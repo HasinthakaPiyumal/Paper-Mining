@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environment
+venv/
+.env/
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data and output files
+*.log
+*.out
+*.tmp
+
+# PDF and text files in output folders
+papers/*.pdf
+cleaned_papers/*.txt
+patterns/*
+
+# Python environment files
+Pipfile
+Pipfile.lock
+
+# Ignore extracted patterns JSON
+extracted_patterns.json
