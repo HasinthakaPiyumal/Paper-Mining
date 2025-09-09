@@ -1,0 +1,108 @@
+[
+  {
+    "Pattern Name": "LLM-KG Interactive Reasoning Paradigm (LLM <-> KG)",
+    "Problem": "Large Language Models (LLMs) suffer from hallucination problems, struggle with deep and responsible reasoning (especially with specialized, out-of-date, or multi-hop knowledge), and lack explainability/transparency. Training LLMs for knowledge updates is expensive and time-consuming. Existing LLM-KG integrations (LLM -> KG) are loosely coupled, with LLMs acting only as translators, and their success depends heavily on the completeness and high quality of the Knowledge Graph (KG).",
+    "Context": "AI systems requiring LLMs to answer complex questions that demand accurate, traceable, and up-to-date knowledge, leveraging structured external knowledge from KGs. The LLM needs to be an active participant in the reasoning process on the KG, rather than just translating queries.",
+    "Solution": "Establish a tight-coupling between the LLM and the KG, where the LLM acts as an agent that interactively explores related entities and relations on the KG. The LLM dynamically makes decisions at each step of the graph reasoning process, retrieving relevant knowledge, and performing reasoning based on this retrieved information. This paradigm moves beyond simple prompt augmentation by enabling the LLM to actively navigate and reason over the KG in an iterative fashion (e.g., ThinkonGraph framework).",
+    "Result": "Enhanced deep reasoning capabilities, mitigation of hallucination, improved knowledge traceability and correctability, and the ability for LLMs to generate correct answers with reliable, retrieved knowledge. It allows LLMs and KGs to complement each other's strengths, leading to better overall performance in knowledge-intensive tasks.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Agentic AI Patterns",
+      "Knowledge & Reasoning Patterns",
+      "LLM-specific Patterns",
+      "LLM -> KG (Loose Coupling) - contrasting pattern"
+    ],
+    "Uses": [
+      "Complex Knowledge Base Question Answering (KBQA)",
+      "Open-domain Question Answering (QA)",
+      "Fact-checking",
+      "Slot filling",
+      "Any application where LLMs need to reason over and interact with structured external knowledge with high accuracy and explainability."
+    ]
+  },
+  {
+    "Pattern Name": "ThinkonGraph (ToG) Framework",
+    "Problem": "Implementing the LLM-KG Interactive Reasoning Paradigm effectively requires a structured algorithmic approach that allows LLMs to perform iterative, dynamic exploration and reasoning on KGs to address issues like hallucination and limited deep reasoning, without requiring additional training.",
+    "Context": "An LLM-KG Interactive Reasoning Paradigm is adopted, and a concrete, training-free algorithmic framework is needed to enable the LLM to act as an agent, iteratively exploring KGs and making reasoning decisions to solve knowledge-intensive tasks.",
+    "Solution": "ToG implements the LLM <-> KG paradigm by prompting an LLM to perform iterative beam search on a Knowledge Graph. It constantly updates and maintains top-N reasoning paths for a given question. The entire inference process contains three main phases:\n1.  **Initialization:** The LLM extracts initial topic entities from the question to start the reasoning paths.\n2.  **Exploration:** The LLM iteratively identifies the most relevant relations and entities by performing 'Search' and 'Prune' steps on the KG. This involves a two-step strategy for both relation exploration and entity exploration, where the LLM acts as an agent to select promising candidates.\n3.  **Reasoning:** The LLM evaluates whether the current reasoning paths are adequate to answer the question. If positive, it generates the answer; otherwise, it repeats the Exploration step or falls back to its inherent knowledge if the maximum search depth is reached.",
+    "Result": "Provides a robust, training-free method for deep, responsible, and efficient LLM reasoning. Achieves state-of-the-art (SOTA) performance in many knowledge-intensive tasks, enhances LLM's deep reasoning capabilities, and offers a flexible plug-and-play framework. It can enable smaller LLMs to be competitive with larger ones, reducing deployment costs.",
+    "Related Patterns": [
+      "LLM-KG Interactive Reasoning Paradigm",
+      "LLM-Guided Beam Search for KG Exploration and Pruning",
+      "Knowledge Traceability and Correctability with KG Feedback",
+      "Plug-and-Play LLM-KG Integration",
+      "Agentic AI Patterns",
+      "Planning Patterns",
+      "Prompt Design Patterns"
+    ],
+    "Uses": [
+      "Multi-hop Knowledge Base Question Answering (KBQA)",
+      "Open-domain Question Answering (QA)",
+      "Slot filling",
+      "Fact-checking",
+      "Enhancing the reasoning ability of small LLMs",
+      "Any task requiring deep, responsible, and verifiable reasoning over KGs with LLMs."
+    ]
+  },
+  {
+    "Pattern Name": "LLM-Guided Beam Search for KG Exploration and Pruning",
+    "Problem": "Efficiently navigating large and complex Knowledge Graphs (KGs) for multi-hop reasoning requires an intelligent search strategy that can dynamically identify and filter relevant paths. Traditional beam search often relies on simpler heuristics or lightweight similarity metrics, which may not capture the complex semantic relevance or contextual nuances needed for accurate LLM-based reasoning, leading to suboptimal or irrelevant paths.",
+    "Context": "An LLM is acting as an agent to explore a Knowledge Graph for relevant information to answer a complex natural language question. The exploration involves iteratively extending reasoning paths, and at each step, there's a need to intelligently select the most promising paths from a multitude of candidates.",
+    "Solution": "Integrate the LLM directly into the beam search algorithm to guide both the exploration ('Search') and selection ('Prune') of reasoning paths. At each iteration, the LLM performs the following roles:\n1.  **Relation Search & Prune:** Searches for all candidate relations linked to current tail entities. The LLM then, through prompting, evaluates and scores these candidates based on their relevance to the original question and current paths, selecting the top-N most promising relations.\n2.  **Entity Search & Prune:** Using the pruned relations, searches for candidate tail entities. The LLM again, through prompting, evaluates and scores these entities based on their contribution to the question, selecting the top-N most promising entities.\nThis iterative, LLM-driven process ensures that the beam search is semantically aware and contextually relevant, dynamically focusing on pertinent information.",
+    "Result": "More accurate and focused discovery of multi-hop reasoning paths compared to naive beam search or methods using lightweight pruning tools (e.g., BM25, SentenceBERT). Improves the deep reasoning capability of LLMs by providing highly relevant structured knowledge. Partially mitigates calibration error accumulation by considering top-N paths rather than just a single best path.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "Planning Patterns",
+      "Prompt Design Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "ThinkonGraph (ToG) Framework"
+    ],
+    "Uses": [
+      "Enhancing the precision and effectiveness of knowledge graph traversal for complex questions",
+      "Constructing high-quality, semantically relevant reasoning paths",
+      "Optimizing search in large KGs by intelligently reducing the search space",
+      "Improving the accuracy of multi-hop knowledge base question answering."
+    ]
+  },
+  {
+    "Pattern Name": "Knowledge Traceability and Correctability with KG Feedback",
+    "Problem": "LLM-generated answers, even when augmented with KGs, can still contain errors (e.g., hallucinations, outdated or incorrect information from the KG). The lack of transparency in reasoning makes it difficult to diagnose and correct these errors, undermining trust and system reliability. There's a need for a mechanism to verify the provenance of answers and provide a feedback loop for knowledge base improvement.",
+    "Context": "An LLM-KG system generates answers by constructing explicit, step-by-step reasoning paths (e.g., sequences of KG triples). Users, experts, or even other AI systems need to understand how an answer was derived and have the ability to rectify errors or improve the underlying knowledge.",
+    "Solution": "The system is designed to explicitly display the full, explicit reasoning paths (provenance) used by the LLM to derive an answer. If an error or uncertainty is detected in the LLM's output (by a human user/expert or another LLM), the system enables:\n1.  **Traceability:** Users can trace back along the displayed reasoning path to pinpoint the specific triples or knowledge elements from the KG that contributed to the erroneous conclusion.\n2.  **Correctability:** Armed with this insight, users can provide feedback to correct the identified suspicious or incorrect triples directly within the Knowledge Graph. This correction then improves the KG's quality, which in turn benefits future LLM reasoning, forming a self-improving feedback loop (knowledge infusion).",
+    "Result": "Significantly enhances the explainability and transparency of LLM reasoning. Builds user trust by providing verifiable provenance for answers. Enables continuous improvement of the underlying Knowledge Graph, reducing the recurrence of errors and potentially lowering the cost of KG construction and correction. Contributes to more responsible AI systems.",
+    "Related Patterns": [
+      "AI-Human Interaction Patterns",
+      "MLOps Patterns (for data quality, monitoring, and feedback loops)",
+      "Knowledge & Reasoning Patterns",
+      "Responsible AI Patterns",
+      "ThinkonGraph (ToG) Framework"
+    ],
+    "Uses": [
+      "Debugging LLM outputs and identifying sources of error",
+      "Ensuring factual accuracy and reliability in AI-generated content",
+      "Facilitating expert-in-the-loop systems for knowledge curation",
+      "Improving data quality in KGs",
+      "Building more trustworthy and accountable AI applications."
+    ]
+  },
+  {
+    "Pattern Name": "Plug-and-Play LLM-KG Integration",
+    "Problem": "Developing LLM-KG systems often results in rigid, tightly coupled components that are difficult to adapt to new LLM models or different Knowledge Graph schemas/implementations. This limits flexibility, increases development and maintenance costs, and hinders the rapid adoption of new technologies or knowledge sources.",
+    "Context": "Building knowledge-enhanced LLM applications that require high adaptability and reusability across various LLM backbones (e.g., proprietary APIs like GPT-4, open-source models like Llama2) and diverse Knowledge Graphs (e.g., Freebase, Wikidata), without incurring significant retraining or re-engineering costs.",
+    "Solution": "Design the LLM-KG system as a modular, training-free framework where the LLM's interaction with the KG is abstracted and standardized. The LLM communicates with the KG through predefined formal queries (e.g., SPARQL, service APIs) for knowledge retrieval and updates. The core logic of exploration, pruning, and reasoning is implemented via generalized prompting strategies that are independent of the specific LLM model or KG backend. This architectural decoupling allows for seamless swapping of LLMs or KGs without requiring additional training or complex architectural changes.",
+    "Result": "High flexibility, generality, and reusability of the LLM-KG system. Reduced development and deployment costs by eliminating the need for extensive retraining. Enables rapid experimentation with different LLMs and KGs to find optimal configurations. Allows for frequent knowledge updates directly in the KG, bypassing expensive LLM retraining. Empowers smaller, more efficient LLMs to achieve competitive performance by leveraging external knowledge.",
+    "Related Patterns": [
+      "Tools Integration Patterns",
+      "MLOps Patterns (for deployment flexibility, cost reduction, and scalability)",
+      "LLM-specific Patterns",
+      "ThinkonGraph (ToG) Framework"
+    ],
+    "Uses": [
+      "Rapid development of knowledge-intensive LLM applications",
+      "Building adaptable Knowledge Base Question Answering (KBQA) systems",
+      "Creating flexible knowledge-enhanced chatbots and virtual assistants",
+      "Developing scalable AI applications that can leverage evolving LLM technologies and diverse knowledge bases efficiently."
+    ]
+  }
+]

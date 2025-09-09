@@ -29,11 +29,11 @@ Thumbs.db
 # PDF and text files in output folders
 papers/*.pdf
 cleaned_papers/*.txt
-patterns/*
+# patterns/*
 
 # Python environment files
 Pipfile
 Pipfile.lock
 
 # Ignore extracted patterns JSON
-extracted_patterns.json
+# extracted_patterns.json

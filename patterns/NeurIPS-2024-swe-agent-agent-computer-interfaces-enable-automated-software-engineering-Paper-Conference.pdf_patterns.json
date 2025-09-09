@@ -1,0 +1,138 @@
+[
+  {
+    "Pattern Name": "Agent-Computer Interface (ACI)",
+    "Problem": "Language Model (LM) agents struggle to interact effectively with complex digital environments (e.g., Linux shell, human-designed IDEs) due to mismatched abilities, verbose feedback, and unoptimized action spaces, leading to poor performance and error propagation.",
+    "Context": "Designing or deploying LM agents to automate complex tasks in digital environments (like software engineering) that were originally designed for human users or have granular, low-level interfaces. LMs have limitations such as lacking visual understanding and sensitivity to context window size.",
+    "Solution": "Introduce an abstraction layer, the Agent-Computer Interface (ACI), between the LM agent and the computer environment. This interface provides a curated set of high-level, LM-friendly commands, structured and concise environment feedback, and built-in guardrails tailored to the LM's strengths and weaknesses. It also manages interaction history and formats input for the LM.",
+    "Result": "Substantially improved LM agent performance, enhanced ability to interact with the environment (e.g., file creation, editing, navigation, test execution), and increased task success rates compared to using raw, human-centric interfaces. Achieved state-of-the-art performance on benchmarks like SWEbench.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "Tools Integration Patterns",
+      "AI–Human Interaction Patterns"
+    ],
+    "Uses": [
+      "Automating software engineering tasks (SWEagent)",
+      "General computer control",
+      "Web navigation"
+    ]
+  },
+  {
+    "Pattern Name": "Simple and Understandable Actions",
+    "Problem": "Language Model (LM) agents struggle to reliably use complex commands with many options and verbose documentation (e.g., many bash commands), leading to misinterpretations, incorrect usage, and an increased need for demonstrations or fine-tuning.",
+    "Context": "Designing the action space for LM agents interacting with a digital environment, especially when the underlying system offers highly configurable but complex commands.",
+    "Solution": "Design commands with a small number of clear, intuitive options and concise, easy-to-understand documentation. Prioritize clarity over extensive configurability for LM agents to reduce their cognitive load.",
+    "Result": "Reduces the cognitive load on the LM, decreases the likelihood of command misusage, and improves the agent's ability to effectively interact with the environment without extensive prior examples or fine-tuning.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "Prompt Design Patterns",
+      "LLM-specific Patterns"
+    ],
+    "Uses": [
+      "Defining commands for file system navigation (e.g., `findfile`, `searchfile`, `searchdir`)",
+      "File editing (e.g., `edit`)",
+      "General environment interaction in agent-computer interfaces"
+    ]
+  },
+  {
+    "Pattern Name": "Compact and Efficient Actions",
+    "Problem": "Language Model (LM) agents can get stuck in inefficient loops or exhaust their context window and computational budget when higher-order operations require composing many simple, granular actions across multiple turns, hindering meaningful progress towards a goal.",
+    "Context": "Designing the action space for LM agents in an interactive environment where tasks involve multi-step operations (e.g., multi-line editing, complex search workflows).",
+    "Solution": "Consolidate important, frequently composed operations into as few actions as possible. Design actions that enable the agent to make meaningful progress towards a goal in a single step, rather than requiring multiple turns for a basic effect.",
+    "Result": "Improves agent efficiency, reduces the number of interaction turns, conserves context window space, and accelerates task completion.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "Context Window Optimization"
+    ],
+    "Uses": [
+      "File editing (e.g., `edit` command replacing a range of lines in one step)",
+      "Search and navigation (e.g., summarized search results instead of iterative, one-by-one results)"
+    ]
+  },
+  {
+    "Pattern Name": "Informative but Concise Environment Feedback",
+    "Problem": "Language Model (LM) agents can be overwhelmed by verbose or irrelevant environment feedback, which consumes valuable context window space and computational resources, and can distract from critical information, leading to reduced performance. Conversely, too little feedback makes it difficult to understand the current state or the effect of actions.",
+    "Context": "Providing feedback to LM agents after their actions in an interactive digital environment.",
+    "Solution": "Design environment feedback to be substantive, providing crucial information about the current state and the immediate effects of the agent's actions, while strictly avoiding unnecessary details or verbose output. This includes displaying updated content after an edit, contextualizing file views with line numbers, and providing specific messages for silent command successes.",
+    "Result": "Enhances the agent's understanding of the environment, helps it focus on relevant information, reduces context window bloat, and improves decision-making without incurring excessive computational costs.",
+    "Related Patterns": [
+      "LLM-specific Patterns",
+      "Prompt Design Patterns",
+      "Context Window Optimization"
+    ],
+    "Uses": [
+      "File viewer output (windowed view with line numbers and context indicators)",
+      "Feedback after file edits (showing updated content)",
+      "Search results (summarized results)",
+      "Success messages for silent commands (e.g., 'Your command ran successfully and did not produce any output')"
+    ]
+  },
+  {
+    "Pattern Name": "Guardrails for Error Mitigation and Recovery",
+    "Problem": "Language Model (LM) agents frequently make mistakes (e.g., syntax errors in code edits, invalid commands, overly broad search queries) and can struggle to recognize these errors, recover from them, or prevent cascading failures, significantly hindering task performance.",
+    "Context": "Designing interactive systems for LM agents where agent actions can introduce errors or lead to unproductive states.",
+    "Solution": "Implement automated checks and interventions (guardrails) that detect common agent mistakes, prevent the propagation of errors, and provide clear, actionable feedback to guide recovery. Examples include code syntax checkers that block invalid edits, mechanisms to discard malformed commands, and suggestions to refine overly broad search queries.",
+    "Result": "Reduces the frequency and impact of agent errors, improves the agent's ability to self-correct, shortens recovery times, and enhances overall task reliability and success rates.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "Prompt Design Patterns"
+    ],
+    "Uses": [
+      "Integrated code linter for file editing (discards edits with syntax errors, shows error message and diff)",
+      "Search command limits (suggests refining queries if too many results)",
+      "Error responses for malformed agent generations"
+    ]
+  },
+  {
+    "Pattern Name": "Context Window Optimization (for History and Viewing)",
+    "Problem": "Language Models (LMs) have finite context windows, and providing a full, unmanaged history of interactions or extensive file content can quickly exhaust this limit, leading to 'lost in the middle' phenomena, increased inference costs, and reduced performance.",
+    "Context": "Managing the information presented to an LM agent during a multi-turn interaction with a digital environment, particularly concerning long interaction histories and large files.",
+    "Solution": "Implement strategies to keep the agent's context concise and relevant. This includes collapsing older observations into single-line summaries, limiting the window of visible lines when viewing large files, and selectively omitting redundant or less critical historical information while preserving essential plan and action history.",
+    "Result": "Maximizes the number of interaction turns possible within the LM's context window, reduces inference costs, improves the LM's ability to focus on recent and critical information, and mitigates performance degradation due to excessive context.",
+    "Related Patterns": [
+      "LLM-specific Patterns",
+      "Prompt Design Patterns",
+      "Agentic AI Patterns"
+    ],
+    "Uses": [
+      "Collapsing observations preceding the last N turns in the history",
+      "Windowed file viewer (e.g., showing at most 100 lines of a file at a time)",
+      "History processors to manage message history length"
+    ]
+  },
+  {
+    "Pattern Name": "Specialized Search Interface",
+    "Problem": "Language Model (LM) agents struggle with traditional, verbose search tools (e.g., `grep`, `find` with many options) that can return overwhelming amounts of irrelevant information, exhaust context windows, or require inefficient iterative exploration to find relevant content.",
+    "Context": "Enabling LM agents to efficiently locate specific files or content within a large codebase or digital repository.",
+    "Solution": "Provide specialized, LM-friendly search commands that offer targeted search capabilities (e.g., `findfile` for names, `searchfile` for strings in files, `searchdir` for strings in directories). These commands should prioritize summarized, filtered results, and provide guidance for refining queries if initial searches yield too many results.",
+    "Result": "Improves the agent's efficiency in code localization, reduces the amount of irrelevant information presented, conserves context window space, and helps agents quickly zoom in on problematic areas.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "Tools Integration Patterns",
+      "Informative but Concise Environment Feedback",
+      "Guardrails for Error Mitigation and Recovery"
+    ],
+    "Uses": [
+      "`findfile`, `searchfile`, `searchdir` commands in SWEagent, including features like limiting results (e.g., to 50 matches) and suggesting more specific queries."
+    ]
+  },
+  {
+    "Pattern Name": "Efficient File Editing",
+    "Problem": "Language Model (LM) agents find file editing cumbersome and error-prone when relying on low-level, multi-step commands (e.g., `sed` for single-line changes, redirection for entire file replacement) that lack immediate feedback and require complex arithmetic or state tracking. This leads to inefficiency, cascading errors, and poor performance.",
+    "Context": "Enabling LM agents to modify code or text files within a digital environment, especially in software engineering tasks.",
+    "Solution": "Provide a consolidated, high-level `edit` command that works in conjunction with a file viewer. This command should allow for replacing a specific range of lines with new text in a single action, automatically display the updated content, and ideally integrate guardrails like syntax checking.",
+    "Result": "Streamlines the editing process, reduces the number of actions required for multi-line changes, provides immediate and clear feedback on modifications, and mitigates syntax-related errors, significantly improving agent productivity and accuracy.",
+    "Related Patterns": [
+      "Agentic AI Patterns",
+      "Tools Integration Patterns",
+      "Compact and Efficient Actions",
+      "Informative but Concise Environment Feedback",
+      "Guardrails for Error Mitigation and Recovery"
+    ],
+    "Uses": [
+      "SWEagent's `edit` command, which takes start/end lines and replacement text, displays updated content, and integrates a code linter."
+    ]
+  }
+]

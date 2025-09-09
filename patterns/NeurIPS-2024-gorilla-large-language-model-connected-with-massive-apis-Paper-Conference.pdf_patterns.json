@@ -1,0 +1,134 @@
+[
+  {
+    "Pattern Name": "Tool-Augmented LLM (API-Agent LLM)",
+    "Problem": "Large Language Models (LLMs) struggle to effectively use external tools via API calls due to unawareness of available APIs, how to use them, and frequently updated tool sets, leading to unfulfilled potential and hallucination.",
+    "Context": "An LLM needs to interact with a vast, dynamic, and potentially overlapping set of external tools or services, often exposed through APIs, to perform complex, real-world tasks that go beyond its internal knowledge or capabilities. The LLM must generate accurate, actionable API calls based on user instructions and available documentation.",
+    "Solution": "Develop a specialized LLM (e.g., Gorilla, a finetuned LLaMA model) that is explicitly trained to understand user instructions and generate correct API calls. This involves finetuning the LLM on a dataset of instruction-API pairs and integrating it with a retrieval system that provides relevant, up-to-date API documentation at inference time. The LLM learns to parse user queries, reason about constraints, and select appropriate APIs.",
+    "Result": "The LLM can accurately select and invoke APIs from a large, changing set of tools, significantly reducing hallucination errors and adapting to test-time documentation changes. It can also reason about user-defined constraints (e.g., performance, parameters) when choosing APIs, increasing the reliability and applicability of its outputs.",
+    "Related Patterns": [
+      "Retriever-Aware Training",
+      "Self-Instruct Finetuning for Tool Use",
+      "Instruction Finetuning",
+      "Dynamic API Documentation Adaptation",
+      "Constraint-Aware API Invocation"
+    ],
+    "Uses": [
+      "Program synthesis",
+      "Automating tasks requiring external service interaction",
+      "Enhancing conversational agents with computational capabilities",
+      "Dynamic knowledge base access",
+      "Integrating LLMs with massive API ecosystems"
+    ]
+  },
+  {
+    "Pattern Name": "Retriever-Aware Training (RAT)",
+    "Problem": "LLMs struggle to adapt to frequently updated external knowledge bases (like API documentation) and can be negatively impacted by irrelevant or inaccurate information provided by a retriever at inference time, leading to reduced accuracy and increased hallucination.",
+    "Context": "An LLM needs to leverage external, dynamic documentation (retrieved information) during inference to perform tasks, but the retrieval mechanism is imperfect, providing potentially irrelevant or outdated information. The LLM must learn to effectively utilize relevant retrieved information while ignoring irrelevant context.",
+    "Solution": "During instruction finetuning, augment the user prompt with retrieved documentation (even if potentially incorrect, reflecting real-world retriever imperfections) while providing the accurate ground-truth response. This teaches the LLM to 'judge' the retriever at inference time: to use the documentation when relevant and accurate, and to rely on its baked-in domain knowledge when the retrieved information is irrelevant or misleading.",
+    "Result": "The LLM gains the ability to dynamically adapt to test-time changes in documentation, improves performance over standard in-context learning, and substantially reduces hallucination errors by intelligently processing retrieved context.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "Instruction Finetuning",
+      "Self-Instruct Finetuning for Tool Use",
+      "Dynamic API Documentation Adaptation"
+    ],
+    "Uses": [
+      "LLMs requiring up-to-date external knowledge",
+      "Dynamic tool usage",
+      "Factual grounding of LLM responses",
+      "Mitigating context-induced hallucination",
+      "Adapting LLMs to evolving information sources"
+    ]
+  },
+  {
+    "Pattern Name": "Self-Instruct Finetuning for Tool Use",
+    "Problem": "Training LLMs to accurately generate API calls requires a large, high-quality dataset of natural language instructions paired with correct API invocations, which is labor-intensive and difficult to scale, especially for a vast and dynamic API ecosystem.",
+    "Context": "A base LLM needs to be adapted to a specific domain (e.g., API generation) or task (e.g., tool use) where extensive human-labeled instruction-response pairs are unavailable or costly to create. The target task involves complex structured outputs (like API calls) based on natural language input.",
+    "Solution": "Leverage an existing powerful LLM (e.g., GPT-4) to automatically generate synthetic instruction-API pairs. This involves providing the LLM with a few in-context examples (seed data) and reference documentation, then instructing it to generate diverse real-world use cases and their corresponding API calls. The generated synthetic data is then used to instruction-finetune a smaller, target LLM.",
+    "Result": "Efficiently creates a large and diverse training dataset for specialized LLM tasks, reducing reliance on manual annotation. The finetuned LLM learns to follow instructions and generate domain-specific structured outputs, such as accurate API calls, without directly memorizing API names or hints from the instructions.",
+    "Related Patterns": [
+      "Instruction Finetuning",
+      "Tool-Augmented LLM",
+      "Prompt Engineering (for generating instructions)"
+    ],
+    "Uses": [
+      "Adapting LLMs to new domains",
+      "Generating synthetic training data for specialized tasks",
+      "Building specialized LLMs for code generation",
+      "API invocation",
+      "Structured data output"
+    ]
+  },
+  {
+    "Pattern Name": "AST-based Hallucination and Accuracy Metric",
+    "Problem": "Evaluating the correctness and factual accuracy (lack of hallucination) of LLM-generated code or API calls is challenging. Simple string matching is insufficient due to syntactic variations, multiple correct solutions, and the need to distinguish between functional errors and outright fabrication (hallucination). Manual execution is time-consuming and resource-intensive.",
+    "Context": "An LLM is designed to generate structured code or API calls, and there's a need for an automated, robust, and semantically-aware evaluation method that can differentiate between correct, incorrect, and hallucinatory outputs. The target domain (e.g., API invocation) has well-defined syntax and a known set of valid constructs.",
+    "Solution": "Employ Abstract Syntax Tree (AST) subtree matching to compare generated API calls against a database of known, valid API definitions. Define: \n- **Accuracy:** A generated API call whose AST is a subtree match of a reference API in the database (considering required arguments).\n- **Error:** A generated API call that matches a known API but uses incorrect arguments or structure (not a valid subtree match beyond the API name).\n- **Hallucination:** A generated API call whose AST is not a subtree of any API in the database, indicating an entirely imagined or fabricated tool.",
+    "Result": "Provides a precise, automated, and semantically grounded metric for evaluating LLM-generated code/API calls. It accurately distinguishes between functional errors and hallucination, correlates strongly with human judgment, and significantly reduces the need for manual code execution or validation.",
+    "Related Patterns": [
+      "MLOps for Code Generation",
+      "LLM Evaluation"
+    ],
+    "Uses": [
+      "Automated testing of code-generating LLMs",
+      "Benchmarking API invocation models",
+      "Identifying and mitigating hallucination in structured output generation",
+      "Continuous integration/deployment for LLM-powered code assistants"
+    ]
+  },
+  {
+    "Pattern Name": "Constraint-Aware API Invocation",
+    "Problem": "LLMs, when generating API calls, typically focus on functional correctness but often fail to consider or reason about additional user-defined constraints (e.g., performance, resource limits, specific model properties) that are critical for real-world application, leading to suboptimal or unusable API selections.",
+    "Context": "Users provide natural language instructions for API usage that include both functional requirements and non-functional constraints (e.g., 'model with less than 10M parameters and 70% accuracy'). The LLM needs to select an API that satisfies all specified criteria, potentially involving trade-offs or complex reasoning over API metadata.",
+    "Solution": "Incorporate instructions with explicit constraints into the LLM's training dataset (e.g., via self-instruct finetuning). This trains the LLM to parse and reason about these constraints alongside functional descriptions. During inference, the LLM processes the user's prompt, potentially augmented with retrieved API documentation containing constraint-related metadata (like model parameters, accuracy, latency), and selects an API that best fits the combined functional and non-functional requirements.",
+    "Result": "The LLM can accurately interpret and respond to complex user queries that involve multiple constraints, selecting APIs that are not just functionally correct but also meet specific performance or resource criteria. This significantly enhances the practical utility and applicability of LLM-generated API calls in real-world scenarios.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "Retriever-Aware Training",
+      "Self-Instruct Finetuning for Tool Use"
+    ],
+    "Uses": [
+      "Intelligent assistants for developers",
+      "Automated resource provisioning",
+      "Optimizing API selection based on application requirements",
+      "Personalized tool recommendations",
+      "Decision-making systems for complex API ecosystems"
+    ]
+  },
+  {
+    "Pattern Name": "Dynamic API Documentation Adaptation",
+    "Problem": "The utility and reliability of LLMs that use external APIs degrade rapidly as underlying API documentation changes (e.g., version upgrades, argument modifications, new registries). Retraining LLMs to keep pace with these frequent updates is impractical and costly.",
+    "Context": "An LLM relies on external API documentation to generate correct API calls. This documentation is subject to frequent, unpredictable changes that outpace the LLM's training cycle, making the LLM brittle to information shifts.",
+    "Solution": "Implement a mechanism (e.g., Retriever-Aware Training) that trains the LLM to leverage retrieved, up-to-date API documentation at inference time. The LLM learns to interpret and incorporate information from the latest documentation, even if it differs from the documentation seen during its initial training, and to reason about the relevance of retrieved documents.",
+    "Result": "The LLM maintains its accuracy and relevance over extended periods without constant retraining, dynamically adapting to changes in API versions, arguments, and even preferred API sources. This ensures the LLM remains effective despite the rapid evolution of the external tool ecosystem.",
+    "Related Patterns": [
+      "Retriever-Aware Training",
+      "Tool-Augmented LLM"
+    ],
+    "Uses": [
+      "LLMs interacting with rapidly evolving software libraries",
+      "Cloud services",
+      "Any external system with frequently updated interfaces",
+      "Maintaining long-term relevance of LLM-powered tools"
+    ]
+  },
+  {
+    "Pattern Name": "Instruction Finetuning",
+    "Problem": "General-purpose pre-trained LLMs often struggle to follow specific instructions or generate desired structured outputs for specialized tasks, leading to suboptimal performance, poor adherence to formats, or unhelpful responses.",
+    "Context": "A large pre-trained language model possesses vast knowledge but lacks the ability to consistently perform a specific downstream task (e.g., API call generation, summarization, question answering) according to explicit user instructions or desired output formats.",
+    "Solution": "Further train the pre-trained LLM on a dataset of instruction-response pairs, where each input is a natural language instruction (and potentially context) and the output is the desired response. This process adapts the model to better understand and follow instructions, aligning its behavior with the target task's requirements. The data can be human-labeled or synthetically generated (e.g., using self-instruct).",
+    "Result": "The LLM becomes significantly more adept at following instructions, generating task-specific outputs, and adhering to desired formats, leading to improved performance on the target task compared to zero-shot or few-shot prompting of the base model.",
+    "Related Patterns": [
+      "Self-Instruct Finetuning for Tool Use",
+      "Prompt Engineering",
+      "Retriever-Aware Training"
+    ],
+    "Uses": [
+      "Adapting LLMs to specific applications",
+      "Improving task-specific accuracy",
+      "Aligning LLMs with user intent",
+      "Reducing the need for extensive prompt engineering at inference time",
+      "Building specialized models from general foundation models"
+    ]
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "Pattern Name": "Tool Use",
+    "Problem": "Language agents powered by Large Language Models (LLMs) have limited inherent capabilities and access to real-world, dynamic information, restricting their ability to perform complex tasks.",
+    "Context": "When a language agent needs to interact with external environments, gather specific data (e.g., flight information, restaurant details), perform calculations, or execute actions beyond its inherent knowledge.",
+    "Solution": "Equip language agents with a 'Toolbox' of external functions or APIs (e.g., CitySearch, FlightSearch, DistanceMatrix, RestaurantSearch, AttractionSearch, AccommodationSearch, NotebookWrite). The agent selects and employs these tools based on its reasoning to achieve complex goals.",
+    "Result": "Significantly expands the potential capabilities of language agents, allowing them to collect information, perform calculations, and interact with structured data. However, agents can struggle with argument errors in tool calls, getting trapped in dead loops, and dynamically adjusting plans based on tool feedback.",
+    "Related Patterns": [
+      "ReAct",
+      "Reflexion",
+      "Memory Management",
+      "Task Decomposition",
+      "Retrieval"
+    ],
+    "Uses": "Information collection (e.g., travel data), data retrieval, calculations, interacting with external databases, completing real-world tasks like travel planning, web navigation, and embodied agent control.",
+    "Category": [
+      "Tools Integration Patterns",
+      "Agentic AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "Large Language Models (LLMs) struggle with complex reasoning tasks, often producing direct, incorrect answers without showing their intermediate thought processes.",
+    "Context": "When an LLM is tasked with a problem that requires logical deduction, multi-step problem-solving, or complex decision-making, and a direct answer is insufficient or often wrong.",
+    "Solution": "Enhance the reasoning process by explicitly requiring intermediate steps. This is typically achieved by adding a prompt like 'Let's think step by step' to elicit a detailed, sequential thought process from the LLM.",
+    "Result": "Improves the LLM's capability to engage in step-by-step reasoning, leading to significant improvements in performance on complex tasks by making the LLM's internal thought process explicit and allowing for self-correction.",
+    "Related Patterns": [
+      "Direct Prompting",
+      "ReAct",
+      "Reflexion",
+      "Task Decomposition",
+      "Tree of Thoughts",
+      "Graph of Thoughts"
+    ],
+    "Uses": "Mathematical problem-solving, logical reasoning, planning, complex question answering, and general multi-step problem-solving.",
+    "Category": [
+      "Prompt Design Patterns",
+      "Knowledge & Reasoning Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "LLM-powered agents need to synergize reasoning with actions to effectively interact with dynamic environments, collect information, and make progress towards a goal, especially when explicit instructions are insufficient or environmental feedback is crucial.",
+    "Context": "An agent needs to perform a sequence of actions (e.g., using tools) in an environment, where each action's outcome might influence subsequent decisions, and continuous reasoning is required to stay on track and adapt.",
+    "Solution": "The agent alternates between 'Thought' (reasoning about the current situation and planning the next step) and 'Action' (executing a tool or API call, or performing a specific operation). The 'Observation' (feedback from the environment after an action) then informs the next 'Thought' step, creating an iterative loop of reasoning, acting, and observing.",
+    "Result": "Enhances language agents' reasoning ability and effectiveness in tool interaction, enabling iterative information collection and decision-making. However, agents can still struggle to convert their reasoning into correct actions, keep track of global or multiple constraints, and avoid dead loops.",
+    "Related Patterns": [
+      "Tool Use",
+      "Chain-of-Thought",
+      "Reflexion",
+      "Task Decomposition",
+      "Feedback from Environment"
+    ],
+    "Uses": "Complex planning (e.g., travel planning), web navigation, embodied agents, tool-augmented LLMs, and problem-solving in dynamic, partially observable environments.",
+    "Category": [
+      "Agentic AI Patterns",
+      "Prompt Design Patterns",
+      "Planning Patterns",
+      "Tools Integration Patterns",
+      "Knowledge & Reasoning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Reflexion",
+    "Problem": "Language agents often get trapped in repetitive errors, suboptimal paths, or fail to learn from past mistakes and improve their planning or execution over time.",
+    "Context": "When an agent attempts a task, receives feedback (e.g., an action is invalid, a plan is too costly, or a constraint is violated), and needs to adjust its strategy or re-plan to avoid similar failures in the future.",
+    "Solution": "Extends the ReAct framework by incorporating a 'reflection' step. After a task attempt (especially a failed one), a separate reflection model (or the same LLM prompted for reflection) provides high-level insights and verbal feedback on why the attempt failed. This feedback is then used to refine the agent's internal 'thought' process or prompt for subsequent attempts, akin to 'verbal reinforcement learning'.",
+    "Result": "Aims to help agents identify and correct flawed reasoning, leading to improved performance over multiple attempts and increased robustness. However, agents might still struggle to align their actions with their reasoning or make substantial adjustments based on reflections.",
+    "Related Patterns": [
+      "ReAct",
+      "Chain-of-Thought",
+      "Feedback from Environment",
+      "Memory Management"
+    ],
+    "Uses": "Improving agent robustness, self-correction in planning, overcoming dead loops, refining strategies in complex, multi-step tasks, and learning from failures in interactive environments.",
+    "Category": [
+      "Agentic AI Patterns",
+      "Planning Patterns",
+      "Knowledge & Reasoning Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Greedy Search",
+    "Problem": "Finding a solution or path in a search space where a quick, locally optimal decision is desired, without extensive exploration of future possibilities or global implications.",
+    "Context": "When a planning or decision-making task can be broken down into a series of steps, and at each step, the most immediate beneficial option (e.g., lowest cost, highest reward) is chosen, without necessarily considering its long-term impact.",
+    "Solution": "At each decision point in the planning process, select the option that appears best at that moment according to a predefined heuristic or optimization objective (e.g., minimizing cost). For travel planning, this involves picking the cheapest flight, restaurant, accommodation, etc.",
+    "Result": "Provides a straightforward and often computationally efficient baseline solution. However, it frequently leads to suboptimal or infeasible global plans when long-term constraints or interdependencies are significant, as it struggles with multi-constraint tasks.",
+    "Related Patterns": [],
+    "Uses": "Baselines for planning tasks, simple optimization problems, initial exploration of a search space, and situations where computational resources are limited.",
+    "Category": [
+      "Classical AI",
+      "Planning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Direct Prompting",
+    "Problem": "Obtaining a specific output from an LLM without providing intermediate reasoning steps or complex interaction protocols, which can lead to errors for complex tasks.",
+    "Context": "When an LLM is capable of generating a response directly from a query, and the task does not explicitly require step-by-step reasoning or tool interaction.",
+    "Solution": "The query is input directly into the model along with instructions detailing the task and any relevant information. The LLM is expected to generate the final output in one continuous response.",
+    "Result": "Simple and fast for straightforward tasks. For complex tasks like multi-constraint planning, it often results in low accuracy, hallucination, and failure to meet constraints, as the LLM lacks explicit guidance for reasoning and validation.",
+    "Related Patterns": [
+      "Chain-of-Thought",
+      "ReAct"
+    ],
+    "Uses": "Simple question answering, text generation, summarization, and tasks where the LLM's inherent knowledge is sufficient for a direct response.",
+    "Category": [
+      "Prompt Design Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Tree of Thoughts (ToT)",
+    "Problem": "Traditional Chain-of-Thought prompting explores only one linear path of reasoning, which can be insufficient for problems requiring exploration of multiple reasoning paths or backtracking from dead ends.",
+    "Context": "Complex problems that involve exploration, lookahead, or require evaluating multiple possible reasoning steps before committing to a single path. These problems often have intermediate states that need to be evaluated for their prospects.",
+    "Solution": "Decompose the problem into 'thought' steps, but instead of a linear chain, create a tree structure where each node represents an intermediate thought state. The agent can explore multiple branches (different reasoning paths), evaluate their prospects, and backtrack if a path leads to a dead end, allowing for more deliberate problem-solving.",
+    "Result": "Enables more exhaustive and deliberate problem-solving by exploring diverse reasoning paths. However, it requires extensive exploration of the search space, making it prohibitively costly for very complex problems like those in TravelPlanner.",
+    "Related Patterns": [
+      "Chain-of-Thought",
+      "Graph of Thoughts",
+      "Planning",
+      "Task Decomposition"
+    ],
+    "Uses": "Complex reasoning, strategic planning, puzzles, and tasks requiring combinatorial search or multi-path exploration.",
+    "Category": [
+      "Planning Patterns",
+      "Knowledge & Reasoning Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Graph of Thoughts (GoT)",
+    "Problem": "Tree of Thoughts can still be restrictive, as it assumes a tree structure, while complex problems might benefit from more flexible, graph-like connections between thoughts, allowing for merging and cycles in the reasoning process.",
+    "Context": "Problems where intermediate thoughts might not form a strict tree, but rather a more interconnected graph, allowing for richer relationships between reasoning steps, parallel exploration, and merging of ideas from different branches.",
+    "Solution": "Represent the reasoning process as a graph where nodes are 'thoughts' and edges represent transitions or dependencies between thoughts. This allows for more dynamic and non-linear exploration of reasoning paths, including parallel processing and the merging of information from different branches.",
+    "Result": "Offers a more flexible and potentially powerful framework for deliberate problem-solving than ToT. Similar to ToT, it requires extensive exploration of the search space, making it prohibitively costly for very complex problems.",
+    "Related Patterns": [
+      "Tree of Thoughts",
+      "Planning",
+      "Knowledge & Reasoning",
+      "Task Decomposition"
+    ],
+    "Uses": "Elaborate problem-solving, advanced reasoning tasks, and complex planning where thought merging and non-linear reasoning are beneficial.",
+    "Category": [
+      "Planning Patterns",
+      "Knowledge & Reasoning Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Memory Management (for Language Agents)",
+    "Problem": "LLMs have limited context windows (short-term memory) and struggle to retain and process information over long interactions or complex, multi-step tasks, leading to 'Lost in the Middle' phenomena or exceeding token limits.",
+    "Context": "Language agents engaged in long-horizon planning, multi-turn dialogues, or complex problem-solving require continuous access to past information, intermediate plans, or external knowledge to maintain coherence and achieve goals.",
+    "Solution": "Implement mechanisms to acquire and process information, often divided into long-term memory (the parametric memory inherent in LLMs) and short-term memory (in-context learning or working memory). Techniques like memory summarization, retrieval, and dedicated tools (e.g., `NotebookWrite`) are employed to store and manage necessary information.",
+    "Result": "Enables agents to handle longer contexts, access relevant past information, and avoid exceeding token limits. However, agents can still get 'lost in the middle' or struggle with effectively utilizing accumulated information.",
+    "Related Patterns": [
+      "Memory Summarization",
+      "Retrieval",
+      "Tool Use"
+    ],
+    "Uses": "Long-horizon planning, multi-turn conversations, maintaining state in agentic workflows, complex problem-solving, and enhancing LLM grounding.",
+    "Category": [
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Agentic AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Memory Summarization",
+    "Problem": "The finite context window of LLMs means that long histories of interactions or extensive collected information cannot be fully retained, leading to the loss of crucial details or exceeding token limits during long-running tasks.",
+    "Context": "When a language agent needs to maintain a coherent understanding of a long interaction or a large amount of collected information, but the raw data is too extensive for the LLM's context window.",
+    "Solution": "Periodically summarize past interactions, observations, or collected data into a concise representation. This summary then replaces or augments the raw history in the LLM's context, allowing key information to be retained.",
+    "Result": "Enhances the memory capabilities of language agents by compressing information, allowing them to retain key details over longer periods and manage context accumulation more effectively.",
+    "Related Patterns": [
+      "Memory Management",
+      "Retrieval"
+    ],
+    "Uses": "Long-running agentic tasks, multi-session dialogues, complex planning where intermediate states or past interactions need to be condensed for efficient recall.",
+    "Category": [
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Agentic AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Retrieval (for Memory Augmentation)",
+    "Problem": "LLMs have static knowledge bases, leading to potential hallucinations or an inability to access up-to-date, specific, or proprietary external information required for a task.",
+    "Context": "When an LLM needs to answer questions, generate plans, or make decisions based on a large, dynamic, or specialized external knowledge base that is not part of its training data.",
+    "Solution": "Integrate a retrieval mechanism that fetches relevant information from an external database (e.g., structured data records) based on the current query or context. This retrieved information is then provided to the LLM as additional context for its reasoning and generation, effectively augmenting its memory.",
+    "Result": "Enhances the memory capabilities of language agents by providing access to external, specific information, reducing hallucinations and improving factual grounding. Allows LLMs to ground their responses in up-to-date and relevant data.",
+    "Related Patterns": [
+      "Memory Management",
+      "Tool Use"
+    ],
+    "Uses": "Knowledge-intensive tasks, grounding LLM generations in specific data, enhancing agent memory, and complex planning requiring external data (e.g., searching for flights, attractions, accommodations).",
+    "Category": [
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Tools Integration Patterns",
+      "Agentic AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Task Decomposition",
+    "Problem": "Complex problems are often too large or intricate for an AI agent (especially an LLM) to solve in a single step, leading to errors, suboptimal solutions, or an inability to complete the task.",
+    "Context": "When a user query or a high-level goal requires a series of interdependent sub-problems to be solved, or a long sequence of actions to be planned and executed.",
+    "Solution": "Break down the complex task into smaller, more manageable sub-tasks or sequential steps. The agent then addresses these sub-tasks iteratively or strategically, often by using reasoning or tool-use for each step, building up towards the overall solution.",
+    "Result": "Simplifies complex problems, making them tractable for AI agents. Improves the likelihood of successful completion by guiding the agent through a structured approach, leading to significant improvements in performance.",
+    "Related Patterns": [
+      "Chain-of-Thought",
+      "ReAct",
+      "Planning",
+      "Tree of Thoughts",
+      "Graph of Thoughts"
+    ],
+    "Uses": "Planning (e.g., multi-day travel itineraries), complex problem-solving, code generation, and multi-stage reasoning tasks.",
+    "Category": [
+      "Planning Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Agentic AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Feedback from Environment",
+    "Problem": "AI agents, particularly LLMs, can make errors or suboptimal decisions without external validation or information about the real-world consequences of their actions, leading to persistent failures or illogical plans.",
+    "Context": "An agent operates in an interactive environment where its actions yield observable outcomes, and these outcomes can be used to guide subsequent decisions, correct errors, or inform further planning.",
+    "Solution": "Design the agent to receive and process feedback from its environment after performing an action. This feedback (e.g., 'no flights found', 'cost is too high', 'actions are invalid', 'null results') is then incorporated into the agent's reasoning process to dynamically adjust its plan or strategy.",
+    "Result": "Enables agents to dynamically adjust their plans, learn from mistakes, and operate more robustly in dynamic settings. However, agents might struggle to effectively utilize this feedback for global planning or complex self-correction, sometimes repeating invalid actions.",
+    "Related Patterns": [
+      "ReAct",
+      "Reflexion",
+      "Planning",
+      "Tool Use"
+    ],
+    "Uses": "Interactive problem-solving, agentic systems, reinforcement learning, self-correction mechanisms, and dynamic planning in changing environments.",
+    "Category": [
+      "Agentic AI Patterns",
+      "Planning Patterns"
+    ]
+  }
+]

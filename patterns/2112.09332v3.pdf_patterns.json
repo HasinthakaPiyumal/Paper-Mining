@@ -1,0 +1,105 @@
+[
+  {
+    "Pattern Name": "Browser-Assisted Question Answering (WebGPT)",
+    "Problem": "Long-form question-answering (LFQA) systems lag human performance, particularly in information retrieval and synthesis, and struggle to provide up-to-date, factual answers with verifiable sources.",
+    "Context": "Large Language Models (LLMs) like GPT-3 excel at text generation but lack real-time access to external, up-to-date knowledge. Human evaluators find it difficult to assess factual accuracy without explicit references.",
+    "Solution": "Create a text-based web-browsing environment that a fine-tuned LLM can interact with. The model receives a summary of the current state (question, page text) and issues commands (Search, Click, Find, Quote, Scroll, etc.). It actively searches the web, navigates pages, and collects 'references' (quoted passages) to support its final answer. Training is done end-to-end using imitation learning and reinforcement learning.",
+    "Result": "Improves both retrieval and synthesis by enabling the model to dynamically gather information. Generates answers with explicit references, which is crucial for easier and more accurate human evaluation of factual accuracy. Achieves performance competitive with or exceeding human demonstrators on LFQA tasks.",
+    "Related Patterns": [
+      "Retrieval Augmented Generation (RAG)",
+      "Agentic Web Browsing",
+      "Human Feedback for Answer Quality",
+      "Reference Collection for Factual Verification"
+    ],
+    "Uses": "Long-form question answering, information gathering, factual synthesis, interactive AI agents."
+  },
+  {
+    "Pattern Name": "Behavior Cloning for Agentic Control",
+    "Problem": "A pre-trained language model needs to learn to interact with a novel, structured environment (like a text-based web browser) by issuing specific commands, a capability not inherent in its pre-training.",
+    "Context": "Human experts can successfully perform the desired task within the environment. Their sequence of actions and observations can serve as a strong supervised signal. An underlying LLM possesses general language understanding and generation capabilities.",
+    "Solution": "Collect demonstrations of humans using the environment to perform the task (e.g., answering questions via browsing). Fine-tune the pre-trained LLM using supervised learning, where the observed human commands are treated as labels for the model's actions in response to environmental states.",
+    "Result": "The model learns a policy to navigate and interact within the environment, mimicking human behavior. This provides a strong initial policy that can then be further refined or optimized.",
+    "Related Patterns": [
+      "Imitation Learning",
+      "Reinforcement Learning from Human Feedback (as a starting point)"
+    ],
+    "Uses": "Initial training for AI agents in structured interactive environments, learning complex multi-step tasks from expert demonstrations, bootstrapping policies for RL."
+  },
+  {
+    "Pattern Name": "Reward Modeling from Human Comparisons",
+    "Problem": "Directly optimizing for subjective and complex qualities (e.g., factual accuracy, coherence, overall usefulness of an answer) with a simple loss function is difficult. Human evaluation is the gold standard but is slow and expensive to apply to every generated output during training.",
+    "Context": "A generative model can produce multiple candidate outputs for a given input. Human labelers can provide pairwise preferences (A is better than B, B is better than A, or equal) for these outputs.",
+    "Solution": "Train a separate 'reward model' (RM) to predict a scalar score (e.g., an Elo score or preference logit) for a given input-output pair (e.g., question and answer with references). The RM is trained on human comparison data, typically using a cross-entropy loss to predict the likelihood of human preference.",
+    "Result": "The reward model serves as a scalable, automated proxy for human judgment, allowing for quantitative evaluation of model outputs and providing a learnable reward signal for subsequent optimization methods like Reinforcement Learning or Rejection Sampling.",
+    "Related Patterns": [
+      "Human Feedback",
+      "Reinforcement Learning from Human Feedback",
+      "Rejection Sampling (Best-of-N)"
+    ],
+    "Uses": "Evaluating model performance, providing a reward signal for RL, enabling inference-time selection of best outputs."
+  },
+  {
+    "Pattern Name": "Reinforcement Learning from Human Feedback (RLHF) for Agentic Behavior",
+    "Problem": "Behavior Cloning (BC) can only imitate human performance and may not fully optimize for the desired objective (e.g., answer quality) or surpass human capabilities. The agent needs to explore and learn beyond expert demonstrations to achieve optimal performance.",
+    "Context": "An initial policy (e.g., from Behavior Cloning) is available. A Reward Model (RM), trained on human preferences, can provide a scalar reward signal for agent trajectories or final outputs. The agent operates in an interactive environment.",
+    "Solution": "Fine-tune the BC-initialized policy using Reinforcement Learning algorithms, such as Proximal Policy Optimization (PPO). The reward signal for the RL agent is derived from the Reward Model's score at the end of an episode, often combined with a KL-divergence penalty from the initial BC policy to prevent catastrophic forgetting and over-optimization of the RM.",
+    "Result": "The agent learns to explore and exploit the environment more effectively, optimizing directly for human-aligned quality objectives as captured by the RM. Can potentially achieve performance beyond expert human demonstrators.",
+    "Related Patterns": [
+      "Behavior Cloning",
+      "Reward Modeling",
+      "Agentic AI Patterns"
+    ],
+    "Uses": "Optimizing policies for complex, multi-step tasks in interactive environments, aligning AI agent behavior with human preferences, improving generative model outputs."
+  },
+  {
+    "Pattern Name": "Rejection Sampling (Best-of-N) with Reward Model",
+    "Problem": "Improving the quality of generated outputs at inference time without incurring the computational cost and complexity of further policy training (e.g., full Reinforcement Learning). The base generative policy might produce a range of qualities, and a mechanism is needed to select the best one.",
+    "Context": "A base generative policy (e.g., a fine-tuned LLM) can produce multiple diverse candidate outputs for a given input. A Reward Model (RM) is available that can accurately score the quality of these candidates according to human preferences.",
+    "Solution": "For each query, sample a fixed number (N) of candidate outputs from the base generative policy. Evaluate each of these N candidates using the pre-trained Reward Model. Select the candidate that receives the highest score from the Reward Model as the final output. This trades inference-time compute for improved quality.",
+    "Result": "Significantly improves the quality of the final output by leveraging the RM to select the best among multiple attempts. It's a computationally efficient alternative or complement to RL for optimizing against a reward model, often outperforming RL for certain compute budgets.",
+    "Related Patterns": [
+      "Reward Modeling",
+      "Generative AI Patterns"
+    ],
+    "Uses": "Enhancing the quality of LLM responses, optimizing outputs without further policy fine-tuning, leveraging reward models for inference-time selection."
+  },
+  {
+    "Pattern Name": "Reference Collection for Factual Verification",
+    "Problem": "Human evaluators face difficulty and subjectivity when assessing the factual accuracy of long-form AI-generated answers, especially without knowing the sources or having to perform independent research. AI models can also hallucinate or make unverified claims.",
+    "Context": "An AI agent is designed to gather information from external sources (e.g., the web) to compose answers. Transparency and verifiability are critical for building trust and enabling effective human oversight.",
+    "Solution": "Design the AI agent's environment and workflow such that it explicitly identifies and 'quotes' relevant passages from the external sources (e.g., web pages) it browses while forming its answer. These quoted passages, along with their source (title, domain), are then presented alongside the final generated answer.",
+    "Result": "Enables more accurate, less noisy, and consistent human evaluation of factual accuracy by providing direct evidence. Increases transparency, allowing end-users to easily follow up on sources and verify claims themselves. Reduces non-imitative falsehoods (hallucinations) by grounding the answer in retrieved text.",
+    "Related Patterns": [
+      "Browser-Assisted Question Answering",
+      "AI-Human Interaction Patterns",
+      "Knowledge & Reasoning Patterns"
+    ],
+    "Uses": "Improving factual accuracy and verifiability of AI-generated content, facilitating human oversight and trust, reducing the burden on human labelers."
+  },
+  {
+    "Pattern Name": "Retrieval Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) often suffer from factual inaccuracies, knowledge cutoff issues, and the tendency to 'hallucinate' information, as their knowledge is limited to their training data.",
+    "Context": "The task requires access to up-to-date, specific, or domain-specific factual information that is not reliably encoded within the LLM's parameters. External knowledge bases or search engines are available.",
+    "Solution": "Combine a retrieval mechanism with a generative LLM. First, a retriever (e.g., dense passage retriever, search engine API) queries an external knowledge source based on the input prompt. Then, the retrieved relevant documents or passages are provided as context to the LLM, which generates a response conditioned on both the original prompt and the retrieved information.",
+    "Result": "Significantly improves factual accuracy, reduces hallucinations, and allows the LLM to provide answers grounded in up-to-date or specific external knowledge. Enhances the trustworthiness and applicability of LLMs for knowledge-intensive tasks.",
+    "Related Patterns": [
+      "Browser-Assisted Question Answering (WebGPT's approach is an agentic form of RAG)",
+      "Knowledge & Reasoning Patterns",
+      "Tools Integration Patterns"
+    ],
+    "Uses": "Open-domain question answering, factual summarization, knowledge-intensive dialogue systems, reducing LLM 'hallucinations.'"
+  },
+  {
+    "Pattern Name": "Implicit Reliable Source Preference",
+    "Problem": "AI models, especially LLMs, can generate 'imitative falsehoods' by reproducing common misconceptions or unreliable information found in their vast training data, or by quoting from untrustworthy sources if given web access.",
+    "Context": "The AI system has access to diverse information sources, including potentially unreliable ones (e.g., raw web search results). The goal is to produce truthful and reliable answers.",
+    "Solution": "Design the training and evaluation pipeline to implicitly incentivize the model to prioritize and cite reliable sources. This can involve: 1. Filtering underlying search API results (e.g., Bing API filtering in WebGPT). 2. Explicitly instructing human labelers to rate the trustworthiness of references and prioritize answers supported by reliable sources during reward modeling data collection. 3. Designing the reward model to implicitly or explicitly penalize reliance on untrustworthy sources.",
+    "Result": "Reduces the generation of imitative falsehoods and improves the overall truthfulness and trustworthiness of the AI's answers by guiding it towards more credible information sources.",
+    "Related Patterns": [
+      "Reference Collection for Factual Verification",
+      "Human Feedback",
+      "Prompt Design Patterns (through instructions to labelers)"
+    ],
+    "Uses": "Improving factual accuracy and trustworthiness, combating misinformation, aligning AI with epistemic goals."
+  }
+]

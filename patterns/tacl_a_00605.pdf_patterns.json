@@ -1,0 +1,102 @@
+[
+  {
+    "Pattern Name": "InContext Retrieval-Augmented Language Model (InContext RALM)",
+    "Problem": "Large Language Models (LLMs) often generate factually inaccurate text, lack source attribution, struggle to incorporate up-to-date information, and perform poorly in uncommon or private domains. Existing Retrieval-Augmented Language Modeling (RALM) approaches require modifying the LM architecture or dedicated retraining, complicating deployment and preventing use with frozen or API-accessed models.",
+    "Context": "When deploying or using pre-trained LLMs, especially via API access, where architectural modifications or further training are not feasible or desirable, but grounding the model with external, relevant knowledge is crucial for accuracy, recency, and trustworthiness.",
+    "Solution": "Instead of modifying the LM architecture, pre-pend relevant grounding documents retrieved from an external knowledge source directly to the LLM's input text (context window). The LLM then processes this concatenated input (documents + original prefix) for generation without any internal architectural changes or further training.",
+    "Result": "Significantly improves LLM performance (e.g., perplexity), mitigates factual inaccuracies, provides a natural source attribution mechanism, and makes RALM widely applicable to off-the-shelf and API-accessed LMs, increasing the prevalence of LM grounding.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "In-Context Learning"
+    ],
+    "Uses": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Prompt Design Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Retrieval Stride Optimization",
+    "Problem": "In Retrieval-Augmented Language Models (RALMs), performing a retrieval operation at every generation step (i.e., for every token) can be computationally expensive due to the cost of calling the retriever and recomputing LM embeddings. This creates a trade-off between grounding frequency (performance) and runtime cost.",
+    "Context": "When designing a RALM system where the frequency of document retrieval impacts both the quality of grounding and the computational efficiency, and a balance between these factors is required.",
+    "Solution": "Introduce a 'retrieval stride' (s), which defines the number of tokens generated between consecutive retrieval operations. Instead of retrieving for every token (s=1), retrieval is performed only once every `s` tokens, and the retrieved documents are then used for the subsequent `s` generation steps.",
+    "Result": "Allows for balancing runtime costs and performance. Smaller strides (more frequent retrieval) generally lead to better LM performance by providing higher-resolution grounding, while larger strides reduce computational overhead. An optimal stride (e.g., s=4 in the paper) can be found to balance these concerns.",
+    "Related Patterns": [
+      "Latency Reduction",
+      "Cost Optimization"
+    ],
+    "Uses": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "MLOps Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Retrieval Query Length Optimization",
+    "Problem": "When constructing a query for a retriever in a Retrieval-Augmented Language Model (RALM), the length of the query (i.e., how many preceding tokens from the prefix are used) significantly impacts the relevance of the retrieved documents. Queries that are too short may lack sufficient context, while queries that are too long can dilute the importance of the most recent, and often most relevant, tokens for the current generation step.",
+    "Context": "When designing the query formulation for the retriever component in a RALM system, where the goal is to maximize the relevance of retrieved documents to the immediate generation task.",
+    "Solution": "Restrict the retrieval query to a specific number of the most recent tokens from the LM's prefix (e.g., the last `l` tokens). This involves empirically determining an optimal query length (`l`) that captures enough context without introducing irrelevant or diluting information.",
+    "Result": "Leads to improved LM performance by ensuring that the retrieval query is optimally focused on the most relevant contextual information for the upcoming generation. An optimal length (e.g., 32 tokens for BM25, 64 tokens for dense retrievers) balances contextualization and recency.",
+    "Related Patterns": [
+      "Context Window Management",
+      "Relevance Tuning"
+    ],
+    "Uses": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Prompt Design Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Sparse Retriever Preference for InContext RALM",
+    "Problem": "Choosing an effective and efficient document retriever for InContext Retrieval-Augmented Language Models (RALMs), especially in zero-shot settings or when computational resources are limited, as dense neural retrievers can be computationally intensive and may not always yield superior performance.",
+    "Context": "When implementing InContext RALM, particularly in scenarios where the LM is off-the-shelf, no specific retriever training data is available for the task, or computational cost is a significant factor.",
+    "Solution": "Utilize a sparse, lexical retriever (e.g., BM25) as the primary document selection mechanism. This involves leveraging keyword-based matching rather than dense vector representations.",
+    "Result": "The sparse retriever (BM25) can outperform more complex dense neural retrievers (e.g., BERT-based, Contriever, Spider) in zero-shot InContext RALM settings, while also being significantly cheaper to apply. This makes the overall InContext RALM system more accessible and cost-effective.",
+    "Related Patterns": [
+      "Cost Optimization",
+      "Zero-Shot Learning"
+    ],
+    "Uses": [
+      "MLOps Patterns",
+      "LLM-specific Patterns",
+      "Tools Integration Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "LM as Zero-Shot Reranker",
+    "Problem": "While an initial retriever (like BM25) can identify a set of potentially relevant documents, its lexical nature may limit its ability to semantically understand the query and prioritize the most useful document for the LLM's generation. Training a dedicated reranker is not always feasible (e.g., no training data, API-only LM, time constraints).",
+    "Context": "When an InContext RALM system needs to improve the selection of the most relevant document from a candidate set (e.g., top-k from an initial retriever) without requiring specific training for the reranking task, or when the main LLM is accessed via API and its internal log-probabilities are not directly accessible for fine-tuning.",
+    "Solution": "Use an off-the-shelf Language Model (LM), potentially a smaller or a different model than the main generation LM, to perform zero-shot reranking. For each candidate document `d_i` and a short segment of the prefix `y'` (representing the upcoming text or a relevant part of the query), the LM computes `p(y' | d_i, prefix)`. The document that maximizes this probability is selected.",
+    "Result": "Consistently better document selection and improved LM performance compared to using the initial retriever's top result alone. This method is highly flexible as it can leverage existing LMs, including smaller ones for efficiency, and works even when the main LM is only accessible via API (as only forward passes for scoring are needed).",
+    "Related Patterns": [
+      "Zero-Shot Learning",
+      "API Integration"
+    ],
+    "Uses": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Prompt Design Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Tools Integration Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Predictive Reranking (Trained LM-Dedicated Reranker)",
+    "Problem": "To achieve the highest possible performance in document selection for InContext Retrieval-Augmented Language Models (RALMs), generic rerankers or zero-shot LM rerankers might not fully capture the nuances of what makes a document most 'predictive' for the LLM's upcoming generation in a specific domain or task.",
+    "Context": "When maximum document selection performance is required for InContext RALM, and domain-specific training data is available to specialize a reranking component. This is often applicable where the underlying LM is frozen, but the retrieval/reranking pipeline can be optimized.",
+    "Solution": "Train a dedicated reranker (e.g., a fine-tuned RoBERTa-base classifier) to predict the relevance of a document `d_i` for predicting the upcoming text `y` given the current prefix `x_sj`. Training examples are generated by sampling prefixes and their upcoming text `y` from training data, retrieving candidate documents, and using the main LM's `p(y | d_i, x_sj)` as a target signal for relevance. The reranker then learns to output scores that resemble these probabilities.",
+    "Result": "Leads to significant gains in LM performance, outperforming both initial retrievers and zero-shot LM rerankers. This method allows for domain-specific optimization of document selection, fully leveraging available training data to tailor the reranker to the exact needs of the RALM task.",
+    "Related Patterns": [
+      "Supervised Fine-Tuning",
+      "Domain Adaptation"
+    ],
+    "Uses": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "MLOps Patterns"
+    ]
+  }
+]

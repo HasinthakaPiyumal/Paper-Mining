@@ -1,0 +1,269 @@
+[
+  {
+    "Pattern Name": "LLM as Planner",
+    "Problem": "Traditional embodied agents require extensive labeled data (language instructions and gold trajectories) for each task, hindering versatility and quick learning of new tasks.",
+    "Context": "Designing embodied agents that can follow natural language instructions to complete complex tasks in visually-perceived, often partially-observable, environments. The goal is to reduce data cost and improve sample efficiency.",
+    "Solution": "Leverage Large Language Models (LLMs) to directly generate plans (e.g., high-level plans or sequences of subgoals) for the agent's actions, rather than requiring the agent to learn plans from scratch through many demonstrations. This utilizes the LLM's pre-trained knowledge and reasoning capabilities.",
+    "Result": "Enables few-shot planning, significantly reducing the amount of paired training data needed. Agents can quickly learn new tasks and achieve competitive performance with less data compared to methods requiring full training datasets. Reduces the need for extensive environment-specific knowledge a priori.",
+    "Related Patterns": [
+      "Few-shot Learning (with LLMs)",
+      "In-Context Learning",
+      "Hierarchical Planning",
+      "Grounded Planning / Environmental Grounding",
+      "Dynamic Replanning",
+      "Prompt Engineering",
+      "LLM as Skill Ranker / Admissible Action Filter (contrasted)"
+    ],
+    "Uses": [
+      "Generating high-level plans for embodied agents",
+      "Decision-making in complex environments",
+      "Instruction following for robots"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Planning Patterns",
+      "Agentic AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Few-shot Learning (with LLMs)",
+    "Problem": "Training AI models for new tasks typically requires a large amount of labeled data, which is costly and time-consuming to acquire, especially for diverse or complex tasks.",
+    "Context": "Developing AI systems, particularly those using Large Language Models (LLMs), to perform new tasks efficiently with minimal task-specific labeled examples. This is crucial for achieving versatility and rapid adaptation in embodied agents.",
+    "Solution": "Adapt LLMs to new tasks by providing only a small number of demonstration examples (paired inputs and desired outputs) within the prompt, without requiring any parameter updates to the underlying LLM. This leverages the LLM's vast pre-trained knowledge to generalize from limited examples.",
+    "Result": "Dramatically reduces data annotation costs and development time. Enables models to learn and perform new tasks quickly and achieve competitive performance even with a fraction of the data typically required.",
+    "Related Patterns": [
+      "In-Context Learning",
+      "Prompt Engineering",
+      "Dynamic In-Context Example Retrieval",
+      "LLM as Planner"
+    ],
+    "Uses": [
+      "Rapid adaptation of LLMs to new tasks",
+      "Reducing data requirements for embodied agents",
+      "Quick prototyping of AI functionalities",
+      "Building versatile agents"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Classical AI"
+    ]
+  },
+  {
+    "Pattern Name": "In-Context Learning",
+    "Problem": "Adapting a pre-trained Large Language Model (LLM) to a specific downstream task without costly fine-tuning or parameter updates, especially when only a few examples are available.",
+    "Context": "Utilizing the capabilities of large, pre-trained language models for various tasks by providing task-specific instructions and demonstrations directly within the input prompt. This method is used when parameter updates are undesirable or infeasible.",
+    "Solution": "Formulate the task as a sequence of input-output examples or instructions, which are then concatenated with the actual test input and fed to the LLM. The LLM then generates the output based on the provided context, inferring the task from the examples.",
+    "Result": "Enables zero-shot or few-shot adaptation of LLMs to new tasks without model retraining, saving significant computational resources and development time. Allows for flexible task definition and rapid experimentation.",
+    "Related Patterns": [
+      "Few-shot Learning (with LLMs)",
+      "Prompt Engineering",
+      "Dynamic In-Context Example Retrieval",
+      "LLM as Planner"
+    ],
+    "Uses": [
+      "Adapting LLMs for classification, generation, planning, summarization, and other NLP tasks",
+      "Enabling few-shot learning for embodied agents"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Prompt Design Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Hierarchical Planning",
+    "Problem": "Complex, long-horizon tasks for embodied agents are difficult to plan directly with a single-level planner, leading to inefficiency, unmanageable state spaces, and difficulty in reasoning about high-level goals.",
+    "Context": "Designing planning systems for embodied agents (e.g., robots) that need to accomplish complex tasks involving multiple steps and interactions in dynamic environments.",
+    "Solution": "Decompose the overall task into a hierarchy of plans. A high-level planner generates a sequence of abstract subgoals (e.g., 'Navigate to fridge', 'Pickup potato'). A separate low-level planner then translates each subgoal into a sequence of primitive actions executable by the agent (e.g., 'move forward 0.1m', 'turn left 10 degrees', 'grasp').",
+    "Result": "Simplifies complex planning problems by breaking them into manageable sub-problems. Improves efficiency and robustness, as the low-level planner can focus on execution details while the high-level planner focuses on strategic goal achievement. Allows for modularity and easier integration of different planning components.",
+    "Related Patterns": [
+      "LLM as Planner",
+      "Grounded Planning / Environmental Grounding",
+      "Dynamic Replanning",
+      "Modular AI System Design"
+    ],
+    "Uses": [
+      "Embodied AI",
+      "Robotics",
+      "Complex task automation",
+      "Long-horizon decision-making"
+    ],
+    "Category": [
+      "Planning Patterns",
+      "Classical AI"
+    ]
+  },
+  {
+    "Pattern Name": "Grounded Planning / Environmental Grounding",
+    "Problem": "Plans generated by language models, while plausible, often lack 'physical grounding' to the specific, dynamic, and partially-observable environment the agent is operating in, leading to unattainable or incorrect actions.",
+    "Context": "When using Large Language Models (LLMs) for planning in embodied AI systems where the generated plans must be executable and relevant to the agent's current physical surroundings and perceived objects.",
+    "Solution": "Enhance the LLM's planning process by explicitly incorporating real-time environmental observations (e.g., a list of visible objects, their properties, or a scene description) into the prompt or as a constraint. This feedback loop allows the LLM to generate plans that are physically grounded and adaptable to the current state of the environment.",
+    "Result": "Produces more robust and executable plans that are relevant to the agent's actual environment. Helps overcome issues like referring to non-existent objects, suggesting impossible actions, or disambiguating objects based on context. Enables the agent to dynamically adapt its plan based on what it perceives.",
+    "Related Patterns": [
+      "Dynamic Replanning",
+      "Prompt Engineering",
+      "LLM as Planner",
+      "Tools Integration Patterns (Object Detector)"
+    ],
+    "Uses": [
+      "Embodied agents",
+      "Robotics",
+      "Vision-and-language navigation",
+      "Interactive AI systems that need to operate in physical environments"
+    ],
+    "Category": [
+      "Agentic AI Patterns",
+      "Knowledge & Reasoning Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Dynamic Replanning",
+    "Problem": "Static plans generated upfront by AI models may become invalid or suboptimal due to unforeseen environmental changes, execution failures, or new observations during task execution, leading to agents getting stuck or failing.",
+    "Context": "Embodied agents operating in dynamic, partially-observable, or unpredictable environments where an initial plan might not remain optimal or feasible throughout the entire task execution.",
+    "Solution": "Implement a mechanism to monitor the agent's progress and environmental state during plan execution. If the agent encounters a failure (e.g., fails to execute an action, gets stuck, or takes too long) or new critical information is perceived, trigger a replanning phase. The AI planner (e.g., an LLM) then generates a new, updated plan or a continuation of the existing plan, incorporating the latest environmental observations and execution status.",
+    "Result": "Increases the robustness and adaptability of embodied agents to real-world complexities. Allows agents to recover from failures, adapt to changing environments, and achieve goals that would be impossible with static planning. Creates a closed-loop system between the agent, environment, and planner.",
+    "Related Patterns": [
+      "Grounded Planning / Environmental Grounding",
+      "LLM as Planner",
+      "Hierarchical Planning",
+      "Prompt Engineering"
+    ],
+    "Uses": [
+      "Embodied AI",
+      "Robotics",
+      "Autonomous navigation",
+      "Long-horizon task execution in uncertain environments"
+    ],
+    "Category": [
+      "Agentic AI Patterns",
+      "Planning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Prompt Engineering",
+    "Problem": "Large Language Models (LLMs) are highly sensitive to the exact wording, structure, and content of input prompts, making it challenging to reliably elicit desired behaviors or optimal performance for specific tasks.",
+    "Context": "Utilizing LLMs for various downstream tasks, especially in few-shot or zero-shot settings, where the quality of the LLM's output heavily depends on how the task is presented and demonstrated in the prompt.",
+    "Solution": "Systematically design, test, and refine the input prompt given to an LLM. This involves crafting clear instructions, selecting effective in-context examples, specifying output formats, and potentially including environmental context or constraints to guide the LLM towards generating accurate, relevant, and well-structured responses.",
+    "Result": "Significantly improves the accuracy, relevance, and consistency of LLM outputs for specific tasks. Unlocks the full potential of pre-trained LLMs by aligning their internal knowledge with the task requirements, often without needing model fine-tuning.",
+    "Related Patterns": [
+      "In-Context Learning",
+      "Few-shot Learning (with LLMs)",
+      "Dynamic In-Context Example Retrieval",
+      "Logit Bias / Constrained Generation",
+      "Grounded Planning / Environmental Grounding"
+    ],
+    "Uses": [
+      "Optimizing LLM performance for any task (e.g., planning, summarization, Q&A, code generation)",
+      "Adapting LLMs to new domains",
+      "Controlling output format and style"
+    ],
+    "Category": [
+      "Prompt Design Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Dynamic In-Context Example Retrieval",
+    "Problem": "Providing a fixed set of in-context examples to an LLM for few-shot learning might not be optimal for all test cases, as different examples might be more relevant or informative for different inputs.",
+    "Context": "Applying Few-shot Learning or In-Context Learning with LLMs where the effectiveness of the demonstrations can vary significantly depending on the similarity between the example and the current test task.",
+    "Solution": "Instead of using a static set of examples, dynamically select the most relevant in-context examples for each specific test input. This typically involves using a retriever (e.g., k-nearest neighbors based on embedding similarity) to find examples from a larger pool of training examples that are semantically similar to the current test instruction. These retrieved examples are then included in the prompt.",
+    "Result": "Improves the performance and robustness of in-context learning by providing the LLM with demonstrations that are highly relevant to the current task. Reduces the 'sensitivity' to example choice and leads to more consistent high-quality outputs.",
+    "Related Patterns": [
+      "In-Context Learning",
+      "Few-shot Learning (with LLMs)",
+      "Prompt Engineering"
+    ],
+    "Uses": [
+      "Enhancing few-shot learning for LLMs",
+      "Improving prompt effectiveness",
+      "Adapting LLMs to diverse task variations within a domain"
+    ],
+    "Category": [
+      "Prompt Design Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Logit Bias / Constrained Generation",
+    "Problem": "LLMs can generate arbitrary text, which may include irrelevant or invalid tokens (e.g., actions not allowed, objects not present) when trying to generate structured outputs like plans or specific entity mentions. This can lead to unexecutable plans or incorrect information.",
+    "Context": "Using LLMs to generate outputs where there are specific constraints on the vocabulary, structure, or entities that should be used, such as generating a plan with a predefined set of actions or mentioning only observed objects.",
+    "Solution": "Apply 'logit biases' during the LLM's generation process. This involves programmatically increasing or decreasing the probability (logits) of specific tokens before sampling. For example, boosting the logits of allowed action tokens or observed object names, and potentially suppressing irrelevant tokens, to guide the LLM towards generating valid and grounded outputs.",
+    "Result": "Constrains the LLM's output to a desired vocabulary or structure, increasing the likelihood of generating valid and executable plans. Improves grounding by prioritizing observed objects and allowed actions. Reduces errors and makes the LLM's output more reliable for downstream systems.",
+    "Related Patterns": [
+      "Prompt Engineering",
+      "Grounded Planning / Environmental Grounding",
+      "LLM as Planner"
+    ],
+    "Uses": [
+      "Guiding LLM output for structured data generation",
+      "Ensuring valid actions in planning",
+      "Disambiguating object references",
+      "Enforcing grammar or format constraints"
+    ],
+    "Category": [
+      "Prompt Design Patterns",
+      "LLM-specific Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "LLM as Auxiliary Helper",
+    "Problem": "Main AI models (e.g., vision-language models, navigation agents) may lack sufficient world knowledge or reasoning capabilities to infer crucial information needed for their primary task, such as likely object locations or relevant landmarks.",
+    "Context": "Enhancing the performance of an existing AI system by leveraging the commonsense knowledge and reasoning abilities of an LLM, without making the LLM the primary decision-maker or planner.",
+    "Solution": "Use an LLM to generate supplementary information or provide relevant context that assists a separate, specialized model in its core task. For example, an LLM might be prompted to suggest likely locations for a goal object, generate a list of landmarks from a navigation instruction, or provide commonsense explanations. This information is then fed into the main model.",
+    "Result": "Improves the robustness and intelligence of the main AI system by augmenting it with external knowledge and reasoning. Allows the main model to focus on its specialized task (e.g., vision processing, low-level control) while benefiting from the LLM's broader understanding.",
+    "Related Patterns": [
+      "Tools Integration Patterns",
+      "Knowledge & Reasoning Patterns"
+    ],
+    "Uses": [
+      "Providing commonsense knowledge for navigation",
+      "Inferring object properties",
+      "Generating explanations",
+      "Augmenting perception modules"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Tools Integration Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "LLM as Skill Ranker / Admissible Action Filter",
+    "Problem": "In environments with a predefined set of admissible actions or skills, it's challenging to select the most appropriate action at each step, especially when the choice depends on natural language instructions and environmental context.",
+    "Context": "Embodied agents operating in environments where a comprehensive list of all possible (admissible) actions or skills is known a priori. The task is to choose the best action from this list given the current state and instruction.",
+    "Solution": "Instead of generating actions directly, use an LLM to rank or filter a pre-enumerated list of admissible actions or skills based on the natural language instruction and potentially the current environmental state. The LLM evaluates each candidate action for its relevance and likelihood of contributing to the task goal.",
+    "Result": "Simplifies action selection by leveraging the LLM's understanding of language and context to choose from a constrained set of options. Can be effective in environments where admissible actions are easily enumerable.",
+    "Related Patterns": [
+      "LLM as Planner (contrasted)",
+      "Tools Integration Patterns"
+    ],
+    "Uses": [
+      "Action selection in embodied agents",
+      "Ranking potential responses",
+      "Filtering options in interactive systems"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Planning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Modular AI System Design",
+    "Problem": "Building complex AI systems for tasks like embodied instruction following often involves diverse functionalities (e.g., perception, planning, control, language understanding), making a monolithic design difficult to manage, debug, and improve.",
+    "Context": "Developing AI systems that integrate multiple specialized components, where each component handles a distinct part of the overall task, allowing for independent development, optimization, and replacement.",
+    "Solution": "Design the AI system as a collection of loosely coupled modules, each responsible for a specific functionality. For example, separating high-level planning, low-level planning, object detection, and perception into distinct modules with well-defined interfaces. This allows for components to be developed or replaced independently.",
+    "Result": "Enhances system flexibility, maintainability, and scalability. Facilitates independent development and optimization of components. Allows for easier integration of new technologies (e.g., a new LLM planner or a different object detector) without overhauling the entire system.",
+    "Related Patterns": [
+      "Tools Integration Patterns",
+      "Hierarchical Planning"
+    ],
+    "Uses": [
+      "Embodied AI",
+      "Robotics",
+      "MLOps (for managing components)",
+      "Complex multi-modal AI systems"
+    ],
+    "Category": [
+      "MLOps Patterns",
+      "Tools Integration Patterns"
+    ]
+  }
+]

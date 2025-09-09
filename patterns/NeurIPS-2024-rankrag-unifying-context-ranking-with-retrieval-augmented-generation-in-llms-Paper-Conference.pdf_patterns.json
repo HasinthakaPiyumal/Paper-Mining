@@ -1,0 +1,116 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) often lack access to up-to-date or domain-specific knowledge, can hallucinate, and struggle with long-tail information, requiring frequent, costly retraining for knowledge updates or domain adaptation.",
+    "Context": "When LLMs need to leverage external, dynamic, or specialized knowledge beyond their pre-training data, or when grounded, attributable, and up-to-date responses are critical for knowledge-intensive tasks.",
+    "Solution": "Integrate an external retrieval mechanism with an LLM. A retriever component first fetches relevant information (e.g., documents, passages, facts) from a vast, up-to-date corpus based on a given query or context. These retrieved contexts are then provided as additional input to the LLM, which uses this information to generate a more informed, accurate, and grounded response.",
+    "Result": "Enables LLMs to access and incorporate external knowledge, reducing hallucinations, providing current information, and adapting to specific domains without modifying the model's weights. Enhances the factual accuracy and trustworthiness of generated content.",
+    "Related Patterns": [
+      "Unified LLM for Retrieve-Rerank-Generate",
+      "Context Reranking with LLM",
+      "Multi-Stage Instruction Tuning"
+    ],
+    "Uses": [
+      "Knowledge-intensive Question Answering (QA)",
+      "Fact Verification",
+      "Conversational AI",
+      "Personalized Content Generation",
+      "Document Summarization"
+    ],
+    "Category": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Unified LLM for Retrieve-Rerank-Generate",
+    "Problem": "Traditional RAG pipelines often rely on separate, specialized models for retrieval, reranking, and generation. This can lead to inefficiencies, limited zero-shot generalization for external rerankers, and challenges in managing the trade-off between recall (with large context sets) and precision/efficiency (with small, highly relevant context sets).",
+    "Context": "When aiming to streamline and enhance the RAG pipeline by having a single LLM perform both context ranking (reranking) and answer generation, especially to improve robustness against imperfect initial retrieval and leverage the LLM's inherent reasoning capabilities across stages.",
+    "Solution": "An LLM is instruction-tuned to perform both context ranking (reranking) and answer generation within a 'Retrieve-Rerank-Generate' inference pipeline. The steps are: 1. An initial retriever fetches a broader set of 'top-N' contexts. 2. The instruction-tuned LLM then evaluates these 'top-N' contexts for relevance to the query, reranks them, and selects a refined 'top-k' subset (where k < N). 3. The *same* instruction-tuned LLM then uses these 'top-k' contexts to generate the final answer.",
+    "Result": "Significantly improves the quality of retrieved contexts and the accuracy of generated answers, outperforming traditional RAG setups with separate rerankers. Enhances zero-shot generalization, robustness to various retrievers, and data efficiency for ranking, as the model's ranking and generation capabilities mutually enhance each other.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Context Reranking with LLM",
+      "Multi-Stage Instruction Tuning",
+      "Unified Input Format for Multi-Task Instruction Tuning"
+    ],
+    "Uses": [
+      "Knowledge-intensive NLP tasks requiring high accuracy",
+      "Open-domain Question Answering (QA)",
+      "Fact Verification",
+      "Conversational QA in noisy retrieval environments"
+    ],
+    "Category": [
+      "Generative AI Patterns",
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "Planning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Multi-Stage Instruction Tuning",
+    "Problem": "Training LLMs for complex, specialized tasks (like advanced RAG) while retaining strong general instruction-following capabilities can be challenging. A single-stage tuning approach might overfit to specific tasks or dilute general abilities.",
+    "Context": "When developing LLMs that require both broad instruction-following proficiency and deep, integrated expertise in particular multi-faceted tasks, suggesting a progressive skill acquisition approach.",
+    "Solution": "The LLM undergoes a structured training process in multiple distinct stages: \n1.  **Stage I (Supervised Fine-Tuning - SFT):** The LLM is initially fine-tuned on a diverse blend of high-quality, general instruction-following datasets (e.g., conversational data, long-form QA, LLM-generated instructions). This stage aims to instill robust basic instruction-following abilities and improve zero-shot performance across a wide range of tasks.\n2.  **Stage II (Unified Instruction-Tuning for Specialized Tasks):** Building upon the foundation from Stage I, the LLM is further instruction-tuned on a specialized blend of datasets that specifically target the desired complex capabilities (e.g., context-rich QA, retrieval-augmented QA, context ranking, retrieval-augmented ranking data, often unified under a common input format).",
+    "Result": "Produces LLMs with both strong general instruction-following capabilities and enhanced, integrated performance on specialized, complex tasks. This staged approach allows for systematic skill development, preventing catastrophic forgetting of general abilities while fostering deep expertise.",
+    "Related Patterns": [
+      "Instruction Tuning",
+      "Unified LLM for Retrieve-Rerank-Generate",
+      "Unified Input Format for Multi-Task Instruction Tuning"
+    ],
+    "Uses": [
+      "Developing specialized LLMs from foundational models",
+      "Enhancing RAG capabilities with integrated ranking and generation",
+      "Improving zero-shot generalization across diverse NLP tasks"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Generative AI Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Context Reranking with LLM",
+    "Problem": "Initial retrieval mechanisms (e.g., dense retrievers) often return a list of contexts that may contain irrelevant or noisy passages alongside relevant ones. Providing too many contexts can overwhelm the LLM and degrade generation quality, while relying solely on a small 'top-k' from initial retrieval might compromise recall.",
+    "Context": "In Retrieval-Augmented Generation (RAG) pipelines, particularly when the quality of initial retrieval is variable, and there's a need to precisely filter and prioritize the most relevant contexts before they are consumed by the LLM for answer generation.",
+    "Solution": "An LLM is specifically trained or adapted to act as a reranker. After an initial retriever fetches a set of 'top-N' candidate contexts, the LLM assesses the relevance of each context (or a small batch of contexts) to the query. This assessment can be done by having the LLM generate a relevance score or a binary 'True/False' output indicating relevance. Based on these scores, the contexts are reordered, and a smaller, highly relevant subset of 'top-k' contexts is selected for the final generation step.",
+    "Result": "Significantly improves the precision of the contexts fed to the LLM, leading to more accurate and less error-prone generations. Enhances the robustness of the RAG system to noisy initial retrieval and can achieve strong reranking performance even with a modest amount of ranking-specific training data.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Unified LLM for Retrieve-Rerank-Generate",
+      "Instruction Tuning for RAG Enhancement"
+    ],
+    "Uses": [
+      "Filtering noisy retrieved documents in RAG",
+      "Improving precision in knowledge-intensive QA",
+      "Enhancing relevance in document summarization",
+      "Information retrieval systems"
+    ],
+    "Category": [
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Unified Input Format for Multi-Task Instruction Tuning",
+    "Problem": "When instruction-tuning an LLM for multiple diverse tasks (e.g., standard QA, conversational QA, context ranking, retrieval-augmented ranking) that naturally have different input/output structures, it can be challenging to blend these tasks effectively and enable knowledge transfer. Inconsistent formats can confuse the model and hinder learning.",
+    "Context": "Instruction tuning an LLM for a suite of related but structurally distinct NLP tasks, aiming for a single model to acquire multiple capabilities and benefit from synergistic learning across these tasks.",
+    "Solution": "All diverse training tasks are cast into a single, standardized input-output format. This involves designing specific instruction templates that consistently structure the 'question/instruction', 'context', and 'target output/answer' for every task type. For example, a context ranking task (e.g., 'Is passage relevant to question?') and a QA task (e.g., 'Answer question from passage') are both framed as a question (x), context (c), and target output (y), facilitating unified training and knowledge transfer.",
+    "Result": "Enables an LLM to effectively learn and generalize across multiple diverse tasks with a unified instruction-tuning approach. Facilitates knowledge transfer between tasks, allowing the model to leverage insights from one task to improve another. Simplifies data preparation and the training pipeline for multi-task learning.",
+    "Related Patterns": [
+      "Instruction Tuning",
+      "Multi-Stage Instruction Tuning",
+      "Unified LLM for Retrieve-Rerank-Generate"
+    ],
+    "Uses": [
+      "Multi-task learning for LLMs",
+      "Instruction tuning for complex RAG frameworks",
+      "Developing generalist LLMs with specialized skills",
+      "Creating robust models for diverse NLP benchmarks"
+    ],
+    "Category": [
+      "Prompt Design Patterns",
+      "LLM-specific Patterns"
+    ]
+  }
+]

@@ -1,0 +1,306 @@
+[
+  {
+    "Pattern Name": "Plan-and-Solve Paradigm",
+    "Problem": "LLMs need to unleash their reasoning ability to handle complex tasks.",
+    "Context": "Complex tasks that require LLMs to perform multi-step reasoning.",
+    "Solution": "Prompt LLMs to first generate a plan and then execute each reasoning step. This allows LLMs to decompose complex reasoning tasks into a series of subtasks and solve them step by step.",
+    "Result": "LLMs can decompose complex reasoning tasks into a series of subtasks and solve them step by step, improving their ability to handle complexity.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Tree of Thoughts",
+      "Graph of Thoughts",
+      "Planning Module (RoG Specific)"
+    ],
+    "Uses": [
+      "Complex reasoning tasks"
+    ],
+    "Category": "Planning Patterns"
+  },
+  {
+    "Pattern Name": "Knowledge Graph Augmentation",
+    "Problem": "Large Language Models (LLMs) lack up-to-date knowledge and experience hallucinations during reasoning, which can lead to incorrect reasoning processes and diminish their performance and trustworthiness.",
+    "Context": "LLMs are used for reasoning tasks where factual accuracy, up-to-date information, and trustworthiness are critical (e.g., legal judgment, medical diagnosis, KGQA).",
+    "Solution": "Incorporate Knowledge Graphs (KGs), which capture vast amounts of facts in a structured format, to offer a reliable source of knowledge for reasoning.",
+    "Result": "Tackles issues of lack of knowledge and hallucinations, improving the reasoning ability and trustworthiness of LLMs by providing a faithful knowledge source.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation",
+      "Reasoning on Graphs (RoG Framework)",
+      "Knowledge-Driven CoT (KDCoT)"
+    ],
+    "Uses": [
+      "Improving LLM reasoning ability",
+      "Knowledge Graph Question Answering (KGQA)",
+      "Reducing hallucinations"
+    ],
+    "Category": "Knowledge & Reasoning Patterns"
+  },
+  {
+    "Pattern Name": "Semantic Parsing (for KGQA)",
+    "Problem": "Obtaining answers based on knowledge from Knowledge Graphs (KGs) where high accuracy and interpretability are desired, but direct LLM reasoning might be less precise. Generated logical queries can often be non-executable and yield no answers due to syntax and semantic limitations.",
+    "Context": "Knowledge Graph Question Answering (KGQA) tasks requiring precise interaction with structured knowledge.",
+    "Solution": "Use LLMs to convert natural language questions into formal logical queries (e.g., SPARQL) that are executed on KGs to obtain answers.",
+    "Result": "Can generate more accurate and interpretable results by leveraging reasoning on KGs. However, the generated logical queries can often be non-executable and yield no answers.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation",
+      "Reasoning on Graphs (RoG Framework)"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Generating structural queries for KGs"
+    ],
+    "Category": "Classical AI"
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG - General)",
+    "Problem": "LLMs are limited by their static training data, leading to knowledge cut-offs, hallucinations, and inability to access external or proprietary information, making them prone to errors in knowledge-intensive tasks.",
+    "Context": "LLMs need to provide responses based on current, specific, or external factual information not present in their training data, particularly for Knowledge Graph Question Answering (KGQA).",
+    "Solution": "Retrieve relevant external information (e.g., triples from KGs) as knowledge context and use LLMs to obtain the final answers.",
+    "Result": "More flexible than semantic parsing and exploits the ability of LLMs for reasoning. However, it often only treats KGs as factual knowledge bases and overlooks structural information.",
+    "Related Patterns": [
+      "Knowledge Graph Augmentation",
+      "Reasoning on Graphs (RoG Framework)",
+      "Knowledge-Driven CoT (KDCoT)"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Improving reasoning performance with external facts"
+    ],
+    "Category": "Generative AI Patterns"
+  },
+  {
+    "Pattern Name": "Reasoning on Graphs (RoG Framework)",
+    "Problem": "LLMs suffer from hallucinations and lack of knowledge, and existing KG-based methods only treat KGs as factual knowledge bases, overlooking the importance of their structural information for faithful and interpretable reasoning.",
+    "Context": "Synergizing LLMs with KGs to conduct faithful and interpretable reasoning for complex tasks, particularly Knowledge Graph Question Answering (KGQA).",
+    "Solution": "A planning-retrieval-reasoning framework where RoG first generates relation paths grounded by KGs as faithful plans via a planning module. These plans are then used to retrieve valid reasoning paths from KGs by a retrieval module for LLMs to conduct faithful reasoning via a reasoning module. It also distills knowledge from KGs to improve LLM reasoning through training.",
+    "Result": "Achieves state-of-the-art performance on KG reasoning tasks and generates faithful and interpretable reasoning results. RoG not only distills knowledge from KGs to improve reasoning ability but also allows seamless integration with any arbitrary LLMs during inference.",
+    "Related Patterns": [
+      "Plan-and-Solve Paradigm",
+      "Knowledge Graph Augmentation",
+      "Retrieval-Augmented Generation",
+      "Planning Module (RoG Specific)",
+      "Retrieval Module (RoG Specific)",
+      "Reasoning Module (RoG Specific)"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Faithful and interpretable reasoning"
+    ],
+    "Category": "Knowledge & Reasoning Patterns"
+  },
+  {
+    "Pattern Name": "Planning Module (RoG Specific)",
+    "Problem": "LLMs are prone to generating incorrect plans due to hallucination issues, leading to wrong answers, especially when they have zero knowledge of specific relations contained in KGs.",
+    "Context": "Within the RoG framework, LLMs need to generate reliable, KG-grounded plans for multi-step reasoning, specifically for KGQA tasks.",
+    "Solution": "Design a simple instruction template that prompts LLMs to generate relation paths (a sequence of relations) structurally formatted as a sentence. These relation paths are grounded by KGs and serve as faithful plans. This module is optimized via 'planning optimization' to distill KG knowledge into the LLM.",
+    "Result": "Generates faithful relation paths as plans, ensuring plans are grounded by KGs, which enables LLMs to conduct faithful and interpretable reasoning on graphs. This module can be plug-and-play with different LLMs during inference.",
+    "Related Patterns": [
+      "Plan-and-Solve Paradigm",
+      "Reasoning on Graphs (RoG Framework)",
+      "Planning Optimization (RoG Specific)",
+      "Plug-and-Play Planning Module"
+    ],
+    "Uses": [
+      "Generating KG-grounded plans",
+      "Multi-hop question answering",
+      "Ensuring plan faithfulness"
+    ],
+    "Category": "Planning Patterns"
+  },
+  {
+    "Pattern Name": "Retrieval Module (RoG Specific)",
+    "Problem": "Given a high-level plan (a relation path), the system needs to find concrete, factual instances of that plan within the Knowledge Graph to support reasoning.",
+    "Context": "Following a generated plan (relation path) to gather specific factual evidence from a Knowledge Graph for LLM reasoning, as part of the RoG framework.",
+    "Solution": "Conduct retrieval by finding paths in the KG that start from the question entities and follow the relation paths. A constrained breadth-first search is adopted to retrieve reasoning paths (sequences of entities and relations).",
+    "Result": "Retrieves valid reasoning paths from KGs according to the plans, providing concrete, factual evidence for LLM reasoning.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation",
+      "Reasoning on Graphs (RoG Framework)"
+    ],
+    "Uses": [
+      "Instantiating relation path plans with factual data",
+      "Extracting factual evidence from KGs for LLM reasoning"
+    ],
+    "Category": "Tools Integration Patterns"
+  },
+  {
+    "Pattern Name": "Reasoning Module (RoG Specific)",
+    "Problem": "Even with retrieved reasoning paths, LLMs might not correctly understand them or struggle to identify important paths from noisy or irrelevant ones, leading to incorrect answers.",
+    "Context": "LLMs need to synthesize information from a set of retrieved reasoning paths to generate accurate answers and interpretable explanations, as part of the RoG framework.",
+    "Solution": "Takes the question and a set of retrieved reasoning paths (formatted as structural sentences) as input. A reasoning instruction prompt guides LLMs to conduct reasoning based on these paths, identifying important ones and generating answers. This module is optimized via 'retrieval-reasoning optimization'.",
+    "Result": "Enables LLMs to identify important reasoning paths, filter out noise, conduct faithful reasoning, and generate answers with interpretable explanations, improving precision despite potential noise in retrieved data.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG Framework)",
+      "Retrieval-Reasoning Optimization (RoG Specific)",
+      "Few-Shot Prompting (for Explanations)"
+    ],
+    "Uses": [
+      "Generating answers from retrieved evidence",
+      "Producing interpretable explanations",
+      "Filtering noisy information for reasoning"
+    ],
+    "Category": "LLM-specific Patterns"
+  },
+  {
+    "Pattern Name": "Planning Optimization (RoG Specific)",
+    "Problem": "LLMs have zero knowledge of relations contained in KGs and therefore cannot directly generate faithful relation paths grounded by KGs as plans.",
+    "Context": "Training LLMs within the RoG framework to generate valid and faithful plans (relation paths) that are grounded in a target Knowledge Graph.",
+    "Solution": "An instruction tuning task that distills knowledge from KGs into LLMs to generate faithful relation paths as plans. This is achieved by minimizing the KL divergence with the posterior distribution of faithful relation paths, which can be approximated by the valid (shortest) relation paths in KGs.",
+    "Result": "Maximizes the probability of LLMs generating faithful relation paths through distilling the knowledge from KGs, enabling more reliable planning.",
+    "Related Patterns": [
+      "Instruction Tuning",
+      "Planning Module (RoG Specific)"
+    ],
+    "Uses": [
+      "Fine-tuning LLMs for domain-specific planning",
+      "Knowledge distillation into LLMs"
+    ],
+    "Category": "MLOps Patterns"
+  },
+  {
+    "Pattern Name": "Retrieval-Reasoning Optimization (RoG Specific)",
+    "Problem": "LLMs might not understand the retrieved reasoning paths correctly and conduct reasoning based on them, leading to errors.",
+    "Context": "Training LLMs within the RoG framework to effectively reason based on a set of retrieved reasoning paths to produce correct answers.",
+    "Solution": "An instruction tuning task that enables LLMs to conduct reasoning based on the retrieved reasoning paths. This maximizes the probability of LLMs generating correct answers based on the retrieved reasoning paths, potentially leveraging frameworks like FiD for multiple paths.",
+    "Result": "Enables LLMs to conduct faithful reasoning based on retrieved paths and generate interpretable results, improving their ability to utilize external evidence.",
+    "Related Patterns": [
+      "Instruction Tuning",
+      "Reasoning Module (RoG Specific)"
+    ],
+    "Uses": [
+      "Fine-tuning LLMs for retrieval-augmented reasoning",
+      "Improving answer generation from external evidence"
+    ],
+    "Category": "MLOps Patterns"
+  },
+  {
+    "Pattern Name": "ReACT (Reasoning and Acting)",
+    "Problem": "LLMs often operate in a static, pre-trained knowledge space and cannot dynamically interact with external environments to get the latest knowledge for reasoning.",
+    "Context": "LLMs performing complex tasks that require dynamic information retrieval and interaction with external tools or environments.",
+    "Solution": "Treats LLMs as agents which interact with the environment to get the latest knowledge for reasoning.",
+    "Result": "Enables LLMs to dynamically gather up-to-date knowledge for reasoning through environmental interaction.",
+    "Related Patterns": [
+      "ThinkonGraph",
+      "KGAgent"
+    ],
+    "Uses": [
+      "Dynamic knowledge acquisition",
+      "Tool use by LLMs",
+      "Agentic behavior"
+    ],
+    "Category": "Agentic AI Patterns"
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "LLMs need to harness their reasoning ability to handle complex tasks, often providing incorrect answers or superficial reasoning.",
+    "Context": "Improving LLM performance on complex reasoning tasks (e.g., arithmetic, common sense, symbolic reasoning) without extensive fine-tuning.",
+    "Solution": "Enables LLMs to generate a reasoning chain (intermediate reasoning steps) that could be helpful to reasoning, typically through prompting.",
+    "Result": "Elicits reasoning in large language models, leading to more accurate answers and providing transparency into the model's thought process.",
+    "Related Patterns": [
+      "Plan-and-Solve Paradigm",
+      "Tree of Thoughts",
+      "Graph of Thoughts"
+    ],
+    "Uses": [
+      "Complex reasoning tasks",
+      "Improving explainability of LLM outputs"
+    ],
+    "Category": "Prompt Design Patterns"
+  },
+  {
+    "Pattern Name": "Tree of Thoughts (ToT)",
+    "Problem": "Linear Chain-of-Thought reasoning can be insufficient for problems requiring exploration, backtracking, or considering multiple reasoning paths.",
+    "Context": "Complex reasoning tasks that benefit from exploring diverse intermediate thoughts and evaluating their progress, similar to human problem-solving.",
+    "Solution": "Expands the reasoning chain to a tree structure to explore more reasoning paths.",
+    "Result": "Allows for more deliberate and systematic problem-solving by exploring multiple reasoning paths, evaluating intermediate steps, and improving the quality of the final solution for tasks requiring search and planning.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Graph of Thoughts",
+      "Plan-and-Solve Paradigm"
+    ],
+    "Uses": [
+      "Complex reasoning",
+      "Problem-solving requiring search and planning"
+    ],
+    "Category": "Planning Patterns"
+  },
+  {
+    "Pattern Name": "Graph of Thoughts (GoT)",
+    "Problem": "Tree of Thoughts can still be limited by its tree structure, as it doesn't naturally support arbitrary dependencies or aggregation across different reasoning branches.",
+    "Context": "Reasoning tasks that involve complex interdependencies between thoughts, requiring a more flexible structure than a tree and the ability to aggregate information from multiple lines of reasoning.",
+    "Solution": "Models the reasoning chain as a graph with an aggregation operation to synergize the reasoning paths.",
+    "Result": "Provides a highly flexible framework for complex reasoning, enabling more sophisticated aggregation and interaction between diverse thoughts, potentially leading to more robust and accurate solutions.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Tree of Thoughts"
+    ],
+    "Uses": [
+      "Elaborate problem-solving",
+      "Complex logical deduction"
+    ],
+    "Category": "Planning Patterns"
+  },
+  {
+    "Pattern Name": "Instruction Tuning",
+    "Problem": "Large Language Models (LLMs) may not effectively follow specific instructions or perform new tasks without explicit guidance, or they may perform suboptimally on specialized tasks.",
+    "Context": "Adapting pre-trained LLMs to follow instructions more effectively, perform specific tasks, or align with desired behaviors.",
+    "Solution": "Fine-tune a pre-trained LLM on a dataset consisting of instruction-response pairs, where the instruction explicitly describes the task.",
+    "Result": "Greatly improves the LLM's ability to understand and follow instructions, enhances its performance on a wide range of tasks, and can specialize its behavior for specific domains or applications.",
+    "Related Patterns": [
+      "Planning Optimization (RoG Specific)",
+      "Retrieval-Reasoning Optimization (RoG Specific)"
+    ],
+    "Uses": [
+      "Customizing LLMs for specific applications",
+      "Improving instruction following",
+      "Aligning LLM behavior"
+    ],
+    "Category": "MLOps Patterns"
+  },
+  {
+    "Pattern Name": "Plug-and-Play Planning Module",
+    "Problem": "Integrating specialized planning capabilities with various existing LLMs often requires retraining or complex adaptation, limiting flexibility and widespread adoption.",
+    "Context": "Enhancing the performance of arbitrary, pre-existing LLMs on tasks requiring structured planning (e.g., KG traversal) without needing to retrain the entire LLM.",
+    "Solution": "Adopt a separate, trained planning module (like RoG's planning module) to generate relation paths (plans). These plans are executed on KGs to retrieve reasoning paths, which are then fed as context into different LLMs using reasoning prompts during inference.",
+    "Result": "Substantially improves the performance of various LLMs by providing them with structured, faithful plans and retrieved knowledge, without requiring retraining of the target LLMs, thus offering seamless integration and flexibility.",
+    "Related Patterns": [
+      "Planning Module (RoG Specific)",
+      "Tools Integration Patterns"
+    ],
+    "Uses": [
+      "Enhancing diverse LLMs with external planning capabilities",
+      "Modular AI system design"
+    ],
+    "Category": "Tools Integration Patterns"
+  },
+  {
+    "Pattern Name": "Few-Shot Prompting (for Explanations)",
+    "Problem": "LLMs may struggle to generate high-quality, structured, or specific types of outputs (like explanations) without clear examples of the desired format and content.",
+    "Context": "Guiding LLMs to produce interpretable and well-structured explanations for their reasoning, particularly when the desired explanation format is complex or specific.",
+    "Solution": "Design an 'Explanation Prompt Template' that includes a few-shot human-annotated examples to demonstrate the explanation process.",
+    "Result": "Helps empower the method in generating results with good explainability by guiding the LLM to understand the desired explanation style, structure, and level of detail.",
+    "Related Patterns": [
+      "Prompt Design Patterns",
+      "Reasoning Module (RoG Specific)"
+    ],
+    "Uses": [
+      "Generating structured explanations",
+      "Improving interpretability of LLM outputs"
+    ],
+    "Category": "Prompt Design Patterns"
+  },
+  {
+    "Pattern Name": "Zero-Shot Prompting",
+    "Problem": "Evaluating baseline LLM performance on a task, such as KGQA, without any specific training examples or fine-tuning.",
+    "Context": "Using LLMs for KGQA tasks or other general tasks without prior examples or specific training.",
+    "Solution": "Directly ask LLMs to answer the question using a clear instruction or question, without providing any input-output examples.",
+    "Result": "Provides a baseline performance for LLMs on tasks like KGQA, demonstrating their inherent capabilities.",
+    "Related Patterns": [
+      "Prompt Design Patterns"
+    ],
+    "Uses": [
+      "Baseline evaluation of LLMs",
+      "General knowledge question answering"
+    ],
+    "Category": "Prompt Design Patterns"
+  }
+]

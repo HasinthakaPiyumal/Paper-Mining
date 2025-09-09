@@ -1,0 +1,129 @@
+[
+  {
+    "Pattern Name": "Non-Retrieval QA (LLM-only)",
+    "Problem": "Large Language Models (LLMs) may generate factually incorrect answers or struggle with queries requiring precise, current, or external knowledge because they rely solely on their parametric memory.",
+    "Context": "Queries that are straightforward and can be accurately answered by the LLM's internal knowledge without the need for external information or retrieval.",
+    "Solution": "The LLM directly processes the input query (`q`) to generate an answer (`a = LLM(q)`), without accessing any external knowledge bases or retrieval modules.",
+    "Result": "High efficiency for simple, common knowledge queries. However, it is largely problematic for queries requiring specific, current, or external knowledge beyond the LLM's training data, leading to potential inaccuracies or hallucinations.",
+    "Related Patterns": [
+      "Single-step Retrieval-Augmented QA",
+      "Multi-step Retrieval-Augmented QA",
+      "Adaptive Retrieval (General Baseline)",
+      "AdaptiveRAG"
+    ],
+    "Uses": [
+      "Simple factual questions",
+      "Common knowledge queries",
+      "Initial LLM deployments where external knowledge integration is not yet implemented or required."
+    ],
+    "AI Design Pattern Category": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Single-step Retrieval-Augmented QA",
+    "Problem": "LLMs alone struggle with queries that require external, non-parametric knowledge not stored in their internal memory, leading to potential inaccuracies or an inability to answer certain questions.",
+    "Context": "Queries that require external knowledge, where the necessary information can typically be found within one or a few relevant documents through a single retrieval operation. This pattern is suitable for single-hop questions.",
+    "Solution": "1. A `Retriever` module identifies and retrieves relevant documents (`d`) from an external knowledge source (`D`) based on the input query (`q`). 2. The retrieved documents (`d`) are then incorporated into the LLM's input, augmenting its context, and the LLM generates the answer (`a = LLM(q, d)`).",
+    "Result": "Significantly improves accuracy and currency for queries needing external knowledge compared to non-retrieval methods, mitigating hallucination. However, it may be insufficient for complex queries that require synthesizing information from multiple sources or multi-step reasoning.",
+    "Related Patterns": [
+      "Non-Retrieval QA",
+      "Multi-step Retrieval-Augmented QA",
+      "Adaptive Retrieval (General Baseline)",
+      "AdaptiveRAG"
+    ],
+    "Uses": [
+      "Open-domain question answering for moderate complexity questions",
+      "Factual lookup and verification",
+      "Enhancing LLM accuracy with up-to-date external knowledge."
+    ],
+    "AI Design Pattern Category": [
+      "Generative AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Tools Integration Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Multi-step Retrieval-Augmented QA (Iterative RAG)",
+    "Problem": "Complex, multi-hop queries cannot be adequately answered by single-step retrieval, as they require synthesizing information from multiple documents and performing iterative reasoning steps to reach a conclusion.",
+    "Context": "Queries that demand sequential reasoning, information aggregation from disparate sources, and iterative refinement of understanding to formulate a complete answer. Typically applies to multi-hop questions.",
+    "Solution": "The LLM and a `Retriever` interact iteratively over multiple rounds. 1. An initial query (`q`) is provided. 2. In each step `i`, new documents (`d_i`) are retrieved, often based on the query and a growing context (`c_i`) derived from previous documents and intermediate answers. 3. The LLM generates intermediate answers or refines its reasoning using the current query, retrieved documents, and accumulated context (`a_i = LLM(q, d_i, c_i)`). 4. This process continues until the final answer is derived or a maximum number of steps is reached.",
+    "Result": "Highly effective for complex multi-hop queries, enabling the LLM to build a comprehensive foundation for solving intricate problems. However, it is resource-intensive and computationally expensive due to repeated accesses to both the LLM and the retriever, making it inefficient for simpler queries.",
+    "Related Patterns": [
+      "Single-step Retrieval-Augmented QA",
+      "Adaptive Retrieval (General Baseline)",
+      "AdaptiveRAG",
+      "Chain-of-Thought (as a reasoning mechanism)"
+    ],
+    "Uses": [
+      "Complex multi-hop question answering",
+      "Tasks requiring deep reasoning and information synthesis from multiple sources",
+      "Fact-checking and evidence aggregation."
+    ],
+    "AI Design Pattern Category": [
+      "Generative AI Patterns",
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "Tools Integration Patterns",
+      "Planning Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "Adaptive Retrieval (General Baseline)",
+    "Problem": "Traditional 'one-size-fits-all' retrieval strategies lead to inefficiencies (e.g., complex RAG for simple queries) or ineffectiveness (e.g., simple RAG for complex queries) when dealing with a wide range of query complexities.",
+    "Context": "Systems where user queries vary significantly in complexity, from straightforward to highly intricate, and a static retrieval approach is suboptimal for overall performance or resource utilization.",
+    "Solution": "Dynamically adjusts the retrieval strategy based on an assessment of the query's complexity or characteristics. Examples include: \n*   **Mallen et al. 2023:** Decides whether to retrieve based on the frequency of entities in the query. \n*   **Qi et al. 2021:** Performs a fixed set of operations (retrieving, reading, reranking) repeatedly until an answer is derived. \n*   **Asai et al. 2024 (SelfRAG):** Trains the LLM to predict a special token, triggering retrieval if a certain threshold is met, then generates an answer.",
+    "Result": "Aims to optimize the trade-off between efficiency and effectiveness by applying retrieval only when necessary or by adjusting its intensity. However, these baseline approaches are often limited (e.g., a binary decision is too simple, fixed operations are not truly adaptive to varying complexities, or a single model attempts to handle all adaptivity internally) and may not be sufficiently fine-grained for all query complexities.",
+    "Related Patterns": [
+      "Non-Retrieval QA",
+      "Single-step Retrieval-Augmented QA",
+      "Multi-step Retrieval-Augmented QA",
+      "AdaptiveRAG"
+    ],
+    "Uses": [
+      "Optimizing the performance and cost of RAG systems in environments with varied query types",
+      "Reducing latency for simple queries",
+      "Improving resource efficiency in LLM deployments."
+    ],
+    "AI Design Pattern Category": [
+      "Generative AI Patterns",
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "MLOps Patterns",
+      "Tools Integration Patterns"
+    ]
+  },
+  {
+    "Pattern Name": "AdaptiveRAG (Adaptive Retrieval-Augmented Generation)",
+    "Problem": "Existing retrieval-augmented LLM (RAG) approaches are 'one-size-fits-all,' leading to either unnecessary computational overhead for simple queries (e.g., using multi-step RAG) or insufficient handling for complex, multi-step queries (e.g., using no-retrieval or single-step RAG). This results in suboptimal efficiency and accuracy across the spectrum of real-world query complexities.",
+    "Context": "Open-domain Question Answering (QA) systems where user queries exhibit a wide range of complexities, from straightforward (answerable by LLM's internal knowledge) to moderate (requiring single-step retrieval) to highly complex (demanding multi-step reasoning and iterative retrieval).",
+    "Solution": "1.  **Query Complexity Assessment:** A dedicated, smaller Language Model (Classifier) is trained to predict the complexity level of an incoming query (`q`). The classifier outputs one of three labels: `A` (Straightforward: answerable by LLM itself, No Retrieval), `B` (Moderate: requires at least a single-step retrieval), or `C` (Complex: requires a multi-step retrieval and reasoning solution). \n2.  **Automated Classifier Training Data Generation:** Training data for the classifier is automatically constructed without human labeling by: \n    *   **Outcome-based Labeling:** Assigning complexity labels (A, B, C) to queries based on which of the three RAG strategies (No Retrieval, Single-step, Multi-step) successfully provides a correct answer, prioritizing simpler models in case of ties. \n    *   **Dataset Inductive Bias Labeling:** For queries not labeled by outcome, assign labels based on the known characteristics of the datasets they come from (e.g., 'B' for single-hop datasets, 'C' for multi-hop datasets). \n3.  **Dynamic Strategy Selection:** Based on the complexity level predicted by the classifier, AdaptiveRAG dynamically selects and executes the most suitable retrieval-augmented LLM strategy (No Retrieval, Single-step, or Multi-step) to answer the query.",
+    "Result": "Significantly enhances the overall accuracy and efficiency of QA systems by seamlessly adapting between different RAG strategies. It avoids unnecessary computational costs for simple queries while ensuring robust and comprehensive handling of complex ones, leading to a significant balance between performance and resource utilization across diverse query types. This approach offers a robust middle ground among existing methods.",
+    "Related Patterns": [
+      "Non-Retrieval QA",
+      "Single-step Retrieval-Augmented QA",
+      "Multi-step Retrieval-Augmented QA",
+      "Adaptive Retrieval (General Baseline)",
+      "Agentic AI Patterns (classifier as a decision-making agent)"
+    ],
+    "Uses": [
+      "Production-grade open-domain QA systems",
+      "Intelligent conversational agents",
+      "Enterprise search and information retrieval systems",
+      "Any LLM application requiring dynamic resource allocation and tailored processing for varying input complexities to optimize accuracy, efficiency, and cost."
+    ],
+    "AI Design Pattern Category": [
+      "Generative AI Patterns",
+      "Agentic AI Patterns",
+      "LLM-specific Patterns",
+      "Knowledge & Reasoning Patterns",
+      "MLOps Patterns",
+      "Tools Integration Patterns",
+      "Planning Patterns"
+    ]
+  }
+]

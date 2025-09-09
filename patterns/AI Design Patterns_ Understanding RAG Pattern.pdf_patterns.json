@@ -1,0 +1,86 @@
+[
+  {
+    "Pattern Name": "LACE (Local Agnostic attribute Contribution Explanation)",
+    "Problem": "High-performing machine learning models, especially black-box classifiers, lack interpretability, making it difficult to understand the reasons behind individual instance predictions. Quantifying the influence of feature values and their subsets on predictions often faces exponential time complexity if all combinations are considered.",
+    "Context": "Post-hoc explanation for black-box classification models on structured data, where the goal is to provide a comprehensive understanding of individual predictions (both qualitative and quantitative). It is model-agnostic.",
+    "Solution": "LACE trains a local rule-based surrogate model (an associative classifier) on the K nearest neighbors of the instance to be explained. This local model identifies relevant patterns (conjunctions of attribute-value pairs) that locally determine the prediction. A removal-based technique then computes the 'prediction difference' for these identified relevant patterns and individual attribute values, quantifying their influence on the prediction probability. An automatic heuristic is used to select the optimal 'K' for defining the locality.",
+    "Result": "Provides a dual explanation: a qualitative understanding through intrinsically interpretable local rules/patterns, and a quantitative understanding through prediction difference values. It accurately captures relevant feature associations and their joint effects, overcoming the exponential time complexity of evaluating all feature subsets. It helps in understanding and comparing the local behavior of different classifier models.",
+    "Related Patterns": [
+      "LIME (contrasted for locality definition and interaction capture)",
+      "SHAP (contrasted for interaction summarization)",
+      "Anchor (contrasted for rule completeness)",
+      "IME (removal-based explanations)"
+    ],
+    "Uses": [
+      "Explaining individual black-box model predictions",
+      "Human-in-the-loop inspection of model predictions",
+      "Understanding local model behavior",
+      "Comparing local behavior across different classifiers"
+    ],
+    "Category": "AI–Human Interaction Patterns"
+  },
+  {
+    "Pattern Name": "XPLAIN (Interactive Framework to Inspect Model Behavior)",
+    "Problem": "The black-box nature of many high-performance machine learning models hinders interactive exploration and understanding of their behavior, making it challenging for users (experts and end-users) to trust, debug, and improve AI systems, especially for critical decisions.",
+    "Context": "Interactive analysis of individual predictions for any black-box classifier on structured data, where human-in-the-loop inspection, what-if analysis, and comparison across models/classes are desired to gain actionable insights.",
+    "Solution": "XPLAIN is a web-based interactive tool that integrates LACE as its underlying explanation method. It allows users to: 1) Generate and compare class-dependent explanations for single instances (both correctly and misclassified). 2) Perform 'what-if' analyses by interactively changing attribute values and observing the impact on predictions and explanations. 3) Define user-specific rules to test domain knowledge assumptions. 4) Aggregate multiple local explanations into 'explanation metadata' (attribute, item, and local rule views) to derive global insights into the model's behavior.",
+    "Result": "Enables comprehensive human-in-the-loop inspection, debugging, and validation of AI models. It provides actionable insights for assessing trustworthiness, detecting wrong associations, and improving models. It supports GDPR-compliant ex-post explanations and facilitates knowledge discovery about model behavior.",
+    "Related Patterns": [
+      "LACE (underlying explanation method)",
+      "SHAP (for combining local explanations to global insights)",
+      "LIME (for combining local explanations)"
+    ],
+    "Uses": [
+      "Model validation and testing",
+      "Debugging classifiers",
+      "Assessing model trustworthiness",
+      "Detecting wrong associations and biases",
+      "GDPR compliance for automated decisions",
+      "Comparing model behavior across different algorithms",
+      "Knowledge discovery in data"
+    ],
+    "Category": "AI–Human Interaction Patterns"
+  },
+  {
+    "Pattern Name": "DivExplorer (Algorithm for Subgroup Divergence Analysis)",
+    "Problem": "Identifying and characterizing data subgroups where a classification model behaves differently (anomalously or with bias) from its overall behavior is crucial for model validation and fairness. Existing methods often rely on predefined subgroups, non-exhaustive searches, or struggle to quantify individual item contributions to subgroup divergence.",
+    "Context": "Post-hoc analysis of black-box classification models (generalized to scoring and ranking systems) on structured data. The goal is to automatically discover and characterize all sufficiently represented (frequent) subgroups that exhibit anomalous or peculiar behavior.",
+    "Solution": "DivExplorer introduces the 'divergence' metric to quantify the difference in a chosen performance statistic (e.g., False Positive Rate, False Negative Rate, error rate) between a data subgroup (defined by an intrinsically interpretable pattern/itemset) and the overall dataset. It leverages efficient frequent pattern mining algorithms (like FPgrowth) to exhaustively identify all frequent itemsets and compute their divergence and statistical significance (informed by Bayesian statistics). It employs Shapley values to quantify the 'item contribution to itemset divergence' and introduces 'global item divergence' (a generalization of Shapley value) to measure an item's overall impact on divergence across all patterns. It also identifies 'corrective items' that reduce divergence.",
+    "Result": "Provides a complete and efficient exploration of all frequent divergent subgroups, revealing peculiar model behaviors, including those that might be masked by non-monotonic metrics or require specific item associations. It allows for detailed analysis of individual item contributions and global item influence on divergence, including the identification of corrective effects. This provides a deep understanding of model behavior at the subgroup level.",
+    "Related Patterns": [
+      "Slice Finder (compared and contrasted for search exhaustiveness and metrics)",
+      "FairVIS (compared for subgroup generation and interpretability)",
+      "Errudite (related for error analysis)",
+      "Frequent Pattern Mining (underlying technique, e.g., Apriori, FPgrowth)",
+      "Shapley values (concept used for contribution quantification, similar to SHAP, IME)"
+    ],
+    "Uses": [
+      "Model validation and testing",
+      "Error analysis and model debugging",
+      "Evaluation of model fairness (especially intersectional bias)",
+      "Identifying bias in AI systems",
+      "Understanding underrepresented group behavior",
+      "Analysis of scoring functions and ranking systems"
+    ],
+    "Category": "Knowledge & Reasoning Patterns"
+  },
+  {
+    "Pattern Name": "DivExplorer (Interactive System for Subgroup Divergence Analysis)",
+    "Problem": "Users need an intuitive and interactive way to explore and understand the complex insights derived from the DivExplorer algorithm, such as lists of divergent subgroups, individual item contributions, and corrective phenomena, to effectively analyze and debug AI models or identify bias.",
+    "Context": "Interactive exploration of divergent subgroups identified by the DivExplorer algorithm, for black-box classifiers (or scoring/ranking systems) on structured data, where users need to drill down, summarize, and search for specific patterns.",
+    "Solution": "A web-based interactive tool that integrates the DivExplorer algorithm. It provides a user interface to: 1) Display a sortable table of divergent itemsets. 2) Enable pruning of redundant itemsets for better summarization. 3) Allow users to drill down into specific itemsets to visualize individual item contributions to divergence using bar graphs (Shapley values) and an itemset lattice. 4) Visually highlight 'corrective items' and phenomena within the lattice. 5) Present the 'individual' and 'global divergence' of items across the entire dataset. 6) Offer interactive search functionalities for itemsets containing specific items or for supersets of a given itemset.",
+    "Result": "Enables dynamic, intuitive, and comprehensive exploration of classifier behavior in data subgroups. It facilitates the analysis of problematic behaviors, identification of bias, and understanding of contributing factors, making the DivExplorer algorithm's insights accessible and actionable for debugging, validation, and fairness assessment.",
+    "Related Patterns": [
+      "DivExplorer (underlying algorithm, Chapter 6)",
+      "Shapley values (concept used for contribution visualization)"
+    ],
+    "Uses": [
+      "Analyzing and debugging classifiers",
+      "Identifying bias in AI systems",
+      "Model validation and testing",
+      "Assessing model fairness",
+      "Interactive data exploration for peculiar behaviors"
+    ],
+    "Category": "AI–Human Interaction Patterns"
+  }
+]
