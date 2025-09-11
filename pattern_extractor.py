@@ -117,14 +117,24 @@ Paper text:
 """
 
 
+summary_prompt = """
+You are an expert in AI design patterns. 
+Your task is to combine the following AI design patterns into a single, unified pattern. 
+Use information from all patterns to produce one coherent pattern that includes:
 
-prompt = PromptTemplate(
-    template=pattern_extraction_prompt,
-    input_variables=["text"]
-)
+- Pattern Name
+- Problem
+- Context
+- Solution
+- Result
+- Related Patterns
+- Uses
 
-chain = prompt | llm
+Return strictly as JSON. Do not add extra text, explanations, or formatting.
 
+Patterns to combine:
+{patterns_text}
+"""
 
 def load_text_file(file_path):
     with open(file_path, "r") as file:
@@ -137,7 +147,18 @@ def remove_json_header_footer(text):
         return text[start_index:end_index]
     return text
 
+def remove_json_annotations(text):
+    text = text.replace("```json", "").replace("```", "")
+    return text
+
 def extract_patterns_from_text(text):
+
+    prompt = PromptTemplate(
+        template=pattern_extraction_prompt,
+        input_variables=["text"]
+    )
+
+    chain = prompt | llm
     result = chain.invoke({"text": text})
     return remove_json_header_footer(result.content)
 
@@ -149,6 +170,16 @@ def extract_patterns(file_path):
 def save_patterns_to_file(patterns, output_path):
     with open(output_path, "w") as file:
         file.write(patterns)
+
+def summarize_patterns(patterns):
+    prompt = PromptTemplate(
+        template=summary_prompt,
+        input_variables=["patterns_text"]
+    )
+
+    chain = prompt | llm
+    summary = chain.invoke({"patterns_text": patterns})
+    return remove_json_annotations(summary.content)
 
 if __name__ == "__main__":
     file_path = "cleaned_papers/cleaned_Song_LLM-Planner_Few-Shot_Grounded_Planning_for_Embodied_Agents_with_Large_Language_ICCV_2023_paper.pdf.txt"
