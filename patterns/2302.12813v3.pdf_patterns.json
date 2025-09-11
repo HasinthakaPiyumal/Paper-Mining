@@ -1,108 +1,38 @@
 [
   {
-    "Pattern Name": "LLM Augmenter for Grounded Generation",
-    "Problem": "Large Language Models (LLMs) suffer from hallucinations, lack up-to-date external knowledge, become stale for time-sensitive tasks, and are prohibitively expensive to fine-tune for specific applications while needing to interact with them as black-box models.",
-    "Context": "Designing reliable AI systems for mission-critical applications that rely on LLMs, where factual accuracy, up-to-dateness, and domain-specific knowledge are crucial, and direct fine-tuning of large black-box LLMs is not feasible or desirable. The system needs to improve LLM responses without modifying the LLM's internal parameters.",
-    "Solution": "Augment a fixed, black-box LLM with a set of plug-and-play modules that interact in an iterative loop. These modules include:\n1.  **Knowledge Consolidator:** Retrieves and processes external knowledge relevant to the user query from diverse sources.\n2.  **Prompt Engine:** Constructs prompts for the LLM, incorporating user query, dialog history, consolidated external knowledge, and automated feedback.\n3.  **Utility Module:** Evaluates the LLM's candidate response against task-specific criteria (e.g., factuality, groundedness) and generates a utility score and verbalized feedback.\n4.  **Policy:** Determines the next action (e.g., retrieve more knowledge, query LLM, revise prompt with feedback, send final response), potentially iteratively, to maximize an expected reward.\n5.  **Working Memory:** Maintains the current state of the conversation, including query, evidence, candidate responses, utility scores, and feedback.\nThe system iteratively revises LLM prompts using automated feedback until a satisfactory response is generated.",
-    "Result": "Significantly reduces LLM hallucinations, improves factual grounding and informativeness, and enables LLMs to leverage external, up-to-date, and domain-specific knowledge without requiring expensive fine-tuning. Empirically validated to improve usefulness and humanness of responses in conversational AI and question answering.",
+    "Pattern Name": "Retrieval-Augmented Generation for Blackbox LLMs",
+    "Problem": "Large Language Models (LLMs) tend to hallucinate and lack access to up-to-date, domain-specific, or proprietary external knowledge, especially when used as blackbox models where fine-tuning is infeasible or too costly.",
+    "Context": "Blackbox LLMs (e.g., ChatGPT) are deployed in mission-critical applications that require factual accuracy and grounding in specific external information (e.g., latest news, task-specific databases, customer reviews).",
+    "Solution": "Augment the blackbox LLM with a 'Knowledge Consolidator' module. This module comprises a knowledge retriever, an entity linker, and an evidence chainer. It generates search queries, retrieves raw evidence from various external knowledge sources (web, databases), enriches it with related context, prunes irrelevant information, and forms concise evidence chains. This consolidated evidence is then injected into the LLM's prompt.",
+    "Result": "The LLM generates responses that are factually grounded in external knowledge, significantly reducing hallucinations and improving informativeness without requiring expensive fine-tuning of the LLM itself.",
     "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "Self-Correction",
-      "Agentic Loop",
-      "External Knowledge Integration",
-      "Iterative Prompting",
-      "LLM-specific Patterns"
+      "Self-Correction with Automated Feedback",
+      "Adaptive LLM Orchestration"
     ],
-    "Uses": [
-      "Building robust conversational AI agents (e.g., customer service chatbots)",
-      "Open-domain question answering systems",
-      "Information-seeking conversational AI",
-      "Any LLM application requiring high factual accuracy and dynamic knowledge retrieval without LLM fine-tuning."
-    ]
+    "Uses": "Open-domain Question Answering, Information-Seeking Dialog, Customer Service, any application requiring LLMs to use external, dynamic, or private knowledge."
   },
   {
-    "Pattern Name": "External Knowledge Consolidation for LLMs",
-    "Problem": "Raw external knowledge (e.g., retrieved documents, database entries) can be incomplete, noisy, irrelevant, or too disparate to be directly useful for grounding LLM responses, leading to poor performance or continued hallucinations. LLMs alone often cannot effectively process and synthesize diverse external information for complex reasoning.",
-    "Context": "Augmenting LLMs with external knowledge for tasks requiring factual grounding, up-to-dateness, or domain-specific information, where the raw retrieved data needs refinement and structuring before being fed to the LLM. This is especially critical for multi-hop reasoning tasks across heterogeneous knowledge sources.",
-    "Solution": "Implement a modular 'Knowledge Consolidator' that acts as an intermediary between raw external knowledge sources and the LLM. This module typically involves:\n1.  **Knowledge Retrieval:** Generates search queries and calls APIs (e.g., Bing Search, REST APIs) to fetch raw evidence from various external knowledge sources (web documents, Wikipedia articles, proprietary databases, FAQs, customer reviews).\n2.  **Entity Linking:** Enriches raw evidence by identifying and linking entities mentioned in it to related contextual information (e.g., Wikipedia descriptions) to form evidence graphs.\n3.  **Evidence Chaining and Pruning:** Prunes irrelevant evidence from the graphs and forms a shortlist of highly relevant and coherent 'evidence chains' that are most pertinent to the user query, potentially involving multi-hop reasoning. The output is consolidated, high-quality evidence used in LLM prompts.",
-    "Result": "Provides the LLM with structured, relevant, and enriched external knowledge, significantly improving its ability to generate grounded and factual responses and mitigate hallucinations. This is particularly effective for complex, multi-hop reasoning tasks where information is scattered across different modalities and documents.",
+    "Pattern Name": "Self-Correction with Automated Feedback",
+    "Problem": "Large Language Models (LLMs) can generate responses that do not meet desired quality criteria (e.g., factuality, coherence, alignment with user expectations or business rules) in a single pass.",
+    "Context": "Blackbox LLMs are used for tasks where high-quality, verifiable, and aligned responses are crucial, and direct programmatic control over LLM generation is limited.",
+    "Solution": "Implement a 'Utility' module that evaluates candidate LLM-generated responses using task-specific utility functions (model-based or rule-based) to produce a utility score and verbalized feedback. This feedback is then used by a 'Prompt Engine' to revise the original prompt, querying the LLM again for an improved response. This process iterates until a candidate response meets the verification criteria.",
+    "Result": "LLM responses are iteratively refined and improved in terms of alignment with specific quality metrics (e.g., groundedness, factuality, informativeness), making them more suitable for mission-critical applications.",
     "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "Information Retrieval",
-      "Knowledge Graph Construction",
-      "Tools Integration Patterns",
-      "Knowledge & Reasoning Patterns"
+      "Retrieval-Augmented Generation for Blackbox LLMs",
+      "Adaptive LLM Orchestration"
     ],
-    "Uses": [
-      "Enhancing LLM factuality in question answering",
-      "Supporting evidence-based response generation in dialog systems",
-      "Integrating diverse data sources into LLM workflows",
-      "Multi-hop reasoning tasks",
-      "Reducing hallucinations by providing structured context."
-    ]
+    "Uses": "Information-Seeking Dialog, Customer Service, Question Answering, content generation requiring specific quality checks, scenarios where LLM output needs to conform to strict rules or factual constraints."
   },
   {
-    "Pattern Name": "Iterative Self-Correction via Automated Feedback Loop",
-    "Problem": "Initial LLM responses may suffer from hallucinations, lack of grounding, or failure to meet specific task requirements. Correcting these issues often requires multiple attempts or human intervention, which is inefficient, especially for black-box LLMs.",
-    "Context": "Applications where the quality and alignment of LLM outputs are critical, and there's a need to automatically refine responses iteratively based on objective criteria, without requiring human-in-the-loop for each revision. This is crucial when using fixed, black-box LLMs where direct fine-tuning is not an option.",
-    "Solution": "Establish an iterative loop where:\n1.  An LLM generates a candidate response based on a given prompt.\n2.  A 'Utility Module' evaluates this candidate response against task-specific criteria (e.g., factuality score, adherence to rules, groundedness). \n3.  If the response is deemed unsatisfactory, the Utility Module generates verbalized, actionable feedback (e.g., 'The response is inconsistent with the knowledge. Please generate again.').\n4.  This feedback is then incorporated into the original prompt, and the LLM is queried again for a revised response.\nThis process repeats until the response meets the desired utility threshold or a maximum number of iterations is reached.",
-    "Result": "Significantly improves the factual accuracy, groundedness, and overall quality of LLM responses by systematically guiding the LLM towards better outputs. Reduces hallucinations and enhances the alignment of the model's output with specific requirements through automated refinement. Achieves substantial improvements in metrics like KF1 scores.",
+    "Pattern Name": "Adaptive LLM Orchestration",
+    "Problem": "Effectively managing the interactions between a blackbox LLM, external knowledge sources, and feedback mechanisms to achieve complex, multi-step goals in a dynamic environment. Deciding when to perform which action (e.g., retrieve knowledge, query LLM, apply feedback, respond to user) is non-trivial.",
+    "Context": "Building agentic AI systems around blackbox LLMs that need to perform complex tasks, often involving multiple turns of interaction and external tool use, while optimizing for a long-term reward.",
+    "Solution": "Design a 'Policy' module that, based on the current dialog state stored in 'Working Memory,' selects the optimal next system action. This policy can be rule-based (for initial bootstrapping) or trainable (e.g., using Reinforcement Learning with a neural network model like T5). Actions include acquiring evidence via the Knowledge Consolidator, calling the Prompt Engine to generate a candidate response from the LLM, or sending a verified response to the user.",
+    "Result": "The LLM-augmented system gains the ability to make intelligent, adaptive decisions about its operational flow, optimizing for desired outcomes (e.g., maximizing response quality, minimizing hallucination) and efficiently utilizing its various augmentation modules.",
     "Related Patterns": [
-      "Self-Correction",
-      "Prompt Engineering",
-      "Agentic Loop",
-      "Feedback Loops",
-      "LLM-specific Patterns",
-      "Prompt Design Patterns"
+      "Retrieval-Augmented Generation for Blackbox LLMs",
+      "Self-Correction with Automated Feedback"
     ],
-    "Uses": [
-      "Refining LLM-generated text for factual accuracy, style, or adherence to constraints",
-      "Improving conversational coherence and groundedness",
-      "Reducing post-generation editing effort",
-      "Enhancing the reliability of generative AI systems, especially in mission-critical applications."
-    ]
-  },
-  {
-    "Pattern Name": "Trainable Policy for Adaptive LLM Orchestration",
-    "Problem": "In complex agentic systems augmenting LLMs, deciding the optimal sequence of actions (e.g., when to retrieve knowledge, when to query the LLM, when to use feedback, when to terminate and respond) based on the current state can be challenging and difficult to hardcode with static rules, leading to suboptimal performance or inefficient resource use.",
-    "Context": "Designing AI agents that interact dynamically with LLMs, external tools, and the environment to achieve specific goals, where the optimal strategy depends on the evolving conversation state and aims to maximize a cumulative reward. This is particularly relevant when the costs of different actions (e.g., API calls, LLM queries) vary.",
-    "Solution": "Implement a 'Policy module' that learns to select the most appropriate next system action given the current dialog state (tracked in 'Working Memory'). This policy can be:\n1.  **Bootstrapped:** Starting with manually crafted rule-based policies encoding domain expertise and business logic.\n2.  **Trained:** Using Reinforcement Learning (e.g., REINFORCE) on human-system interactions or simulated user interactions to maximize an expected reward (e.g., based on utility functions like KF1).\nThe policy's actions include acquiring evidence via the Knowledge Consolidator, querying the LLM via the Prompt Engine, or sending the final response to users after verification.",
-    "Result": "Enables the AI system to adaptively and optimally orchestrate its interactions with the LLM and its modules, leading to improved performance (e.g., better grounding, reduced hallucinations) and more efficient resource utilization (e.g., only retrieving knowledge when necessary). Demonstrates learning capability to effectively select actions that maximize reward over time.",
-    "Related Patterns": [
-      "Agentic AI Patterns",
-      "Reinforcement Learning",
-      "Planning Patterns",
-      "Tools Integration Patterns",
-      "Classical AI (for RL)"
-    ],
-    "Uses": [
-      "Building goal-directed conversational agents",
-      "Multi-step reasoning systems",
-      "Optimizing multi-tool use in LLM agents",
-      "Dynamic resource allocation for AI tasks",
-      "Systems requiring adaptive decision-making in human-AI conversations."
-    ]
-  },
-  {
-    "Pattern Name": "Utility-Function-Based Automated Feedback Generation",
-    "Problem": "Objectively evaluating the quality of LLM-generated responses and automatically generating actionable textual feedback for improvement is complex, especially for nuanced criteria like factual accuracy, style, or alignment with specific business rules, making manual feedback impractical for iterative processes.",
-    "Context": "Any AI system requiring automated assessment and guidance for LLM outputs, particularly within iterative refinement processes or for self-improvement mechanisms, where human evaluation is impractical, too slow, or too costly. This is critical for ensuring LLM outputs meet predefined quality standards.",
-    "Solution": "Develop a 'Utility Module' that integrates various utility functions to assess LLM candidate responses. These functions can be:\n1.  **Model-based Utility Functions:** Trained on human preference data or annotated logs to assign preference scores to different dimensions of a response (e.g., fluency, informativeness, factuality).\n2.  **Rule-based Utility Functions:** Implemented using heuristics or programmed functions to measure whether a response complies with a specific rule or factual grounding (e.g., using Knowledge F1 score to measure overlap with external evidence).\nBased on these assessments, a text generation model (e.g., a seq2seq LLM or a template-based natural language generator) is used to produce clear, verbalized feedback that can guide the LLM in subsequent generations (e.g., 'The response is inconsistent with the knowledge. Please generate again.').",
-    "Result": "Provides an automated, objective, and actionable mechanism for evaluating and guiding LLM generations, enabling iterative self-correction and alignment with complex requirements. Enhances the quality and groundedness of LLM outputs and fosters self-improvement capabilities within AI agents without constant human oversight.",
-    "Related Patterns": [
-      "Self-Correction",
-      "Feedback Loops",
-      "Evaluation Metrics",
-      "Prompt Design Patterns",
-      "LLM-specific Patterns (for quality control)",
-      "Generative AI Patterns"
-    ],
-    "Uses": [
-      "Automated quality assurance for generative AI",
-      "Improving response grounding and factuality in LLM applications",
-      "Enhancing conversational AI systems through iterative refinement",
-      "Training AI agents with self-supervision",
-      "Prompt optimization and adaptation."
-    ]
+    "Uses": "Task-oriented Dialog Systems, Autonomous Agents, Complex Question Answering, any multi-turn AI system where dynamic decision-making for LLM and tool interaction is required."
   }
 ]

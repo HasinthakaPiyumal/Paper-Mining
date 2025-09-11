@@ -1,170 +1,83 @@
 [
   {
     "Pattern Name": "Retrieval-Augmented Generation (RAG)",
-    "Problem": "Large pretrained language models (LMs) have limited ability to access and precisely manipulate knowledge, leading to lower performance on knowledge-intensive tasks, difficulty providing provenance, challenges in updating world knowledge, and propensity for hallucinations.",
-    "Context": "Knowledge-intensive NLP tasks (e.g., Open-domain QA, abstractive QA, question generation, fact verification) where systems require access to external, up-to-date, and verifiable factual knowledge beyond what is implicitly stored in model parameters.",
-    "Solution": "Combine a pretrained parametric memory (a seq2seq model like BART) with a differentiable access mechanism to an explicit, non-parametric memory (a dense vector index of a knowledge source like Wikipedia accessed by a neural retriever like DPR). The entire system (retriever and generator) is fine-tuned end-to-end, treating retrieved documents as latent variables and marginalizing over them during generation.",
-    "Result": "Achieves state-of-the-art results on open-domain QA tasks, generates more specific, diverse, and factual language than parametric-only baselines, reduces hallucinations, provides a mechanism for dynamic knowledge updates (hot-swapping the index), and offers a degree of interpretability through inspectable retrieved text.",
+    "Problem": "Large pretrained language models (PLMs) exhibit limitations in accessing and precisely manipulating factual knowledge, leading to suboptimal performance on knowledge-intensive tasks, difficulty in expanding or revising their internal knowledge, lack of provenance for predictions, and a tendency to hallucinate.",
+    "Context": "Knowledge-intensive Natural Language Processing (NLP) tasks (e.g., Open-domain Question Answering, Fact Verification, abstractive text generation) where AI models need to generate factual, specific, and diverse language, or require access to up-to-date and verifiable external knowledge. This pattern is applicable when using pretrained parametric memory models (like seq2seq transformers) that need to be augmented with external, dynamically revisable, and inspectable knowledge.",
+    "Solution": "Combine a pretrained parametric memory (a seq2seq model, e.g., BART) with an explicit, non-parametric memory (a dense vector index of text documents, e.g., Wikipedia). A pretrained neural retriever (e.g., DPR) is used to access this non-parametric memory by retrieving top-K relevant documents based on the input query. The retrieved documents are then provided as additional context to the seq2seq generator. The entire system (retriever and generator) is fine-tuned end-to-end, treating the retrieved documents as latent variables and marginalizing over their probabilities during training and inference.",
+    "Result": "Achieves state-of-the-art performance on a wide range of knowledge-intensive NLP tasks. Generates more specific, diverse, and factual language, and reduces hallucinations compared to parametric-only baselines. Enables easy expansion and revision of the model's knowledge and provides a form of interpretability by allowing inspection of the accessed knowledge. Facilitates unconstrained generation, outperforming extractive approaches even for extractive tasks.",
     "Related Patterns": [
-      "Hybrid Parametric and Non-parametric Memory",
-      "Learned Retrieval",
-      "Marginalization over Latent Documents",
-      "RAGSequence Model",
-      "RAGToken Model",
-      "REALM (Retrieval-Augmented Language Model pretraining)",
-      "ORQA (Open-Retrieval Question Answering)",
-      "Memory Networks",
-      "Retrieve-and-Edit approaches"
+      "RAGSequence",
+      "RAGToken",
+      "Index Hotswapping"
     ],
     "Uses": [
       "Open-domain Question Answering (NQ, TriviaQA, WebQuestions, CuratedTrec)",
       "Abstractive Question Answering (MSMARCO NLG)",
       "Jeopardy Question Generation",
-      "Fact Verification (FEVER)",
-      "Any knowledge-intensive NLP task requiring factual grounding and generation"
-    ]
-  },
-  {
-    "Pattern Name": "RAGSequence Model",
-    "Problem": "How to integrate retrieved documents when generating an entire sequence, assuming a single latent document is most relevant for the whole output, while still leveraging multiple retrieved documents probabilistically.",
-    "Context": "Retrieval-Augmented Generation (RAG) where the target sequence is relatively coherent and likely supported by a single primary document, or when the entire output sequence benefits from a consistent context. Decoding efficiency is a secondary concern.",
-    "Solution": "The model uses the same retrieved document to predict all tokens in the complete target sequence. It treats the retrieved document as a single latent variable that is marginalized to calculate the seq2seq probability. Top-K documents are retrieved for the input, the generator produces the output sequence probability for each document, and these probabilities are then marginalized. Decoding involves running beam search for each document and then marginalizing probabilities across hypotheses.",
-    "Result": "Effective for tasks where a single document provides sufficient context for the entire output. Can generate more diverse outputs than RAGToken in some generation tasks. Offers a principled way to incorporate document-level context.",
-    "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "Marginalization over Latent Documents",
-      "RAGToken Model (alternative formulation)"
+      "Fact Verification (FEVER)"
     ],
-    "Uses": [
-      "Open-domain Question Answering",
-      "Abstractive Question Answering (MSMARCO NLG)",
-      "Fact Verification (FEVER, where it's equivalent to RAGToken for length-one sequences)"
+    "Category": [
+      "Generative AI",
+      "Knowledge & Reasoning",
+      "LLM-specific"
     ]
   },
   {
-    "Pattern Name": "RAGToken Model",
-    "Problem": "How to integrate retrieved documents when generating a sequence where different parts of the output might benefit from different retrieved documents, allowing for more flexible, token-level information aggregation.",
-    "Context": "Retrieval-Augmented Generation (RAG) where the target sequence might draw information from multiple sources, or when more flexible and potentially more specific token-level generation is desired. Tasks where the output requires combining facts from various documents.",
-    "Solution": "The model can draw a different latent document for each target token and marginalize accordingly. The top-K documents are retrieved once for the input. For each output token, the generator produces a probability distribution for the next token given each document, before marginalizing these distributions and repeating the process for the next token. Decoding can utilize a standard autoregressive beam decoder.",
-    "Result": "Performs well on tasks requiring aggregation of content from several documents (e.g., Jeopardy question generation). Offers potentially more specific token-level generation and more efficient decoding compared to RAGSequence. Can adapt context dynamically during generation.",
+    "Pattern Name": "RAGSequence",
+    "Problem": "Ensuring consistency and coherence in generated sequences when leveraging retrieved knowledge, particularly when the entire output is expected to be derived from a single, dominant source or consistent context.",
+    "Context": "Retrieval-Augmented Generation (RAG) tasks where the generated output sequence is best supported by a single, consistent retrieved document. The model needs to make a global decision about which document to use for the entire generation process.",
+    "Solution": "Within the Retrieval-Augmented Generation (RAG) framework, the model treats the retrieved document as a single latent variable responsible for generating the complete output sequence. It marginalizes over the top-K retrieved documents, calculating the probability of the entire sequence given each document, and then summing these probabilities weighted by the document retrieval probability.",
+    "Result": "Produces coherent and consistent output sequences based on a single, globally chosen document. Effective for tasks where a single document provides sufficient context for the whole output.",
     "Related Patterns": [
       "Retrieval-Augmented Generation (RAG)",
-      "Marginalization over Latent Documents",
-      "RAGSequence Model (alternative formulation)"
-    ],
-    "Uses": [
-      "Open-domain Question Answering",
-      "Jeopardy Question Generation (shows stronger performance than RAGSequence)",
-      "Fact Verification (FEVER, where it's equivalent to RAGSequence for length-one sequences)"
-    ]
-  },
-  {
-    "Pattern Name": "Learned Retrieval",
-    "Problem": "Traditional retrieval methods (e.g., BM25) may not be optimally aligned with the specific requirements of a downstream NLP task, leading to suboptimal performance, as they are not trained to maximize the task's objective.",
-    "Context": "AI systems that rely on external knowledge retrieval where the relevance of retrieved documents is crucial for the performance of a subsequent task (e.g., generative question answering, summarization).",
-    "Solution": "Optimize the retrieval module (e.g., a neural retriever like DPR) jointly with the downstream task model (e.g., a generator like BART) through end-to-end training. This allows the retriever to learn to find documents that are most useful for the specific task objective, rather than just general relevance based on keyword overlap.",
-    "Result": "Significantly improves results for many knowledge-intensive tasks, especially Open-Domain QA, compared to fixed or non-differentiable retrievers. The retriever becomes specialized to the needs of the generator and the task, leading to better overall system performance.",
-    "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "Dense Passage Retrieval (DPR-like Retriever)",
-      "Marginalization over Latent Documents",
-      "Latent Variable Approaches for Retrieval (REALM, ORQA)"
+      "RAGToken"
     ],
     "Uses": [
       "Open-domain Question Answering",
       "Abstractive Question Answering",
-      "Question Generation",
       "Fact Verification"
+    ],
+    "Category": [
+      "Generative AI",
+      "LLM-specific"
     ]
   },
   {
-    "Pattern Name": "Non-parametric Memory Hot-swapping (Dynamic Knowledge Update)",
-    "Problem": "Parametric-only language models struggle to update their world knowledge as facts change, requiring expensive and time-consuming re-training or fine-tuning to incorporate new information, leading to outdated or incorrect responses.",
-    "Context": "AI systems that need to stay current with evolving factual knowledge (e.g., world leaders, current events, scientific discoveries) without incurring high computational costs for retraining the entire model.",
-    "Solution": "Store factual knowledge in an explicit, external, non-parametric memory (e.g., a dense vector index of Wikipedia passages) that can be easily replaced or updated independently of the core parametric model. When new information becomes available, a new index can be built from an updated corpus and 'hot-swapped' into the system at test time.",
-    "Result": "Enables rapid and cost-effective updating of the model's world knowledge without requiring any retraining of the parametric components. Improves factual accuracy for recent information and allows the model to adapt to a changing world, contributing to the 'human-writable' aspect of the memory.",
+    "Pattern Name": "RAGToken",
+    "Problem": "Generating output sequences that require combining information from multiple distinct retrieved documents or dynamically switching context across different parts of the generated text to provide a comprehensive and diverse answer.",
+    "Context": "Retrieval-Augmented Generation (RAG) tasks where different tokens or segments of the output sequence might be best supported by different pieces of retrieved knowledge. This is particularly useful for complex generations that synthesize information from various sources.",
+    "Solution": "Within the Retrieval-Augmented Generation (RAG) framework, the model allows for drawing a potentially different latent document for each target token to be generated. It marginalizes over the top-K retrieved documents at each generation step, calculating the probability of the next token given each document, and then summing these probabilities. This enables the generator to dynamically choose content from several documents as it produces the answer token by token.",
+    "Result": "Generates responses that can combine content from multiple documents, leading to more diverse and factually rich outputs, especially for tasks requiring synthesis of information. Improves performance on tasks that benefit from dynamic context switching.",
     "Related Patterns": [
       "Retrieval-Augmented Generation (RAG)",
-      "Hybrid Parametric and Non-parametric Memory"
+      "RAGSequence"
     ],
     "Uses": [
-      "Question Answering (e.g., queries about current events or individuals whose roles change over time)",
-      "Fact Verification",
-      "Any application where the underlying knowledge base is dynamic and needs frequent updates"
-    ]
-  },
-  {
-    "Pattern Name": "Marginalization over Latent Documents",
-    "Problem": "When multiple documents are retrieved, it's uncertain which single document is 'correct' or most relevant, or if the desired output requires information from several sources. Relying on a single 'best' document can lead to errors if the retriever makes a mistake.",
-    "Context": "Retrieval-augmented models that retrieve multiple candidate documents for a given input and need to combine their information to produce a single, coherent output, especially in generative tasks.",
-    "Solution": "Treat the retrieved documents as latent variables in a probabilistic model. During training and inference, sum (marginalize) over the probabilities of generating the target output given each of the top-K retrieved documents, weighted by the retriever's prior probability of selecting that document. This allows the model to consider a 'blend' of evidence.",
-    "Result": "Allows the model to consider evidence from multiple sources, improving robustness by not relying solely on a single 'best' retrieved document. Enables the model to generate correct answers even when the correct answer is not explicitly present in any single retrieved document (by combining clues), leading to more effective information aggregation.",
-    "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "RAGSequence Model",
-      "RAGToken Model",
-      "REALM (Retrieval-Augmented Language Model pretraining)",
-      "Latent Variable Approaches for Retrieval"
-    ],
-    "Uses": [
+      "Jeopardy Question Generation (where questions often combine two separate pieces of information)",
       "Open-domain Question Answering",
       "Abstractive Question Answering",
-      "Jeopardy Question Generation",
       "Fact Verification"
+    ],
+    "Category": [
+      "Generative AI",
+      "LLM-specific"
     ]
   },
   {
-    "Pattern Name": "Hybrid Parametric and Non-parametric Memory",
-    "Problem": "Purely parametric language models struggle with factual accuracy, interpretability, and dynamic knowledge updates due to their 'black box' nature and fixed knowledge base. Purely non-parametric (retrieval-only) models lack the strong generative capabilities and contextual understanding of large LMs.",
-    "Context": "Designing AI systems that require both strong general language understanding/generation capabilities (fluency, coherence) and access to precise, verifiable, and updatable factual knowledge.",
-    "Solution": "Combine a large, pretrained parametric model (e.g., a seq2seq transformer like BART) that stores implicit general knowledge and language patterns in its parameters with an explicit, external non-parametric memory (e.g., a dense vector index of text) that stores factual knowledge. The parametric model uses the non-parametric memory to ground and augment its generation or reasoning.",
-    "Result": "Leverages the strengths of both approaches: the fluency, coherence, and broad understanding of parametric models, and the factual accuracy, verifiability, and dynamic updatability of non-parametric memory. Reduces hallucinations, improves factuality, and enhances interpretability by allowing inspection of accessed knowledge.",
+    "Pattern Name": "Index Hotswapping (Dynamic Knowledge Update)",
+    "Problem": "Parametric-only language models suffer from 'stale knowledge' and cannot easily update their world knowledge as new information emerges without computationally expensive and time-consuming full model retraining. This limits their applicability in dynamic, knowledge-intensive environments.",
+    "Context": "AI systems, particularly those using large language models, that require up-to-date external knowledge and need to adapt to changing factual landscapes. This pattern is applicable when the core model architecture is designed with a separable, non-parametric memory component.",
+    "Solution": "Employ a Retrieval-Augmented Generation (RAG) architecture where factual knowledge is stored in an external, non-parametric memory (a document index). To update the model's world knowledge, simply replace or update this external document index at test time. The parametric components of the model (e.g., the generator and query encoder) remain fixed and do not require retraining.",
+    "Result": "Enables dynamic and efficient updating of the model's world knowledge. The model can accurately respond to queries based on the most current information available in the swapped index. Dramatically reduces the need for continuous, costly retraining of large language models to stay current with real-world changes.",
     "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "Non-parametric Memory Hot-swapping (Dynamic Knowledge Update)",
-      "Memory Networks",
-      "REALM (Retrieval-Augmented Language Model pretraining)"
+      "Retrieval-Augmented Generation (RAG)"
     ],
     "Uses": [
-      "Knowledge-intensive NLP tasks (Question Answering, Generation, Fact Verification)",
-      "Building AI systems that require grounded, up-to-date, and explainable factual responses"
-    ]
-  },
-  {
-    "Pattern Name": "Denoising Sequence-to-Sequence Pretraining for Generation (BART-like Generator)",
-    "Problem": "Training a robust and versatile sequence-to-sequence model for various natural language generation (NLG) tasks that can produce fluent, coherent, and grammatically correct text, and serve as a strong base for fine-tuning.",
-    "Context": "Developing a general-purpose generator component for NLP systems, particularly when it needs to be integrated into a larger architecture (like RAG) and perform well on diverse generation tasks, handling both discriminative and generative objectives.",
-    "Solution": "Pretrain an encoder-decoder transformer model (like BART) using a denoising objective. This involves corrupting text with various noising functions (e.g., token masking, deletion, text infilling, sentence permutation) and training the model to reconstruct the original, uncorrupted text. This objective encourages learning robust representations and generation capabilities.",
-    "Result": "Obtains state-of-the-art results on a diverse set of generation tasks (e.g., summarization, translation). Provides a strong foundation for fine-tuning on specific seq2seq tasks, producing fluent and coherent text. Serves as an effective parametric generator component in hybrid models like RAG.",
-    "Related Patterns": [
-      "Retrieval-Augmented Generation (RAG)",
-      "Hybrid Parametric and Non-parametric Memory",
-      "T5 (Text-to-Text Transformer)"
+      "Any knowledge-intensive NLP task requiring current information, such as factual question answering, news summarization, or policy compliance checks where external knowledge evolves rapidly."
     ],
-    "Uses": [
-      "General-purpose Natural Language Generation",
-      "Machine Translation",
-      "Summarization",
-      "Generative Question Answering",
-      "As the generator component in RAG models"
-    ]
-  },
-  {
-    "Pattern Name": "Dense Passage Retrieval (DPR-like Retriever)",
-    "Problem": "Inefficient and ineffective retrieval of relevant text passages from very large, unstructured text corpora given a natural language query, which is crucial for open-domain knowledge-intensive tasks.",
-    "Context": "Building retrieval components for knowledge-intensive AI systems that need to access large, unstructured text corpora (e.g., Wikipedia) to find relevant evidence or context for a subsequent task.",
-    "Solution": "Employ a bi-encoder architecture: a query encoder (e.g., BERT-based) creates a dense vector representation of the query, and a document encoder (e.g., BERT-based) creates dense vector representations for all documents in the corpus. Retrieval is then performed by finding documents whose embeddings have the highest inner product similarity with the query embedding using Maximum Inner Product Search (MIPS). The retriever is often pretrained with retrieval supervision (e.g., to retrieve passages containing answers to questions).",
-    "Result": "Achieves high retrieval recall and precision for open-domain tasks. Enables fast approximate nearest neighbor search (MIPS using FAISS) even with millions of documents. Provides a strong foundation for 'learned retrieval' by being fine-tunable, making it an effective component in RAG models.",
-    "Related Patterns": [
-      "Learned Retrieval",
-      "Retrieval-Augmented Generation (RAG)",
-      "BM25 (word overlap-based retriever, often a baseline or comparison point)"
-    ],
-    "Uses": [
-      "Open-domain Question Answering",
-      "Fact Verification",
-      "As the retrieval component in RAG models",
-      "Efficient document retrieval from large corpora"
+    "Category": [
+      "MLOps",
+      "Knowledge & Reasoning"
     ]
   }
 ]

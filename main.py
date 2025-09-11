@@ -45,6 +45,6 @@ def extract_patterns_from_all_files(file_list,auto_save=True,save_in_single_file
     return all_patterns
 
 if __name__ == "__main__":
-    clean_papers() # Uncomment if cleaning is needed
+    # clean_papers() # Uncomment if cleaning is needed
     cleaned_files = get_cleaned_file_list()
     extract_patterns_from_all_files(cleaned_files)

@@ -1,85 +1,52 @@
 [
   {
-    "Pattern Name": "Retrieval Augmented Fine-Tuning (RAFT)",
-    "Problem": "Pretrained Large Language Models (LLMs) struggle to effectively adapt to specialized domains for Retrieval Augmented Generation (RAG) tasks, especially when dealing with imperfect retrieval (i.e., the presence of distractor documents) and leveraging the learning opportunity afforded by a fixed domain. Existing finetuning methods either fail to incorporate RAG at test time or don't account for retrieval imperfections during training.",
-    "Context": "Deploying LLMs in specialized domains (e.g., legal, medical, enterprise documents, code repositories) where the primary goal is to maximize accuracy based on a given set of external documents. The LLM needs to perform robustly in an 'open-book' setting, even when retrieved documents contain irrelevant information.",
-    "Solution": "A training recipe that finetunes LLMs using question-answer pairs while explicitly referencing a set of documents, which includes both 'golden' (relevant) and 'distractor' (irrelevant) documents. The model is trained to generate Chain-of-Thought style answers that verbatim cite the correct sequences from the relevant documents. Crucially, a portion (1-P) of the training data also includes questions with only distractor documents (no golden document) to compel the model to either memorize or explicitly state it cannot answer from the context.",
-    "Result": "Significantly improves the LLM's ability to read, extract, and reason with information from in-domain documents. Enhances robustness against distracting retrieved information, leading to consistent performance improvements across various domain-specific RAG benchmarks compared to standard supervised finetuning or general-purpose LLMs with RAG.",
+    "Pattern Name": "Retrieval Augmented Fine Tuning (RAFT)",
+    "Problem": "Pretrained Large Language Models (LLMs) struggle to accurately answer questions in specialized, 'open-book' domains when presented with external documents, especially when retrieval is imperfect (i.e., includes irrelevant 'distractor' documents). Existing finetuning or in-context learning methods do not adequately prepare LLMs for this specific challenge.",
+    "Context": "Adapting LLMs for domain-specific Retrieval-Augmented Generation (RAG) tasks where the LLM needs to leverage a given set of documents (e.g., legal, medical, enterprise, code repositories) and be robust to noisy retrieval outputs that may contain irrelevant information. The primary goal is to maximize accuracy based on provided documents rather than general knowledge.",
+    "Solution": "A novel finetuning recipe that trains the LLM on question-answer pairs (Q-A) alongside a meticulously prepared set of documents (Dk). This set includes 'golden documents' (containing the answer) and 'distractor documents' (irrelevant). The answers (A) are generated in a Chain-of-Thought style, including verbatim citations from the relevant documents. A crucial aspect is that for a portion (1-P fraction) of the training data, the golden document is intentionally omitted, compelling the model to learn robustness against missing context or to memorize when appropriate.",
+    "Result": "Significantly improves LLM performance in domain-specific RAG settings, enhances the model's ability to discern and disregard irrelevant information, and boosts factual accuracy and explainability by teaching it to extract and cite relevant information effectively. It consistently outperforms supervised finetuning (with or without RAG) and general-purpose models with RAG.",
     "Related Patterns": [
-      "Retrieval Augmented Generation (RAG)",
-      "Supervised Finetuning (SFT)",
-      "Chain-of-Thought Prompting",
-      "Training with Distractor Documents for RAG Robustness"
+      "Retrieval-Augmented Generation (RAG)",
+      "Training with Distractor Documents",
+      "Chain-of-Thought Reasoning"
     ],
-    "Uses": [
-      "Generative AI Patterns",
-      "LLM-specific Patterns",
-      "Knowledge & Reasoning Patterns"
-    ]
+    "Uses": "Domain-specific Question Answering, enhancing LLM robustness to imperfect retrieval, improving factual consistency and explainability in RAG systems, adapting LLMs to specialized knowledge domains.",
+    "Category": "MLOps, LLM-specific, Prompt Design, Knowledge & Reasoning"
   },
   {
-    "Pattern Name": "Chain-of-Thought Prompting",
-    "Problem": "Large Language Models (LLMs) may provide superficial or incorrect answers, especially for complex reasoning tasks, and can overfit to concise answers during training, leading to reduced robustness and accuracy.",
-    "Context": "Training or prompting LLMs for tasks that benefit from step-by-step reasoning, explanation, or justification, such as question answering, where the model's understanding and ability to derive answers from context need to be enhanced.",
-    "Solution": "Instruct the LLM to generate an explicit reasoning process or 'chain of thought' alongside its final answer. This reasoning often involves breaking down the problem, explaining intermediate steps, and, in the context of RAG, citing verbatim sources from the provided documents.",
-    "Result": "Improves the model's ability to reason, enhances overall accuracy, and increases training robustness by guiding the model's understanding. It helps prevent overfitting to direct, short answers and encourages deeper processing of information, especially when used with external contexts.",
+    "Pattern Name": "Training with Distractor Documents",
+    "Problem": "Large Language Models (LLMs) are vulnerable to irrelevant text (distractors) within the context provided by retrieval systems, particularly in top-k RAG scenarios where high recall often means including some noise. Training solely with perfectly relevant documents diminishes the model's ability to discern pertinent information from noise.",
+    "Context": "Designing robust Retrieval-Augmented Generation (RAG) systems where the LLM needs to process a context window that may contain a mix of relevant and irrelevant information from external sources, and the model must learn to focus only on the pertinent parts.",
+    "Solution": "During the LLM finetuning process, intentionally compose training examples by including both 'golden' (relevant) documents and 'distractor' (irrelevant) documents in the input context. Experiment with varying numbers of distractor documents and, for a proportion of the training data, even omit the golden document to further compel the model to handle uncertainty or memorization.",
+    "Result": "Enhances the LLM's robustness against irrelevant text, improves its ability to discern and disregard irrelevant content, and makes the model more resilient to fluctuations in the number and quality of documents encountered during testing.",
     "Related Patterns": [
-      "Retrieval Augmented Fine-Tuning (RAFT)",
-      "Instruction Finetuning",
-      "Self-Instruct"
+      "Retrieval Augmented Fine Tuning (RAFT)"
     ],
-    "Uses": [
-      "Prompt Design Patterns",
-      "LLM-specific Patterns",
-      "Knowledge & Reasoning Patterns"
-    ]
+    "Uses": "Improving LLM robustness against noisy retrieval, enhancing context processing capabilities, preventing distraction by irrelevant information in RAG, preparing models for real-world imperfect retrieval scenarios.",
+    "Category": "MLOps, LLM-specific"
   },
   {
-    "Pattern Name": "Training with Distractor Documents for RAG Robustness",
-    "Problem": "Large Language Models (LLMs) are vulnerable to irrelevant text when performing Retrieval Augmented Generation (RAG). If trained solely on highly relevant (golden) documents, they may lack the ability to effectively discern and disregard irrelevant information, leading to degraded performance when real-world retrievers provide noisy, top-k documents.",
-    "Context": "Finetuning LLMs for domain-specific RAG applications where the retriever is not perfect and may present a mix of relevant and irrelevant documents (distractors) to the LLM at inference time. The model needs to be robust to varying numbers of distractors.",
-    "Solution": "During finetuning, incorporate a training strategy where each data point includes a mix of golden (relevant) documents and purposefully selected distractor (irrelevant) documents. Experiment with varying proportions of golden vs. distractor documents. Additionally, include a fraction of training samples where the golden document is absent, compelling the model to either rely on memorized knowledge or explicitly state its inability to answer from the provided context.",
-    "Result": "Significantly enhances the LLM's ability to filter out irrelevant information and focus on pertinent content. Makes the model more resilient to fluctuations in the number of documents encountered during testing, leading to improved and consistent performance in real-world RAG scenarios with imperfect retrievers.",
+    "Pattern Name": "Chain-of-Thought Reasoning",
+    "Problem": "Large Language Models (LLMs) can struggle with complex, multi-step reasoning tasks, often providing direct answers without showing their derivation. This can lead to a lack of transparency, reduced accuracy for intricate problems, and potential overfitting to concise answer formats.",
+    "Context": "Training or prompting LLMs for tasks requiring logical deduction, multi-hop question answering, or improved explainability, where the process of arriving at an answer is as important as the answer itself.",
+    "Solution": "Generate training data or craft prompts that explicitly guide the LLM to produce an intermediate, step-by-step reasoning process (a 'chain of thought') that leads to the final answer. In the context of Retrieval Augmented Generation (RAG), this often includes citing specific parts of the provided context verbatim to justify each step.",
+    "Result": "Improves the model's ability to perform complex reasoning, enhances overall accuracy, makes training more robust by enriching the model's understanding, and provides greater transparency into the model's decision-making process.",
     "Related Patterns": [
-      "Retrieval Augmented Fine-Tuning (RAFT)",
-      "Retrieval Augmented Generation (RAG)"
+      "Retrieval Augmented Fine Tuning (RAFT)"
     ],
-    "Uses": [
-      "LLM-specific Patterns",
-      "Generative AI Patterns"
-    ]
+    "Uses": "Complex Question Answering, improving LLM reasoning capabilities, enhancing explainability and trustworthiness, robust model training.",
+    "Category": "Prompt Design, Knowledge & Reasoning"
   },
   {
-    "Pattern Name": "Domain-Specific Supervised Finetuning",
-    "Problem": "General-purpose Large Language Models (LLMs), despite vast pretraining, often lack the specific knowledge, terminology, and desired output style required for optimal performance in specialized domains. They may also struggle to align with user preferences for domain-specific tasks.",
-    "Context": "Adapting a pretrained LLM for tasks within a specific, narrower domain (e.g., medical, legal, specific software APIs, enterprise documents) where domain expertise and a particular answering style are critical.",
-    "Solution": "Apply standard supervised finetuning (SFT) to the pretrained LLM using a dataset specifically curated for the target domain. This dataset typically consists of Question-Answer (Q, A) pairs relevant to the domain. The training can be done without providing additional context documents during the finetuning phase (0-shot prompting).",
-    "Result": "Enables the LLM to learn and adopt the appropriate answering style, become familiar with domain context, and incorporate domain-specific knowledge into its parameters. This significantly enhances its performance on tasks within that specialized domain, often serving as a strong baseline or a prerequisite for further RAG-based improvements.",
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) have a knowledge cutoff date (limited by their training data), may 'hallucinate' incorrect facts, or lack specific, up-to-date, or proprietary domain expertise, making them unsuitable for applications requiring high factual accuracy or current information.",
+    "Context": "Deploying LLMs in applications where access to external, dynamic, or specialized knowledge bases is critical for generating accurate, relevant, and reliable responses. The LLM needs to integrate current or domain-specific information beyond its pre-trained knowledge.",
+    "Solution": "Integrate a retrieval module with an LLM. Given a user query, the retriever fetches relevant documents, passages, or data snippets from an external knowledge source (e.g., database, document store, web search). These retrieved documents are then appended to the user's prompt as additional context, allowing the LLM to generate an informed response grounded in external evidence.",
+    "Result": "Enables LLMs to leverage external, up-to-date, and domain-specific information; significantly reduces factual errors and hallucinations; improves the relevance, accuracy, and trustworthiness of generated content; and allows LLMs to adapt to new information without full retraining.",
     "Related Patterns": [
-      "Retrieval Augmented Generation (RAG)",
-      "Retrieval Augmented Fine-Tuning (RAFT)"
+      "Retrieval Augmented Fine Tuning (RAFT)"
     ],
-    "Uses": [
-      "LLM-specific Patterns",
-      "Generative AI Patterns",
-      "Knowledge & Reasoning Patterns"
-    ]
-  },
-  {
-    "Pattern Name": "Retrieval Augmented Generation (RAG)",
-    "Problem": "Large Language Models (LLMs) are limited by their pre-training data cutoff, making them unable to access real-time, proprietary, or highly specialized information. This can lead to factual inaccuracies (hallucinations), outdated responses, or an inability to answer questions requiring external, dynamic knowledge.",
-    "Context": "Deploying LLMs in applications where responses must be grounded in up-to-date, authoritative, or private external knowledge sources, rather than solely relying on the model's internal parameters. Tasks include question answering, content generation, and fact-checking.",
-    "Solution": "Integrate a retrieval module with the LLM. The retriever queries an external knowledge base (e.g., document store, database, web search engine) to fetch relevant documents or information snippets based on the user's query. These retrieved documents are then provided as context to the LLM, which uses this information to formulate its response.",
-    "Result": "Significantly enhances the factual accuracy and relevance of LLM-generated responses by grounding them in external, verifiable information. Reduces hallucinations, allows access to dynamic and proprietary data, and enables LLMs to answer questions beyond their pre-training knowledge.",
-    "Related Patterns": [
-      "Retrieval Augmented Fine-Tuning (RAFT)",
-      "Domain-Specific Supervised Finetuning"
-    ],
-    "Uses": [
-      "Generative AI Patterns",
-      "LLM-specific Patterns",
-      "Tools Integration Patterns",
-      "Knowledge & Reasoning Patterns"
-    ]
+    "Uses": "Knowledge-intensive Question Answering, factual summarization, enterprise search, chatbots, content generation requiring external validation, reducing LLM hallucinations.",
+    "Category": "Generative AI, LLM-specific, Knowledge & Reasoning, Tools Integration"
   }
 ]

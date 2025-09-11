@@ -1,188 +1,121 @@
 [
   {
-    "Pattern Name": "Agent Customization",
-    "Problem": "How to design individual agents that are capable, reusable, and effective in multi-agent collaboration, and exhibit complex behavior tailored to specific application needs.",
-    "Context": "Building LLM applications where agents need specialized capabilities and roles, potentially leveraging LLMs, human inputs, or tools, and where modularity and reusability are important.",
-    "Solution": "Configure agents with a mix of basic backend types (LLMs, humans, tools). Reuse or extend built-in agents (e.g., `ConversableAgent`, `AssistantAgent`, `UserProxyAgent`) to create agents with specialized capabilities and roles. This involves setting parameters like `human_input_mode`, `termination_condition`, `code_execution_config`, and `llm_config`.",
-    "Result": "Easy creation of agents with specialized capabilities and roles. Agents can exhibit complex behavior in multi-agent conversations. Maximizes reusability of implemented agents.",
+    "Pattern Name": "Conversable Agents",
+    "Problem": "Designing individual agents that are capable, reusable, customizable, and effective in multi-agent collaboration within LLM applications.",
+    "Context": "Building multi-agent LLM applications where agents need to interact, provide feedback, and make progress through conversation.",
+    "Solution": "Implement a generic agent design that can leverage LLMs, human inputs, tools, or a combination thereof. Make agents 'conversable' so they can receive, react, and respond to messages, maintaining internal context. Allow for convenient creation of agents with different roles or responsibilities through configuration or extension.",
+    "Result": "Enables modular combination of broad LLM capabilities, allows agents to hold multi-turn conversations autonomously or with human involvement, and facilitates the creation of specialized agents for diverse tasks.",
     "Related Patterns": [
-      "Agentic AI Patterns",
-      "Tools Integration Patterns",
-      "AI-Human Interaction Patterns",
-      "LLM-specific Patterns"
-    ],
-    "Uses": [
-      "Math Problem Solving (A1)",
-      "Retrieval-augmented QA (A2)",
-      "Decision Making in Embodied Agents (A3)",
-      "Supply Chain Optimization (A4)",
-      "Conversational Chess (A6)",
-      "Online Decision Making in Web Interaction Tasks (A7)"
-    ]
-  },
-  {
-    "Pattern Name": "Automated Agent Chat",
-    "Problem": "How to enable agents to automatically exchange messages and progress a conversation without explicit, centralized control, and to allow for custom agent behaviors.",
-    "Context": "Multi-agent conversation frameworks where agents need to interact autonomously and flexibly, leveraging the conversational capabilities of LLMs.",
-    "Solution": "Provide unified conversation interfaces (`send/receive`, `generate_reply`, `register_reply`) and an agent autoreply mechanism. Agents automatically invoke `generate_reply` and send a reply unless a termination condition is met. Built-in reply functions (LLM inference, code/function execution, human input) are provided, and custom reply functions can be registered via `register_reply` to define specific behavior patterns.",
-    "Result": "Conversation flow is naturally induced and proceeds automatically. Decentralized, modular, and unified workflow definition. Enables diverse conversation patterns.",
-    "Related Patterns": [
-      "Agentic AI Patterns",
-      "LLM-specific Patterns",
+      "Conversation Programming",
+      "Unified Conversation Interfaces and Autoreply Mechanisms",
       "Composable Conversation Patterns"
     ],
-    "Uses": [
-      "General infrastructure for AutoGen applications",
-      "All general agent interactions within AutoGen (Figure 2)"
-    ]
+    "Uses": "General multi-agent LLM application development, role-playing scenarios, task-specific agents (e.g., AssistantAgent, UserProxyAgent)."
   },
   {
-    "Pattern Name": "Hybrid Control",
-    "Problem": "How to manage and control the flow of multi-agent conversations effectively, allowing for both intuitive, high-level guidance and precise, programmatic specification.",
-    "Context": "Developing complex LLM applications where conversation flow needs to be managed with varying degrees of flexibility and precision, and where both human-like guidance and deterministic logic are required.",
-    "Solution": "Allow control over conversation flow using a fusion of natural language (prompting LLM-backed agents) and programming language (Python code for specifying termination conditions, human input modes, tool execution logic, and custom autoreply functions). Support dynamic transitions between these control modes.",
-    "Result": "Flexible control flow management. Enables both high-level, human-readable guidance and detailed, programmatic control. Reduces development effort for complex workflows.",
+    "Pattern Name": "Conversation Programming",
+    "Problem": "Streamlining the development of complex LLM applications that rely on multi-agent interactions and require flexible control over conversation flow and agent actions.",
+    "Context": "Developing intricate multi-agent systems where workflows are best expressed as inter-agent conversations rather than rigid sequences.",
+    "Solution": "Adopt a programming paradigm centered around inter-agent conversations. This involves two primary steps: 1) defining a set of conversable agents with specific capabilities and roles, and 2) programming the interaction behavior between agents via conversation-centric computation and control, using a fusion of natural language and code.",
+    "Result": "Simplifies and unifies complex LLM applications, facilitates intuitive reasoning about complex workflows through agent actions and message passing, and supports flexible multi-agent conversation patterns.",
     "Related Patterns": [
-      "Agentic AI Patterns",
-      "Prompt Design Patterns",
-      "Tools Integration Patterns",
-      "LLM-specific Patterns",
-      "AI-Human Interaction Patterns"
+      "Conversable Agents",
+      "Unified Conversation Interfaces and Autoreply Mechanisms",
+      "Control by Fusion of Programming and Natural Language",
+      "Composable Conversation Patterns"
     ],
-    "Uses": [
-      "AssistantAgent's default system message (natural language control, Figure 5)",
-      "Configuring `human_input_mode` or `max_auto_replies` (programming language control)",
-      "LLM-proposed function calls"
-    ]
+    "Uses": "General multi-agent LLM application development, defining complex workflows, agent interaction scripting."
+  },
+  {
+    "Pattern Name": "Unified Conversation Interfaces and Autoreply Mechanisms",
+    "Problem": "Managing the communication and control flow in multi-agent systems in a decentralized, modular, and unified way, without requiring a separate, complex control plane.",
+    "Context": "Agents needing to send, receive, and generate replies in multi-turn conversations, where the conversation flow should be naturally induced by agent interactions.",
+    "Solution": "Provide low-level, unified conversation interfaces (`send/receive`, `generate_reply`, `register_reply`). Implement a default 'agent autoreply mechanism' where an agent automatically invokes `generate_reply` and sends a response after receiving a message, unless a termination condition is met. Allow registration of custom reply functions to customize agent behavior.",
+    "Result": "Enables automated agent chats, simplifies workflow definition, and supports dynamic, conversation-driven control flow.",
+    "Related Patterns": [
+      "Conversable Agents",
+      "Conversation Programming",
+      "Composable Conversation Patterns"
+    ],
+    "Uses": "Automated agent chats, dynamic workflow definition, custom agent behaviors (e.g., nested chat implementation)."
+  },
+  {
+    "Pattern Name": "Control by Fusion of Programming and Natural Language",
+    "Problem": "Achieving flexible and powerful control over multi-agent conversation flow, leveraging the strengths of both human-readable natural language instructions and precise programmatic logic.",
+    "Context": "Multi-agent systems where LLM-backed agents, human inputs, and tool executions interact, requiring adaptable control mechanisms.",
+    "Solution": "Provide natural language control via prompting LLM-backed agents with instructions (e.g., system messages for role-playing, debugging, output confinement). Enable programming language control using code to specify termination conditions, human input modes, tool execution logic, or custom autoreply functions. Support seamless control transition between natural language and code (e.g., LLM inference with control logic in a reply function, LLM-proposed function calls triggering code).",
+    "Result": "Enables sophisticated and adaptive control over agent interactions, allowing for dynamic adjustments and complex logic that leverages both human intuition and computational precision.",
+    "Related Patterns": [
+      "Conversation Programming",
+      "Conversable Agents",
+      "Unified Conversation Interfaces and Autoreply Mechanisms"
+    ],
+    "Uses": "Guiding agent behavior, implementing complex decision trees, dynamic debugging, integrating human oversight, LLM function calling."
   },
   {
     "Pattern Name": "Composable Conversation Patterns",
-    "Problem": "How to design and implement diverse and flexible multi-agent conversation workflows, from simple fixed interactions to complex, dynamic collaborations.",
-    "Context": "Building multi-agent LLM applications that require various interaction structures depending on the task's complexity, the number of agents, and whether the flow is static or dynamic.",
-    "Solution": "Provide high-level interfaces for common patterns (two-agent chat, sequential chats, nested chat, group chat). Allow these patterns to be composed recursively (e.g., nested chat with group chat) and extended via low-level interfaces (e.g., `register_reply`) or dynamic mechanisms (custom reply functions, LLM-driven function calls).",
-    "Result": "Supports diverse conversation patterns (static and dynamic). Enables creation of complex, creative workflows (e.g., inner monologue). Enhances usability for common patterns.",
+    "Problem": "Building multi-agent applications that require diverse interaction structures (static or dynamic, simple or complex) beyond basic back-and-forth dialogues.",
+    "Context": "Designing multi-agent systems for varying application complexities, such as single-turn, multi-turn, human-involved, or dynamically evolving conversations.",
+    "Solution": "Provide high-level interfaces for commonly used conversation patterns like Two-Agent Chat, Sequential Chat, Nested Chat, and Group Chat. Allow these patterns to be composed recursively using low-level interfaces (like `register_reply`) to create more complex and creative patterns. Enable dynamic conversation flows through custom reply functions, speaker transition conditions, and LLM-driven function calls.",
+    "Result": "Supports a broad spectrum of application needs, from simple two-agent interactions to complex, dynamically evolving multi-agent collaborations, enhancing flexibility and generalizability.",
     "Related Patterns": [
-      "Agentic AI Patterns",
-      "Planning Patterns",
-      "LLM-specific Patterns",
-      "Automated Agent Chat"
+      "Conversation Programming",
+      "Unified Conversation Interfaces and Autoreply Mechanisms"
     ],
-    "Uses": [
-      "Two-agent chat (A1, A2, A3, A7)",
-      "Sequential chats (Listing 5)",
-      "Nested chat (Listing 3 for self-reflection)",
-      "Group chat (A4, A5, A6)"
-    ]
+    "Uses": "Math problem solving (two-agent), retrieval-augmented QA (two-agent), decision making in embodied agents (two/three-agent), supply chain optimization (three-agent), dynamic task solving (group chat), conversational chess (multi-agent); implementing inner monologues or self-reflection (nested chat)."
+  },
+  {
+    "Pattern Name": "Human-in-the-Loop Multi-Agent Systems",
+    "Problem": "Effectively integrating human feedback, guidance, and oversight into multi-agent AI workflows to improve performance, ensure safety, and enable collaborative problem-solving.",
+    "Context": "Challenging tasks where fully autonomous AI systems may fail, require validation, or where human expertise is essential. Scenarios involving multiple human users collaborating with AI agents.",
+    "Solution": "Configure a UserProxyAgent to solicit human inputs at specific rounds or conditions (e.g., `human_input_mode=ALWAYS`). Enable multi-user participation by designing agents (e.g., Student, Expert) that can interact with the system and with each other, mediated by AI assistants.",
+    "Result": "Enhances the system's ability to solve complex problems, incorporates human intelligence, provides guardrails, improves user experience, and allows for interactive user instructions and multi-user collaboration.",
+    "Related Patterns": [
+      "Conversable Agents",
+      "Composable Conversation Patterns"
+    ],
+    "Uses": "Math problem solving (correcting LLM errors, multi-user scenarios), dynamic task solving, conversational games (AI-human chess), general AI oversight."
+  },
+  {
+    "Pattern Name": "Interactive Retrieval",
+    "Problem": "Mitigating the intrinsic limitations of LLMs (e.g., hallucination, outdated knowledge, lack of domain-specific context) in retrieval-augmented generation (RAG) systems when initial retrieval is insufficient.",
+    "Context": "Question-answering or code generation tasks where LLMs need to access external, up-to-date, or private knowledge bases, and the first attempt to retrieve relevant information might not be enough.",
+    "Solution": "Design the LLM-backed assistant to explicitly signal 'UPDATE CONTEXT' when it cannot find information in the current context. This signal triggers a user proxy agent (or another specialized agent) to perform additional retrieval attempts (e.g., fetching next most similar document chunks) and provide updated context to the assistant.",
+    "Result": "Dynamically updates the context for the LLM, significantly boosting performance on QA and code generation tasks, and improving the LLM's ability to provide accurate and relevant responses.",
+    "Related Patterns": [],
+    "Uses": "Natural language question answering, code generation based on private or latest codebases."
   },
   {
     "Pattern Name": "Grounding Agent",
-    "Problem": "LLM-based agents may lack basic commonsense knowledge, hallucinate, or get stuck in repetitive error loops, especially in interactive decision-making tasks in dynamic environments, leading to task failures.",
-    "Context": "Multi-agent systems where an agent's decisions require specific, often commonsense, knowledge about the environment or task rules, and where errors can lead to persistent failures or invalid actions.",
-    "Solution": "Introduce a specialized 'grounding agent' that provides crucial commonsense knowledge, factual information, or corrective feedback to the decision-making agents. This agent is triggered when specific conditions are met (e.g., early signs of recurring errors, repeated actions, invalid moves).",
-    "Result": "Enhances the system's ability to avoid error loops, mitigates persistence with flawed plans, improves task success rate, and ensures adherence to rules/facts.",
+    "Problem": "Preventing LLM-based agents from making commonsense errors, getting stuck in repetitive error loops, or violating task-specific rules in interactive decision-making environments.",
+    "Context": "Embodied agents or game-playing AI systems operating in environments that require adherence to physical laws, common sense, or explicit game rules.",
+    "Solution": "Introduce a specialized 'grounding agent' that acts as a knowledge source or rule validator. This agent provides crucial commonsense knowledge or checks proposed actions for legality, intervening dynamically (e.g., when recurring errors are detected, or an illegal move is suggested) to guide the decision-making agent.",
+    "Result": "Significantly enhances the system's ability to avoid error loops, ensures adherence to rules (e.g., game integrity), and improves decision-making by supplying necessary external knowledge.",
     "Related Patterns": [
-      "Agentic AI Patterns",
-      "Knowledge & Reasoning Patterns",
-      "LLM-specific Patterns"
+      "Executor Agent"
     ],
-    "Uses": [
-      "Decision Making in Embodied Agents (A3, for commonsense knowledge)",
-      "Conversational Chess (A6, board agent for rule validation)"
-    ]
+    "Uses": "Decision making in embodied agents (ALFWorld), conversational games (Chess), preventing flawed plans."
   },
   {
-    "Pattern Name": "Safeguard Agent",
-    "Problem": "Ensuring the safety, security, and reliability of code or actions generated by LLM agents, especially when interacting with external tools or sensitive systems (e.g., preventing malicious code, information leakage, or unsafe operations).",
-    "Context": "Multi-agent systems where LLM agents generate code or make decisions that could have security implications, require adherence to specific safety protocols, or involve critical operations.",
-    "Solution": "Introduce a specialized 'safeguard agent' responsible for reviewing and verifying the safety, security, and correctness of outputs (e.g., code) from other agents before execution or deployment. This agent can act in an adversarial manner to scrutinize proposed solutions.",
-    "Result": "Boosts performance in identifying unsafe code, reduces risks, and ensures adherence to safety guidelines. Enhances reliability and trustworthiness of the system. Improves user experience by preventing errors.",
+    "Pattern Name": "Adversarial/Collaborative Agent Interactions",
+    "Problem": "Ensuring robustness, safety, and quality in complex multi-agent tasks, especially those involving creative generation (like code) where errors or unsafe outputs are possible.",
+    "Context": "Tasks requiring a combination of generation, interpretation, and critical review or validation, such as software development or optimization solution interpretation.",
+    "Solution": "Design a multi-agent system where some agents work collaboratively to generate solutions (e.g., a 'Writer' for code and interpretation, a 'Commander' for coordination) while others act adversarially to check for safety, errors, or adherence to constraints (e.g., a 'Safeguard' agent for code safety). Information is shared in a controlled manner between these roles.",
+    "Result": "Boosts performance (e.g., F1 score in identifying unsafe code), reduces errors, promotes modularity, and ensures a higher quality and safer output.",
     "Related Patterns": [
-      "Agentic AI Patterns",
-      "MLOps Patterns",
-      "LLM-specific Patterns",
-      "Tools Integration Patterns"
+      "Composable Conversation Patterns"
     ],
-    "Uses": [
-      "Supply Chain Optimization (A4, checking code safety)"
-    ]
+    "Uses": "Supply chain optimization (code generation and safety checks), software engineering tasks."
   },
   {
-    "Pattern Name": "Role Play Prompting",
-    "Problem": "How to guide an LLM agent to adopt a specific persona, mindset, or behavior within a multi-agent conversation, influencing its responses, reasoning, and actions to align with a desired role.",
-    "Context": "Designing LLM-backed agents that need to fulfill distinct roles (e.g., assistant, critic, engineer) or exhibit specific conversational styles or reasoning processes in a collaborative environment.",
-    "Solution": "Incorporate explicit role-playing instructions into the agent's system message or initial prompt, clearly defining its persona, responsibilities, and expected behavior.",
-    "Result": "Agent adopts the specified role, leading to more aligned, focused, and effective contributions to the multi-agent conversation. Can be used for dynamic speaker selection and fostering specific interaction dynamics.",
+    "Pattern Name": "Executor Agent",
+    "Problem": "Decoupling the high-level decision-making and planning logic from the low-level interaction and execution within an external environment.",
+    "Context": "Online decision-making tasks where an AI agent needs to perform actions in a simulated or real-world environment (e.g., embodied agents, web interaction tasks).",
+    "Solution": "Implement a dedicated 'executor agent' that is responsible for: 1) receiving high-level action decisions from a planning/assistant agent, 2) translating and executing these actions in the environment, and 3) reporting the environment's state, observations, or feedback back to the decision-making agent. The assistant agent then focuses solely on planning and reasoning.",
+    "Result": "Simplifies the development of decision-making agents, allows for reuse of planning logic across different environments (with different executors), and streamlines agent-environment interactions by clearly separating concerns.",
     "Related Patterns": [
-      "Prompt Design Patterns",
-      "Generative AI Patterns",
-      "Agentic AI Patterns"
-    ],
-    "Uses": [
-      "AssistantAgent's default system message (Figure 5: 'You are a helpful AI assistant')",
-      "Dynamic Task Solving with Group Chat (A5, for speaker selection)",
-      "CAMEL (related work, uses 'Inception prompting')"
-    ]
-  },
-  {
-    "Pattern Name": "Control Flow Prompting",
-    "Problem": "How to use natural language instructions within prompts to influence the sequence of operations, decision-making logic, or overall flow of an LLM agent's behavior in a multi-agent system.",
-    "Context": "LLM agents need to follow specific steps, conditions, or iterative processes in their problem-solving, and developers prefer natural language for high-level guidance.",
-    "Solution": "Embed instructions related to the conversation flow, step-by-step reasoning, planning, or conditional actions directly into the LLM's system message or prompt.",
-    "Result": "LLM agents follow the intended control flow, performing tasks in a structured manner, suggesting code, explaining plans, or debugging when needed.",
-    "Related Patterns": [
-      "Prompt Design Patterns",
-      "Planning Patterns",
-      "Agentic AI Patterns"
-    ],
-    "Uses": [
-      "AssistantAgent's default system message (Figure 5: 'Solve the task step by step if you need to. If a plan is not provided explain your plan first. Be clear which step uses code and which step uses your language skill. If the result indicates there is an error fix the error and output the code again')"
-    ]
-  },
-  {
-    "Pattern Name": "Output Confinement Prompting",
-    "Problem": "How to constrain the output format or content of an LLM agent to make it easily consumable by other agents or external tools, and to improve system robustness and parsing reliability.",
-    "Context": "Multi-agent systems where agents exchange messages that need to adhere to specific structural or content requirements for successful automated processing by other agents, tools, or parsers.",
-    "Solution": "Include explicit instructions in the LLM's prompt to confine its output to a particular format (e.g., Python coding block, shell script block, specific keywords, single code block per response, `TERMINATE` signal).",
-    "Result": "LLM outputs are structured and predictable, making it easier for other agents or tools to parse and act upon them. Reduces parsing errors and improves inter-agent communication and system stability.",
-    "Related Patterns": [
-      "Prompt Design Patterns",
-      "LLM-specific Patterns",
-      "Tools Integration Patterns"
-    ],
-    "Uses": [
-      "AssistantAgent's default system message (Figure 5: 'suggest python code in a python coding block or shell script in a sh coding block', 'Do not include multiple code blocks in one response', 'Reply TERMINATE in the end when everything is done')"
-    ]
-  },
-  {
-    "Pattern Name": "Facilitate Automation Prompting",
-    "Problem": "How to design prompts that encourage LLM agents to produce outputs that directly enable or streamline automated processes, such as code execution or tool invocation, without manual intervention.",
-    "Context": "LLM agents are expected to interact with tools or execute code generated by themselves or other agents, and the system needs to automate these interactions efficiently.",
-    "Solution": "Instruct the LLM agent to suggest executable code or function calls in a specific, parseable format, and to use `print` statements for output capture, rather than asking for manual copy-pasting or complex parsing.",
-    "Result": "Streamlines the automation of code execution and tool usage, reducing manual intervention and improving the efficiency of multi-agent workflows. Enhances the seamless integration of LLMs with external systems.",
-    "Related Patterns": [
-      "Prompt Design Patterns",
-      "Tools Integration Patterns",
-      "Automated Agent Chat",
-      "LLM-specific Patterns"
-    ],
-    "Uses": [
-      "AssistantAgent's default system message (Figure 5: 'When using code you must indicate the script type in the code block', 'The user cannot provide any other feedback or perform any other action beyond executing the code you suggest. The user cant modify your code. So do not suggest incomplete code which requires users to modify', 'Instead use print function for the output when relevant')"
-    ]
-  },
-  {
-    "Pattern Name": "Grounding Prompting",
-    "Problem": "How to ensure that an LLM agent's responses and actions are factually accurate, aligned with external data, or adhere to specific domain rules, thereby preventing hallucinations or invalid outputs.",
-    "Context": "LLM agents operate in environments where factual accuracy, compliance with rules, or leveraging external knowledge is critical for task success and trustworthiness.",
-    "Solution": "Provide instructions in the prompt that guide the LLM to verify answers, include verifiable evidence, or adhere to domain-specific rules. This can complement or be supported by a 'Grounding Agent' that actively injects relevant knowledge.",
-    "Result": "Improves factuality, reduces hallucinations, and ensures compliance with rules or external information. Builds trust in the agent's outputs.",
-    "Related Patterns": [
-      "Prompt Design Patterns",
-      "Knowledge & Reasoning Patterns",
-      "LLM-specific Patterns",
       "Grounding Agent"
     ],
-    "Uses": [
-      "AssistantAgent's default system message (Figure 5: 'When you find an answer verify the answer carefully. Include verifiable evidence in your response if possible')"
-    ]
+    "Uses": "Decision making in embodied agents (ALFWorld), online decision making in web interaction tasks (MiniWoB), robotics."
   }
 ]

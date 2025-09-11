@@ -22,3 +22,5 @@ if __name__ == "__main__":
     output_file = f"full_patterns_with_clusters.json"
     cluster_file = "patterns_with_50_clusters.json" # Output from clustering notebook
     add_cluster_numbers_to_json(input_file, output_file, cluster_file)
+    df = pd.read_json(output_file)
+    df.to_csv("full_patterns_with_clusters.csv", index=False)

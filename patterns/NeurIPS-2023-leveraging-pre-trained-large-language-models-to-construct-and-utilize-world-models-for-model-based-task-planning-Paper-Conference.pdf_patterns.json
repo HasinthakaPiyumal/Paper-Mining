@@ -1,239 +1,50 @@
 [
   {
-    "Pattern Name": "LLM-Assisted Symbolic World Model Construction",
-    "Problem": "Manually creating accurate and comprehensive symbolic world models (e.g., PDDL) is time-consuming and requires specialized expertise. Direct LLM planning is unreliable for correctness.",
-    "Context": "A reliable symbolic world model is needed for classical planning or plan validation. Users may lack expertise in formal symbolic languages like PDDL.",
-    "Solution": "Leverage Large Language Models (LLMs), such as GPT-4, to generate PDDL domain models from natural language descriptions of actions and domain context. This involves careful prompt engineering, iterating over actions, and maintaining a shared predicate list for consistency.",
-    "Result": "High-quality PDDL models are produced for complex domains, significantly reducing the burden on human experts and enabling the use of sound classical planners or robust plan validators.",
+    "Pattern Name": "LLM-Powered Symbolic World Model Engineering",
+    "Problem": "Large Language Models (LLMs) often generate incorrect or implausible plans when used directly for complex planning tasks due to limitations in reasoning, handling long-term dependencies, and combinatorial search. Simultaneously, acquiring robust, symbolic world models (e.g., in PDDL) is traditionally labor-intensive and requires specialized knowledge, making it inaccessible to non-experts. Initial LLM-generated symbolic models may also contain errors (syntax or factual) that are difficult for non-PDDL experts to correct directly.",
+    "Context": "Developing AI agents for sequential decision-making in domains like robotics or household automation, where plan correctness and reliability are paramount. Users (e.g., robot engineers) possess natural language descriptions of actions and domain constraints but may lack expertise in formal planning languages. The goal is to leverage LLMs' common-world knowledge and natural language understanding to build reliable symbolic models, without relying on their unreliable planning capabilities.",
+    "Solution": "The process involves two main phases: \n1.  **Acquisition:** Prompt an LLM (e.g., GPT-4) with detailed instructions, illustrative examples, domain context, natural language descriptions of actions, and a dynamically updated list of predicates. The LLM then generates symbolic representations of actions (e.g., PDDL action models) including their preconditions and effects. This process can be iterative (e.g., generating models action-by-action and then re-running with a full predicate list) to refine the model and leverage LLMs for knowledge acquisition from minimal descriptions.\n2.  **Correction:** Employ the LLM as an intelligent interface between the generated symbolic model and various feedback sources (human experts, PDDL validators). The LLM translates PDDL models and validator error messages into natural language for user comprehension. It then incorporates natural language corrective feedback (e.g., missing effects, syntax errors) back into the PDDL model by continuing the dialogue, effectively concealing the complexity of PDDL from end-users.",
+    "Result": "Produces high-quality, correct, and intuitively named symbolic world models (e.g., PDDL domain models) by effectively separating the modeling of causal dependencies (LLM's strength) from the combinatorial search (external planner's strength). This significantly reduces the human involvement and specialized expertise required for symbolic model acquisition and correction, making the process more efficient and accessible. The generated models can then be seamlessly used by sound, domain-independent classical planners, offering correctness guarantees.",
     "Related Patterns": [
-      "Natural Language to Formal Representation",
-      "Structured Prompt for Model Generation",
-      "Iterative Model Construction with Shared Predicate List",
-      "LLM for Knowledge Acquisition"
+      "LLM as Goal Translator",
+      "Classical Planner with LLM-Acquired World Model",
+      "LLM Planner with Symbolic Validation and Feedback"
     ],
-    "Uses": [
-      "Generating PDDL models for classical planners",
-      "Validating LLM-generated plans",
-      "Guiding skill learning for embodied agents"
-    ]
+    "Uses": "Robotics (e.g., household robots), general AI agent development requiring robust planning capabilities, knowledge engineering for symbolic AI systems, enabling non-experts to define agent behaviors and causal models."
   },
   {
-    "Pattern Name": "LLM as a Feedback Interface for Symbolic Models",
-    "Problem": "Correcting errors in symbolic models (like PDDL) requires expertise in the formal language. Technical feedback from validators or humans may be difficult for non-experts to interpret and apply.",
-    "Context": "An LLM-generated symbolic model may contain errors (syntax, factual) that need correction. End-users providing feedback may not understand the symbolic language.",
-    "Solution": "Use an LLM as an intermediary layer. It translates the symbolic model (or technical validator feedback) into natural language for human understanding and then incorporates natural language corrective feedback back into the symbolic model, typically through a dialogue.",
-    "Result": "Enables non-experts to provide effective feedback, streamlines the correction process, and significantly improves the accuracy and functionality of the symbolic model while concealing its complexity.",
+    "Pattern Name": "LLM as Goal Translator",
+    "Problem": "Classical symbolic planners require precise, formal goal specifications (e.g., PDDL goals), but end-users typically provide high-level instructions in natural language. This disparity creates a barrier to accessibility and usability for symbolic planning systems.",
+    "Context": "An AI system that utilizes a classical symbolic planner (which demands formal goal input) but is designed to interact with users through natural language commands. A symbolic world model (e.g., PDDL) is already available, defining the predicates and objects relevant to the domain.",
+    "Solution": "An LLM is employed to parse and interpret natural language user instructions and translate them into a formal, symbolic goal specification (e.g., a set of PDDL predicates to be achieved). The LLM leverages its natural language understanding capabilities and its knowledge of the defined predicates to accurately represent the user's intent in a machine-readable format suitable for the symbolic planner.",
+    "Result": "Bridges the semantic gap between human natural language and formal planning systems, thereby making classical planners more accessible and user-friendly. This allows users to specify complex tasks without needing to learn or understand a formal planning language.",
     "Related Patterns": [
-      "PDDL to Natural Language Translation",
-      "Dialogue-Based Correction",
-      "Early Feedback Loop for Model Correction",
-      "Self-Documenting Model"
+      "LLM-Powered Symbolic World Model Engineering",
+      "Classical Planner with LLM-Acquired World Model"
     ],
-    "Uses": [
-      "Correcting LLM-generated PDDL models",
-      "Making symbolic model inspection accessible to non-experts",
-      "Integrating PDDL validator feedback"
-    ]
+    "Uses": "Natural language interfaces for robotic control, intelligent assistants, task automation systems, and any application where symbolic planning is used, and user interaction is primarily in natural language."
   },
   {
-    "Pattern Name": "Classical Planning with LLM-Generated World Model",
-    "Problem": "LLMs alone struggle with combinatorial search and ensuring correctness for complex planning tasks. Manually crafting accurate PDDL domain models for classical planners is laborious.",
-    "Context": "A reliable and correct plan is needed for an agent to achieve a goal in a complex domain. An LLM has been successfully used to construct a symbolic world model.",
-    "Solution": "The LLM first translates user instructions into PDDL goal specifications. This, along with the LLM-generated (and corrected) PDDL domain model, is then fed into a sound, domain-independent classical planner (e.g., Fast Downward) to find a plan.",
-    "Result": "Generates highly reliable, correct, and executable plans by leveraging the LLM's natural language understanding and model acquisition capabilities, combined with the classical planner's robust search and correctness guarantees.",
+    "Pattern Name": "Classical Planner with LLM-Acquired World Model",
+    "Problem": "Large Language Models (LLMs) struggle with the combinatorial search and correctness guarantees essential for reliable planning in complex, real-world scenarios. They often produce plans that are logically inconsistent, physically impossible, or fail to achieve goals, making them unsuitable for critical applications.",
+    "Context": "An AI agent needs to execute plans for complex, long-horizon tasks in a structured environment where reliability is paramount. A robust symbolic world model (e.g., PDDL domain model) has been successfully acquired and refined using LLM-Powered Symbolic World Model Engineering, and user goals are translated into formal specifications by an LLM (LLM as Goal Translator).",
+    "Solution": "A standard, robust, and domain-independent classical symbolic planner (e.g., Fast Downward, STRIPS planner) is integrated with the LLM-generated and corrected symbolic world model and the LLM-translated formal goal specifications. The classical planner is exclusively responsible for performing the search through the state space to find a sequence of actions that achieves the goal, leveraging its proven algorithms for optimality or satisficing.",
+    "Result": "Generates highly reliable, correct, and executable plans with strong correctness guarantees, effectively overcoming the limitations of direct LLM planning regarding combinatorial search and logical consistency. This pattern successfully combines the natural language understanding and knowledge acquisition strengths of LLMs with the robust, provable planning capabilities of classical AI.",
     "Related Patterns": [
-      "LLM-Assisted Symbolic World Model Construction",
-      "LLM for Goal Specification Translation",
-      "Tools Integration Patterns"
+      "LLM-Powered Symbolic World Model Engineering",
+      "LLM as Goal Translator"
     ],
-    "Uses": [
-      "Reliable task planning for AI agents",
-      "Achieving goals in complex environments",
-      "Integrating natural language commands with symbolic planning systems"
-    ]
+    "Uses": "Robotics, automated task execution, complex system control, and any application where plan correctness, logical consistency, and provable execution are critical requirements."
   },
   {
-    "Pattern Name": "LLM Plan Refinement with Symbolic Validation",
-    "Problem": "LLM-generated plans often lack correctness, overlook preconditions, or exhibit physically implausible actions, making them unreliable for execution.",
-    "Context": "An LLM is used as a primary planner, but its output needs rigorous validation and iterative correction. A symbolic world model (PDDL) is available.",
-    "Solution": "The LLM-generated symbolic world model (PDDL) is used as a 'symbolic simulator' or 'human proxy' to validate plans proposed by an LLM planner. A validation tool (e.g., VAL) checks for unmet preconditions or goal conditions. This validation feedback is translated into natural language by an LLM and provided back to the LLM planner for iterative refinement (reprompting).",
-    "Result": "Significantly improves the correctness and executability of LLM-generated plans compared to vanilla LLM planning, reducing reliance on costly physical simulators or extensive manual inspection.",
+    "Pattern Name": "LLM Planner with Symbolic Validation and Feedback",
+    "Problem": "While LLM planners can sometimes capture implicit human preferences or ordering constraints not easily formalized, they frequently generate incorrect, incomplete, or non-executable plans due to a lack of deep causal reasoning and logical consistency. Manually correcting these plans is resource-intensive and impractical for complex tasks.",
+    "Context": "An AI system employs an LLM directly as a planner (e.g., using a ReAct-like approach) to leverage its flexibility and ability to incorporate commonsense or implicit user constraints. However, the resulting plans require rigorous validation to ensure their correctness and executability. A reliable symbolic world model (e.g., PDDL) is available, typically acquired through LLM-Powered Symbolic World Model Engineering.",
+    "Solution": "The LLM-acquired symbolic world model (e.g., PDDL) is utilized as an inexpensive, high-level 'symbolic simulator' or 'human proxy' to validate plans proposed by the LLM planner. A PDDL validator tool (e.g., VAL) checks the LLM-generated plan against the symbolic model for unmet preconditions or goal conditions. Any validation feedback (e.g., error messages, unmet conditions) is then translated by an LLM into natural language and provided back to the LLM planner through a reprompting mechanism. The LLM planner iteratively refines its plan based on this corrective feedback.",
+    "Result": "Significantly improves the correctness and executability of LLM-generated plans by introducing a robust, automated feedback loop. This approach allows the LLM planner to retain its capacity for incorporating implicit preferences and commonsense knowledge while benefiting from the logical consistency checks and correctness guarantees of symbolic AI. It reduces reliance on costly physical simulators or extensive human oversight during plan execution.",
     "Related Patterns": [
-      "LLM as a Feedback Interface for Symbolic Models",
-      "Dialogue-Based Correction",
-      "Feedback-Driven Refinement (general concept)",
-      "Tools Integration Patterns"
+      "LLM-Powered Symbolic World Model Engineering"
     ],
-    "Uses": [
-      "Improving the reliability of LLM planners",
-      "Reducing iteration cost in plan generation",
-      "Providing grounded feedback for LLMs to self-correct"
-    ]
-  },
-  {
-    "Pattern Name": "Iterative Model Construction with Shared Predicate List",
-    "Problem": "When constructing a comprehensive symbolic domain model (e.g., PDDL) across multiple actions, LLMs might generate inconsistent or redundant predicates, or miss implicit preconditions in initial passes.",
-    "Context": "Building a complex symbolic domain model from natural language, where consistency and completeness of predicates are crucial for the model's functionality.",
-    "Solution": "Generate PDDL models for each action sequentially. Maintain an actively updated list of all newly defined predicates and their natural language descriptions. Provide this list to the LLM in subsequent prompts to encourage reuse of existing predicates and ensure consistency. A second pass with the full predicate list can further refine the model.",
-    "Result": "Ensures predicate consistency, reduces redundancy, helps LLMs infer implicit preconditions, and improves the overall quality and completeness of the symbolic model.",
-    "Related Patterns": [
-      "LLM-Assisted Symbolic World Model Construction",
-      "Structured Prompt for Model Generation",
-      "Self-Documenting Model"
-    ],
-    "Uses": [
-      "Building complex symbolic domain models systematically",
-      "Maintaining consistency in knowledge representation across actions",
-      "Improving model completeness by surfacing implicit dependencies"
-    ]
-  },
-  {
-    "Pattern Name": "Structured Prompt for Model Generation",
-    "Problem": "LLMs require specific and structured guidance to reliably produce accurate, consistent, and syntactically correct formal representations (like PDDL) from natural language inputs.",
-    "Context": "Using an LLM to generate formal, structured outputs such as PDDL action models, where the output format and content rules are strict.",
-    "Solution": "Design a comprehensive prompt template that includes: a) detailed instructions for the task, b) one or two few-shot examples illustrating input and desired output formats, c) contextual information about the domain, d) a natural language description of the specific action, and e) a dynamically updated list of existing predicates.",
-    "Result": "Significantly improves the LLM's ability to generate high-quality, syntactically correct, and semantically consistent symbolic models, reducing errors and noise in the output.",
-    "Related Patterns": [
-      "Few-Shot Prompting (implicit)",
-      "LLM-Assisted Symbolic World Model Construction",
-      "Iterative Model Construction with Shared Predicate List"
-    ],
-    "Uses": [
-      "Generating PDDL models or other formal specifications",
-      "Creating structured code or data from natural language instructions",
-      "Ensuring consistent output format from LLMs"
-    ]
-  },
-  {
-    "Pattern Name": "Natural Language to Formal Representation",
-    "Problem": "Bridging the semantic gap between human-understandable natural language descriptions and precise, machine-executable formal representations required by AI systems.",
-    "Context": "Humans provide high-level instructions, domain knowledge, or descriptions in natural language, but the AI system (e.g., a planner) requires a formal, symbolic representation for reasoning or execution.",
-    "Solution": "Leverage LLMs' advanced natural language understanding capabilities to parse natural language descriptions (of actions, goals, environment states) and translate them into a specified formal language (e.g., PDDL preconditions, effects, goal specifications, predicate definitions).",
-    "Result": "Automates the creation of formal models and specifications, reduces the need for human experts in formal languages, and makes AI systems more accessible to end-users.",
-    "Related Patterns": [
-      "LLM-Assisted Symbolic World Model Construction",
-      "LLM for Goal Specification Translation",
-      "LLM for State Grounding"
-    ],
-    "Uses": [
-      "Generating PDDL models from action descriptions",
-      "Defining planning goals from user instructions",
-      "Grounding initial states from environment descriptions",
-      "Acquiring knowledge in formal formats"
-    ]
-  },
-  {
-    "Pattern Name": "LLM for Knowledge Acquisition",
-    "Problem": "Expanding the set of actions or understanding implicit, commonsense constraints for an AI agent, especially when only minimal natural language descriptions of actions are available.",
-    "Context": "An AI agent needs to learn new skills or expand its operational capabilities. Domain engineers may provide only high-level or minimal descriptions of actions.",
-    "Solution": "Use an LLM, leveraging its extensive common-world knowledge encoded from its training data, to infer and propose detailed preconditions and effects for actions based on minimal natural language descriptions. This goes beyond mere translation to 'suggesting meaningful action models.'",
-    "Result": "Accelerates the process of knowledge acquisition for new skills, helping engineers set up training environments, define new agent capabilities, or generate initial hypotheses for action models.",
-    "Related Patterns": [
-      "LLM-Assisted Symbolic World Model Construction",
-      "Natural Language to Formal Representation"
-    ],
-    "Uses": [
-      "Defining new skills for AI agents",
-      "Expanding agent capabilities with inferred knowledge",
-      "Generating initial action model hypotheses for domain engineers",
-      "Integrating commonsense knowledge into symbolic models"
-    ]
-  },
-  {
-    "Pattern Name": "Early Feedback Loop for Model Correction",
-    "Problem": "Correcting errors in plans generated by LLMs is inefficient and repetitive, as similar mistakes might recur across different planning instances. Traditional feedback is often collected online during plan execution.",
-    "Context": "LLMs are used in planning, but their direct plan generation is error-prone. The goal is to improve overall system reliability and reduce human effort in the long run.",
-    "Solution": "Shift the feedback and correction process from individual plan execution to the underlying symbolic world model itself, at an earlier stage in the development lifecycle. Users correct the domain model (e.g., PDDL) once, at the beginning of the process, rather than repeatedly inspecting and correcting every generated plan.",
-    "Result": "Reduces human involvement and frustration, as corrections made to the foundational model propagate to all future plans, offering correctness guarantees from external planners and improving overall system efficiency.",
-    "Related Patterns": [
-      "LLM as a Feedback Interface for Symbolic Models",
-      "Human-in-the-Loop Correction (implicit)"
-    ],
-    "Uses": [
-      "Improving efficiency and reliability of AI planning systems",
-      "Reducing operational costs by front-loading corrections",
-      "Ensuring foundational model correctness upfront"
-    ]
-  },
-  {
-    "Pattern Name": "Self-Documenting Model",
-    "Problem": "Symbolic models, such as PDDL, can be opaque and difficult for non-experts to understand, inspect, or debug, hindering collaboration and validation.",
-    "Context": "Generating complex symbolic representations that need to be understood and validated by human users, some of whom may not be experts in the formal language.",
-    "Solution": "When defining new elements within the symbolic model (e.g., predicates, parameters, actions in PDDL), require the LLM to also provide a clear and concise natural language description of that element.",
-    "Result": "Makes the symbolic model transparent and understandable for non-PDDL experts, facilitating inspection, debugging, and collaboration, and aids in downstream tasks like automatic state grounding.",
-    "Related Patterns": [
-      "PDDL to Natural Language Translation (implicit)",
-      "LLM-Assisted Symbolic World Model Construction"
-    ],
-    "Uses": [
-      "Improving interpretability of symbolic models",
-      "Facilitating human oversight and validation",
-      "Enhancing model maintainability and collaboration",
-      "Aiding automatic state grounding"
-    ]
-  },
-  {
-    "Pattern Name": "LLM for Goal Specification Translation",
-    "Problem": "End-users typically express their desired goals in natural language, but symbolic planners require precise, formal goal specifications (e.g., PDDL goals).",
-    "Context": "Integrating natural language user commands or high-level instructions with symbolic planning systems.",
-    "Solution": "Use an LLM to parse natural language user instructions and convert them into a structured, symbolic goal specification in the PDDL format, utilizing the predicates and objects defined in the domain model.",
-    "Result": "Enables natural language interaction with classical planning systems, making them more accessible and user-friendly, and automates a crucial step in setting up planning problems.",
-    "Related Patterns": [
-      "Natural Language to Formal Representation",
-      "Classical Planning with LLM-Generated World Model"
-    ],
-    "Uses": [
-      "User interface for planning systems",
-      "Automating goal definition for symbolic planners",
-      "Bridging human intent to formal planning requirements"
-    ]
-  },
-  {
-    "Pattern Name": "LLM for State Grounding",
-    "Problem": "Initial states of an environment are often described in natural language or observed visually, but symbolic planners require these descriptions to be translated into grounded PDDL predicate values.",
-    "Context": "Preparing an initial state for a classical planner from human descriptions, environmental observations, or sensor data.",
-    "Solution": "Leverage LLMs to translate natural language descriptions of the environment into grounded PDDL predicate values. This can also be combined with vision-language models to derive predicate values directly from visual observations through a question-answering approach.",
-    "Result": "Automates the creation of accurate initial state descriptions for symbolic planners, bridging the gap between perception/description and formal symbolic representation.",
-    "Related Patterns": [
-      "Natural Language to Formal Representation",
-      "Self-Documenting Model (predicate descriptions aid grounding)"
-    ],
-    "Uses": [
-      "Initializing planning problems for symbolic planners",
-      "Connecting perception to symbolic reasoning systems",
-      "Automating environment setup for simulations"
-    ]
-  },
-  {
-    "Pattern Name": "Dialogue-Based Correction",
-    "Problem": "Correcting errors in LLM-generated outputs (such as PDDL models or plans) often requires an iterative process involving multiple rounds of feedback and refinement.",
-    "Context": "An LLM has generated an initial (potentially erroneous) output, and feedback (from validators or humans) needs to be incorporated to improve its quality.",
-    "Solution": "Integrate corrective feedback by 'replaying and continuing the original generation dialogue.' The LLM receives the feedback (often translated to natural language) and attempts to rectify its previous output within the context of the ongoing conversation, allowing for incremental improvements.",
-    "Result": "Facilitates iterative refinement of LLM outputs, enabling incremental improvements, addressing errors effectively, and making the correction process more interactive and user-friendly.",
-    "Related Patterns": [
-      "LLM as a Feedback Interface for Symbolic Models",
-      "Early Feedback Loop for Model Correction",
-      "Prompt Design Patterns"
-    ],
-    "Uses": [
-      "Refining LLM-generated code, models, or text based on iterative feedback",
-      "Interactive debugging of LLM outputs",
-      "Collaborative improvement of AI-generated content"
-    ]
-  },
-  {
-    "Pattern Name": "LLM as Heuristic/Seed for Classical Planning",
-    "Problem": "While classical planners ensure correctness, they can be computationally expensive for large search spaces. LLMs can offer commonsense insights that might guide the search more efficiently.",
-    "Context": "Using a classical planner, but aiming to accelerate its search or guide it towards plans that align more with human intuition or preferences.",
-    "Solution": "Utilize an LLM to generate a preliminary, high-level plan or to score potential actions. This LLM-generated information (e.g., a 'seed plan') is then provided to a local-search classical planner (e.g., LPG) to accelerate its search process.",
-    "Result": "Potentially speeds up classical planning by providing a good starting point or heuristic guidance, and can incorporate implicit human preferences or commonsense into the planning process.",
-    "Related Patterns": [
-      "Classical Planning with LLM-Generated World Model"
-    ],
-    "Uses": [
-      "Hybrid planning approaches combining LLM intuition with classical rigor",
-      "Guiding classical search algorithms",
-      "Incorporating commonsense into planning for more human-like solutions"
-    ]
+    "Uses": "Agentic AI systems, interactive planning where LLMs generate initial plans, scenarios where implicit user preferences are valuable but plan correctness must be ensured, and enhancing the reliability of LLM-driven agents in dynamic environments."
   }
 ]

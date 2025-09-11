@@ -1,21 +1,53 @@
 [
   {
-    "Pattern Name": "Solution Pattern for Machine Learning",
-    "Problem": "Organizations struggle to derive business value from ML due to inherent complexities in ML solution development. These complexities include: understanding ML capabilities and limitations, specifying well-defined business cases and translating them into ML problems, data preparation and feature selection, ML algorithm selection and trade-offs, and finding linkages between ML models and business processes. This is compounded by a lack of specialized ML skillset and talent, and insufficient ML knowledge among executives and stakeholders.",
-    "Context": "Organizations designing, developing, or deploying ML/ML systems, particularly those facing challenges in bridging the gap between business problems and ML solutions, managing ML development complexities, and needing to enhance design effectiveness, speed up development, and facilitate knowledge transfer. Applicable in \"real-world scenarios\" and \"business process management\" contexts where there's a need to represent generic and well-proven ML designs for recurring business analytics problems.",
-    "Solution": "Introduces \"solution patterns\" as an explicit way of representing generic and well-proven ML designs for commonly-known and recurring business analytics problems. A solution pattern is an artifact in the form of a conceptual model, comprised of several parts: \n1.  **Business View:** Actors, Decision Goals, Question Goals, and Insights, which translate a business problem into a set of well-defined ML problems.\n2.  **Analytics View:** Analytics Goals (e.g., Prediction, Classification), Algorithms (e.g., kNearest Neighbor, Naive Bayes, Support Vector Machines), Indicators (ML metrics like Accuracy, Precision), and Softgoals (non-functional requirements like Interpretability, Speed, Tolerance to missing values).\n3.  **Data Preparation View:** Data Preparation Tasks (e.g., Dimensionality Reduction, normalization), Operators, Data Flows, and Entities (datasets).\n4.  **Contexts:** User Contexts (user preferences, e.g., desire for algorithm simplicity), Data Contexts (data characteristics, e.g., feature independence, dataset noise), and Model Contexts (algorithm configurations, e.g., parameter tuning). These define applicability conditions.\n5.  **Parameters:** Configuration values required as input by an Algorithm.\nThe solution is supported by a prototype architecture with components like Pattern Repository, Data Extractor, Context Analyzer (User, Data, Model Context Monitors), Quality Evaluator, Workflow Planner, Data Preparator, and Data Miner, providing semi-automated support for using these patterns.",
-    "Result": "1.  Positive impact on ML design and development efforts. \n2.  Organizes, stores, and presents knowledge on various aspects of ML solution design, providing reusable answers to critical ML development questions. \n3.  Enables efficient transfer of ML design knowledge among developers, helping new teams quickly acquire ML expertise. \n4.  Potentially reduces time and cost of ML development efforts by providing proven starting points and simplifying the coding phase. \n5.  Constrains the solution space into a narrower scope based on critical quality requirements and verified contexts. \n6.  Offers convenient and easy-to-understand visual representations of ML design. \n7.  Leads to metamodel enhancements, such as the classification of Context elements into Data, User, and Model Context subtypes.",
+    "Pattern Name": "Loan Approval Solution Pattern",
+    "Problem": "Organizations struggle to effectively apply machine learning to complex business decisions like loan approval. This involves challenges in translating business needs into well-defined ML problems, selecting appropriate algorithms, configuring them, evaluating their performance, and managing quality requirements and data preparation.",
+    "Context": "A business process where a 'Loan expert' needs to make 'Decision on Loan Applications' and desires an 'ML-generated recommendation on a new case given past decisions'. The process requires a structured approach to integrate ML effectively.",
+    "Solution": "The pattern provides a structured ML design that:\n1.  **Translates Business to ML:** Links business actors and decisions to specific ML 'Question Goals' (e.g., 'What would be the approval decision?') which are answered by 'Insight' elements (e.g., a 'Predictive model').\n2.  **Guides ML Algorithm Selection:** Defines 'Analytics Goals' (e.g., 'Prediction' leading to 'Classification') and links them to alternative 'Algorithms' (e.g., kNearest Neighbor, Naive Bayes, Support Vector Machines).\n3.  **Applies Contextual Guidance:** Incorporates 'User Contexts' (e.g., 'Users desire simplicity'), 'Data Contexts' (e.g., 'Features are independent'), and 'Model Contexts' (e.g., 'Decrease parameter C when dataset is noisy') to inform algorithm applicability and configuration.\n4.  **Manages Evaluation & Non-Functional Requirements (NFRs):** Specifies 'Indicators' (e.g., Accuracy, Precision) for model evaluation, with 'Data Contexts' guiding metric choice (e.g., 'Precision should be used...when Users desire a low rate of false-positives'). It also considers 'Softgoals' (NFRs, e.g., 'Tolerance to missing values') and how algorithms contribute to or detract from them.\n5.  **Directs Data Preparation:** Identifies relevant 'Entities' (data attributes, e.g., Age, Income, Loan amount) and 'Operators' for 'Data Preparation Tasks' (e.g., 'Perform data normalization on numerical features when using kMeans algorithm').",
+    "Result": "Provides a reusable, context-aware ML design that streamlines the development of loan approval systems. It ensures appropriate algorithm selection, configuration, data preparation, and evaluation, aligning with business needs and quality requirements, thereby reducing development complexity and time.",
     "Related Patterns": [
-      "**Best practices catalogues and patterns for analytics and ML solution development (e.g., Chen et al., Sculley et al., Zinkevich, Breck et al.):** Solution patterns differ by offering a more explicit and systematic way to represent business requirements and link them to relevant ML algorithms, while capturing user, data, and model contexts.",
-      "**Machine learning services on cloud platforms (e.g., Microsoft Azure ML Studio, Google Cloud AI, Amazon SageMaker):** Solution patterns are distinct in that business questions and decisions play a critical role in deriving solution design, integrating quality requirements, user preferences, data characteristics, and parameter configurations into the design process.",
-      "**Data mining formal ontologies (e.g., Keet et al., Vanschoren):** Unlike these ontologies, solution patterns start from business decisions and questions, linking them to alternative ML algorithms and data preparation techniques while explicitly considering quality requirements.",
-      "**Software design patterns (e.g., Buschmann et al.):** Solution patterns are more problem-domain specific and less generic than classical software design patterns. They are conceptually closer to a working solution, intended for adopters to use as a starting point for implementation."
+      "Fraud Detection Solution Pattern",
+      "Task Assignment Solution Pattern"
     ],
-    "Uses": [
-      "MLOps Patterns",
-      "Knowledge & Reasoning Patterns",
-      "AI–Human Interaction Patterns",
-      "Tools Integration Patterns"
+    "Uses": "Loan application approval systems, credit scoring, risk assessment in financial services, any business process requiring ML-driven binary classification decisions.",
+    "Category": [
+      "Classical AI",
+      "MLOps",
+      "Knowledge & Reasoning"
+    ]
+  },
+  {
+    "Pattern Name": "Fraud Detection Solution Pattern",
+    "Problem": "Detecting fraudulent activities (e.g., in insurance claims) is challenging due to the inherent class imbalance in fraud datasets and the need to adapt ML approaches based on the type and availability of training data (e.g., presence of both fraud and non-fraud samples vs. only non-fraud samples).",
+    "Context": "Business processes involving the detection of anomalies or unusual patterns, such as identifying fraudulent insurance claims, where the characteristics of available training data significantly influence the choice and effectiveness of the ML approach.",
+    "Solution": "This pattern guides the design of fraud detection systems by:\n1.  **Focusing on Anomaly Detection:** Employs 'Anomaly Detection' as the primary 'Analytics Goal' for identifying unusual claims.\n2.  **Adapting to Data Availability:** Provides guidance on selecting between supervised and semi-supervised anomaly detection approaches based on whether both fraud and non-fraud samples are available, or if only non-fraud examples are present.\n3.  **Addressing NFRs:** Incorporates 'Softgoals' such as 'Tolerance to redundant attributes' and recommends specific ML techniques (e.g., neural networks) that are known to address these quality requirements.\n4.  **Structured ML Design:** Adheres to the general 'solution pattern' framework, detailing relevant algorithms, metrics, contextual guidance (User, Data, Model Contexts), and data preparation steps specifically tailored for fraud detection scenarios.",
+    "Result": "Enables efficient and effective development of fraud detection systems by providing a structured design that adapts the ML approach based on data characteristics and prioritizes quality requirements. This reduces exploration and experimentation efforts and improves the reliability of fraud detection.",
+    "Related Patterns": [
+      "Loan Approval Solution Pattern",
+      "Task Assignment Solution Pattern"
+    ],
+    "Uses": "Fraud detection in banking, insurance, and cybersecurity; anomaly detection in network intrusion, manufacturing quality control, and system health monitoring.",
+    "Category": [
+      "Classical AI",
+      "MLOps",
+      "Knowledge & Reasoning"
+    ]
+  },
+  {
+    "Pattern Name": "Task Assignment Solution Pattern",
+    "Problem": "Developing ML solutions for task assignment involves challenges related to effective data preparation, ensuring efficient learning, and managing computational resources, especially when dealing with high-dimensional data or the need for fast model execution.",
+    "Context": "Business processes that require automated or ML-assisted task allocation, where factors like data efficiency, learning speed, and algorithm complexity are critical considerations for successful deployment and operation.",
+    "Solution": "The pattern provides a structured design for ML-driven task assignment by:\n1.  **Emphasizing Advanced Data Preparation:** Explicitly includes 'Data Preparation Tasks' like 'Dimensionality Reduction' to optimize complex datasets for ML algorithms, improving efficiency and performance.\n2.  **Facilitating Fine-Grained Algorithm Decomposition:** Illustrates how complex algorithms (e.g., kNearest Neighbor) can be broken down into 'finer-grain tasks', offering more detailed guidance for their implementation and optimization.\n3.  **Prioritizing Performance:** Integrates 'Softgoals' such as 'Speed of learning', linking algorithm choices and data preparation steps directly to their impact on these critical performance requirements.\n4.  **Structured ML Design:** Adheres to the overall 'solution pattern' framework, integrating business goals, ML algorithms, contextual factors, and quality attributes to guide the comprehensive design of task assignment ML systems.",
+    "Result": "Facilitates the creation of robust and performant ML systems for task assignment by providing clear guidance on data preparation, algorithm breakdown, and ensuring that design choices are aligned with critical performance and quality objectives. This leads to more efficient and effective task allocation solutions.",
+    "Related Patterns": [
+      "Loan Approval Solution Pattern",
+      "Fraud Detection Solution Pattern"
+    ],
+    "Uses": "Workforce management, resource allocation, intelligent routing systems, project management task distribution, scheduling systems.",
+    "Category": [
+      "Classical AI",
+      "MLOps",
+      "Knowledge & Reasoning"
     ]
   }
 ]

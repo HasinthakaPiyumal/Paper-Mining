@@ -1,44 +1,24 @@
 [
   {
-    "Pattern Name": "Retrieval Augmented Generation (RAG)",
-    "Problem": "Traditional language models (LLMs) often suffer from hallucinations, lack access to up-to-date or domain-specific knowledge, and rely solely on parametric memory, which can be expensive to scale. Additionally, training conventional two-stage Open-Domain Question Answering (ODQA) systems often requires explicitly annotated context-question-answer triplets, which are difficult to acquire.",
-    "Context": "Designing AI systems for knowledge-intensive NLP tasks such as Open-Domain Question Answering, summarization, or conversational AI, where it is crucial to combine the generative capabilities of language models with a broad, external, and verifiable knowledge base.",
-    "Solution": "Integrates a neural retriever (e.g., Dense Passage Retrieval - DPR) with a seq2seq generator (e.g., BART) into a unified architecture. The retriever component dynamically identifies and fetches relevant passages from a large external knowledge base (non-parametric memory) based on an input query. These retrieved passages then condition the generator, guiding it to produce more factual, grounded, and interpretable responses. The system can be finetuned by propagating gradients to the generator and the question encoder.",
-    "Result": "Reduced hallucinations, improved factual consistency, higher interpretability, and enhanced performance in knowledge-intensive tasks by leveraging external, up-to-date, and verifiable knowledge. Performs well on general-purpose, Wikipedia-based datasets.",
-    "Related Patterns": ["REALM", "RETRO"],
-    "Uses": [
-      "Open-Domain Question Answering",
-      "Abstractive Summarization",
-      "Knowledge-grounded Conversational AI",
-      "Chatbot Frameworks",
-      "Fact-checking"
-    ]
+    "Pattern Name": "End-to-End Domain-Adaptive RAG Training",
+    "Problem": "Standard Retrieval Augmented Generation (RAG) models, pre-trained on general knowledge bases (e.g., Wikipedia), struggle to adapt to specialized domains (e.g., healthcare, news) because their retriever components and external knowledge base encodings are typically fixed during finetuning, preventing effective domain-specific learning.",
+    "Context": "Developing or deploying RAG systems for Open-Domain Question Answering (ODQA) or other knowledge-intensive NLP tasks in specialized domains where the target knowledge base significantly differs from the general-purpose data used for initial pre-training. The system needs to learn deep domain-specific representations for both retrieval and generation.",
+    "Solution": "Jointly finetune all RAG components: the retriever's question encoder, the retriever's passage encoder, and the generator (e.g., BART) on domain-specific data. This is enabled by:\n1.  **Asynchronous Knowledge Base Re-encoding and Re-indexing:** To overcome the computational bottleneck of updating a large external knowledge base, implement an asynchronous process. This involves dedicated computational resources (e.g., separate GPUs for re-encoding, CPUs for FAISS re-indexing) that run independently of the main training loop. The main loop continues training with a periodically updated index, while the asynchronous processes prepare the next updated knowledge base and index.\n2.  **Auxiliary Statement Reconstruction Task:** Introduce a secondary, auxiliary training signal where the model is tasked with reconstructing a given domain-specific statement (e.g., a sentence from an abstract or summary) by retrieving relevant passages from the external knowledge base and generating the statement. This explicitly forces the model to acquire and utilize domain-specific knowledge, enhancing the retriever's understanding and the generator's factual grounding in the new domain.",
+    "Result": "Significantly improved performance (higher Exact Match, F1 scores for QA, and Top-K retrieval accuracy) in domain-specific ODQA tasks. The approach leads to better domain adaptation of the retriever component compared to standalone finetuning, and the auxiliary task further boosts overall accuracy by injecting more domain-specific knowledge.",
+    "Related Patterns": [
+      "Domain-Specific Retriever Finetuning"
+    ],
+    "Uses": "Domain adaptation for RAG models, building specialized knowledge-intensive AI systems (e.g., medical QA, legal search, enterprise chatbots), improving factual consistency and reducing hallucinations in generative models for new domains."
   },
   {
-    "Pattern Name": "End-to-End Retrieval Augmented Generation (RAGend2end)",
-    "Problem": "Standard RAG models, when finetuned for new, specialized domains (e.g., healthcare, news), often perform suboptimally because the passage encoder and the external knowledge base encoding are kept fixed during training, relying on prior training on general (e.g., Wikipedia) datasets. Adapting to new domains requires updating the domain-specific knowledge representations for both the retriever and the knowledge base itself, but re-encoding and re-indexing large knowledge bases is computationally intensive and can stall the training process.",
-    "Context": "Adapting Retrieval Augmented Generation (RAG) models to perform Open-Domain Question Answering or similar tasks in specialized domains where the external knowledge base is distinct from the general-purpose data on which the retriever was initially trained. There is a need for comprehensive, domain-specific retriever adaptation without incurring prohibitive computational costs during training.",
-    "Solution": "Extends the RAG architecture to enable joint, end-to-end finetuning of *all* its components, including both the question encoder (EQ) and the passage encoder (EP) of the retriever (DPR), and dynamically updates the external knowledge base's embeddings and index during training. To manage the computational burden of re-encoding and re-indexing the knowledge base, these processes are run *asynchronously* in parallel to the main training loop, utilizing dedicated computational resources (e.g., multiple GPUs for re-encoding, multiple CPU cores for FAISS re-indexing).",
-    "Result": "Significantly improved domain adaptation performance for ODQA tasks, better adaptation of the retriever component to domain-specific data compared to standalone retriever finetuning, and enhanced overall accuracy across diverse specialized domains. This approach eliminates the need for separate retriever training with gold-standard passages for domain adaptation.",
-    "Related Patterns": ["Retrieval Augmented Generation (RAG)", "Asynchronous Updates", "REALM"],
-    "Uses": [
-      "Domain adaptation for Retrieval Augmented Generation models",
-      "Training neural retrievers for domain-specific retrieval tasks",
-      "Improving performance on in-domain datasets by dynamically updating knowledge representations"
-    ]
-  },
-  {
-    "Pattern Name": "Auxiliary Statement Reconstruction Signal",
-    "Problem": "Retrieval Augmented Generation (RAG) models, especially during domain adaptation, may not deeply learn domain-specific factual knowledge or effectively leverage retrieved passages to generate precise, grounded statements. There is a need for an additional training signal to inject more domain-specific understanding and improve the model's ability to synthesize information accurately from retrieved contexts.",
-    "Context": "Training Retrieval Augmented Generation (RAG) models, particularly in domain adaptation scenarios, where the goal is to enhance the model's factual grounding, reduce hallucinations, and improve the retriever's ability to find passages highly relevant for generating coherent and accurate statements about documents.",
-    "Solution": "Incorporates a secondary, auxiliary training task alongside the primary task (e.g., question answering). This auxiliary task involves feeding the model an input statement (e.g., a sentence from a document abstract or a summary) and requiring it to reconstruct this statement using *only* a self-retrieved set of passages from the external knowledge base. A unique control token (e.g., '<p>') is prepended to the retrieved passages to explicitly differentiate this task from the main one. The input statement itself must be excluded from the retrieved passages to prevent simple memorization or overfitting on lexical content.",
-    "Result": "Forces the model to gain more domain-specific knowledge by learning to synthesize and reconstruct information from retrieved contexts. This improves both the retriever's accuracy in finding relevant passages and the overall answer generation accuracy, contributing to better factual consistency and reduced hallucinations in the generated outputs. It can moderately improve performance even without full end-to-end retriever training.",
-    "Related Patterns": ["Multi-task Learning", "Retrieval Augmented Generation (RAG)"],
-    "Uses": [
-      "Enhancing domain adaptation of generative AI models",
-      "Improving factual consistency and reducing hallucinations in generative models",
-      "Strengthening the relevance capabilities of the retriever component",
-      "Pre-training or finetuning for summarization-like tasks"
-    ]
+    "Pattern Name": "Domain-Specific Retriever Finetuning",
+    "Problem": "A general-purpose neural retriever (e.g., DPR) trained on broad datasets (e.g., Wikipedia) performs poorly when deployed in specialized, domain-specific contexts due to a mismatch in data distribution and knowledge.",
+    "Context": "Improving the retrieval accuracy of a neural retriever for a specific domain when used as a standalone component or as part of a larger system (e.g., a RAG model initialized with a domain-adapted retriever). This approach requires access to domain-specific gold-standard QA pairs and carefully selected negative examples.",
+    "Solution": "Generate a dataset of domain-specific gold-standard passages (containing answers for given questions) and carefully selected hard-negative passages (lexically similar to the question but not containing the answer, often identified using methods like BM25 lexical matching). Then, finetune the neural retriever (e.g., DPR, consisting of a question encoder and a passage encoder) on this domain-specific data using a similarity-based loss function (e.g., dot-product similarity) that maximizes similarity between relevant question-passage pairs and minimizes it for negative pairs.",
+    "Result": "Improved retrieval accuracy (Top-K scores) for the neural retriever within the target domain. This can be used to initialize RAG models with a better-performing retriever for the specific domain, although it is shown to be less effective for overall RAG domain adaptation than the End-to-End Domain-Adaptive RAG Training pattern.",
+    "Related Patterns": [
+      "End-to-End Domain-Adaptive RAG Training"
+    ],
+    "Uses": "Improving information retrieval in specialized domains, pre-training/initializing retrievers for domain-specific RAG systems, standalone search engines for niche knowledge bases."
   }
 ]

@@ -18,45 +18,105 @@ llm = init_chat_model("gemini-2.5-flash", model_provider="google_genai")
 # )
 
 # Prompt template for pattern extraction
+# pattern_extraction_prompt = """
+# You are an expert in AI design patterns.
+
+# An AI design pattern is a proven, reusable solution to a recurring problem 
+# in the design, development, or deployment of AI/ML systems. 
+# It captures the essence of a solution in a structured way, making it easier 
+# to apply in similar contexts. 
+
+# You will be given the text of a research paper. 
+# Your task is to carefully scan the text and extract **all AI design patterns** mentioned.
+
+# For each pattern, identify the following fields:
+# - Pattern Name
+# - Problem
+# - Context
+# - Solution
+# - Result
+# - Related Patterns
+# - Uses
+
+# AI Design Patterns are:
+# 1. Classical AI
+# 2. Generative AI Patterns
+# 3. Agentic AI Patterns
+# 4. Prompt Design Patterns
+# 5. MLOps Patterns
+# 6. AI–Human Interaction Patterns
+# 7. LLM-specific Patterns
+# 8. Tools Integration Patterns
+# 9. Knowledge & Reasoning Patterns
+# 10. Planning Patterns
+# 11. Personalization Pattern
+
+# Return the output strictly as a JSON array.
+# Do not include explanations outside JSON.
+
+# Paper text:
+# {text}
+# """
+
 pattern_extraction_prompt = """
-You are an expert in AI design patterns.
+An AI design pattern is a proven, reusable solution to a recurring problem specifically within AI/ML system design, development, or deployment. It addresses challenges inherent to building machine learning, agentic behavior, or data-driven intelligence.
 
-An AI design pattern is a proven, reusable solution to a recurring problem 
-in the design, development, or deployment of AI/ML systems. 
-It captures the essence of a solution in a structured way, making it easier 
-to apply in similar contexts. 
+**Exclusion Criteria:**
+Do NOT extract general software engineering, data architecture, or DevOps patterns. These are often used to build AI systems but are not AI design patterns themselves. Specifically, ignore concepts like:
+- **General Architectural Patterns:** Microservice Architecture, Lambda/Kappa Architecture, Gateway Routing, Layered Architecture (MultiLayer Pattern).
+- **Classic Software Design Patterns:** Strategy Pattern, Separation of Concerns, Facade/Adapter patterns (e.g., "Wrap BlackBox Packages").
+- **General Data Engineering Patterns:** Data Lake, Batch Serving, generic Workflow Pipelines.
+- **General DevOps/Process Patterns:** Continuous Integration and Deployment (CI/CD), general testing principles, code reuse, and versioning strategies.
 
-You will be given the text of a research paper. 
-Your task is to carefully scan the text and extract **all AI design patterns** mentioned.
+Given a research paper text, extract only the true AI design patterns mentioned.
 
-For each pattern, identify the following fields:
+For each pattern, include:
 - Pattern Name
 - Problem
 - Context
 - Solution
 - Result
-- Related Patterns
+- Related Patterns (only other extracted patterns)
 - Uses
 
-AI Design Patterns are:
+If patterns are mostly similar in their problem, solution, or context, merge them into a single entry. When merging, combine their names, uses, and related patterns.
+
+Recognized AI Design Pattern Categories:
 1. Classical AI
-2. Generative AI Patterns
-3. Agentic AI Patterns
-4. Prompt Design Patterns
-5. MLOps Patterns
-6. AI–Human Interaction Patterns
-7. LLM-specific Patterns
-8. Tools Integration Patterns
-9. Knowledge & Reasoning Patterns
-10. Planning Patterns
-11. Personalization Pattern
+2. Generative AI
+3. Agentic AI
+4. Prompt Design
+5. MLOps (only if specific to ML workflows, not general deployment)
+6. AI–Human Interaction
+7. LLM-specific
+8. Tools Integration
+9. Knowledge & Reasoning
+10. Planning
+11. Personalization
+
+Examples:
+
+Valid AI Pattern:
+"Pattern Name": "Hierarchical Planning",
+"Problem": "Complex, long-horizon tasks for embodied agents are difficult to plan directly.",
+"Context": "Embodied agents following multi-step instructions.",
+"Solution": "Decompose planning into high-level and low-level planners.",
+"Result": "Improves planning efficiency for long-horizon tasks.",
+"Related Patterns": "LLM as a Planner, Grounded Replanning",
+"Uses": "Robotics, Vision-and-language navigation"
+
+Pattern to IGNORE (Not an AI Pattern):
+"Pattern Name": "Microservice Architecture",
+"Problem": "ML applications may be confined to some known ML frameworks.",
+"Solution": "Enable data scientists to make ML frameworks available through microservices."
 
 Return the output strictly as a JSON array.
-Do not include explanations outside JSON.
 
 Paper text:
 {text}
 """
+
+
 
 prompt = PromptTemplate(
     template=pattern_extraction_prompt,
@@ -91,6 +151,8 @@ def save_patterns_to_file(patterns, output_path):
         file.write(patterns)
 
 if __name__ == "__main__":
-    file_path = "cleaned_papers/cleaned_2307.07697v6.pdf.txt"
+    file_path = "cleaned_papers/cleaned_Song_LLM-Planner_Few-Shot_Grounded_Planning_for_Embodied_Agents_with_Large_Language_ICCV_2023_paper.pdf.txt"
+    print('Extracting patterns from:', file_path)
     patterns = extract_patterns(file_path)
-    save_patterns_to_file(patterns, "extracted_patterns.json")
+    print('Extracted')
+    save_patterns_to_file(patterns, "test_pattern_extraction.json")

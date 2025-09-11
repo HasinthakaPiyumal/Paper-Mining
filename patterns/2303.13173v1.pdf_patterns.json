@@ -1,142 +1,92 @@
 [
   {
     "Pattern Name": "Workflow Pipeline",
-    "Problem": "Creating an end-to-end reproducible training and deployment pipeline for a machine learning component is difficult. Data science notebooks can run a whole pipeline but they do not scale.",
-    "Context": "ML projects requiring scalable and reproducible training and deployment pipelines.",
-    "Solution": "Make each pipeline step a separate containerized service. Services are orchestrated and chained together to form pipelines that can be run via REST API calls.",
-    "Result": "The portability, scalability, and maintainability of the individual pipeline steps is improved at the cost of an overall more complex solution.",
-    "Related Patterns": "",
-    "Uses": "Presented at AWS Blog.",
-    "Category": "MLOps Patterns"
+    "Problem": "Creating an end-to-end reproducible training and deployment pipeline for a machine learning component is difficult, and data science notebooks do not scale for this purpose.",
+    "Context": "ML components require reproducible training and scalable deployment, but existing methods like data science notebooks fall short.",
+    "Solution": "Each pipeline step is containerized as a separate service, which are then orchestrated and chained together to form a pipeline executable via REST API calls.",
+    "Result": "Improved portability, scalability, and maintainability of individual pipeline steps, though at the cost of increased overall solution complexity.",
+    "Related Patterns": [],
+    "Uses": "AWS Blog examples for building MLOps workflows.",
+    "Category": "MLOps"
   },
   {
     "Pattern Name": "Two-Phase Predictions",
-    "Problem": "Executing large complex models can be time-consuming and costly especially if lightweight clients like mobile or IoT devices are involved.",
-    "Context": "Applications where predictions are needed on lightweight clients (mobile, IoT) and involve large, complex models.",
-    "Solution": "Split the prediction into two phases. A simple fast model is executed first on the client. Afterwards a large complex model is optionally executed in the cloud for deeper insights.",
-    "Result": "Prediction response time is reduced for some cases. The number of large expensive predictions is reduced. The client has a fallback model when there is no Internet connection.",
-    "Related Patterns": "",
+    "Problem": "Executing large, complex ML models is time-consuming and costly, especially when lightweight clients (e.g., mobile, IoT devices) are involved.",
+    "Context": "Systems where predictions are needed on resource-constrained clients or where high-latency predictions from large models are undesirable for all requests.",
+    "Solution": "Split the prediction process into two phases: first, a simple, fast model is executed on the client, and then, optionally, a large, complex model is executed in the cloud for deeper insights.",
+    "Result": "Reduced prediction response time for some cases, decreased number of large, expensive predictions, and a fallback model available on the client even without internet connection.",
+    "Related Patterns": [],
     "Uses": "Voice activation in AI assistants like Alexa or Google Assistant.",
-    "Category": "MLOps Patterns"
+    "Category": "MLOps"
   },
   {
     "Pattern Name": "Encapsulating ML Models within Rule-based Safeguards",
-    "Problem": "It is impossible to guarantee the correctness of ML model predictions so they should not be directly used for safety or security-related functions. Furthermore ML models can be unstable and vulnerable to adversarial attacks, data noise and drift.",
-    "Context": "Systems where ML model predictions are used for safety or security-critical functions, or where model instability, adversarial attacks, data noise, and drift are concerns.",
-    "Solution": "Introduce a deterministic rule-based mechanism that decides what to do with the prediction results eg based on additional quality checks.",
-    "Result": "Reduced risk for negative impacts of incorrect predictions but a more complex architecture.",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "AI–Human Interaction Patterns"
+    "Problem": "The inherent non-guarantee of correctness in ML model predictions makes them unsuitable for direct use in safety or security-related functions, and they are vulnerable to adversarial attacks, data noise, and drift.",
+    "Context": "AI systems operating in safety-critical or security-sensitive environments where the unreliability of ML models poses significant risks.",
+    "Solution": "Introduce a deterministic rule-based mechanism that evaluates and decides how to handle ML prediction results, often based on additional quality checks.",
+    "Result": "Reduced risk of negative impacts from incorrect predictions, but the architecture becomes more complex.",
+    "Related Patterns": [],
+    "Uses": [],
+    "Category": "Agentic AI, AI–Human Interaction"
   },
   {
     "Pattern Name": "AI Pipelines",
-    "Problem": "Complex prediction or synthesis use cases are often difficult to accomplish with a single AI tool or model.",
-    "Context": "Use cases requiring complex prediction or synthesis that cannot be handled by a single AI tool or model.",
-    "Solution": "Divide the problem into smaller consecutive steps then combine several existing AI tools or custom models into an inferencetime AI pipeline where each specialized tool or model is responsible for a single step.",
-    "Result": "More tools and models need to be integrated but the provided is result is of higher quality Each step can be optimized individually.",
-    "Related Patterns": "Pipes and Filters",
+    "Problem": "Complex prediction or synthesis use cases are often difficult to accomplish effectively with a single AI tool or model.",
+    "Context": "AI systems requiring a sequence of specialized AI processing steps to achieve a high-quality final result, such as in computer vision or complex natural language generation.",
+    "Solution": "Divide the overall problem into smaller, consecutive steps. Then, combine several existing AI tools or custom models into an inference-time AI pipeline, with each specialized tool or model responsible for a single step.",
+    "Result": "Higher quality results, with the ability to optimize each step individually, but requires integrating more tools and models.",
+    "Related Patterns": [],
     "Uses": "Typical computer vision inference pipelines.",
-    "Category": "MLOps Patterns"
+    "Category": "Tools Integration, Classical AI"
   },
   {
     "Pattern Name": "Ethics Credentials",
-    "Problem": "Responsible AI requirements are either omitted or mostly stated as highlevel objectives and not specified explicitly in a verifiable way as expected system outputs. Because of this users may trust an AI system less or even refrain from using it.",
-    "Context": "AI systems where user trust and ethical compliance are critical, and where responsible AI requirements need to be verifiable.",
-    "Solution": "Provide verifiable ethics credentials for your AI system or component Using publicly accessible and trusted data infrastructure the credentials can be verified as proof of ethical compliance Additionally users may also have to verify their credentials before getting access to the AI system.",
-    "Result": "Trust and system acceptance increases and awareness of ethical issues is raised However a trusted public data infrastructure is needed and credentials need to be maintained and potentially refreshed from time to time.",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "AI–Human Interaction Patterns"
-  },
-  {
-    "Pattern Name": "MultiLayer Pattern",
-    "Problem": "An application comprises several groups of subtasks each of which is at a different level of abstraction.",
-    "Context": "Applications with subtasks at different levels of abstraction.",
-    "Solution": "Divide the application into different layers Each layer consisting of submodules can be independently designed to feed into foreign prototypes Each layer has an input and corresponding output to the succeeding layer The succeeding return is used as a feed to the next layers for further processing Every layer communicates only with its direct neighbor.",
-    "Result": "This pattern enables inference of results at the individual steps Extra components can be added or modified to meet the computational requirements giving it high flexibility.",
-    "Related Patterns": "",
-    "Uses": "Self-learning student platform.",
-    "Category": "Classical AI"
-  },
-  {
-    "Pattern Name": "Continuous Integration and Deployment",
-    "Problem": "Reduce the risk of releasing broken applications.",
-    "Context": "Software development projects aiming to reduce the risk of releasing broken applications through automated processes.",
-    "Solution": "Always build with unit and component tests and deploy with verification tests using code that itself is under version control After you commit to a development branch the system deploys to a development environment Once all endtoend and manual smoke testing is complete a manual action deploys to production.",
-    "Result": "",
-    "Related Patterns": "Continued Model Evaluation, End-to-End Tests",
-    "Uses": "easemlci presented in 58",
-    "Category": "MLOps Patterns"
-  },
-  {
-    "Pattern Name": "Strategy Pattern",
-    "Problem": "How can an ML model that performs a task in a given context be flexibly changed?",
-    "Context": "Systems requiring flexible switching or behavior modification of ML models based on context.",
-    "Solution": "Define an interface strategy that different models implement The context will call the methods exposed by the interface and the implemented models will behave differently based on the contextual data.",
-    "Result": "Switching models or achieving flexibility in model behavior is easier but code complexity is increased.",
-    "Related Patterns": "",
-    "Uses": "XGBoosts custom objective functions Hugging Faces pipeline interface.",
-    "Category": "Classical AI"
-  },
-  {
-    "Pattern Name": "Deploy Canary Model",
-    "Problem": "You trained a new model with assumed better prediction quality but its not certain if this will carry over to production Additionally there could be other quality issues with the new model that should not affect all users in production at once.",
-    "Context": "Deploying new ML models to production where uncertainties exist regarding their real-world performance or potential side effects.",
-    "Solution": "Deploy the new model in addition to the existing ones and route a small number of requests to it to evaluate its performance If this test is successful all existing models can be replaced If not the new model needs to be improved.",
-    "Result": "Only a small number of users are subjected to potential bugs or lowquality predictions Additional serving and monitoring infrastructure is required.",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "MLOps Patterns"
-  },
-  {
-    "Pattern Name": "Batch Serving",
-    "Problem": "Predictions need to be carried out asynchronously over large volumes of data contrary to predictions for small individual requests eg generating personalized playlists every week This is only applicable if there is no need for nearrealtime predictions.",
-    "Context": "Scenarios requiring asynchronous predictions on large datasets where near-realtime results are not necessary.",
-    "Solution": "Use distributed data processing infrastructure eg based on MapReduce to asynchronously carry out complex ML inference tasks on a large number of computing nodes The individual predictions are aggregated back into a single result.",
-    "Result": "Positive You can manage server resources flexibly and in strict accordance with demand You may rerun the job in case of error There is no requirement for high availability in your server system Negative You need a job management server This pattern depends on the ability to split a task across multiple workers.",
-    "Related Patterns": "Stateless Serving Function",
-    "Uses": "",
-    "Category": "MLOps Patterns"
-  },
-  {
-    "Pattern Name": "Lambda Architecture Pattern",
-    "Problem": "Different components in a system have different performance requirements that need to be satisfied eg some are focused on throughput and others on response time.",
-    "Context": "Systems dealing with large datasets where both batch processing (high throughput) and real-time processing (low latency) are required.",
-    "Solution": "Group the components based on their latency requirements into three layers 1 batch layer ingests and stores large amounts of data 2 speed layer processes updates to the data in lowlatency 3 serving layer provides precalculated results in a lowlatency fashion.",
-    "Result": "",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "Classical AI"
+    "Problem": "Responsible AI requirements are frequently omitted or stated as vague high-level objectives, lacking explicit, verifiable specifications as system outputs, leading to user distrust or non-adoption.",
+    "Context": "AI systems where user trust, ethical compliance, and accountability are paramount, but current methods for demonstrating these are insufficient.",
+    "Solution": "Provide verifiable ethics credentials for the AI system or component, leveraging publicly accessible and trusted data infrastructure for verification. Users may also need to verify their credentials to access the system.",
+    "Result": "Increased trust and system acceptance, raised awareness of ethical issues. Requires a trusted public data infrastructure and ongoing maintenance/refresh of credentials.",
+    "Related Patterns": [],
+    "Uses": [],
+    "Category": "AI–Human Interaction"
   },
   {
     "Pattern Name": "Distinguish Business Logic from ML Model",
-    "Problem": "Machine Learning ML systems are complex because their ML components must be retrained regularly and have an intrinsic nondeterministic behavior Similar to other systems the business requirements for these systems as well as ML algorithms change over time.",
-    "Context": "ML systems where business logic and ML model logic are intertwined, leading to complexity in maintenance and adaptation to changing requirements or model retraining.",
-    "Solution": "Define clear APIs between traditional and ML components Place business and ML components with different responsibilities into three layers Divide data flows into three.",
-    "Result": "",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "Classical AI"
+    "Problem": "ML systems are complex due to regular retraining requirements and intrinsic non-deterministic behavior of ML components, alongside evolving business requirements and ML algorithms.",
+    "Context": "Any system integrating ML components where clear separation of concerns is needed between the stable business logic and the dynamic, evolving ML models.",
+    "Solution": "Define clear APIs between traditional (business logic) and ML components. Structure the system into layers, separating business and ML components based on their distinct responsibilities, and divide data flows accordingly.",
+    "Result": "Improved manageability and adaptability of ML systems by isolating the volatile ML parts from the stable business logic.",
+    "Related Patterns": [],
+    "Uses": [],
+    "Category": "MLOps"
   },
   {
     "Pattern Name": "Microservice Vertical Pattern",
-    "Problem": "When to use when you need to run several inferences in order or when you have several inferences and they have dependencies.",
-    "Context": "Scenarios where multiple ML inferences need to be executed sequentially or have dependencies on each other.",
-    "Solution": "The pattern deploys prediction models in separate servers or containers as services You execute prediction requests from top to bottom synchronously and gather the results to respond to the client.",
-    "Result": "",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "Tools Integration Patterns"
+    "Problem": "Managing several ML inferences that need to run in a specific order or have dependencies on each other within an ML system.",
+    "Context": "AI systems requiring sequential execution of multiple prediction models, where the output of one model serves as input for the next.",
+    "Solution": "Deploy individual prediction models as separate services (servers or containers). Prediction requests are executed synchronously from top to bottom, with results gathered to form the final response to the client.",
+    "Result": "Facilitates ordered execution and dependency management for multi-stage ML inference.",
+    "Related Patterns": [],
+    "Uses": [],
+    "Category": "MLOps, Tools Integration"
   },
   {
     "Pattern Name": "Microservice Horizontal Pattern",
-    "Problem": "When to use when the workow can execute multiple predictions in parallel or when you want to integrate prediction results at last. Required to run several predictions to one request.",
-    "Context": "Scenarios where multiple ML predictions can be run in parallel for a single request, or where their results need to be integrated at the end.",
-    "Solution": "Multiple are deployed models in parallel You can send one request to the models at once to acquire multiple predictions or an integrated prediction.",
-    "Result": "",
-    "Related Patterns": "",
-    "Uses": "",
-    "Category": "Tools Integration Patterns"
+    "Problem": "Workflows that can execute multiple ML predictions in parallel, or when multiple predictions need to be integrated into a single response for one request.",
+    "Context": "AI systems that benefit from parallel execution of independent prediction models to handle a single request, or where an ensemble of models is used.",
+    "Solution": "Deploy multiple prediction models in parallel as separate services. A single request can be sent to these models simultaneously to acquire multiple predictions or an integrated prediction.",
+    "Result": "Enables efficient parallel inference and integration of results from multiple models for a single request.",
+    "Related Patterns": [],
+    "Uses": [],
+    "Category": "MLOps, Tools Integration"
+  },
+  {
+    "Pattern Name": "Deploy Canary Model",
+    "Problem": "Uncertainty about whether a newly trained ML model, assumed to have better prediction quality, will perform as expected in production, and to mitigate risks of new model issues affecting all users.",
+    "Context": "MLOps environments where new ML models are frequently deployed and need rigorous, real-world validation before full rollout.",
+    "Solution": "Deploy the new model alongside existing ones and route a small fraction of production requests to it. Evaluate its performance with this limited exposure. If successful, replace existing models; otherwise, improve the new model.",
+    "Result": "Minimizes user exposure to potential bugs or low-quality predictions from new models, but requires additional serving and monitoring infrastructure.",
+    "Related Patterns": [],
+    "Uses": [],
+    "Category": "MLOps"
   }
 ]
