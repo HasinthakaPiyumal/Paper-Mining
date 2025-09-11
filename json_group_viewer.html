@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JSON Group Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f1115;
+      --panel: #1b1f25;
+      --panel-border: #2a3039;
+      --text: #e6e8eb;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --danger: #dc2626;
+      --radius: 8px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    }
+    body { margin:0; background: var(--bg); color: var(--text); line-height:1.4; width: 100%; overflow-x: hidden; }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f9fafb;
+        --panel: #ffffff;
+        --panel-border: #e5e7eb;
+        --text: #111827;
+      }
+      .tree-value.string { color: #2e7d32; }
+      .tree-value.number { color: #1565c0; }
+      .tree-value.boolean { color: #e65100; }
+      .tree-value.null { color: #757575; }
+    }
+    header { padding: 1rem 1.25rem; border-bottom:1px solid var(--panel-border); display:flex; flex-wrap:wrap; gap:1rem; align-items:center; background: var(--panel); }
+    h1 { font-size:1.1rem; margin:0; font-weight:600; letter-spacing:.5px; }
+    input[type=file] { display:none; }
+    label.file-btn { background:var(--accent); color:#fff; padding:.6rem 1rem; border-radius: var(--radius); cursor:pointer; font-size:.85rem; font-weight:600; letter-spacing:.5px; box-shadow:0 2px 4px #0006; }
+    label.file-btn:hover { background: var(--accent-hover); }
+    select, button, input[type=text] { background: var(--panel); color: var(--text); border:1px solid var(--panel-border); padding:.55rem .7rem; border-radius: var(--radius); font-size:.85rem; }
+    select:focus, button:focus, input[type=text]:focus { outline:2px solid var(--accent); outline-offset:1px; }
+    button.action { cursor:pointer; font-weight:600; letter-spacing:.5px; }
+    button.action:hover { background: #243044; }
+    main { padding: 1rem 1.25rem 3rem; width: 100%; max-width: 100%; box-sizing: border-box; }
+    #status { font-size:.8rem; opacity:.85; margin-left:.5rem; }
+    .controls { display:flex; flex-wrap:wrap; gap:.7rem; align-items:center; }
+    .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+    .small-label { font-size: 0.7rem; opacity: 0.8; margin-left: 0.2rem; }
+    .groups { margin-top:1rem; display:flex; flex-direction:column; gap:.9rem; width:100%; }
+    .group { border:1px solid var(--panel-border); border-radius: var(--radius); overflow:hidden; background: var(--panel); }
+    .group summary { cursor:pointer; list-style:none; padding:.7rem .9rem; display:flex; justify-content:space-between; gap:1rem; font-weight:600; }
+    .group summary::-webkit-details-marker { display:none; }
+    .badge { background:#243044; padding:.2rem .55rem; border-radius: 1rem; font-size:.65rem; font-weight:600; letter-spacing:.5px; }
+    .items { padding:.2rem .9rem .9rem; display:grid; gap:.8rem; width: 100%; }
+    .item-details { border:1px solid var(--panel-border); border-radius:6px; padding:.8rem; background:#1a1e24; margin-bottom:.4rem; width: 100%; box-sizing: border-box; }
+    .item-details summary { margin-bottom:.5rem; cursor: pointer; font-size: 1rem; }
+    
+    /* Add a nicer group title format */
+    .group summary strong { 
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      margin-left: 0.25rem;
+    }
+    pre { margin:0; background:#11161c; border:1px solid #2b323c; padding:.6rem .7rem; border-radius:6px; font-size:.7rem; max-height:240px; overflow:auto; }
+    .flex-grow { flex:1 1 200px; }
+    .hidden { display:none !important; }
+    .search-box { width:190px; }
+    .meta { font-size:.65rem; opacity:.65; margin-left:.4rem; font-weight:400; }
+    .inline { display:inline-block; }
+    #rawPreview { margin-top:1.25rem;height: calc(100vh - 100px); }
+    .pill { display:inline-block; background:#2c3644; padding:.15rem .5rem; margin:.15rem .25rem 0 0; border-radius: 999px; font-size:.6rem; letter-spacing:.5px; }
+    #fieldPills { margin-top:.3rem; }
+    
+    /* Tree View Styles */
+    .tree-view { font-size: 0.85rem; margin: 0.5rem 0; width: 100%; }
+    .tree-branch { margin-left: 1.2rem; position: relative; width: 100%; }
+    .tree-item { padding: 0.25rem 0; display: flex; align-items: flex-start; width: 100%; }
+    .tree-key { color: var(--accent); margin-right: 0.5rem; font-weight: 500; }
+    .tree-value { color: var(--text); word-break: break-word; }
+    .tree-value.string { color: #a5d6a7; }
+    .tree-value.number { color: #90caf9; }
+    .tree-value.boolean { color: #ffcc80; }
+    .tree-value.null { color: #bdbdbd; font-style: italic; }
+    .tree-toggle { cursor: pointer; width: 1rem; height: 1rem; display: inline-flex; justify-content: center; align-items: center; margin-right: 0.25rem; }
+    .tree-toggle::before { content: "▶"; font-size: 0.6rem; transition: transform 0.15s; }
+    .tree-toggle.open::before { transform: rotate(90deg); }
+    
+    /* Tree control buttons */
+    .tree-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .tree-control-btn {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      border: none;
+      border-radius: 3px;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .tree-control-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+    }
+    /* Full-width display */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JSON Group Viewer</h1>
+    <div class="controls">
+      <label for="fileInput" class="file-btn">Select JSON File</label>
+      <input id="fileInput" type="file" accept="application/json,.json" />
+      <div class="control-group">
+        <label for="fieldSelect" class="small-label">Group By:</label>
+        <select id="fieldSelect" disabled title="Field to group by"></select>
+      </div>
+      <div class="control-group">
+        <label for="itemLabelField" class="small-label">Item Label Field:</label>
+        <select id="itemLabelField" disabled title="Field to use for item labels"></select>
+      </div>
+      <button id="groupBtn" class="action" disabled>Group</button>
+      <input id="filterInput" class="search-box" type="text" placeholder="Filter groups" disabled />
+      <button id="expandAllBtn" class="action" disabled>Expand All</button>
+      <button id="collapseAllBtn" class="action" disabled>Collapse All</button>
+      <span id="status"></span>
+    </div>
+  </header>
+  <main>
+    <div id="fieldPills"></div>
+    <div id="groupContainer" class="groups"></div>
+    <section id="rawPreview" class="hidden">
+      <h3 style="font-size:.9rem; margin-top:2rem;">Raw JSON Preview (first 50 entries)</h3>
+      <pre id="rawJson"></pre>
+    </section>
+  </main>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const fieldSelect = document.getElementById('fieldSelect');
+    const itemLabelField = document.getElementById('itemLabelField');
+    const groupBtn = document.getElementById('groupBtn');
+    const groupContainer = document.getElementById('groupContainer');
+    const statusEl = document.getElementById('status');
+    const rawPreview = document.getElementById('rawPreview');
+    const rawJsonEl = document.getElementById('rawJson');
+    const filterInput = document.getElementById('filterInput');
+    const expandAllBtn = document.getElementById('expandAllBtn');
+    const collapseAllBtn = document.getElementById('collapseAllBtn');
+    const fieldPills = document.getElementById('fieldPills');
+
+    let jsonData = [];
+    let lastGroupKey = null;
+    let lastLabelKey = null;
+
+    function setStatus(msg, ok=true){
+      statusEl.textContent = msg;
+      statusEl.style.color = ok ? 'var(--accent)' : 'var(--danger)';
+    }
+
+    function enableControls(){
+      fieldSelect.disabled = false;
+      itemLabelField.disabled = false;
+      groupBtn.disabled = false;
+      filterInput.disabled = false;
+      expandAllBtn.disabled = false;
+      collapseAllBtn.disabled = false;
+    }
+
+    function populateFields(sample){
+      fieldSelect.innerHTML = '';
+      itemLabelField.innerHTML = '';
+      
+      // Add a default option for item label field
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = "";
+      defaultOpt.textContent = "Default (Item #)";
+      itemLabelField.appendChild(defaultOpt);
+      
+      const keys = Object.keys(sample).sort();
+      keys.forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k; 
+        opt.textContent = k; 
+        fieldSelect.appendChild(opt.cloneNode(true));
+        itemLabelField.appendChild(opt);
+      });
+      
+      // Add pseudo option for multi-field composite key (later maybe)
+      buildFieldPills(keys);
+    }
+
+    function buildFieldPills(keys){
+      fieldPills.innerHTML = '';
+      keys.forEach(k => {
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = k;
+        fieldPills.appendChild(pill);
+      });
+    }
+
+    function groupBy(arr, key){
+      const map = new Map();
+      for(const item of arr){
+        let val = item[key];
+        if(val === undefined || val === null) val = '__NULL__';
+        if(typeof val === 'object') val = JSON.stringify(val);
+        const bucket = map.get(val) || [];
+        bucket.push(item);
+        map.set(val, bucket);
+      }
+      return map;
+    }
+
+    function renderGroups(key){
+      const labelKey = itemLabelField.value;
+      const groups = groupBy(jsonData, key);
+      lastGroupKey = key;
+      lastLabelKey = labelKey;
+      groupContainer.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+
+      const sorted = Array.from(groups.entries()).sort((a,b)=> b[1].length - a[1].length || (''+a[0]).localeCompare(''+b[0]));
+      sorted.forEach(([val, items], idx) => {
+        const details = document.createElement('details');
+        if(idx < 5) details.open = true; // open first few by default
+        details.className = 'group';
+        const summary = document.createElement('summary');
+        const groupValue = val === '__NULL__' ? '(null/undefined)' : val;
+        
+        // Format the group name as "GroupField: GroupValue" 
+        summary.innerHTML = `<span>${key}: <strong>${escapeHtml(groupValue)}</strong></span><span class="badge">${items.length}</span>`;
+        
+        const itemsDiv = document.createElement('div');
+        itemsDiv.className = 'items';
+        
+        items.forEach((obj, i)=>{
+          const itemContainer = document.createElement('details');
+          itemContainer.className = 'item-details';
+          itemContainer.open = i === 0; // open first item by default
+          
+          const itemSummary = document.createElement('summary');
+          
+          // Use the selected field for item naming if available
+          let itemLabel = `Item ${i+1}`;
+          if (labelKey && obj[labelKey] !== undefined) {
+            const labelValue = obj[labelKey];
+            const displayValue = typeof labelValue === 'object' ? 
+              (JSON.stringify(labelValue).substring(0, 30) + (JSON.stringify(labelValue).length > 30 ? '...' : '')) : 
+              String(labelValue);
+            itemLabel = `${displayValue}`;
+          }
+          
+          itemSummary.textContent = itemLabel;
+          itemSummary.style.fontWeight = '500';
+          itemSummary.style.marginBottom = '0.5rem';
+          
+          // Add tree control buttons
+          const treeControls = document.createElement('div');
+          treeControls.className = 'tree-controls';
+          
+          const expandBtn = document.createElement('button');
+          expandBtn.className = 'tree-control-btn expand-tree-btn';
+          expandBtn.textContent = 'Expand All';
+          
+          const collapseBtn = document.createElement('button');
+          collapseBtn.className = 'tree-control-btn collapse-tree-btn';
+          collapseBtn.textContent = 'Collapse All';
+          
+          treeControls.appendChild(expandBtn);
+          treeControls.appendChild(collapseBtn);
+          
+          const treeView = document.createElement('div');
+          treeView.className = 'tree-view';
+          renderTreeView(obj, treeView);
+          
+          itemContainer.appendChild(itemSummary);
+          itemContainer.appendChild(treeControls);
+          itemContainer.appendChild(treeView);
+          itemsDiv.appendChild(itemContainer);
+        });
+        details.appendChild(summary);
+        details.appendChild(itemsDiv);
+        fragment.appendChild(details);
+      });
+      groupContainer.appendChild(fragment);
+      setStatus(`Grouped by "${key}" into ${groups.size} groups. Total items: ${jsonData.length}`);
+    }
+    
+    function renderTreeView(obj, container) {
+      if (obj === null || obj === undefined) {
+        const nullEl = document.createElement('span');
+        nullEl.className = 'tree-value null';
+        nullEl.textContent = 'null';
+        container.appendChild(nullEl);
+        return;
+      }
+      
+      if (typeof obj !== 'object') {
+        const valueEl = document.createElement('span');
+        valueEl.className = `tree-value ${typeof obj}`;
+        valueEl.textContent = typeof obj === 'string' ? `"${obj}"` : String(obj);
+        container.appendChild(valueEl);
+        return;
+      }
+      
+      const isArray = Array.isArray(obj);
+      const keys = Object.keys(obj);
+      
+      if (keys.length === 0) {
+        const emptyEl = document.createElement('span');
+        emptyEl.className = 'tree-value';
+        emptyEl.textContent = isArray ? '[]' : '{}';
+        container.appendChild(emptyEl);
+        return;
+      }
+      
+      keys.forEach((key, idx) => {
+        const value = obj[key];
+        const isComplex = value !== null && typeof value === 'object';
+        
+        const branch = document.createElement('div');
+        branch.className = 'tree-item';
+        
+        if (isComplex && Object.keys(value).length > 0) {
+          const toggle = document.createElement('span');
+          toggle.className = 'tree-toggle';
+          // Make toggle clickable and maintain state
+          toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.toggle('open');
+            const childContainer = this.parentNode.nextElementSibling;
+            if (childContainer && childContainer.classList.contains('tree-branch')) {
+              childContainer.style.display = this.classList.contains('open') ? 'block' : 'none';
+            }
+          });
+          branch.appendChild(toggle);
+        } else {
+          const spacer = document.createElement('span');
+          spacer.style.width = '1rem';
+          spacer.style.display = 'inline-block';
+          branch.appendChild(spacer);
+        }
+        
+        const keyEl = document.createElement('span');
+        keyEl.className = 'tree-key';
+        keyEl.textContent = isArray ? `[${key}]:` : `${key}:`;
+        branch.appendChild(keyEl);
+        
+        if (isComplex) {
+          const preview = document.createElement('span');
+          preview.className = 'tree-value';
+          const isChildArray = Array.isArray(value);
+          const childKeys = Object.keys(value);
+          
+          // Make preview text clickable to toggle
+          preview.style.cursor = 'pointer';
+          preview.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const toggle = this.parentNode.querySelector('.tree-toggle');
+            if (toggle) {
+              toggle.click();
+            }
+          });
+          
+          preview.textContent = isChildArray 
+            ? `Array(${childKeys.length})` 
+            : `Object{${childKeys.length} ${childKeys.length === 1 ? 'key' : 'keys'}}`;
+          branch.appendChild(preview);
+          
+          // Add branch first
+          container.appendChild(branch);
+          
+          // Then add child container
+          const childContainer = document.createElement('div');
+          childContainer.className = 'tree-branch';
+          childContainer.style.display = 'none';
+          renderTreeView(value, childContainer);
+          container.appendChild(childContainer);
+        } else {
+          renderTreeView(value, branch);
+          container.appendChild(branch);
+        }
+      });
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    }
+
+    fileInput.addEventListener('change', async (e)=>{
+      const file = e.target.files[0];
+      if(!file){ return; }
+      const text = await file.text();
+      try {
+        const parsed = JSON.parse(text);
+        if(!Array.isArray(parsed)) {
+          throw new Error('Root JSON must be an array of objects.');
+        }
+        if(parsed.length === 0) throw new Error('Array is empty.');
+        if(typeof parsed[0] !== 'object') throw new Error('Array elements must be objects.');
+        jsonData = parsed;
+        populateFields(parsed[0]);
+        rawJsonEl.textContent = JSON.stringify(parsed.slice(0,50), null, 2);
+        rawPreview.classList.remove('hidden');
+        enableControls();
+        setStatus(`Loaded ${parsed.length} records.`);
+      } catch(err){
+        setStatus(err.message, false);
+        jsonData = [];
+        fieldSelect.innerHTML='';
+        groupContainer.innerHTML='';
+      }
+    });
+
+    groupBtn.addEventListener('click', ()=>{
+      const key = fieldSelect.value;
+      if(!key) return;
+      renderGroups(key);
+    });
+
+    // Re-render when item label field changes
+    itemLabelField.addEventListener('change', ()=>{
+      if(lastGroupKey) {
+        renderGroups(lastGroupKey);
+      }
+    });
+
+    filterInput.addEventListener('input', ()=>{
+      const q = filterInput.value.trim().toLowerCase();
+      const groups = groupContainer.querySelectorAll('.group');
+      groups.forEach(g => {
+        const label = g.querySelector('summary span').textContent.toLowerCase();
+        g.style.display = label.includes(q) ? '' : 'none';
+      });
+    });
+
+    expandAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.group').forEach(d=> d.open = true);
+    });
+    collapseAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.group').forEach(d=> d.open = false);
+    });
+
+    // Allow re-group by pressing Enter while select is focused
+    fieldSelect.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ groupBtn.click(); }});
+
+    // Drag & drop support
+    document.addEventListener('dragover', e=>{ e.preventDefault(); });
+    document.addEventListener('drop', e=>{
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if(file) {
+        fileInput.files = e.dataTransfer.files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+
+    // Keyboard quick filter focus with '/'
+    document.addEventListener('keydown', e=>{
+      if(e.key === '/' && document.activeElement !== filterInput){
+        e.preventDefault();
+        if(!filterInput.disabled){ filterInput.focus(); }
+      }
+    });
+    
+    // Global tree expansion helpers
+    function expandTreeNode(node) {
+      const toggle = node.querySelector('.tree-toggle');
+      if (toggle && !toggle.classList.contains('open')) {
+        toggle.classList.add('open');
+        const nextSibling = node.nextElementSibling;
+        if (nextSibling && nextSibling.classList.contains('tree-branch')) {
+          nextSibling.style.display = 'block';
+        }
+      }
+    }
+    
+    function collapseTreeNode(node) {
+      const toggle = node.querySelector('.tree-toggle');
+      if (toggle && toggle.classList.contains('open')) {
+        toggle.classList.remove('open');
+        const nextSibling = node.nextElementSibling;
+        if (nextSibling && nextSibling.classList.contains('tree-branch')) {
+          nextSibling.style.display = 'none';
+        }
+      }
+    }
+    
+    // Add buttons to each item details to expand all / collapse all its content
+    document.addEventListener('click', e => {
+      if (e.target.matches('.expand-tree-btn')) {
+        e.preventDefault();
+        const itemDetails = e.target.closest('.item-details');
+        const treeItems = itemDetails.querySelectorAll('.tree-item');
+        treeItems.forEach(expandTreeNode);
+      } else if (e.target.matches('.collapse-tree-btn')) {
+        e.preventDefault();
+        const itemDetails = e.target.closest('.item-details');
+        const treeItems = itemDetails.querySelectorAll('.tree-item');
+        treeItems.forEach(collapseTreeNode);
+      }
+    });
+  </script>
+</body>
+</html>
