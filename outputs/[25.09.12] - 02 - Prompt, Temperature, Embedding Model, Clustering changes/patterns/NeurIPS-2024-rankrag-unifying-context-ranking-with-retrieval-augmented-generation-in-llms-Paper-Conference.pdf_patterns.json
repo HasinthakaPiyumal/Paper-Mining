@@ -1,0 +1,35 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) often lack access to up-to-date, domain-specific, or proprietary knowledge, leading to factual inaccuracies, 'hallucinations,' or an inability to answer questions requiring external information. Modifying model weights for every new piece of knowledge is computationally expensive and impractical.",
+    "Context": "Building intelligent systems that require LLMs to provide accurate, grounded, and comprehensive answers based on external, dynamic, or specialized information sources, rather than solely relying on their pre-trained parametric knowledge.",
+    "Solution": "Integrate an external information retrieval system with an LLM. When a query is received, a retriever first fetches relevant documents, passages, or contexts from a large corpus or database. These retrieved contexts are then provided to the LLM as additional input, alongside the original query, enabling the LLM to generate an answer that is grounded in the provided external information.",
+    "Result": "LLMs can access and incorporate up-to-date and domain-specific knowledge, significantly reducing factual errors and hallucinations. This approach allows LLMs to adapt to new information and domains without requiring costly re-training or fine-tuning of their core weights.",
+    "Related Patterns": [
+      "Unified Reranker-Generator LLM (RankRAG)"
+    ],
+    "Uses": "Knowledge-intensive NLP tasks, open-domain question answering, conversational AI, fact verification, domain-specific information retrieval, content generation requiring external validation.",
+    "Category": [
+      "Generative AI",
+      "LLM-specific",
+      "Knowledge & Reasoning"
+    ]
+  },
+  {
+    "Pattern Name": "Unified Reranker-Generator LLM (RankRAG)",
+    "Problem": "Traditional Retrieval-Augmented Generation (RAG) pipelines face several limitations: 1) They often rely on separate, less capable models for initial retrieval and subsequent reranking, leading to suboptimal context selection. 2) LLMs struggle with processing a large number of retrieved contexts due to efficiency concerns and the introduction of irrelevant or noisy information, which can degrade generation accuracy. 3) Dedicated ranking models often exhibit limited zero-shot generalization capabilities compared to versatile LLMs. 4) There's a persistent trade-off in selecting the optimal number of top-k contexts: too few can compromise recall, while too many introduce noise and distract the LLM.",
+    "Context": "Improving the effectiveness, efficiency, and generalization of RAG systems by optimizing the context selection and utilization process. This pattern is particularly relevant when aiming to leverage the inherent capabilities of LLMs for both understanding relevance and generating coherent text, and when addressing the limitations of multi-stage RAG architectures that use distinct models for each step.",
+    "Solution": "Instruction-tune a *single Large Language Model* to perform both context ranking (reranking) and answer generation within a unified RAG framework. The training process involves a specialized instruction-tuning blend that incorporates: \n1.  **Context-rich QA data:** To enhance the LLM's ability to use context for generation.\n2.  **Retrieval-augmented QA data:** Including hard negative contexts (irrelevant retrieved passages) to improve the LLM's robustness against noisy information.\n3.  **Context ranking data:** Explicitly training the LLM to assess query-passage relevance (e.g., True/False judgments).\n4.  **Retrieval-augmented ranking data:** Training the LLM to identify multiple relevant passages from a given set of retrieved contexts.\nAll these diverse tasks are cast into a standardized `(question, context, answer)` format to enable mutual enhancement and effective knowledge transfer between ranking and generation capabilities. \nAt inference, the system follows a 'Retrieve-Rerank-Generate' pipeline: \n1.  An initial retriever fetches a broader set of top-N contexts.\n2.  The instruction-tuned LLM then acts as a reranker, calculating relevance scores for these N contexts and selecting a refined top-k (where k < N).\n3.  The *same* instruction-tuned LLM then uses these refined top-k contexts to generate the final answer.",
+    "Result": "Significantly improved performance on knowledge-intensive NLP tasks compared to existing RAG methods and dedicated ranking models, often with a smaller amount of ranking data. Enhanced robustness to irrelevant contexts during generation and superior zero-shot generalization capability to new domains (e.g., biomedical) without additional domain-specific fine-tuning. This approach effectively balances recall and precision by dynamically selecting the most relevant contexts, leading to more accurate and grounded answers.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)"
+    ],
+    "Uses": "Open-domain Question Answering (OpenQA), Fact Verification, Conversational Question Answering (ConvQA), and various domain-specific RAG applications (e.g., biomedical QA), where precise context selection and robust generation are critical.",
+    "Category": [
+      "Generative AI",
+      "LLM-specific",
+      "Knowledge & Reasoning",
+      "MLOps"
+    ]
+  }
+]

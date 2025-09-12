@@ -1,0 +1,38 @@
+[
+  {
+    "Pattern Name": "Agent-Computer Interface (ACI)",
+    "Problem": "Language Model (LM) agents struggle to reliably interact with complex digital environments (like software engineering tools) when using interfaces designed for humans (e.g., Linux shell), leading to poor performance, inefficient actions, and difficulty in error recovery.",
+    "Context": "LM agents are tasked with complex, multi-step operations in digital environments (e.g., software engineering, code generation, navigation). Existing human-centric interfaces are not optimized for LM capabilities and limitations (e.g., lack of visual understanding, fixed cost of context window, difficulty with verbose or unstructured information).",
+    "Solution": "Introduce an abstraction layer, an Agent-Computer Interface (ACI), between the LM agent and the computer. This interface provides a tailored set of commands and structured feedback, designed to complement the LM's abilities and mitigate its weaknesses. It manages context, simplifies actions, and incorporates guardrails to enhance reliability and efficiency.",
+    "Result": "Substantially enhances LM agents' ability to perform complex tasks, improving performance, efficiency, and error recovery compared to using human-centric interfaces. It unifies tool use, prompting techniques, and code execution within a single framework.",
+    "Related Patterns": ["Concise and Structured Environment Feedback", "Guardrails for Agent Actions", "Compact and Efficient Agent Actions"],
+    "Uses": "Automated software engineering, digital environment interaction for LM agents, code generation, web navigation, computer control, any domain where LM agents interact with complex systems."
+  },
+  {
+    "Pattern Name": "Concise and Structured Environment Feedback",
+    "Problem": "Language Model (LM) agents are sensitive to context window size and distracting information. Verbose or unstructured environment feedback can consume excessive tokens, reduce performance, and make it difficult for the agent to identify relevant information.",
+    "Context": "LM agents interact with digital environments, receiving observations after each action. All content in the context window has a fixed cost in memory and computation for LMs, and distracting context can harm performance.",
+    "Solution": "Design environment feedback to be informative but concise. This includes providing substantive information about the current state and action effects without unnecessary details, contextualizing code snippets (e.g., with prepended line numbers, indicators of omitted lines), and collapsing old observations into single-line summaries to maintain essential information while reducing unnecessary context.",
+    "Result": "Improves LM agent efficiency by reducing context window bloat, allowing more interaction cycles, and enhancing the agent's ability to focus on relevant information, leading to better downstream task performance and reduced cost.",
+    "Related Patterns": ["Agent-Computer Interface (ACI)", "Guardrails for Agent Actions", "Compact and Efficient Agent Actions"],
+    "Uses": "Any LM agent interacting with a digital environment, especially for code editing, file navigation, debugging, and managing long-running tasks where context management is critical."
+  },
+  {
+    "Pattern Name": "Guardrails for Agent Actions",
+    "Problem": "Language Model (LM) agents make mistakes (e.g., syntax errors in code edits, malformed commands, overly broad searches) and struggle to recover from these errors. This leads to cascading failures, wasted turns, and increased computational cost.",
+    "Context": "LM agents perform actions in a digital environment where errors can have significant negative consequences (e.g., invalid code breaking the system, inefficient searches consuming budget). Recovery from self-incurred errors is difficult for LMs.",
+    "Solution": "Implement guardrails within the agent-computer interface to automatically detect and prevent common mistakes or provide immediate, specific feedback for recovery. Examples include a code syntax checker for edits (discarding invalid edits and prompting retry), limiting verbose search results (suggesting more specific queries), and providing error responses for malformed generations.",
+    "Result": "Mitigates error propagation, hastens recovery from mistakes, and improves the reliability and efficiency of agent actions, leading to higher task success rates and reduced wasted resources.",
+    "Related Patterns": ["Agent-Computer Interface (ACI)", "Concise and Structured Environment Feedback", "Compact and Efficient Agent Actions"],
+    "Uses": "Automated software engineering, any agentic system where action validity and error recovery are critical, robust ML workflow execution, prompt design for error handling."
+  },
+  {
+    "Pattern Name": "Compact and Efficient Agent Actions",
+    "Problem": "Language Model (LM) agents can be inefficient when performing higher-order operations that require composing many simple, granular actions across multiple turns. This leads to increased cost, context window usage, and slower progress towards a goal.",
+    "Context": "LM agents interact with digital environments using a set of available commands. Granular commands (like many bash commands) require complex composition for common tasks, which is not efficient for LMs due to their sequential nature and context limitations.",
+    "Solution": "Consolidate important operations (e.g., multi-line file editing, efficient search, file navigation) into as few actions as possible. Provide simple commands with concise documentation and few options. Design actions to make meaningful progress towards a goal in a single step, rather than requiring composition across multiple turns.",
+    "Result": "Improves agent efficiency by reducing the number of turns required for complex tasks, lowering computational cost, and making actions easier for agents to use reliably, thereby accelerating problem-solving and improving overall performance.",
+    "Related Patterns": ["Agent-Computer Interface (ACI)", "Concise and Structured Environment Feedback", "Guardrails for Agent Actions"],
+    "Uses": "Automated software engineering, digital environment interaction, task planning for agents, optimizing LLM agent workflows, robotics for high-level action abstraction."
+  }
+]

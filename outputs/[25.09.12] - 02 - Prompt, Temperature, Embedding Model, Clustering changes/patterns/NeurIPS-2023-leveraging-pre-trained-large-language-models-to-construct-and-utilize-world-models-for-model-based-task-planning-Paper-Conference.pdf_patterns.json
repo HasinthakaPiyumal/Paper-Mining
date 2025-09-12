@@ -1,0 +1,52 @@
+[
+  {
+    "Pattern Name": "LLM-Assisted Symbolic World Model Construction",
+    "Problem": "Large Language Models (LLMs) directly used as planners are impractical due to limited correctness of plans, strong reliance on online feedback from interactions with simulators or the actual environment, and inefficiency in utilizing human feedback for complex, long-horizon planning tasks.",
+    "Context": "Designing AI agents for sequential decision-making or planning problems where reliability and correctness are paramount. Users may not be experts in formal planning languages (like PDDL), and the system needs to leverage LLMs' common-sense knowledge for knowledge acquisition and representation.",
+    "Solution": "Leverage LLMs to construct an explicit, symbolic world model (e.g., in PDDL) from natural language descriptions of actions and domains. The LLM also acts as an interface, translating the symbolic model to natural language for human inspection and incorporating natural language corrective feedback (from humans or automated validators) back into the symbolic model through an iterative dialogue. This corrected symbolic model is then used by sound, domain-independent planners.",
+    "Result": "Provides correctness guarantees from external planners, reduces human involvement by shifting correction effort to the model construction phase, and conceals the complexity of formal planning languages from non-expert users. It enables LLMs to excel at modeling causal dependencies rather than combinatorial search.",
+    "Related Patterns": [
+      "LLM with External Tools",
+      "Corrective Reprompting / Iterative Plan Refinement",
+      "LLM as Heuristic/Seed Planner"
+    ],
+    "Uses": "Task planning for embodied agents (e.g., household robots), classical planning domains (e.g., IPC domains), knowledge acquisition for AI agents."
+  },
+  {
+    "Pattern Name": "LLM as Heuristic/Seed Planner",
+    "Problem": "Off-the-shelf LLMs often struggle to produce fully accurate and executable plans for complex tasks due to limitations in reasoning and handling long-term dependencies, but they can provide sensible high-level guidance or initial suggestions based on their broad common-sense knowledge.",
+    "Context": "Planning problems where an LLM's common-sense knowledge can be beneficial for guiding the search, but its direct planning capabilities are insufficient for generating reliable, executable plans. The system needs to combine the strengths of LLMs with the precision of specialized planners.",
+    "Solution": "Use an LLM to generate a preliminary, high-level plan, score potential actions, or provide a 'seed' plan. This LLM output is then passed to a more specialized, reliable external planner (e.g., a classical domain-independent planner, a low-level grounding planner, or a local-search planner) which refines, validates, or grounds these suggestions to determine executability and ensure correctness.",
+    "Result": "Improves the overall planning process by combining the LLM's broad knowledge and high-level reasoning with the precision and correctness of specialized planners, potentially accelerating plan search and making it more robust.",
+    "Related Patterns": [
+      "LLM with External Tools",
+      "LLM-Assisted Symbolic World Model Construction"
+    ],
+    "Uses": "Robotics (e.g., scoring high-level actions, grounding actions), accelerating local-search planners, general sequential decision-making, hybrid planning systems."
+  },
+  {
+    "Pattern Name": "LLM with External Tools",
+    "Problem": "Large Language Models (LLMs) are approximately omniscient but may not always outperform specialized models or tools in specific, precise, or computationally intensive subtasks (e.g., arithmetic, logical reasoning, sound planning, factual retrieval, code execution).",
+    "Context": "Designing AI systems where an LLM needs to perform tasks that require capabilities beyond its inherent generative or reasoning abilities, or where higher reliability and accuracy are required for specific sub-components. The LLM needs to act as an orchestrator.",
+    "Solution": "Enable the LLM to identify when an external tool is needed, formulate appropriate input for that tool, invoke the tool, and then interpret and integrate the tool's output back into its reasoning or generation process. This creates a hybrid system where the LLM orchestrates specialized tools to achieve complex goals.",
+    "Result": "Augments the LLM's capabilities, leading to more reliable, accurate, and robust performance on complex tasks by offloading specialized subtasks to dedicated, proven tools. It allows LLMs to act as controllers or orchestrators for a suite of specialized functionalities.",
+    "Related Patterns": [
+      "LLM-Assisted Symbolic World Model Construction",
+      "LLM as Heuristic/Seed Planner",
+      "Corrective Reprompting / Iterative Plan Refinement"
+    ],
+    "Uses": "Arithmetic, logical reasoning, planning, code generation, data retrieval, interacting with APIs, scientific computation, embodied agents."
+  },
+  {
+    "Pattern Name": "Corrective Reprompting / Iterative Plan Refinement",
+    "Problem": "LLM-generated outputs (e.g., plans, code, text) often contain errors, inconsistencies, or fail to meet specific constraints. LLMs may also struggle to self-correct effectively or get stuck in repetitive error loops when attempting to refine their outputs.",
+    "Context": "Situations where an LLM is used to generate complex outputs that require high accuracy or adherence to specific rules, and where an external mechanism can provide structured, actionable feedback to guide the LLM's refinement process.",
+    "Solution": "An external validator (which could be a symbolic simulator, a formal checker, a human expert, or even another LLM acting as a critic) evaluates the LLM's output. If errors or discrepancies are detected, the validation results are translated into natural language feedback and provided back to the LLM in a subsequent prompt. The LLM then uses this feedback to iteratively refine its output until it meets the desired criteria or a stopping condition is met.",
+    "Result": "Significantly improves the correctness, consistency, and quality of LLM-generated outputs by enabling a structured feedback loop, reducing the need for extensive manual correction or reliance on costly online execution. It helps LLMs overcome their limitations in precise reasoning and self-correction.",
+    "Related Patterns": [
+      "LLM with External Tools",
+      "LLM-Assisted Symbolic World Model Construction"
+    ],
+    "Uses": "Iterative plan generation, debugging LLM reasoning, improving code generation, refining text outputs, correcting symbolic models, agentic behavior with self-reflection."
+  }
+]

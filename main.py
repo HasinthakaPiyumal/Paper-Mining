@@ -4,10 +4,11 @@ from paper_cleaner import clean_all_pdfs_in_folder
 import os
 import json
 
+base_output = "outputs/[25.09.12] - 02 - Prompt, Temperature, Embedding Model, Clustering changes/"
 paper_folder = "papers"
 output_folder = "cleaned_papers"
-patterns_folder = "patterns" # If needed to save patterns separately
-patterns_file = "extracted_patterns.json" # If needed to save all patterns in one file
+patterns_folder = f"{base_output}patterns/" # If needed to save patterns separately
+patterns_file = f"{base_output}extracted_patterns.json" # If needed to save all patterns in one file
 
 
 def clean_papers():
@@ -45,6 +46,6 @@ def extract_patterns_from_all_files(file_list,auto_save=True,save_in_single_file
     return all_patterns
 
 if __name__ == "__main__":
-    # clean_papers() # Uncomment if cleaning is needed
+    clean_papers() # Uncomment if cleaning is needed
     cleaned_files = get_cleaned_file_list()
     extract_patterns_from_all_files(cleaned_files)

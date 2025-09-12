@@ -1,0 +1,74 @@
+[
+  {
+    "Pattern Name": "Grounded Language Models (GLAM)",
+    "Problem": "Large Language Models (LLMs) possess abstract knowledge but often suffer from a lack of grounding, leading to misalignment with specific environments and limited functional competence in decision-making tasks.",
+    "Context": "An agent needs to solve decision-making problems in interactive textual environments, using an LLM as its policy. The environment provides observations and sparse, task-conditioned rewards.",
+    "Solution": "Use an LLM as the agent's policy and progressively update it through online Reinforcement Learning (specifically, the PPO algorithm) as the agent interacts with the environment. This involves: 1) using the LLM's language modeling heads to compute conditional probabilities of token sequences for each possible action, and 2) finetuning the LLM (and an added value head) using rewards collected from environmental interactions to achieve functional grounding.",
+    "Result": "Achieves functional grounding, drastically improving performance, sample efficiency, and generalization abilities for various RL tasks by aligning the LLM's internal knowledge with external environmental dynamics.",
+    "Related Patterns": [
+      "LLM as High-Level Planner",
+      "Finetuning LLMs on Expert Trajectories (Behavioral Cloning for LLMs)",
+      "Online Decision Transformer (Pre-training with Offline RL + Online Finetuning)",
+      "Reinforcement Learning from Human Feedback (RLHF)",
+      "Distributed LLM Policies (Lamorel)"
+    ],
+    "Uses": "Interactive textual environments, spatial and navigation tasks, embodied agents, robotics (implied by related work)."
+  },
+  {
+    "Pattern Name": "LLM as High-Level Planner",
+    "Problem": "LLMs can suggest abstract plans but lack direct grounding for low-level actions and real-time interaction with the environment, limiting their functional competence in embodied tasks.",
+    "Context": "Robotics setups or embodied tasks where LLMs can provide high-level strategic guidance or sequences of actions, but direct control over low-level motor commands or fine-grained environmental interaction is required.",
+    "Solution": "Employ LLMs to generate high-level plans or action sequences. These plans are then executed by a separate, grounded low-level policy or refined through external mechanisms such as affordance functions, a dedicated actor agent, or closed-loop feedback with an environmental 'reporter'. The LLM itself does not directly control low-level actions or learn from direct environmental interaction in this setup.",
+    "Result": "Leverages the LLM's extensive prior knowledge for complex, long-horizon tasks. However, it requires additional components for grounding and low-level control, as the LLM itself remains ungrounded through direct interaction.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "Robotics, embodied reasoning, suggesting action plans in interactive environments."
+  },
+  {
+    "Pattern Name": "Finetuning LLMs on Expert Trajectories (Behavioral Cloning for LLMs)",
+    "Problem": "Leveraging existing expert demonstrations to initialize or pre-train LLM-based policies, while acknowledging that purely offline learning may not achieve full functional grounding or optimal performance in interactive environments.",
+    "Context": "Preparing LLMs to act as policies in interactive environments by utilizing datasets of successful past interactions or expert behavior, often as a starting point before online interaction.",
+    "Solution": "Pre-train or finetune LLMs using Behavioral Cloning (BC) or offline Reinforcement Learning on a dataset of expert trajectories. This teaches the LLM to imitate observed successful actions given states, effectively learning a policy from demonstrations.",
+    "Result": "Provides a strong initial policy that benefits from expert knowledge, potentially boosting initial performance and sample efficiency. However, it often performs worse than methods that incorporate direct online environmental interaction and grounding, as it lacks the ability to learn from trial-and-error.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)",
+      "Online Decision Transformer (Pre-training with Offline RL + Online Finetuning)"
+    ],
+    "Uses": "Initializing LLM policies, leveraging expert demonstrations, pre-training for interactive agents, offline RL for LLMs."
+  },
+  {
+    "Pattern Name": "Online Decision Transformer (Pre-training with Offline RL + Online Finetuning)",
+    "Problem": "Combining the advantages of learning from large offline datasets (e.g., leveraging diverse experiences, sample efficiency) with the benefits of online interaction (e.g., adaptation to specific environments, functional grounding) for transformer-based decision-making policies.",
+    "Context": "Developing robust and adaptable transformer policies for sequential decision-making tasks, where both extensive prior data and real-time environmental interaction are valuable for optimal performance.",
+    "Solution": "First, pre-train a transformer model using offline Reinforcement Learning on a dataset of expert or diverse trajectories. Subsequently, finetune this pre-trained model with online Reinforcement Learning, allowing it to adapt and learn from direct, real-time interactions with the environment.",
+    "Result": "Creates agents that benefit from both broad offline knowledge and specific online adaptation, potentially leading to more sample-efficient and robust learning compared to purely offline or online approaches.",
+    "Related Patterns": [
+      "Finetuning LLMs on Expert Trajectories (Behavioral Cloning for LLMs)",
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "General decision-making with transformers, combining offline and online learning paradigms, developing adaptable policies."
+  },
+  {
+    "Pattern Name": "Reinforcement Learning from Human Feedback (RLHF)",
+    "Problem": "Aligning the outputs and behavior of Large Language Models with complex, often subjective, and evolving human preferences and values, especially in open-ended text generation tasks.",
+    "Context": "LLMs are used for natural language generation, and the goal is to produce text that is helpful, harmless, and honest, or otherwise aligned with human instructions and expectations. Text generation is framed as a sequential decision-making problem where each token is an action.",
+    "Solution": "Employ Reinforcement Learning (typically Proximal Policy Optimization - PPO) to finetune the LLM. The reward signal for this RL process is provided by a reward model, which itself is trained on a dataset of human preferences (e.g., human rankings of different LLM outputs). This 'human feedback' guides the LLM's learning to produce more desirable outputs.",
+    "Result": "Produces LLMs that generate text more aligned with human preferences and instructions, often leading to models that are more useful and safer, even with fewer parameters than larger models without such alignment.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "Natural language generation, improving LLM alignment with human values/preferences, instruction following, conversational AI, content moderation."
+  },
+  {
+    "Pattern Name": "Distributed LLM Policies (Lamorel)",
+    "Problem": "The significant computational cost and time required for online Reinforcement Learning finetuning of large LLMs, particularly when computing action probabilities across multiple parallel environments, making the process intractable.",
+    "Context": "Scaling the training and inference of LLM-based agent policies in online RL settings, where fast and frequent interactions with multiple environments are necessary to collect sufficient data for learning.",
+    "Solution": "Implement a distributed system using multiple LLM workers running in parallel. A client-server architecture manages the distribution of inference requests (each worker scoring a subset of actions) and aggregates results. This system also supports distributed training, where gradient computations for minibatches are parallelized across the LLM instances and then gathered for model updates.",
+    "Result": "Overcomes computational bottlenecks, enabling a near-linear reduction in training time with the number of deployed LLM instances. This makes online RL finetuning of large LLMs feasible and scalable, allowing for more extensive experimentation and training.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "Scaling online RL finetuning of large LLM policies, high-throughput inference for LLM-powered agents, MLOps for LLM-based systems."
+  }
+]

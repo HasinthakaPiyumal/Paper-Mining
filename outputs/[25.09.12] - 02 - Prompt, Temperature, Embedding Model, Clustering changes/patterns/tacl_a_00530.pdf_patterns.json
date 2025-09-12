@@ -1,0 +1,24 @@
+[
+  {
+    "Pattern Name": "End-to-End Retrieval Augmented Generation for Domain Adaptation (RAGend2end)",
+    "Problem": "Original Retrieval Augmented Generation (RAG) models are not optimized for specialized domains (e.g., healthcare, news) because their external knowledge base and passage encodings are fixed during finetuning, leading to poor domain adaptation. Re-encoding and re-indexing a large knowledge base synchronously during training is computationally expensive and inefficient.",
+    "Context": "Developing RAG systems for Open-Domain Question Answering (ODQA) that need to perform effectively in specialized, domain-specific knowledge bases, rather than just general Wikipedia-based knowledge. The system requires dynamic adaptation of both its retrieval and generation components to new domains.",
+    "Solution": "Implement a joint training mechanism for RAG where both the neural retriever (Dense Passage Retrieval's question and passage encoders) and the generator (BART seq2seq model) are finetuned simultaneously for the end QA task. Crucially, the external knowledge base's passage encodings and index are updated asynchronously in parallel processes (re-encoding on dedicated GPUs, re-indexing with FAISS on CPUs) to avoid stalling the main training loop. This allows the entire RAG architecture, including its knowledge base, to adapt to the new domain.",
+    "Result": "Significantly improved domain adaptation performance (Exact Match, F1, Top-k retrieval accuracy) across various specialized domains (COVID-19, News, Conversations) compared to the original RAG. The approach demonstrates superior retriever adaptation compared to standalone retriever finetuning and can be used to train neural retrievers for retrieval-only applications.",
+    "Related Patterns": [
+      "Statement Reconstruction (Auxiliary Training Signal)"
+    ],
+    "Uses": "Open-Domain Question Answering (ODQA) in specialized domains, improving the adaptability of RAG-like models, training domain-specific neural retrievers, reducing the need for gold-standard passages for retriever training."
+  },
+  {
+    "Pattern Name": "Statement Reconstruction (Auxiliary Training Signal)",
+    "Problem": "RAG models, even with end-to-end training, can benefit from additional domain-specific knowledge injection to further enhance their understanding and generation capabilities, especially when explicit QA pairs are scarce or insufficient to fully capture domain nuances.",
+    "Context": "Training Retrieval Augmented Generation (RAG) models for domain adaptation, where the goal is to improve the model's ability to synthesize information from retrieved documents and generate factual, domain-relevant text. This is particularly useful when the model needs to learn to reconstruct or summarize information based on its knowledge base.",
+    "Solution": "Introduce an auxiliary training objective where the RAG model is tasked with reconstructing a given 'statement' (e.g., abstract sentences, news summaries, conversation summaries) by first retrieving relevant passages from its external knowledge base and then generating the statement. A unique control token (e.g., 'p') is prepended to the input to differentiate this task from the primary QA task. The input statements are carefully selected to not be directly present in the knowledge base to prevent simple memorization.",
+    "Result": "Further improves both the retriever's ability to find relevant information and the generator's accuracy in producing answers, leading to higher overall performance (EM, F1, Top-k retrieval accuracy). It effectively injects more domain-specific knowledge into the model, enabling it to generate statements close to the input based on retrieved context.",
+    "Related Patterns": [
+      "End-to-End Retrieval Augmented Generation for Domain Adaptation (RAGend2end)"
+    ],
+    "Uses": "Enhancing domain adaptation for RAG models, injecting domain-specific knowledge, improving factual consistency and potentially reducing hallucinations in generative models, training better retrievers by forcing them to find information for reconstruction."
+  }
+]

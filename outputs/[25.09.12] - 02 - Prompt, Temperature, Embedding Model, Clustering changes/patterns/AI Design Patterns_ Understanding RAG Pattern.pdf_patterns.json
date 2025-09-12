@@ -1,0 +1,107 @@
+[
+  {
+    "Pattern Name": "Interpretable Global Surrogate Model",
+    "Problem": "Complex, black-box AI models lack global interpretability, making it hard to understand their overall decision logic.",
+    "Context": "When a high-performing but opaque AI model is used, and there's a need for a holistic understanding of its behavior across the entire dataset.",
+    "Solution": "Train a simpler, inherently interpretable model (the 'surrogate') on the predictions of the complex black-box model. This surrogate aims to mimic the global behavior of the black-box model.",
+    "Result": "A more transparent, understandable model that approximates the global decision-making of the original black-box system.",
+    "Related Patterns": [],
+    "Uses": "Global model understanding, model validation, debugging."
+  },
+  {
+    "Pattern Name": "Local Surrogate Explanation (LIME-like)",
+    "Problem": "Understanding why a black-box AI model made a specific individual prediction is difficult due to its opacity.",
+    "Context": "When individual predictions of a black-box model need to be explained in a human-understandable way, focusing on the local factors influencing that specific decision.",
+    "Solution": "For a given instance, generate perturbed samples in its local neighborhood. Train a simple, interpretable model (e.g., linear model) on these perturbed samples, weighted by their proximity to the instance, to locally approximate the black-box model's behavior.",
+    "Result": "A feature importance vector indicating which features locally contributed to the individual prediction.",
+    "Related Patterns": [
+      "Interpretable Global Surrogate Model",
+      "Game-Theoretic Feature Attribution (SHAP-like)",
+      "Local Rule-Based Explanation (Anchor/LORE-like)",
+      "LACE (Local Pattern-Based Explanation with Prediction Difference)"
+    ],
+    "Uses": "Local prediction explanation, debugging individual decisions, building trust."
+  },
+  {
+    "Pattern Name": "Game-Theoretic Feature Attribution (SHAP-like)",
+    "Problem": "Quantifying the contribution of each feature to an individual black-box model's prediction in a fair, consistent, and theoretically sound manner.",
+    "Context": "When a quantitative, fair, and consistent attribution of feature importance is required for individual predictions of black-box models, often for fairness analysis or detailed debugging.",
+    "Solution": "Apply concepts from cooperative game theory, specifically Shapley values, to attribute the prediction outcome to each input feature. This involves calculating the marginal contribution of each feature across all possible coalitions of features.",
+    "Result": "A set of Shapley values, one for each feature, representing its average marginal contribution to the prediction.",
+    "Related Patterns": [
+      "Local Surrogate Explanation (LIME-like)",
+      "LACE (Local Pattern-Based Explanation with Prediction Difference)",
+      "Subgroup Divergence Analysis (DivExplorer Algorithm)"
+    ],
+    "Uses": "Local prediction explanation, fairness analysis, bias detection, quantitative debugging."
+  },
+  {
+    "Pattern Name": "Local Rule-Based Explanation (Anchor/LORE-like)",
+    "Problem": "Providing human-understandable, qualitative explanations for individual black-box model predictions in a rule-based format.",
+    "Context": "When users prefer rule-based explanations for individual predictions, which can be easier to interpret than feature importance scores, especially for structured data.",
+    "Solution": "Extract a set of local rules (e.g., 'anchors' or decision rules from a local surrogate tree) that describe the conditions under which the black-box model makes a specific prediction in the neighborhood of the instance.",
+    "Result": "A set of IF-THEN rules that explain the individual prediction, providing qualitative insights into the decision logic.",
+    "Related Patterns": [
+      "Local Surrogate Explanation (LIME-like)",
+      "LACE (Local Pattern-Based Explanation with Prediction Difference)"
+    ],
+    "Uses": "Local prediction explanation, qualitative debugging, human-in-the-loop validation."
+  },
+  {
+    "Pattern Name": "Counterfactual Explanation",
+    "Problem": "Understanding what minimal changes to an input instance would cause a black-box AI model to change its prediction.",
+    "Context": "When users need actionable insights into how to alter an input to achieve a desired outcome from a black-box model, or to understand the model's decision boundaries.",
+    "Solution": "Find the closest possible instance to the original input (in terms of feature values) that results in a different, desired prediction from the black-box model.",
+    "Result": "A 'what-if' scenario showing the smallest perturbation to an input that flips the model's decision.",
+    "Related Patterns": [],
+    "Uses": "Actionable explanations, fairness analysis (e.g., how to change an outcome), debugging, understanding model sensitivity."
+  },
+  {
+    "Pattern Name": "LACE (Local Pattern-Based Explanation with Prediction Difference)",
+    "Problem": "Explaining individual black-box classifier predictions by highlighting both individual and interacting feature contributions qualitatively (rules) and quantitatively (prediction difference), while addressing computational complexity.",
+    "Context": "Structured data, black-box classification models, need for model-agnostic, local, and comprehensive explanations (qualitative and quantitative).",
+    "Solution": "Captures locality via K-nearest neighbors, trains an associative classifier (e.g., L3) on these labeled neighbors to derive local rules (patterns), estimates prediction difference for individual attribute values and relevant patterns (from rules) via marginalization, and automatically tunes K based on locality approximation.",
+    "Result": "A qualitative explanation (local rules/patterns) and a quantitative explanation (prediction difference for individual features and patterns), visualized as a bar plot.",
+    "Related Patterns": [
+      "Local Surrogate Explanation (LIME-like)",
+      "Game-Theoretic Feature Attribution (SHAP-like)",
+      "Local Rule-Based Explanation (Anchor/LORE-like)",
+      "Interactive Human-in-the-Loop Explanation Tool (xPlain)"
+    ],
+    "Uses": "XAI, debugging, model validation, human-in-the-loop inspection."
+  },
+  {
+    "Pattern Name": "Interactive Human-in-the-Loop Explanation Tool (xPlain)",
+    "Problem": "Facilitating human understanding, debugging, and trust in black-box AI models through interactive exploration of individual predictions.",
+    "Context": "Black-box classification models, need for interactive XAI, model validation, debugging, and comparison.",
+    "Solution": "Integrates a local explanation method (LACE) into an interactive UI, allowing users to inspect, compare, perform 'what-if' analysis, define custom rules, and view aggregated explanation metadata (attribute view, item view, local rule view).",
+    "Result": "Enhanced human understanding, trust, and ability to debug and compare AI models.",
+    "Related Patterns": [
+      "LACE (Local Pattern-Based Explanation with Prediction Difference)"
+    ],
+    "Uses": "XAI, model validation, debugging, model comparison, ethical AI."
+  },
+  {
+    "Pattern Name": "Subgroup Divergence Analysis (DivExplorer Algorithm)",
+    "Problem": "Identifying and characterizing data subgroups where a black-box classification model behaves differently (divergently) from its overall behavior, especially for fairness and error analysis.",
+    "Context": "Black-box classification models, structured data, need for model-agnostic subgroup analysis, fairness assessment, error analysis, and model debugging.",
+    "Solution": "Defines a 'divergence' metric for itemsets, uses frequent pattern mining to extract all frequent itemsets, assesses statistical significance, quantifies item contributions to divergence using Shapley values, generalizes Shapley values for 'global item divergence', identifies 'corrective items', and prunes redundant itemsets.",
+    "Result": "Identification of critical data subgroups, characterization of their divergent behavior, insights into contributing factors (items), and detection of corrective items.",
+    "Related Patterns": [
+      "Game-Theoretic Feature Attribution (SHAP-like)",
+      "Interactive Subgroup Divergence Exploration Tool (DivExplorer System)"
+    ],
+    "Uses": "Model validation, testing, error analysis, fairness assessment, bias identification, responsible AI."
+  },
+  {
+    "Pattern Name": "Interactive Subgroup Divergence Exploration Tool (DivExplorer System)",
+    "Problem": "Enabling interactive exploration and inspection of divergent subgroups identified by the DivExplorer algorithm.",
+    "Context": "Black-box classification models, need for interactive subgroup analysis, model debugging, and bias identification.",
+    "Solution": "Integrates the DivExplorer algorithm into an interactive UI, allowing users to view/sort divergent itemsets, drill down into item contributions, visualize the itemset lattice, search for supersets, and examine global item influence.",
+    "Result": "Facilitates human understanding of subgroup-specific model behaviors, aids in debugging, and supports bias identification.",
+    "Related Patterns": [
+      "Subgroup Divergence Analysis (DivExplorer Algorithm)"
+    ],
+    "Uses": "Model validation, debugging, fairness assessment, responsible AI."
+  }
+]

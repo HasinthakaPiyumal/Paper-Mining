@@ -1,0 +1,65 @@
+[
+  {
+    "Pattern Name": "Workflow Pipeline",
+    "Problem": "Creating an end-to-end reproducible training and deployment pipeline for a machine learning component is difficult. Data science notebooks can run a whole pipeline but they do not scale.",
+    "Context": "Developing and deploying machine learning components where reproducibility, scalability, and maintainability of the pipeline steps are crucial.",
+    "Solution": "Make each pipeline step a separate containerized service. Services are orchestrated and chained together to form pipelines that can be run via REST API calls.",
+    "Result": "The portability, scalability, and maintainability of the individual pipeline steps is improved at the cost of an overall more complex solution.",
+    "Related Patterns": [],
+    "Uses": "Presented at AWS Blog."
+  },
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Model",
+    "Problem": "Machine Learning (ML) systems are complex because their ML components must be retrained regularly and have an intrinsic non-deterministic behavior. Similar to other systems, the business requirements for these systems as well as ML algorithms change over time.",
+    "Context": "Designing systems that integrate machine learning components with traditional business logic, where ML models require frequent updates and exhibit non-deterministic behavior.",
+    "Solution": "Define clear APIs between traditional and ML components. Place business and ML components with different responsibilities into three layers. Divide data flows into three.",
+    "Result": "Improved management of complexity, retraining, and changing requirements in ML systems by clearly separating concerns.",
+    "Related Patterns": [],
+    "Uses": []
+  },
+  {
+    "Pattern Name": "Encapsulating ML Models within Rule-based Safeguards",
+    "Problem": "It is impossible to guarantee the correctness of ML model predictions, so they should not be directly used for safety or security-related functions. Furthermore, ML models can be unstable and vulnerable to adversarial attacks, data noise, and drift.",
+    "Context": "Deploying ML models in safety or security-critical applications, or in environments where model robustness, reliability, and resistance to adversarial attacks are paramount.",
+    "Solution": "Introduce a deterministic rule-based mechanism that decides what to do with the prediction results, e.g., based on additional quality checks.",
+    "Result": "Reduced risk for negative impacts of incorrect predictions but a more complex architecture.",
+    "Related Patterns": [],
+    "Uses": []
+  },
+  {
+    "Pattern Name": "AI Pipeline",
+    "Problem": "Complex prediction or synthesis use cases are often difficult to accomplish with a single AI tool or model.",
+    "Context": "Scenarios requiring the combination of multiple AI capabilities or models to achieve a complex, multi-step AI task during inference.",
+    "Solution": "Divide the problem into smaller consecutive steps, then combine several existing AI tools or custom models into an inference-time AI pipeline where each specialized tool or model is responsible for a single step.",
+    "Result": "More tools and models need to be integrated, but the provided result is of higher quality. Each step can be optimized individually.",
+    "Related Patterns": [],
+    "Uses": "Typical computer vision inference pipelines."
+  },
+  {
+    "Pattern Name": "Two-Phase Predictions",
+    "Problem": "Executing large, complex models can be time-consuming and costly, especially if lightweight clients like mobile or IoT devices are involved.",
+    "Context": "Deploying ML models to resource-constrained or latency-sensitive clients, where a full, complex model inference is not always necessary or feasible.",
+    "Solution": "Split the prediction into two phases. A simple, fast model is executed first on the client. Afterwards, a large, complex model is optionally executed in the cloud for deeper insights.",
+    "Result": "Prediction response time is reduced for some cases. The number of large, expensive predictions is reduced. The client has a fallback model when there is no Internet connection.",
+    "Related Patterns": [],
+    "Uses": "Voice activation in AI assistants like Alexa or Google Assistant."
+  },
+  {
+    "Pattern Name": "Ethics Credentials",
+    "Problem": "Responsible AI requirements are either omitted or mostly stated as high-level objectives and not specified explicitly in a verifiable way as expected system outputs. Because of this, users may trust an AI system less or even refrain from using it.",
+    "Context": "Developing AI systems where building user trust, ensuring ethical compliance, and demonstrating responsible AI practices are critical.",
+    "Solution": "Provide verifiable ethics credentials for your AI system or component. Using publicly accessible and trusted data infrastructure, the credentials can be verified as proof of ethical compliance. Additionally, users may also have to verify their credentials before getting access to the AI system.",
+    "Result": "Trust and system acceptance increases and awareness of ethical issues is raised. However, a trusted public data infrastructure is needed and credentials need to be maintained and potentially refreshed from time to time.",
+    "Related Patterns": [],
+    "Uses": []
+  },
+  {
+    "Pattern Name": "Deploy Canary Model",
+    "Problem": "You trained a new model with assumed better prediction quality, but it's not certain if this will carry over to production. Additionally, there could be other quality issues with the new model that should not affect all users in production at once.",
+    "Context": "Deploying new or updated ML models to a production environment, where the risk of introducing regressions or performance degradation needs to be minimized.",
+    "Solution": "Deploy the new model in addition to the existing ones and route a small number of requests to it to evaluate its performance. If this test is successful, all existing models can be replaced. If not, the new model needs to be improved.",
+    "Result": "Only a small number of users are subjected to potential bugs or low-quality predictions. Additional serving and monitoring infrastructure is required.",
+    "Related Patterns": [],
+    "Uses": []
+  }
+]

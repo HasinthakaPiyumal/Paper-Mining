@@ -1,0 +1,194 @@
+[
+  {
+    "Pattern Name": "Interactive Intent Clarification",
+    "Problem": "User queries are often vague, imprecise, or polysemous, making it difficult for the AI controller to accurately infer the user's intended meaning.",
+    "Context": "Foundation models interacting with users in real-world tool learning scenarios, where user instructions can be ambiguous or diverse.",
+    "Solution": "The AI controller actively engages with users to clarify any ambiguity in their instructions, for example, by asking follow-up questions or seeking clarifications about a previous user query. This also involves leveraging user feedback to adapt the model to individual users' unique ways of expressing intentions.",
+    "Result": "More accurate understanding of user intent, leading to more personalized and precise responses and improved user experience.",
+    "Related Patterns": [
+      "Personalized Tool Manipulation",
+      "Proactive Agent Design"
+    ],
+    "Uses": "Dialogue systems, customer service AI, agentic AI, personalized assistants."
+  },
+  {
+    "Pattern Name": "Prompt-Based Tool Understanding",
+    "Problem": "The AI controller needs to comprehend the functionalities and usage of available tools to effectively bridge the gap between user intent and the toolset.",
+    "Context": "Tools are typically accompanied by manuals or tutorials. Foundation models possess strong few-shot and zero-shot learning capabilities.",
+    "Solution": "Construct suitable task-specific prompts that describe API functionalities (zero-shot prompting, including input/output formats and parameters) or provide concrete tool-use demonstrations (few-shot prompting) to the model.",
+    "Result": "Foundation models can effectively unravel tool functionalities and understand how to use them proficiently with minimal human effort, and prompts can be easily adjusted for tool modifications.",
+    "Related Patterns": [],
+    "Uses": "LLM-powered agents, tool-augmented language models, code generation, robotic control."
+  },
+  {
+    "Pattern Name": "Introspective Planning",
+    "Problem": "Decomposing complex, high-level tasks into subtasks and generating a multi-step plan for tool use without immediate environmental feedback, which can lead to unrealistic or nonsensical plans.",
+    "Context": "Foundation models with reasoning capabilities are used as controllers for tasks requiring sequential decisions, such as embodied agents or program generation.",
+    "Solution": "The controller directly generates a static, multi-step plan for tool use without knowing intermediate execution results. This can involve generating intermediate reasoning steps (e.g., Python code) or emphasizing actions the agent is permitted to execute to ensure physical grounding.",
+    "Result": "Models are capable of generating executable programs for agents and anticipating possible anomalies in the plan execution, leading to more physically grounded plans.",
+    "Related Patterns": [
+      "Extrospective Planning (Iterative Replanning)"
+    ],
+    "Uses": "Embodied agents, robotics, complex problem-solving, program-aided language models."
+  },
+  {
+    "Pattern Name": "Extrospective Planning (Iterative Replanning)",
+    "Problem": "Introspective planning cannot adapt the plan in response to intermediate execution results, leading to inflexibility and potential failures in complex, dynamic tasks.",
+    "Context": "Complex tasks (e.g., multi-step Question Answering, embodied learning) where decision-making at each step depends on preceding context and environmental feedback.",
+    "Solution": "The controller generates plans incrementally, one step at a time, by taking environmental feedback and user feedback into account. Subsequent plans are dependent on previous execution results, allowing for dynamic adjustment and regeneration of plans in case of execution failure.",
+    "Result": "Better adaptation to complex and dynamic tasks, improved accuracy, more feasible plans, ability to handle exceptions, and development of more refined subsequent plans through a closed-loop interaction.",
+    "Related Patterns": [
+      "Introspective Planning",
+      "Feedback-Driven Tool Learning"
+    ],
+    "Uses": "Multi-step Question Answering, embodied learning, dynamic task execution, agentic AI."
+  },
+  {
+    "Pattern Name": "Multi-Agent Collaboration",
+    "Problem": "Complex tasks often demand collaboration among multiple agents, each possessing unique abilities and expertise, which single-agent problem-solving cannot fully address.",
+    "Context": "Foundation models can simulate human behaviors, including interpersonal communication, making them suitable for modeling individual agents.",
+    "Solution": "Design methods for communication, coordination, and negotiation among multiple agents (each modeled with a foundation model) to ensure seamless collaboration and optimal task execution for complex objectives.",
+    "Result": "More effective and efficient problem-solving approaches for complex tasks that benefit from diverse perspectives and specialized capabilities.",
+    "Related Patterns": [
+      "Proactive Agent Design"
+    ],
+    "Uses": "Complex task automation, interactive simulations, distributed AI systems."
+  },
+  {
+    "Pattern Name": "Formalized Reasoning Augmentation",
+    "Problem": "Predominant research utilizes plain natural text to facilitate agents' reasoning and planning, which may limit performance in complex reasoning tasks.",
+    "Context": "LLM-based agents inherently comprehend and generate language, but external formalisms can provide structured and precise reasoning capabilities.",
+    "Solution": "Incorporate external formalisms, such as mathematical tools (e.g., probabilistic graph models, Agentic Process Automation), or non-natural language forms to significantly enhance agents' performance in complex reasoning tasks.",
+    "Result": "Significantly enhanced agents' performance in complex reasoning tasks, improved decision-making capabilities, and increased controllability of agent behavior.",
+    "Related Patterns": [
+      "Knowledge Conflict Resolution"
+    ],
+    "Uses": "Complex reasoning tasks, decision-making in agentic systems, mathematical problem-solving, robotic process automation."
+  },
+  {
+    "Pattern Name": "Parallel Tool Execution",
+    "Problem": "Sequential execution of tools can be inefficient for complex tasks where certain subtasks do not depend on each other.",
+    "Context": "Multi-step, multi-tool scenarios where subtasks might be independent and could be processed concurrently.",
+    "Solution": "Determine the dependencies among different subtasks and effectively switch between parallel and sequential execution of tools to optimize efficiency.",
+    "Result": "Improved execution efficiency for complex tasks by allowing independent subtasks to be processed simultaneously.",
+    "Related Patterns": [],
+    "Uses": "Workflow orchestration, complex task automation, multi-tool agents."
+  },
+  {
+    "Pattern Name": "Demonstration-Based Tool Learning",
+    "Problem": "Training foundation models to use tools effectively, especially when direct human guidance is limited or costly.",
+    "Context": "Human experts can provide tool-use demonstrations, which can be recorded as data.",
+    "Solution": "Train models to mimic expert behavior through imitation learning (behavior cloning). This can be achieved via: 1) Supervised Learning: Finetuning models on human-annotated tool-oriented tasks. 2) Semisupervised Learning: Using less capable models to generate pseudolabels from unlabeled data. 3) Self-supervised Learning: Leveraging in-context learning to bootstrap tool-use examples from a few human-written examples.",
+    "Result": "Improved in-domain performance, better out-of-distribution generalization, and reduced reliance on extensive human annotation for tool-use capabilities.",
+    "Related Patterns": [
+      "Feedback-Driven Tool Learning",
+      "Curriculum Tool Learning"
+    ],
+    "Uses": "Robotic control, web-based agents, autonomous vehicles, training LLM agents."
+  },
+  {
+    "Pattern Name": "Feedback-Driven Tool Learning",
+    "Problem": "Manual annotation for tool-use examples is time-consuming and labor-intensive, and models need to adapt to the consequences of their actions in dynamic environments.",
+    "Context": "Humans learn from trial and error to correct and rectify their tool-use behaviors. Feedback can come from the environment or humans.",
+    "Solution": "Optimize model parameters through open explorations, using feedback from the environment or humans. This includes: 1) Environment Feedback: Result feedback (task success/failure) or intermediate feedback (state changes). 2) Human Feedback: Explicit (ratings) or implicit (user behavior). 3) Reinforcement Learning from Human Feedback (RLHF): Training a reward model to imitate human preferences for policy optimization.",
+    "Result": "Models understand action consequences, adapt behaviors, and align with human preferences, leading to improved and more robust tool-use capabilities.",
+    "Related Patterns": [
+      "Demonstration-Based Tool Learning",
+      "Extrospective Planning (Iterative Replanning)"
+    ],
+    "Uses": "Reinforcement learning agents, human-in-the-loop AI, personalized AI systems, LLM alignment."
+  },
+  {
+    "Pattern Name": "Unified Tool Interface",
+    "Problem": "Difficulty in knowledge transfer and generalization across a massive and rapidly expanding array of tools due to varied interfaces and protocols.",
+    "Context": "Models need to manipulate various tools in a consistent and standardized manner to facilitate knowledge transfer.",
+    "Solution": "Design a standardized interface for tool manipulation. This can be: 1) Semantic Interface: Using specific text spans as action triggers. 2) GUI Interface: Mapping predicted tokens to human-like mouse movements and keyboard inputs in a virtual environment. 3) Programming Interface: Allowing models to specify actions using program code (e.g., function calls).",
+    "Result": "Models can more easily identify and abstract essential features of tools, facilitating knowledge transfer and adaptation to new scenarios and tools.",
+    "Related Patterns": [
+      "AI-Optimized Tool Design"
+    ],
+    "Uses": "Generalizable AI agents, multi-tool systems, code generation, robotic control."
+  },
+  {
+    "Pattern Name": "Meta Tool Learning",
+    "Problem": "Adapting to unfamiliar situations and transferring tool-use strategies to new tasks or domains, which is a crucial aspect of human intelligence (metacognition).",
+    "Context": "Models need to generalize tool-use knowledge beyond specific training examples.",
+    "Solution": "Train the model not just to use a tool, but also to learn the optimal strategy for its use, identifying common underlying principles or patterns in tool-use strategies and transferring them to new contexts.",
+    "Result": "Models can generalize tool use to different types of problems and become more adaptable and intelligent, aligning with the algorithms and user interface of new tools.",
+    "Related Patterns": [
+      "Curriculum Tool Learning"
+    ],
+    "Uses": "Transfer learning, adaptable AI models, generalization across tools/domains, few-shot learning."
+  },
+  {
+    "Pattern Name": "Curriculum Tool Learning",
+    "Problem": "Effectively introducing models to complex tools and building upon prior knowledge in a manageable and effective way.",
+    "Context": "A pedagogical strategy that starts with simple concepts and gradually introduces more complex ones.",
+    "Solution": "Start with simple tools and basic operations, then gradually introduce the model to more complex tools and tasks, allowing it to build upon its prior knowledge and develop a deeper understanding of the tool's features and functionalities.",
+    "Result": "Models master essential features, identify similarities and differences between situations, adjust their approach, and handle a wider range of tasks, enhancing generalization and adaptability.",
+    "Related Patterns": [
+      "Meta Tool Learning",
+      "Demonstration-Based Tool Learning"
+    ],
+    "Uses": "Progressive skill acquisition, complex tool mastery, educational AI, training adaptable models."
+  },
+  {
+    "Pattern Name": "AI-Optimized Tool Design",
+    "Problem": "Most existing tools are specifically designed for human use, making them sub-optimal for AI models due to different information processing methods and interaction paradigms.",
+    "Context": "AI models interact with tools that were not originally built with AI in mind.",
+    "Solution": "Create tools specifically suited for AI models by: 1) Modularity: Decomposing tools into smaller, more modular units to make them more adaptable and flexible for AI models. 2) New Input/Output Formats: Developing new input and output formats that are specifically tailored to the needs of AI models for seamless integration and communication.",
+    "Result": "Improved interaction and utilization of tools by AI models, enabling more fine-grained and compositional use, and better alignment with AI's information processing.",
+    "Related Patterns": [
+      "Unified Tool Interface",
+      "AI-Driven Tool Creation"
+    ],
+    "Uses": "Designing tools for AI agents, improving AI-tool interaction, modular AI systems."
+  },
+  {
+    "Pattern Name": "AI-Driven Tool Creation",
+    "Problem": "The traditional limitation of tool creation to human intelligence, and the need for AI to autonomously develop sophisticated solutions or enhance existing tools.",
+    "Context": "Large code models can generate executable programs from language descriptions. Foundation models can encapsulate existing APIs into more advanced functions.",
+    "Solution": "Enable foundation models to autonomously generate executable programs based on language descriptions or encapsulate existing tools/APIs into more advanced, specialized functions.",
+    "Result": "AI systems transition from merely tool users to tool makers, developing sophisticated solutions, extending existing functionalities, and potentially creating novel tools.",
+    "Related Patterns": [
+      "AI-Optimized Tool Design"
+    ],
+    "Uses": "Automated software development, advanced function encapsulation, scientific discovery, generative AI."
+  },
+  {
+    "Pattern Name": "Personalized Tool Manipulation",
+    "Problem": "Foundation models struggle to process personal information and provide personalized assistance to users with varying needs for tool learning, due to heterogeneous user information and diverse preferences for tool planning and selection.",
+    "Context": "Users have unique ways of expressing intentions and different preferences for tool planning, selection, and input generation.",
+    "Solution": "Model diverse user information (e.g., language style, social networks) into a unified semantic space, develop personalized tool execution plans based on user preferences, and adaptively generate different inputs for tools based on individual user needs.",
+    "Result": "Tailored assistance, more personalized tool planning, and adaptive tool calls that align with individual user needs and preferences, enhancing user experience.",
+    "Related Patterns": [
+      "Interactive Intent Clarification",
+      "Proactive Agent Design"
+    ],
+    "Uses": "Personalized assistants, adaptive user interfaces, context-aware AI, dialogue systems."
+  },
+  {
+    "Pattern Name": "Proactive Agent Design",
+    "Problem": "Most foundation models are designed as reactive systems, only responding to user queries without initiating any actions on their own, limiting their utility in dynamic environments.",
+    "Context": "The desire for AI systems to take action on behalf of the user and continually improve performance based on interaction history.",
+    "Solution": "Design systems that can initiate actions autonomously by leveraging the history of user interactions, continually improving their performance and tailoring responses to specific users. This requires incorporating safety mechanisms to prevent unintended consequences.",
+    "Result": "More personalized and seamless user experience, with systems that can anticipate needs and act autonomously, fostering higher-order thinking and decision-making for users.",
+    "Related Patterns": [
+      "Interactive Intent Clarification",
+      "Personalized Tool Manipulation",
+      "Multi-Agent Collaboration"
+    ],
+    "Uses": "Autonomous agents, intelligent assistants, predictive AI systems, personalized recommendations."
+  },
+  {
+    "Pattern Name": "Knowledge Conflict Resolution",
+    "Problem": "Discrepancies and conflicts arise between a model's internalized knowledge and augmented knowledge from tools, or among knowledge from different tools, leading to inaccurate and unreliable predictions.",
+    "Context": "Model knowledge can be outdated or contain false beliefs from pretraining data. Tool execution results can be misleading, and different tools may have varying credibility or biases.",
+    "Solution": "Equip models with the ability to detect potential conflicts among different knowledge sources, verify their reliability, choose reliable sources, and provide explanations for their decisions by interpreting which knowledge source is considered and how it is augmented into the final response.",
+    "Result": "Models can correct their own beliefs, discern knowledge conflicts, adjust responses, and provide explainable and reliable predictions, crucial for high-stakes applications.",
+    "Related Patterns": [
+      "Formalized Reasoning Augmentation"
+    ],
+    "Uses": "Fact-checking AI, reliable information retrieval, medical assistance systems, legal advice AI, robust LLM generation."
+  }
+]

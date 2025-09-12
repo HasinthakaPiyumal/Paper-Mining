@@ -1,0 +1,70 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (RoG)",
+    "Problem": "Large Language Models (LLMs) suffer from a lack of up-to-date knowledge and experience hallucinations during complex reasoning tasks, leading to incorrect outputs and diminished trustworthiness. Existing Knowledge Graph (KG)-based LLM reasoning methods either produce non-executable queries or overlook the crucial structural information (e.g., relation paths) within KGs.",
+    "Context": "Building AI/ML systems that require LLMs to perform faithful, interpretable, and knowledge-intensive reasoning, especially over structured and dynamic knowledge sources like KGs, for tasks such as Knowledge Graph Question Answering (KGQA).",
+    "Solution": "A multi-stage framework that synergizes LLMs with KGs to enable faithful and interpretable reasoning. It comprises:\n1.  **Planning Module:** An LLM is prompted and optimized (via instruction tuning) to generate 'relation paths' (sequences of relations) that are explicitly grounded by the KG, serving as faithful plans.\n2.  **Retrieval Module:** Based on these generated relation paths, valid 'reasoning paths' (instances of relation paths with specific entities) are retrieved from the KG using a constrained search (e.g., Breadth-First Search).\n3.  **Reasoning Module:** An LLM (which can be the same as the planning LLM or a different one) is prompted and optimized to conduct reasoning based on the retrieved reasoning paths, identifying important paths, filtering noise, and generating accurate answers along with interpretable explanations. The framework also distills KG knowledge into the LLM through training and allows for seamless integration with arbitrary LLMs during inference.",
+    "Result": "Achieves state-of-the-art performance on KG reasoning tasks, generates faithful and interpretable reasoning results, effectively alleviates hallucinations and the lack of up-to-date knowledge, and leverages KG structural information for robust reasoning.",
+    "Related Patterns": [
+      "KG-Grounded Planning",
+      "Retrieval-Augmented Reasoning with Structural Context",
+      "Modular Knowledge Augmentation"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Complex multi-hop reasoning tasks requiring external knowledge and verifiability",
+      "Fact verification and explanation generation in knowledge-intensive domains."
+    ]
+  },
+  {
+    "Pattern Name": "KG-Grounded Planning",
+    "Problem": "Large Language Models (LLMs) are prone to generating incorrect, unfaithful, or non-executable reasoning plans due to their inherent limitations (e.g., hallucinations, outdated knowledge), which can lead to erroneous downstream reasoning steps or answers.",
+    "Context": "Designing LLM-based systems where the validity, faithfulness, and executability of the reasoning plan are critical, and a structured, verifiable knowledge source like a Knowledge Graph (KG) is available to guide plan generation.",
+    "Solution": "Train and prompt an LLM to generate reasoning plans (e.g., sequences of relations or 'relation paths') that are explicitly grounded by and verifiable against a Knowledge Graph. This involves:\n1.  **Instruction Tuning:** Fine-tuning the LLM on a dataset where questions are paired with valid relation paths extracted from the KG (e.g., shortest paths between question and answer entities) as supervisory signals.\n2.  **Structured Prompting:** Using a specific instruction template to guide the LLM to generate structurally formatted relation paths.\n3.  **Optimization:** Minimizing the divergence between the LLM's generated paths and the valid paths from the KG, effectively distilling KG knowledge into the LLM's planning capability.",
+    "Result": "LLMs generate faithful, executable, and knowledge-aware plans, significantly reducing hallucinations and improving the trustworthiness of the planning phase. These plans serve as reliable blueprints for subsequent knowledge retrieval and reasoning.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "Retrieval-Augmented Reasoning with Structural Context"
+    ],
+    "Uses": [
+      "Any LLM-based planning or task decomposition where plan validity, faithfulness, and reliance on structured external knowledge are paramount",
+      "Knowledge graph question answering (KGQA) for generating query strategies",
+      "Agentic task planning in knowledge-intensive environments."
+    ]
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Reasoning with Structural Context",
+    "Problem": "Large Language Models (LLMs) struggle with knowledge-intensive tasks due to their static knowledge cutoff, propensity for hallucinations, and inability to effectively leverage the rich structural information present in Knowledge Graphs (KGs) beyond simple factual triples.",
+    "Context": "Developing LLM applications that require access to up-to-date, verifiable, and structured external knowledge for complex, multi-hop reasoning, where the relationships and paths between facts are as important as the facts themselves.",
+    "Solution": "Augment LLM reasoning by retrieving and providing structured knowledge paths from a Knowledge Graph as context. This involves:\n1.  **Path Retrieval:** Given a query and a high-level plan (e.g., a relation path generated by a planning module), perform a constrained search (e.g., Breadth-First Search) on the KG to retrieve concrete 'reasoning paths' (sequences of entities and relations) that instantiate the plan and connect relevant entities.\n2.  **Context Formatting:** Format these retrieved structural paths into a coherent, structured input for the LLM.\n3.  **Reasoning Optimization:** Fine-tune the LLM to reason over these retrieved paths, identify the most relevant ones, filter out noise, and generate accurate answers and interpretable explanations based on the provided evidence.",
+    "Result": "LLMs gain access to dynamic, structured, and faithful knowledge, leading to improved accuracy, reduced hallucinations, and enhanced interpretability by grounding reasoning in verifiable KG paths. The LLM can effectively filter noisy or irrelevant retrieved information.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "KG-Grounded Planning"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Multi-hop reasoning and complex question answering",
+      "Fact checking and evidence-based reasoning",
+      "Scientific synthesis, legal judgment, medical diagnosis, and any domain where reasoning requires traversing and interpreting structured knowledge."
+    ]
+  },
+  {
+    "Pattern Name": "Modular Knowledge Augmentation",
+    "Problem": "Enhancing the performance of diverse Large Language Models (LLMs), including proprietary or large models that are difficult or costly to fine-tune entirely, with external knowledge often requires significant architectural changes or extensive retraining, limiting flexibility and reusability.",
+    "Context": "A need to improve the knowledge-intensive reasoning capabilities of various pre-trained LLMs (e.g., ChatGPT, Alpaca, LLaMA2) without modifying their core models or incurring high retraining costs, by providing them with external, structured knowledge in a flexible manner.",
+    "Solution": "Develop a separate, specialized module that is responsible for interacting with external knowledge sources (e.g., Knowledge Graphs) and generating structured, knowledge-rich context. This module can then be 'plugged in' to any LLM during inference:\n1.  **Knowledge Generation Module:** A component (e.g., RoG's planning and retrieval modules) generates relevant knowledge artifacts (e.g., KG-grounded relation paths and retrieved reasoning paths) from a KG based on the input query.\n2.  **Context Injection:** The generated knowledge artifacts are formatted as part of the input prompt and fed to the target LLM as additional context.\n3.  **LLM Inference:** The target LLM then performs its reasoning based on its inherent capabilities, now enriched by the provided external context, without requiring any internal modifications or retraining.",
+    "Result": "Substantial performance improvement for various LLMs without requiring their retraining or modification, enabling flexible and efficient knowledge integration, and promoting the reusability of the knowledge augmentation component across different LLM backbones. This allows leveraging the strengths of both general-purpose LLMs and specialized knowledge systems.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "KG-Grounded Planning",
+      "Retrieval-Augmented Reasoning with Structural Context"
+    ],
+    "Uses": [
+      "Enhancing general-purpose LLMs for domain-specific tasks without full fine-tuning",
+      "Rapid prototyping with new knowledge sources or different LLM backbones",
+      "Improving LLM performance in knowledge-intensive scenarios where access to up-to-date or verifiable information is crucial",
+      "Leveraging closed-source LLMs with external, proprietary, or dynamic data."
+    ]
+  }
+]

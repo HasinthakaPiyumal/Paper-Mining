@@ -8,7 +8,7 @@ from langchain_core.runnables import RunnableSequence
 if not os.environ.get("GOOGLE_API_KEY"):
     os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter API key for Google Gemini: ")
 
-llm = init_chat_model("gemini-2.5-flash", model_provider="google_genai")
+llm = init_chat_model("gemini-2.5-flash", model_provider="google_genai", temperature=0)
 
 # Configurations for text splitting
 # splitter = RecursiveCharacterTextSplitter(
@@ -116,6 +116,27 @@ Paper text:
 {text}
 """
 
+# pattern_extraction_prompt = """
+# An AI design pattern is a proven, reusable solution to a recurring problem specifically within AI/ML system design, development, or deployment. It addresses challenges inherent to building machine learning, agentic behavior, or data-driven intelligence.
+# Given a research paper text, extract only the true AI design patterns mentioned.
+
+# For each pattern, include:
+# - Pattern Name
+# - Problem
+# - Context
+# - Solution
+# - Result
+# - Related Patterns (only other extracted patterns)
+# - Uses
+
+# If patterns are mostly similar in their problem, solution, or context, merge them into a single entry. When merging, combine their names, uses, and related patterns.
+
+# Return the output strictly as a JSON array.
+
+# Paper text:
+# {text}
+# """
+
 
 summary_prompt = """
 You are an expert in AI design patterns. 
@@ -168,6 +189,8 @@ def extract_patterns(file_path):
     return patterns
 
 def save_patterns_to_file(patterns, output_path):
+    if not os.path.exists(os.path.dirname(output_path)):
+        os.makedirs(os.path.dirname(output_path))
     with open(output_path, "w") as file:
         file.write(patterns)
 
@@ -182,8 +205,9 @@ def summarize_patterns(patterns):
     return remove_json_annotations(summary.content)
 
 if __name__ == "__main__":
-    file_path = "cleaned_papers/cleaned_Song_LLM-Planner_Few-Shot_Grounded_Planning_for_Embodied_Agents_with_Large_Language_ICCV_2023_paper.pdf.txt"
+    file_path = "/home/hasinthaka/Documents/Projects/AI/AI Pattern Mining/Paper Mining/cleaned_papers/cleaned_2310.01061v2.pdf.txt"
     print('Extracting patterns from:', file_path)
-    patterns = extract_patterns(file_path)
-    print('Extracted')
-    save_patterns_to_file(patterns, "test_pattern_extraction.json")
+    for i in range(5):
+        patterns = extract_patterns(file_path)
+        print('Extracted')
+        save_patterns_to_file(patterns, f"/home/hasinthaka/Documents/Projects/AI/AI Pattern Mining/Paper Mining/outputs/[25.09.12] - 01/extracted_patterns-auto-reduced-{i+1}.json")

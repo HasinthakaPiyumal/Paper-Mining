@@ -1,0 +1,70 @@
+[
+  {
+    "Pattern Name": "LLM as a Generative Planner",
+    "Problem": "Existing embodied agents require large labeled datasets for each task, hindering versatility and quick learning. Traditional LLM-based planners often rely on ranking admissible skills, which assumes prior knowledge of the environment and can be inefficient.",
+    "Context": "Building versatile and sample-efficient embodied agents (e.g., robots) that can follow natural language commands for complex, long-horizon tasks in diverse, partially observable environments.",
+    "Solution": "Utilize a Large Language Model (LLM) to directly generate high-level plans (sequences of subgoals) from natural language instructions, rather than ranking a pre-defined list of admissible skills. This approach obviates the need for extensive a priori environmental knowledge and reduces the number of calls to LLMs.",
+    "Result": "Enables few-shot planning, significantly reducing data cost and improving sample efficiency. Allows for more versatile agents capable of quickly learning many tasks.",
+    "Related Patterns": [
+      "Hierarchical Planning with LLMs",
+      "Grounded Replanning",
+      "Prompt Design for LLM Planning"
+    ],
+    "Uses": [
+      "Embodied instruction following",
+      "Robotics",
+      "Vision-and-language navigation",
+      "Rapid task learning for agents"
+    ]
+  },
+  {
+    "Pattern Name": "Hierarchical Planning with LLMs",
+    "Problem": "Complex, long-horizon tasks are difficult for embodied agents to plan directly. Traditional hierarchical planners may lack the commonsense knowledge or few-shot learning capabilities of LLMs.",
+    "Context": "Embodied agents needing to execute multi-step instructions in complex, real-world-like environments.",
+    "Solution": "Decompose the overall planning problem into a high-level planner and a low-level planner. The LLM serves as the high-level planner, generating a sequence of abstract subgoals (e.g., 'Navigation potato', 'Pickup potato'). A separate, specialized low-level planner then translates each subgoal into a sequence of primitive actions executable in the environment.",
+    "Result": "Improves planning efficiency and tractability for long-horizon tasks by leveraging LLMs' commonsense knowledge for high-level reasoning while delegating low-level execution details to a more specialized, efficient component. Makes low-level planning conditionally independent of the natural language instruction.",
+    "Related Patterns": [
+      "LLM as a Generative Planner",
+      "Grounded Replanning"
+    ],
+    "Uses": [
+      "Embodied instruction following",
+      "Vision-and-language navigation",
+      "Robotics"
+    ]
+  },
+  {
+    "Pattern Name": "Grounded Replanning",
+    "Problem": "LLM-generated plans, while plausible, often lack physical grounding to the current environment, leading to unexecutable actions, references to non-existent objects, or the agent getting stuck. Static plans cannot adapt to dynamic environmental changes or execution failures.",
+    "Context": "Embodied agents executing LLM-generated high-level plans in partially observable, dynamic environments where initial plans may become invalid or suboptimal.",
+    "Solution": "Implement a closed-loop system where the LLM dynamically updates its high-level plan based on environmental feedback. When the agent encounters an issue (e.g., fails an action, takes too long to complete a subgoal), the LLM is re-prompted. This re-prompt includes a description of the current environment (e.g., a list of observed objects from a vision model) and the partial plan already completed. The LLM then generates a new, grounded continuation of the plan. Logit biases can be used to prioritize observed objects.",
+    "Result": "Enables LLMs to dynamically adapt plans to the current physical reality, overcoming execution failures, producing more robust and physically grounded plans, and improving task completion rates in diverse environments.",
+    "Related Patterns": [
+      "LLM as a Generative Planner",
+      "Hierarchical Planning with LLMs",
+      "Prompt Design for LLM Planning"
+    ],
+    "Uses": [
+      "Adaptive planning for embodied agents",
+      "Robust execution in dynamic environments",
+      "Real-time plan correction"
+    ]
+  },
+  {
+    "Pattern Name": "Prompt Design for LLM Planning",
+    "Problem": "Unleashing the full potential of LLMs for planning requires careful guidance, as their output quality is highly sensitive to prompt structure, example selection, and output constraints. Achieving few-shot learning and grounding requires specific prompt engineering.",
+    "Context": "Adapting pre-trained LLMs to generate structured, executable high-level plans for embodied agents with minimal task-specific data and ensuring physical grounding.",
+    "Solution": "Systematically design the LLM prompt to include: \n1.  **Task Explanation:** An intuitive description of the task and allowed high-level actions. \n2.  **In-context Examples:** A small number of exemplar instruction-high-level plan pairs to demonstrate the desired planning behavior (in-context learning). \n3.  **Dynamic Example Retrieval:** For each test case, dynamically select the most relevant in-context examples using a similarity metric (e.g., k-NN on instruction embeddings). \n4.  **Output Constraints/Biases:** Apply logit biases to favor allowable actions and objects, and especially objects observed in the current environment, to guide the LLM towards valid and grounded plans. \n5.  **Contextual Information:** For replanning, include completed subgoals and a list of currently observed objects.",
+    "Result": "Enables effective few-shot planning, improves the quality and relevance of generated plans, constrains LLM output to valid actions and objects, and facilitates dynamic adaptation and grounding.",
+    "Related Patterns": [
+      "LLM as a Generative Planner",
+      "Grounded Replanning"
+    ],
+    "Uses": [
+      "Few-shot learning for LLM-based agents",
+      "Guiding LLMs for structured output",
+      "Improving plan quality and executability",
+      "Enhancing physical grounding"
+    ]
+  }
+]

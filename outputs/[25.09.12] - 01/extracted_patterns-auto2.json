@@ -1,0 +1,64 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (Planning-Retrieval-Reasoning Framework)",
+    "Problem": "Large language models (LLMs) lack up-to-date knowledge and are prone to hallucination, which leads to unfaithful and untrustworthy reasoning. Existing methods that use knowledge graphs (KGs) either treat them as simple fact stores, overlooking structural information, or generate complex queries that are often non-executable.",
+    "Context": "Performing complex, multi-hop reasoning tasks, such as Knowledge Graph Question Answering (KGQA), where faithfulness to a structured knowledge source and interpretability of the reasoning process are critical.",
+    "Solution": "Implement a three-stage framework: 1) Planning: Use an LLM to generate abstract \"relation paths\" (e.g., `location.country -> languages_spoken`) that are grounded in the KG's schema to serve as faithful plans. 2) Retrieval: Use these relation path plans to retrieve concrete, valid \"reasoning paths\" (e.g., `Israel -> government.form_of_government -> Parliamentary system`) from the KG. 3) Reasoning: Provide the retrieved reasoning paths as context to an LLM to generate a final answer that is grounded in the KG's facts and structure.",
+    "Result": "The LLM's reasoning process becomes grounded in an external, reliable knowledge source, which significantly reduces hallucinations and improves factual accuracy. The outputs are more trustworthy and interpretable, as they are supported by the explicit reasoning paths retrieved from the KG.",
+    "Related Patterns": [
+      "Plan-and-Solve Paradigm",
+      "Retrieval-Augmented Methods",
+      "Dual-Task Instruction Tuning for Grounded Reasoning"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Faithful and Interpretable Reasoning",
+      "Systems requiring LLMs to reason over structured external knowledge"
+    ]
+  },
+  {
+    "Pattern Name": "Plan-and-Solve Paradigm (Decomposed Prompting)",
+    "Problem": "Complex reasoning tasks are difficult for LLMs to solve accurately in a single, monolithic step, often leading to errors in the reasoning chain.",
+    "Context": "LLMs are tasked with solving complex problems that can be broken down into a sequence of smaller, more manageable subtasks.",
+    "Solution": "Prompt an LLM to first generate a high-level plan for solving the problem. Then, prompt it to execute each step of the plan sequentially, decomposing the complex task into a series of simpler steps to arrive at the final solution.",
+    "Result": "Improves the LLM's reasoning performance and reliability on complex tasks by providing a structured approach. It makes the reasoning process more transparent and easier to debug.",
+    "Related Patterns": [
+      "Reasoning on Graphs (Planning-Retrieval-Reasoning Framework)"
+    ],
+    "Uses": [
+      "Complex reasoning tasks",
+      "Multi-step problem solving",
+      "Mathematical word problems"
+    ]
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Methods",
+    "Problem": "LLMs lack access to up-to-date, domain-specific, or proprietary knowledge and may hallucinate facts not present in their training data.",
+    "Context": "Answering questions or generating text that requires external factual knowledge, such as from a knowledge graph or a document corpus.",
+    "Solution": "Before the LLM generates a response, retrieve relevant facts (e.g., triples from a KG or text chunks from documents) from an external knowledge source. This retrieved information is then provided as context to the LLM along with the original prompt to inform the final answer.",
+    "Result": "Improves the factual accuracy of LLM outputs, reduces hallucinations, and allows the model to ground its responses in a specific, verifiable knowledge base.",
+    "Related Patterns": [
+      "Reasoning on Graphs (Planning-Retrieval-Reasoning Framework)"
+    ],
+    "Uses": [
+      "Open-domain question answering",
+      "Fact-checking",
+      "Enterprise chatbots with access to internal knowledge bases"
+    ]
+  },
+  {
+    "Pattern Name": "Dual-Task Instruction Tuning for Grounded Reasoning",
+    "Problem": "A general-purpose, pre-trained LLM does not inherently know how to generate plans valid for a specific external knowledge source (e.g., a KG's schema) or how to correctly reason over retrieved data from that source.",
+    "Context": "Developing a system where an LLM must perform a complex, multi-stage task involving structured interaction with an external knowledge base, such as the Planning-Retrieval-Reasoning framework.",
+    "Solution": "Fine-tune the LLM using two distinct instruction-tuning tasks. The first task, \"planning optimization,\" teaches the LLM to generate valid plans (e.g., relation paths) using examples from the knowledge graph as supervision. The second task, \"retrieval-reasoning optimization,\" teaches the LLM to consume the retrieved data based on those plans and produce the correct final answer.",
+    "Result": "The LLM becomes specialized to both generate valid queries/plans for a specific knowledge source and to synthesize the results from it, improving the performance and reliability of the overall system.",
+    "Related Patterns": [
+      "Reasoning on Graphs (Planning-Retrieval-Reasoning Framework)"
+    ],
+    "Uses": [
+      "Training specialized LLM agents",
+      "MLOps for systems requiring structured interaction with external tools",
+      "Knowledge Graph Question Answering (KGQA) model training"
+    ]
+  }
+]

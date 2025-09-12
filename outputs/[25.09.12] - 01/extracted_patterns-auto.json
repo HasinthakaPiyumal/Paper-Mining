@@ -1,0 +1,15 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (RoG) / Graph-Grounded Planning and Reasoning",
+    "Problem": "Large Language Models (LLMs) lack up-to-date, domain-specific knowledge and are prone to hallucination, leading to unfaithful, incorrect, and untrustworthy reasoning processes when tackling complex questions.",
+    "Context": "Complex reasoning tasks that require factual, structured, and verifiable knowledge from an external source, such as Knowledge Graph Question Answering (KGQA) or other high-stakes scenarios (e.g., legal, medical).",
+    "Solution": "Implement a multi-stage 'planning-retrieval-reasoning' framework. First, an LLM generates abstract plans in the form of 'relation paths' (a sequence of relationships, e.g., 'marry_to -> father_of') that are grounded in a Knowledge Graph (KG). Second, these plans are used to retrieve concrete, factual 'reasoning paths' (instances of the relation path, e.g., 'Alice -> marry_to -> Bob -> father_of -> Charlie') from the KG. Finally, the retrieved paths are provided as context to an LLM to synthesize a final answer and an interpretable explanation.",
+    "Result": "The LLM's reasoning becomes faithful (grounded in verifiable facts from the KG) and interpretable (the reasoning path serves as an explicit explanation). This reduces hallucinations, incorporates up-to-date knowledge, and improves overall performance and trustworthiness on knowledge-intensive tasks.",
+    "Related Patterns": [],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Fact-based reasoning systems",
+      "High-stakes domains requiring explainability (e.g., legal judgment, medical diagnosis)"
+    ]
+  }
+]

@@ -1,0 +1,161 @@
+[
+  {
+    "Pattern Name": "Cognitive Architecture for Language Agents (CoALA)",
+    "Problem": "Lack of a unified framework to organize existing language agents and guide future development, leading to custom terminology and difficulty comparing agents.",
+    "Context": "Designing general-purpose language agents that interact with internal state and external environments, leveraging Large Language Models (LLMs) as a core component.",
+    "Solution": "Structure language agents with modular memory components (working, episodic, semantic, procedural), a structured action space (grounding, retrieval, reasoning, learning), and a generalized decision-making process (planning, execution loop). This framework positions the LLM as the central computational unit.",
+    "Result": "Provides a conceptual framework for characterizing and designing agents, organizes diverse empirical work, and identifies future directions for developing more capable and human-like agents.",
+    "Related Patterns": [
+      "Working Memory for LLM Agents",
+      "Episodic Memory for LLM Agents",
+      "Semantic Memory for LLM Agents",
+      "Procedural Memory for LLM Agents",
+      "Grounding Actions",
+      "Retrieval Augmented Generation (RAG) for Agents",
+      "LLM-based Reasoning",
+      "Agent Self-Improvement (Learning Actions)",
+      "Deliberative Decision Making (Planning with LLMs)"
+    ],
+    "Uses": "Organizing, designing, and comparing language agents; guiding the development of new LLM-based agents."
+  },
+  {
+    "Pattern Name": "Working Memory for LLM Agents",
+    "Problem": "Large Language Models (LLMs) are stateless; information needs to persist across calls and be readily available for the current decision cycle to enable multi-step interactions.",
+    "Context": "Language agents engaged in multi-step interactions with environments or users, needing to track current circumstances, active goals, perceptual inputs, and intermediate reasoning results.",
+    "Solution": "Maintain an explicit data structure (working memory) that persists across LLM calls. LLM input is synthesized from a subset of working memory (e.g., a prompt template and relevant variables), and LLM output is parsed back into working memory variables (e.g., action names and arguments).",
+    "Result": "Enables statefulness for LLM agents, allows the LLM to operate on a consistent and updated context, and serves as a central hub connecting different agent components (long-term memories, grounding interfaces).",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "LLM-based Reasoning",
+      "Deliberative Decision Making (Planning with LLMs)"
+    ],
+    "Uses": "Tracking dialogue state, active knowledge, perceptual inputs, goals, intermediate reasoning steps in language agents."
+  },
+  {
+    "Pattern Name": "Episodic Memory for LLM Agents",
+    "Problem": "Language agents need to learn from past experiences and retrieve relevant events to inform future decision-making and adapt their behavior over time.",
+    "Context": "Agents interacting over multiple episodes (e.g., game trajectories, conversational turns, task executions), requiring the ability to reflect on past behaviors or use prior experiences as examples.",
+    "Solution": "Store experience from earlier decision cycles (e.g., training input-output pairs, history event flows, game trajectories) in a dedicated episodic memory module. During the planning stage of a decision cycle, relevant episodes can be retrieved into working memory to support reasoning.",
+    "Result": "Supports reasoning by providing concrete examples, enables learning from experience, and allows agents to adapt their behavior based on their history.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Retrieval Augmented Generation (RAG) for Agents",
+      "Agent Self-Improvement (Learning Actions)"
+    ],
+    "Uses": "Reinforcement learning agents, Generative Agents (Park et al. 2023), Reflexion (Shinn et al. 2023) for reflecting on failed episodes."
+  },
+  {
+    "Pattern Name": "Semantic Memory for LLM Agents",
+    "Problem": "Language agents require access to explicit world knowledge and self-knowledge beyond what is implicitly stored in LLM weights, and the ability to incrementally build this knowledge from experience.",
+    "Context": "Tasks requiring external knowledge support, reasoning, or decision-making; agents needing to accumulate and store facts about the world or their operational domain.",
+    "Solution": "Store an agent's knowledge about the world and itself (e.g., facts, game manuals, unstructured text, inferences) in a semantic memory module. This memory can be initialized from external databases (e.g., Wikipedia) or updated by LLM-based reasoning actions.",
+    "Result": "Provides explicit knowledge support, enhances reasoning capabilities, and allows for incremental knowledge building from experience, reducing reliance on the LLM's parametric memory for factual recall.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Retrieval Augmented Generation (RAG) for Agents",
+      "Agent Self-Improvement (Learning Actions)",
+      "LLM-based Reasoning"
+    ],
+    "Uses": "Retrieval-augmented NLP, reading to learn in reinforcement learning, Reflexion (Shinn et al. 2023) for storing inferences, Generative Agents (Park et al. 2023) for storing reflections."
+  },
+  {
+    "Pattern Name": "Procedural Memory for LLM Agents",
+    "Problem": "Language agents need to store and execute rules, skills, and decision-making logic, both implicitly (in LLM weights) and explicitly (as agent code), and to learn new procedures to adapt their capabilities.",
+    "Context": "Agents requiring specific behaviors, algorithms, or the ability to learn new skills; agents needing to adapt their 'source code' or operational logic.",
+    "Solution": "Maintain two forms of procedural memory: implicit knowledge stored in LLM weights and explicit knowledge written in the agent's code. The explicit code includes procedures for actions (reasoning, retrieval, grounding, learning) and decision-making itself. These procedures can be retrieved and executed, and new ones can be learned and written to procedural memory.",
+    "Result": "Defines agent behavior, enables skill learning and reuse, allows for complex control flow, and supports self-modification of agent logic, leading to more adaptable and capable agents.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Agent Self-Improvement (Learning Actions)",
+      "Grounding Actions",
+      "Retrieval Augmented Generation (RAG) for Agents"
+    ],
+    "Uses": "Voyager (Wang et al. 2023a) for maintaining a library of code-based skills, Soar architecture for storing productions."
+  },
+  {
+    "Pattern Name": "Grounding Actions",
+    "Problem": "Large Language Models (LLMs) primarily operate on text, but agents need to interact with and perceive real-world (physical, digital, human dialogue) environments.",
+    "Context": "Agents deployed in physical robots, digital environments (e.g., games, APIs, websites), or engaging in dialogue with humans or other agents, requiring interaction beyond pure text generation.",
+    "Solution": "Implement procedures that execute external actions in the environment and process environmental feedback into working memory as text. This often involves converting multimodal input (e.g., vision, audio) to text (e.g., via Vision-Language Models) and translating text commands into physical or digital actions.",
+    "Result": "Simplifies the agent's interaction with the outside world by abstracting it as a text-based interface, enables LLMs to control embodied agents, and allows interaction with diverse and complex environments.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Working Memory for LLM Agents",
+      "Procedural Memory for LLM Agents"
+    ],
+    "Uses": "Robotics (Ahn et al. 2022), web manipulation (Yao et al. 2022a), dialogue systems, game agents, API interaction (often packaged as 'tools')."
+  },
+  {
+    "Pattern Name": "Retrieval Augmented Generation (RAG) for Agents",
+    "Problem": "Large Language Models (LLMs) have limited context windows and may lack specific, up-to-date, or domain-specific information needed for tasks, leading to hallucinations or incomplete responses.",
+    "Context": "Language agents needing to access and utilize information from their long-term memories (episodic, semantic, procedural) to inform current decisions, generate more accurate responses, or retrieve relevant skills.",
+    "Solution": "Implement procedures to read relevant information from long-term memories into working memory, which then augments the LLM's input prompt. This can involve various retrieval methods such as rule-based, sparse (e.g., BM25), or dense (e.g., embedding-based) retrieval.",
+    "Result": "Augments the LLM's knowledge base, supports more informed reasoning and decision-making, enables efficient use of stored information, and reduces reliance on the LLM's parametric memory alone, improving factual accuracy and relevance.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Episodic Memory for LLM Agents",
+      "Semantic Memory for LLM Agents",
+      "Procedural Memory for LLM Agents",
+      "LLM-based Reasoning"
+    ],
+    "Uses": "Voyager (Wang et al. 2023a) for skill retrieval, Generative Agents (Park et al. 2023) for event retrieval, DocPrompting (Zhou et al. 2022a) for code generation, general knowledge-intensive NLP tasks."
+  },
+  {
+    "Pattern Name": "LLM-based Reasoning",
+    "Problem": "Agents need to process and generate new information from their current working memory to support learning or decision-making, beyond simple input-output mapping, especially for complex tasks.",
+    "Context": "Agents needing to summarize observations, distill insights, reflect on trajectories, or process retrieved information; tasks requiring intermediate thought steps, planning, or self-correction.",
+    "Solution": "Use the Large Language Model (LLM) to process the contents of working memory and generate new information (e.g., analyses, plans, reflections, intermediate steps). This often involves specific prompting techniques (e.g., Chain-of-Thought, ReAct format) to elicit targeted reasoning steps, and the generated information can be written back to working memory or to long-term memory.",
+    "Result": "Generates new knowledge, supports learning, provides additional context for subsequent LLM calls, and enables more sophisticated decision-making and problem-solving capabilities for agents.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Working Memory for LLM Agents",
+      "Prompt Engineering & Chaining",
+      "Agent Self-Improvement (Learning Actions)",
+      "Deliberative Decision Making (Planning with LLMs)"
+    ],
+    "Uses": "ReAct (Yao et al. 2022b) for synergizing reasoning and acting, Reflexion (Shinn et al. 2023) for reflecting on failed episodes, Generative Agents (Park et al. 2023) for generating reflections, Tree of Thoughts (Yao et al. 2023) for deliberate problem solving."
+  },
+  {
+    "Pattern Name": "Agent Self-Improvement (Learning Actions)",
+    "Problem": "Language agents need to continuously adapt and improve their capabilities over time based on new experiences and knowledge, beyond initial training or fixed programming.",
+    "Context": "Agents operating in dynamic environments, requiring lifelong learning, or needing to acquire new skills, knowledge, or modify their internal state or code to enhance performance.",
+    "Solution": "Implement procedures to write information to long-term memory. This encompasses various forms of learning: updating episodic memory with experience, updating semantic memory with knowledge (e.g., inferences, reflections), updating LLM parameters (e.g., finetuning via supervised, imitation, reinforcement learning, human/AI feedback), and updating agent code (procedural memory) for reasoning (e.g., prompt templates), grounding (e.g., code-based skills), or retrieval procedures.",
+    "Result": "Enables lifelong learning, adaptation to new tasks and environments, acquisition of new skills and knowledge, and self-modification of agent behavior and logic, leading to more robust and autonomous agents.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "Episodic Memory for LLM Agents",
+      "Semantic Memory for LLM Agents",
+      "Procedural Memory for LLM Agents",
+      "LLM-based Reasoning",
+      "Deliberative Decision Making (Planning with LLMs)"
+    ],
+    "Uses": "Reflexion (Shinn et al. 2023) for learning from failed episodes, Voyager (Wang et al. 2023a) for learning new code-based skills, Generative Agents (Park et al. 2023) for generating and storing reflections, finetuning LLMs for specific domains."
+  },
+  {
+    "Pattern Name": "Deliberative Decision Making (Planning with LLMs)",
+    "Problem": "Agents need a structured and strategic way to choose which action (grounding, learning, reasoning, retrieval) to apply in a given situation, especially for complex, multi-step tasks where direct action generation is insufficient.",
+    "Context": "Agents facing multi-step problems, requiring planning, evaluation of alternatives, and selection of the best action; tasks where the consequences of actions need to be considered before execution.",
+    "Solution": "Structure the top-level agent program into decision cycles, each involving a planning stage (propose, evaluate, and select candidate actions using LLM-based reasoning and retrieval) and an execution stage. This can involve iterative proposal and evaluation, and the use of search algorithms (e.g., tree search) to explore potential action sequences.",
+    "Result": "Enables agents to make more informed and strategic choices, supports complex planning, allows for iterative improvement of candidate solutions, and reduces the myopia of single-step action generation, leading to more robust and goal-oriented behavior.",
+    "Related Patterns": [
+      "Cognitive Architecture for Language Agents (CoALA)",
+      "LLM-based Reasoning",
+      "Retrieval Augmented Generation (RAG) for Agents",
+      "Prompt Engineering & Chaining",
+      "Working Memory for LLM Agents"
+    ],
+    "Uses": "Tree of Thoughts (Yao et al. 2023), RAP (Hao et al. 2023) for implementing BFS/DFS and MCTS with LLMs, SayCan (Ahn et al. 2022) for evaluating actions, ReAct (Yao et al. 2022b) for planning and remaking action plans."
+  },
+  {
+    "Pattern Name": "Prompt Engineering & Chaining",
+    "Problem": "Large Language Models (LLMs) are stateless and their output distribution needs to be biased towards high-quality, task-specific productions; single LLM calls are limited in complexity and multi-step reasoning.",
+    "Context": "Using LLMs for various tasks, including few-shot learning, question answering, and tasks requiring sequential reasoning, iterative refinement, or the execution of complex algorithms.",
+    "Solution": "Manipulate the LLM's input string (prompt) to control its behavior. This involves preprocessing the input by concatenating additional text, selecting relevant examples, or eliciting targeted reasoning. For multi-step tasks, multiple LLM calls are chained, where the output of one call informs the input of the next, defining a sequence of 'productions'.",
+    "Result": "Biases the LLM towards desired outputs, enables complex algorithms, facilitates multi-step reasoning, and allows for dynamic, context-sensitive interactions with the LLM.",
+    "Related Patterns": [
+      "LLM-based Reasoning",
+      "Deliberative Decision Making (Planning with LLMs)"
+    ],
+    "Uses": "Question answering, few-shot learning (Brown et al. 2020), dynamic context-sensitive prompts (Liu et al. 2021), self-critique (Wang et al. 2022b), selection-inference (Creswell et al. 2023), multi-step problem solving."
+  }
+]

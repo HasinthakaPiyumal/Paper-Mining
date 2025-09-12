@@ -1,0 +1,14 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (Planning-Retrieval-Reasoning Framework)",
+    "Problem": "Large language models (LLMs) lack up-to-date knowledge and experience hallucinations during reasoning, which leads to incorrect and untrustworthy results. Existing retrieval-augmented methods often treat knowledge graphs (KGs) as simple fact stores, overlooking the valuable structural information that can guide a faithful reasoning process.",
+    "Context": "Complex reasoning tasks, such as multi-hop Knowledge Graph Question Answering (KGQA), where answers must be derived from a structured knowledge base and the reasoning process needs to be faithful and interpretable.",
+    "Solution": "Implement a three-stage framework that synergizes an LLM with a KG. First, a 'planning' module uses an LLM to generate abstract 'relation paths' (e.g., a sequence of relations like `marry_to -> father_of`) that are grounded in the KG's structure. These paths act as faithful plans. Second, a 'retrieval' module uses these plans to retrieve concrete 'reasoning paths' (instances with specific entities) from the KG. Finally, a 'reasoning' module feeds these retrieved paths as context to an LLM to synthesize the information and generate a final, grounded answer with an explanation. The planning capability is enabled by instruction-finetuning the LLM on valid paths from the KG, effectively distilling structural knowledge into the model.",
+    "Result": "The system achieves state-of-the-art performance on KG reasoning tasks. It produces faithful and interpretable results by grounding the LLM's reasoning process in the KG's structure, thereby alleviating hallucinations and the lack of knowledge. The planning module can also be used in a plug-and-play manner to improve the performance of other LLMs without retraining.",
+    "Related Patterns": [],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "High-stakes scenarios requiring trustworthy and explainable reasoning"
+    ]
+  }
+]

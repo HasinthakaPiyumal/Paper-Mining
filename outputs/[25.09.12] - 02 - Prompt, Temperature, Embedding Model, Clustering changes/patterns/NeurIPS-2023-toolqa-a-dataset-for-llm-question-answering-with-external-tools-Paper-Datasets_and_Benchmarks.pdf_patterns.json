@@ -1,0 +1,106 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) lack explicit, up-to-date external knowledge, are prone to hallucination, and struggle with factual accuracy.",
+    "Context": "LLMs are used for tasks requiring access to specific, verifiable, or dynamic external information, such as open-domain question answering or fact-checking.",
+    "Solution": "Integrate a retrieval mechanism (e.g., sparse or dense retrieval) to extract relevant knowledge from an external corpus (e.g., text, databases) and provide this retrieved information to the LLM as additional context.",
+    "Result": "Enhances LLMs with explicit external knowledge, reduces hallucinations, and improves factual accuracy and timeliness of generated responses.",
+    "Related Patterns": [
+      "Code-Based Tool Augmentation",
+      "LLM as a Planner (for Tool Use)",
+      "Tool Description & Few-Shot Prompting for Tool Use",
+      "Long-Term Memory / Experience-Based Learning (for Agents)"
+    ],
+    "Uses": "Open-domain Question Answering, Fact-checking, Timely information retrieval, Knowledge-intensive NLP tasks."
+  },
+  {
+    "Pattern Name": "Code-Based Tool Augmentation",
+    "Problem": "LLMs exhibit weaknesses in numerical reasoning and struggle with complex tabular or mathematical tasks that require precise computation or structured data manipulation.",
+    "Context": "LLMs are applied to tasks requiring accurate calculations, data querying, or logical operations on structured data (e.g., tables, databases).",
+    "Solution": "Augment LLMs with code interpreters (e.g., Python Interpreter, SQL Interpreter) or specialized mathematical tools (e.g., WolframAlpha Calculator) to execute computations and interact with structured data programmatically.",
+    "Result": "Improves LLMs' numerical reasoning, enables accurate handling of tabular data, and facilitates complex mathematical problem-solving by offloading computational tasks to reliable external tools.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "LLM as a Planner (for Tool Use)",
+      "Tool Description & Few-Shot Prompting for Tool Use",
+      "Emergent Tool Composition / Innovation"
+    ],
+    "Uses": "Math word problems, Tabular Question Answering, Data analysis, Scientific computing, Code generation for structured prediction."
+  },
+  {
+    "Pattern Name": "LLM as a Planner (for Tool Use)",
+    "Problem": "LLMs need to solve complex, multi-step tasks that require orchestrating and composing multiple external tools in a logical sequence.",
+    "Context": "An LLM is provided with a set of available tools and a complex goal, needing to determine a sequence of actions (tool calls) to achieve it.",
+    "Solution": "Leverage the LLM's reasoning capabilities to act as a controller, autonomously breaking down complex tasks into intermediate reasoning steps and generating a sequence of tool calls (a 'tool chain') to achieve the overall goal.",
+    "Result": "Enables LLMs to solve complex problems by effectively composing and orchestrating multiple tools, extending their capabilities beyond single-step responses.",
+    "Related Patterns": [
+      "Decomposed Planning",
+      "Self-Reflection / Feedback-Driven Planning (ReAct)",
+      "Tool Description & Few-Shot Prompting for Tool Use",
+      "Emergent Tool Composition / Innovation",
+      "Long-Term Memory / Experience-Based Learning (for Agents)"
+    ],
+    "Uses": "Multi-tool question answering, Complex task automation, Agentic behavior, API integration."
+  },
+  {
+    "Pattern Name": "Decomposed Planning",
+    "Problem": "LLMs struggle with complex, long-horizon tasks that cannot be solved in a single, direct step, often leading to errors or incomplete solutions.",
+    "Context": "LLMs are faced with a complex problem requiring multiple logical steps, sub-tasks, or intermediate reasoning to reach a solution.",
+    "Solution": "Enable LLMs to autonomously break down the complex task into a sequence of intermediate, manageable reasoning steps or sub-goals. This can be facilitated through prompting techniques like Chain-of-Thought.",
+    "Result": "Improves LLM's ability to tackle complex, multi-step problems by simplifying the reasoning process, making it more tractable, and allowing for a structured approach to problem-solving.",
+    "Related Patterns": [
+      "LLM as a Planner (for Tool Use)",
+      "Self-Reflection / Feedback-Driven Planning (ReAct)"
+    ],
+    "Uses": "Complex Question Answering, Multi-tool orchestration, Long-horizon task completion, Mathematical reasoning."
+  },
+  {
+    "Pattern Name": "Self-Reflection / Feedback-Driven Planning (ReAct)",
+    "Problem": "LLMs may make suboptimal decisions, generate infeasible actions, or omit arguments during multi-step tasks, especially when composing tools, without a mechanism for correction.",
+    "Context": "LLMs are performing multi-step tasks, often involving external tools, where the outcome or observation of each action can be obtained and evaluated.",
+    "Solution": "Prompt LLMs to generate interleaved verbal reasoning traces (Thought) and tool calls (Action), and then use the observations/feedback from tool execution to self-reflect on previous decisions and iteratively refine their plans or actions.",
+    "Result": "Improves decision-making, reduces errors (e.g., argument errors, infeasible actions), and enhances the LLM's ability to refine its tool-use chain for better success rates and more robust problem-solving.",
+    "Related Patterns": [
+      "LLM as a Planner (for Tool Use)",
+      "Decomposed Planning",
+      "Long-Term Memory / Experience-Based Learning (for Agents)"
+    ],
+    "Uses": "Multi-tool question answering, Complex reasoning tasks, Iterative problem-solving, Agentic control with environmental interaction."
+  },
+  {
+    "Pattern Name": "Tool Description & Few-Shot Prompting for Tool Use",
+    "Problem": "LLMs struggle to understand how to use external tools effectively, call them with correct arguments, or compose them for complex tasks, especially when introduced to new tools.",
+    "Context": "LLMs are augmented with a set of external tools, and their usage needs to be guided within the LLM's limited context window to ensure correct and efficient interaction.",
+    "Solution": "Include clear, concise descriptions of each tool's functionality, its inputs, and outputs, and provide few-shot examples demonstrating correct usage and composition of these tools directly within the prompt.",
+    "Result": "Improves LLM's ability to correctly call tools, reduces argument errors and infeasible actions, and guides the LLM in composing tools for multi-step problems by providing an 'in-context' tutorial.",
+    "Related Patterns": [
+      "LLM as a Planner (for Tool Use)",
+      "Emergent Tool Composition / Innovation"
+    ],
+    "Uses": "Initializing LLMs for tool use, Reducing common tool-calling errors, Guiding complex tool chains, API integration."
+  },
+  {
+    "Pattern Name": "Emergent Tool Composition / Innovation",
+    "Problem": "LLMs may struggle to compose tools in novel ways not explicitly shown in few-shot examples, limiting their problem-solving scope for challenging tasks that require creative combinations.",
+    "Context": "LLMs are provided with a set of tools and few-shot examples, but complex tasks require creative or novel combinations of these tools that go beyond direct exemplars provided in the prompt.",
+    "Solution": "Design prompts and potentially fine-tuning strategies that encourage LLMs to infer and apply logical relationships between tools, enabling them to compose tools in innovative ways beyond explicit exemplars, often relying on their inherent code understanding and reasoning abilities.",
+    "Result": "Enhances LLM's ability to solve challenging tasks requiring novel tool combinations, extending their problem-solving capabilities, though this 'innovation' can sometimes be accompanied by hallucinations.",
+    "Related Patterns": [
+      "LLM as a Planner (for Tool Use)",
+      "Tool Description & Few-Shot Prompting for Tool Use"
+    ],
+    "Uses": "Complex multi-tool tasks, Open-ended problem solving, Situations where few-shot examples are insufficient for all possible compositions."
+  },
+  {
+    "Pattern Name": "Long-Term Memory / Experience-Based Learning (for Agents)",
+    "Problem": "LLMs have limited context windows and cannot learn or adapt based on past experiences (successes or failures) beyond their current prompt, leading to repetitive errors or inefficient behavior over time.",
+    "Context": "LLMs are used in agentic systems or for tasks requiring continuous interaction, adaptation, and learning from historical data or past interactions.",
+    "Solution": "Provide LLMs with external memory capabilities to store and retrieve past experiences, observations, and learned strategies, allowing them to learn and adapt based on historical interactions and accumulated knowledge.",
+    "Result": "Enables LLMs to improve performance over time by leveraging past knowledge, avoiding repetitive mistakes, and adapting to new situations or user preferences, fostering more robust and intelligent agent behavior.",
+    "Related Patterns": [
+      "Self-Reflection / Feedback-Driven Planning (ReAct)",
+      "LLM as a Planner (for Tool Use)"
+    ],
+    "Uses": "Continuous learning agents, Personalized interactions, Multi-session tasks, Complex agentic workflows, Adaptive systems."
+  }
+]

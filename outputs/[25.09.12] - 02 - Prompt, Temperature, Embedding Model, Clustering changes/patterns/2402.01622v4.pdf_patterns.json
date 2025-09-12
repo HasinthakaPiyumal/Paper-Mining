@@ -1,0 +1,74 @@
+[
+  {
+    "Pattern Name": "Memory Augmentation for LLM Agents",
+    "Problem": "Large Language Models (LLMs) have limited context windows (short-term memory) and lack persistent, external knowledge (long-term memory), hindering their ability to acquire, process, and retain extensive information for complex tasks.",
+    "Context": "LLM-powered language agents needing to manage and retain information beyond their immediate context or inherent parametric memory, especially for long-horizon tasks or when facing context accumulation limits.",
+    "Solution": "Employ techniques like memory summarization (for managing working memory and short-term context) and retrieval (for accessing external, long-term knowledge bases). The use of a 'NotebookWrite' tool is mentioned as an implementation to record necessary information, manage working memory, and prevent maximum token limits.",
+    "Result": "Substantial improvement in the general abilities of language agents by allowing them to acquire, process, and retain more information, and effectively manage context accumulation.",
+    "Related Patterns": "Tool-Augmented LLM Agents",
+    "Uses": "Complex task decomposition, reasoning, long-horizon planning, information collection, agentic AI."
+  },
+  {
+    "Pattern Name": "Tool-Augmented LLM Agents",
+    "Problem": "LLMs have inherent limitations in accessing real-time information, performing specific computations, or interacting with dynamic external environments, restricting their ability to perform real-world tasks.",
+    "Context": "LLM-powered language agents needing to expand their capabilities beyond their inherent knowledge and reasoning to perform tasks that require external data, specific actions, or interaction with the environment.",
+    "Solution": "Equip language agents with the ability to interact with external tools (e.g., search APIs, databases, specialized functions) to acquire necessary information, perform specific actions, or access external functionalities. This 'tool-augmentation paradigm' allows agents to proactively acquire information from partially observable environments.",
+    "Result": "Significantly expands the potential capabilities of language agents, enabling them to tackle tasks requiring external information or actions, and to operate more robustly in unconstrained settings.",
+    "Related Patterns": "ReAct (Reasoning and Acting), Memory Augmentation for LLM Agents",
+    "Uses": "Complex planning (e.g., travel planning), information collection, real-world interaction, web agents, embodied agents, agentic AI."
+  },
+  {
+    "Pattern Name": "Tree/Graph-based Search for LLM Planning",
+    "Problem": "Optimizing solution searches in complex planning tasks for language agents, especially when exploring multiple possibilities or needing to find optimal paths efficiently.",
+    "Context": "Language agents performing planning tasks that involve exploring a search space of possible actions or states, aiming for efficient and effective solution discovery.",
+    "Solution": "Employ classical data structures like trees and graphs to represent the search space and guide the language agent's exploration. This allows for more structured and efficient search, helping to decompose tasks and optimize solution searches in fewer steps.",
+    "Result": "Enhances the planning capabilities of language agents by providing a structured approach to explore possibilities and optimize solution searches.",
+    "Related Patterns": "Tree of Thoughts (ToT), Graph of Thoughts (GoT)",
+    "Uses": "Complex planning, task decomposition, multi-step reasoning, agentic AI."
+  },
+  {
+    "Pattern Name": "Environmental Feedback Loop for LLM Agents",
+    "Problem": "Language agents may make errors, get trapped in dead loops, or fail to dynamically adjust their plans without external validation or guidance from the environment.",
+    "Context": "LLM-powered agents performing tasks in dynamic or partially observable environments where their actions yield observable outcomes, and their plans require continuous refinement and error correction.",
+    "Solution": "Incorporate a feedback mechanism where the agent's actions or plans are evaluated against the environment (or a simulated environment). This feedback (e.g., observations, costs, error messages, null results) is then used to adjust or refine subsequent reasoning and actions.",
+    "Result": "Improves agent performance by allowing dynamic adjustment of plans, rectification of errors, and adaptation to environmental changes, preventing persistent errors and dead loops.",
+    "Related Patterns": "ReAct (Reasoning and Acting), Reflexion (Verbal Reinforcement Learning)",
+    "Uses": "Planning, tool use, complex task execution, self-correction, adapting to environment constraints, agentic AI."
+  },
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "Language models struggle to effectively combine reasoning (generating thoughts) with acting (performing actions) in interactive, multi-step tasks, leading to disjointed behavior and inefficient problem-solving.",
+    "Context": "LLM-powered agents needing to interact with external environments or tools to solve problems that require both deliberation and action, where the agent needs to dynamically adapt based on observations.",
+    "Solution": "Interleave reasoning steps ('Thought') with action steps ('Action') and observation steps ('Observation'). The agent first reasons about the current situation, then decides on an action, executes it, and observes the outcome, using this observation to inform the next thought.",
+    "Result": "Synergizes reasoning and acting, enabling agents to dynamically plan, execute, and adapt based on environmental feedback, leading to more effective iteration with tools and improved task performance.",
+    "Related Patterns": "Tool-Augmented LLM Agents, Environmental Feedback Loop for LLM Agents, Reflexion (Verbal Reinforcement Learning)",
+    "Uses": "Information collection, planning, interactive problem-solving, web agents, embodied agents, agentic AI, prompt design."
+  },
+  {
+    "Pattern Name": "Reflexion (Verbal Reinforcement Learning)",
+    "Problem": "Language agents may get stuck in dead loops, make persistent errors, or fail to learn from past mistakes without a mechanism for self-correction and improvement over multiple attempts.",
+    "Context": "LLM-powered agents performing multi-step tasks where errors can occur, and there's a need to improve performance over time or across attempts by analyzing failures and generating corrective insights.",
+    "Solution": "Utilize a 'reflection model' (often another LLM call) to analyze past erroneous attempts, generate high-level insights or 'verbal reinforcement' (e.g., identifying failure modes like argument errors, dead loops, hallucinations), and use this feedback to guide future reasoning and actions.",
+    "Result": "Enhances the agent's ability to identify and correct flawed reasoning, leading to improved task completion, reduced errors, and better adaptation to complex scenarios.",
+    "Related Patterns": "Environmental Feedback Loop for LLM Agents, ReAct (Reasoning and Acting)",
+    "Uses": "Complex planning, error rectification, self-correction, long-horizon tasks, improving robustness, agentic AI, MLOps."
+  },
+  {
+    "Pattern Name": "Chain of Thought (CoT) Prompting",
+    "Problem": "LLMs often struggle with complex reasoning tasks, providing direct answers without showing intermediate steps, which can lead to errors and a lack of transparency in their decision-making process.",
+    "Context": "Using LLMs for tasks requiring multi-step reasoning, problem-solving, or complex decision-making where the process of arriving at the answer is important for accuracy and interpretability.",
+    "Solution": "Prompt the LLM to generate a series of intermediate reasoning steps before providing the final answer (e.g., by adding 'Let's think step by step'). This encourages the model to break down the problem into smaller, manageable parts.",
+    "Result": "Elicits and improves reasoning capabilities in LLMs, leading to more accurate and coherent solutions for complex tasks and providing transparency into the model's thought process.",
+    "Related Patterns": null,
+    "Uses": "Mathematical problem-solving, logical reasoning, planning, complex question answering, prompt design, knowledge & reasoning."
+  },
+  {
+    "Pattern Name": "Multi-Constraint, Long-Horizon Planning for LLM Agents",
+    "Problem": "LLMs' autoregressive nature and limited cognitive capacity make it difficult for them to perform global planning, holistically consider multiple interdependent constraints (explicit and implicit), and anticipate future implications for long-horizon tasks, often leading to local optima or constraint violations.",
+    "Context": "LLM-powered agents tasked with complex, multi-step planning problems (like travel planning) where decisions at one stage significantly impact future stages, and multiple diverse constraints must be satisfied simultaneously over an extended period.",
+    "Solution": "Employ strategies that enable the agent to look beyond immediate steps and manage the entire plan. This involves explicit mechanisms for tracking and balancing multiple constraints, using backtracking to adjust previous decisions, or employing heuristic methods for forward-looking planning to anticipate future implications and costs. The paper highlights the *need* for such sophisticated strategies.",
+    "Result": "Aims to improve the agent's ability to handle long-horizon tasks and satisfy multiple global constraints by enabling more holistic and strategic planning, moving beyond single-objective optimization.",
+    "Related Patterns": "Tree/Graph-based Search for LLM Planning, Environmental Feedback Loop for LLM Agents",
+    "Uses": "Travel planning, complex task execution, resource allocation, multi-objective optimization, agentic AI, planning."
+  }
+]

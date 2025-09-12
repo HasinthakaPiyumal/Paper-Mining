@@ -1,0 +1,20 @@
+[
+  {
+    "Pattern Name": "Context-Driven ML Solution Design",
+    "Problem": "Designing effective and efficient ML solutions is challenging due to the need to align ML algorithms, data preparation, and evaluation metrics with specific business objectives, user preferences, data characteristics, and non-functional requirements (NFRs).",
+    "Context": "Developing ML systems for various business problems (e.g., loan approval, fraud detection, task assignment) where the optimal ML approach is highly dependent on the operational environment, available data, and desired system qualities.",
+    "Solution": "Systematically capture and utilize 'Contexts' (User Contexts, Data Contexts, Model Contexts) and 'Softgoals' (NFRs) to guide the selection and configuration of ML algorithms, data preparation steps, and evaluation metrics. This involves:\n    - **Algorithm Selection:** Choosing algorithms based on their applicability given User, Data, and Model Contexts, and their known contributions to Softgoals (e.g., 'kNearest Neighbor is applicable when Users desire simplicity', 'Naïve Bayes is applicable when Features are independent').\n    - **Data Preparation:** Specifying data transformations and cleansing steps that are conditional on Data Contexts and the requirements of chosen algorithms (e.g., 'Perform data normalization on numerical features when using kMeans algorithm').\n    - **Evaluation Metric Selection:** Determining appropriate performance indicators based on User Contexts and business priorities (e.g., 'Precision should be used for evaluation when Users desire a low rate of false-positives').",
+    "Result": "Leads to ML solutions that are better tailored to specific business problems, more robust to varying conditions, and more aligned with user and business needs, reducing development time and improving solution quality.",
+    "Related Patterns": ["Anomaly Detection Strategy Selection"],
+    "Uses": "Loan approval systems, fraud detection systems, task assignment systems, and any ML application requiring adaptive design based on contextual factors and quality attributes."
+  },
+  {
+    "Pattern Name": "Anomaly Detection Strategy Selection",
+    "Problem": "Effectively detecting anomalies requires choosing the right ML approach (e.g., supervised, semi-supervised, unsupervised) based on the availability and nature of labeled anomaly data.",
+    "Context": "Building systems for anomaly detection (e.g., fraud detection, intrusion detection) where the dataset might contain either labeled examples of both normal and anomalous behavior, or only examples of normal behavior.",
+    "Solution": "Implement a conditional strategy based on data availability:\n    - If labeled examples of both anomalous and non-anomalous data are available, employ a supervised anomaly detection approach.\n    - If only labeled examples of non-anomalous data are present (and anomalies are rare or unknown), employ a semi-supervised anomaly detection approach.",
+    "Result": "Ensures the most appropriate and effective anomaly detection model is selected and trained given the constraints of data labeling, leading to higher detection rates and reduced false positives/negatives.",
+    "Related Patterns": ["Context-Driven ML Solution Design"],
+    "Uses": "Fraud detection in insurance claims, network intrusion detection, manufacturing quality control, medical anomaly detection."
+  }
+]

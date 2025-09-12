@@ -1,0 +1,74 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (RoG)",
+    "Problem": "Large Language Models (LLMs) suffer from lack of up-to-date knowledge and hallucinations, leading to incorrect and untrustworthy reasoning, especially in knowledge-intensive tasks. Existing retrieval-augmented methods often overlook the structural information of Knowledge Graphs (KGs).",
+    "Context": "LLMs are used for complex reasoning tasks that require accurate, up-to-date factual knowledge and interpretability, and where structured knowledge (KGs) is available.",
+    "Solution": "A planning-retrieval-reasoning framework: 1. Planning Module: LLMs generate 'relation paths' (sequences of relations) that are explicitly grounded by the Knowledge Graph (KG) as faithful plans. This involves distilling KG knowledge into the LLM through training. 2. Retrieval Module: These KG-grounded relation paths are then used to retrieve valid 'reasoning paths' (instances of relation paths with specific entities) from the KG. 3. Reasoning Module: The LLM conducts faithful reasoning based on the retrieved reasoning paths, generating answers and interpretable explanations. The planning module is designed to be plug-and-play with different LLMs during inference.",
+    "Result": "Achieves state-of-the-art performance on KG reasoning tasks, significantly reduces hallucinations and addresses lack of knowledge, and generates faithful and interpretable reasoning results. Improves LLM performance without retraining when integrated.",
+    "Related Patterns": [
+      "Instruction Tuning for Knowledge Distillation",
+      "Retrieval-Augmented Planning",
+      "Plan-and-Solve Prompting"
+    ],
+    "Uses": "Knowledge Graph Question Answering (KGQA), faithful reasoning in knowledge-intensive domains."
+  },
+  {
+    "Pattern Name": "Instruction Tuning for Knowledge Distillation",
+    "Problem": "LLMs lack inherent knowledge of specific Knowledge Graphs (KGs) and struggle to generate KG-grounded plans or reason correctly based on KG paths, leading to unfaithful or incorrect outputs.",
+    "Context": "Adapting a pre-trained LLM to perform tasks requiring specific knowledge from a Knowledge Graph (KG) and to follow complex reasoning instructions.",
+    "Solution": "Design and apply specific instruction tuning tasks: 1. Planning Optimization: Distill knowledge from KGs into LLMs to generate faithful relation paths as plans (e.g., by minimizing KL divergence with valid KG paths). 2. Retrieval-Reasoning Optimization: Enable LLMs to conduct faithful reasoning based on retrieved paths (e.g., by maximizing the probability of generating correct answers given retrieved paths).",
+    "Result": "LLMs gain the ability to generate KG-grounded plans and reason effectively with retrieved KG information, improving faithfulness and interpretability for knowledge-intensive tasks.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)"
+    ],
+    "Uses": "Adapting LLMs for KG-specific tasks, knowledge distillation, improving reasoning faithfulness, fine-tuning LLMs for specialized domains."
+  },
+  {
+    "Pattern Name": "ReACT (Reasoning and Acting)",
+    "Problem": "LLMs are limited by their static training data, lack up-to-date knowledge, and cannot interact with dynamic environments or external tools to gather information needed for complex tasks.",
+    "Context": "LLMs need to perform tasks that require dynamic information retrieval, interaction with external environments (e.g., web search, APIs, knowledge bases), or multi-step decision making.",
+    "Solution": "Treat LLMs as agents that interleave 'Reasoning' (e.g., Chain-of-Thought prompting to generate a plan or decide an action) and 'Acting' (executing actions in an environment, such as using tools or retrieving information). The LLM observes the environment's response and updates its reasoning.",
+    "Result": "Enables LLMs to acquire and utilize up-to-date external knowledge, perform complex multi-step tasks, and interact with the real world, leading to more robust and accurate task completion.",
+    "Related Patterns": [
+      "Plan-and-Solve Prompting",
+      "Retrieval-Augmented Planning"
+    ],
+    "Uses": "Agentic AI, tool use, knowledge acquisition, complex problem-solving, interactive systems, web navigation, API interaction."
+  },
+  {
+    "Pattern Name": "Plan-and-Solve Prompting",
+    "Problem": "Large Language Models (LLMs) struggle with complex, multi-step reasoning tasks, often leading to errors or incomplete solutions when attempting to solve them directly.",
+    "Context": "LLMs are tasked with complex problems that can be broken down into a sequence of logical steps or subtasks.",
+    "Solution": "Prompt the LLM to first generate a high-level 'plan' or a sequence of 'subtasks' to address the problem. Subsequently, prompt the LLM to 'execute' each step of the plan or solve each subtask sequentially, building upon previous results. This often involves decomposing the main task.",
+    "Result": "Improves the LLM's ability to handle complex reasoning by breaking it down into manageable parts, leading to more accurate and structured solutions.",
+    "Related Patterns": [
+      "ReACT (Reasoning and Acting)",
+      "Reasoning on Graphs (RoG)",
+      "Monte-Carlo Planning for Faithful Reasoning"
+    ],
+    "Uses": "Complex problem-solving, mathematical reasoning, code generation, multi-step instruction following, general LLM reasoning."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Planning",
+    "Problem": "LLMs, when generating plans for knowledge-intensive tasks, are prone to hallucinations or lack the specific, up-to-date knowledge required for faithful and accurate plans.",
+    "Context": "LLMs are used to generate multi-step plans or reasoning chains for tasks that heavily rely on external, factual knowledge (e.g., from Knowledge Graphs).",
+    "Solution": "Integrate a retrieval mechanism that fetches relevant external knowledge (e.g., triples, relation paths from KGs) and provides it to the LLM. The LLM then uses this retrieved knowledge as context to inform and ground its plan generation process, ensuring faithfulness and accuracy.",
+    "Result": "Reduces hallucinations and improves the factual accuracy and faithfulness of LLM-generated plans, leading to more reliable execution of those plans.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "ReACT (Reasoning and Acting)"
+    ],
+    "Uses": "Knowledge-intensive planning, faithful reasoning, complex Question Answering (QA) over KGs, generating grounded reasoning chains."
+  },
+  {
+    "Pattern Name": "Monte-Carlo Planning for Faithful Reasoning",
+    "Problem": "Ensuring the faithfulness and correctness of individual reasoning steps generated by LLMs, especially in complex or high-stakes scenarios where errors can be critical.",
+    "Context": "LLMs are generating multi-step reasoning chains, and there is a need to validate or improve the reliability of each step.",
+    "Solution": "Employ Monte-Carlo planning techniques to explore multiple possible reasoning paths or steps. This involves sampling and evaluating different continuations, potentially using a verifier or a reward signal, to identify and select the most faithful and correct reasoning steps.",
+    "Result": "Enhances the faithfulness and trustworthiness of LLM-generated reasoning by systematically exploring and validating reasoning steps, reducing the likelihood of errors or unfaithful conclusions.",
+    "Related Patterns": [
+      "Plan-and-Solve Prompting"
+    ],
+    "Uses": "Faithful question answering, complex reasoning validation, high-stakes AI applications, improving LLM reliability."
+  }
+]

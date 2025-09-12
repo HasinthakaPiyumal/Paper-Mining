@@ -1,0 +1,293 @@
+[
+  {
+    "Pattern Name": "Multi-Agent Conversation",
+    "Problem": "Enhancing LLM capabilities for complex tasks, encouraging divergent thinking, improving factuality/reasoning, providing guardrails, combining broad LLM capabilities, facilitating task partitioning and integration.",
+    "Context": "LLM applications spanning a broad spectrum of domains and complexities, where a single LLM or agent is insufficient.",
+    "Solution": "Employ multiple cooperating agents that converse with each other or humans to accomplish tasks. Leverage chat-optimized LLMs' ability to incorporate feedback and combine capabilities modularly.",
+    "Result": "Enhanced agent capabilities, improved factuality and reasoning, modular combination of LLM capabilities, intuitive task partitioning and integration, and guardrails.",
+    "Related Patterns": [
+      "Customizable Conversable Agent",
+      "Automated Agent Chat (Autoreply Mechanism)",
+      "Two-Agent Chat",
+      "Sequential Chat",
+      "Nested Chat",
+      "Group Chat",
+      "Dynamic Conversation Flow",
+      "Multi-Agent Coordination (Commander-Subordinate)",
+      "Role-Based Agent Specialization",
+      "Adversarial Agent Interaction"
+    ],
+    "Uses": "Mathematics, coding, question-answering, supply chain optimization, online decision-making, entertainment"
+  },
+  {
+    "Pattern Name": "Customizable Conversable Agent",
+    "Problem": "Designing individual agents that are capable, reusable, customizable, and effective in multi-agent collaboration, adapting to diverse application needs.",
+    "Context": "Building LLM applications where agents need specific roles, responsibilities, and capabilities (LLMs, human inputs, tools).",
+    "Solution": "Design agents as conversable entities with specific roles, capable of sending/receiving messages, maintaining internal context, and configured with a mix of capabilities (LLMs, human inputs, tools). Developers can reuse or extend built-in agents.",
+    "Result": "Flexible agent behaviors, reusability, modular combination of LLM capabilities, ability to hold multi-turn conversations autonomously or with humans in the loop.",
+    "Related Patterns": [
+      "Multi-Agent Conversation",
+      "Human-in-the-Loop Agent",
+      "Tool-Augmented Agent",
+      "Role-Play Prompting"
+    ],
+    "Uses": "Math problem solving, retrieval-augmented QA, decision making in embodied agents, supply chain optimization, conversational chess"
+  },
+  {
+    "Pattern Name": "Human-in-the-Loop Agent",
+    "Problem": "Many LLM applications require human involvement for feedback, oversight, or to solve challenging problems that LLMs cannot solve autonomously.",
+    "Context": "LLM applications where human input is desired or essential, such as math problem solving, interactive retrieval, or dynamic task solving.",
+    "Solution": "Configure a conversable agent (e.g., UserProxyAgent) to solicit human inputs at certain rounds of a conversation, with configurable involvement levels and patterns (e.g., frequency, conditions for requesting input, option to skip).",
+    "Result": "Effective incorporation of human feedback, ability to solve challenging problems, enhanced user experience, improved safety and alignment.",
+    "Related Patterns": [
+      "Customizable Conversable Agent",
+      "Multi-Agent Conversation"
+    ],
+    "Uses": "Math problem solving (autonomous, human-in-the-loop, multi-user), interactive retrieval in QA, dynamic task solving, conversational chess"
+  },
+  {
+    "Pattern Name": "Tool-Augmented Agent",
+    "Problem": "LLMs have limitations in accessing real-time information, performing complex computations, or interacting with external environments.",
+    "Context": "Tasks requiring code execution, function calls, or interaction with external systems (e.g., databases, web APIs, simulated environments).",
+    "Solution": "Equip a conversable agent with the capability to execute tools via code execution or function execution, allowing it to perform actions suggested by LLMs.",
+    "Result": "Extends LLM capabilities beyond their training data, enables interaction with external environments, facilitates complex task completion.",
+    "Related Patterns": [
+      "Customizable Conversable Agent",
+      "LLM as a Planner (with Executor)",
+      "Retrieval Augmentation"
+    ],
+    "Uses": "Math problem solving (code interpreter), retrieval-augmented QA (vector database), decision making in embodied agents (executor agent), supply chain optimization (Python execution), web interaction tasks"
+  },
+  {
+    "Pattern Name": "Automated Agent Chat (Autoreply Mechanism)",
+    "Problem": "Managing complex multi-agent conversation flows without explicit, centralized control, and streamlining the development of intricate applications.",
+    "Context": "Multi-agent systems where agents need to interact autonomously and dynamically, and developers desire a decentralized workflow.",
+    "Solution": "Agents have unified conversation interfaces (send/receive, generate_reply, register_reply) and automatically invoke generate_reply upon receiving a message, sending a reply back unless a termination condition is met. Custom reply functions can be registered to customize behavior.",
+    "Result": "Decentralized, modular, and unified workflow definition; natural induction of conversation flow; reduced need for an extra control plane; streamlined development.",
+    "Related Patterns": [
+      "Multi-Agent Conversation",
+      "Dynamic Conversation Flow",
+      "Two-Agent Chat",
+      "Sequential Chat",
+      "Nested Chat",
+      "Group Chat"
+    ],
+    "Uses": "General multi-agent application development in AutoGen, implementing various conversation patterns"
+  },
+  {
+    "Pattern Name": "Hybrid Control (Natural Language & Code)",
+    "Problem": "Providing flexible and powerful control over agent conversation flow and behavior, accommodating different levels of abstraction for developers.",
+    "Context": "Developers need to program agent interactions, sometimes preferring natural language for high-level guidance and code for precise logic, and requiring seamless transitions between them.",
+    "Solution": "Control conversation flow by prompting LLM-backed agents with natural language (e.g., system messages, instructions) and/or using programming language (e.g., Python code for termination conditions, human input mode, tool execution logic, custom reply functions). Supports flexible transition between the two.",
+    "Result": "Flexible control flow management, ability to guide agents with high-level instructions or precise logic, enhanced programmability, and adaptability.",
+    "Related Patterns": [
+      "Customizable Conversable Agent",
+      "Automated Agent Chat (Autoreply Mechanism)",
+      "Role-Play Prompting",
+      "Grounding Prompting"
+    ],
+    "Uses": "Configuring AssistantAgent system messages, defining termination conditions, custom reply functions, LLM-proposed function calls"
+  },
+  {
+    "Pattern Name": "Two-Agent Chat",
+    "Problem": "Simple, direct collaboration between two agents for task completion, often as a foundational interaction pattern.",
+    "Context": "Tasks that can be effectively solved through a back-and-forth dialogue between two specialized agents, or as a building block for more complex patterns.",
+    "Solution": "Configure two conversable agents to initiate and respond to messages from each other, typically with one acting as an assistant and the other as a user proxy or executor.",
+    "Result": "Straightforward implementation for many problems, effective for tasks like math problem solving or QA, and easily extensible.",
+    "Related Patterns": [
+      "Multi-Agent Conversation",
+      "Automated Agent Chat (Autoreply Mechanism)",
+      "Sequential Chat",
+      "Nested Chat",
+      "Group Chat"
+    ],
+    "Uses": "Math problem solving, retrieval-augmented QA, decision making in embodied agents"
+  },
+  {
+    "Pattern Name": "Sequential Chat",
+    "Problem": "Tasks requiring a sequence of interdependent multi-agent conversations, where the output of one chat informs the next.",
+    "Context": "Complex tasks that can be broken down into a series of sub-tasks, each handled by a two-agent chat, executed in a predefined order.",
+    "Solution": "Orchestrate a sequence of two-agent chats, where each chat is initiated after the completion of the previous one, allowing for a structured progression through multi-step problems.",
+    "Result": "Enables execution of complex tasks through coordinated chat sequences, beneficial for multi-step problems, and provides a clear workflow.",
+    "Related Patterns": [
+      "Multi-Agent Conversation",
+      "Two-Agent Chat",
+      "Automated Agent Chat (Autoreply Mechanism)"
+    ],
+    "Uses": "Multi-step problem solving"
+  },
+  {
+    "Pattern Name": "Nested Chat",
+    "Problem": "An agent needs to perform an internal sub-task, self-reflection, or 'inner monologue' by consulting other agents before replying to its original sender.",
+    "Context": "An agent requires additional information, critique, or a complex sub-computation that can be delegated to other agents without interrupting the main conversation flow.",
+    "Solution": "A receiver agent, upon receiving a message, invokes a new, internal conversation (nested chat) with other agents. This nested chat completes its task, and its result informs the receiver agent's reply to the original sender. This is often achieved by registering a custom reply function.",
+    "Result": "Allows agents to create an 'inner monologue,' enables self-reflection, facilitates recursive composition of agents, and handles complex sub-tasks efficiently.",
+    "Related Patterns": [
+      "Multi-Agent Conversation",
+      "Automated Agent Chat (Autoreply Mechanism)",
+      "Inner Monologue (via Nested Chat)"
+    ],
+    "Uses": "Self-reflection, complex agent composition, critique, internal sub-computations"
+  },
+  {
+    "Pattern Name": "Group Chat",
+    "Problem": "Dynamic task solving where the exact workflow cannot be predetermined, requiring flexible collaboration among multiple agents with shared context.",
+    "Context": "Scenarios where collaboration without strict communication order is beneficial, such as coding, web scraping, or general dynamic task solving, involving more than two agents.",
+    "Solution": "Participating agents share a common context and converse dynamically. A GroupChatManager agent serves as a conductor, dynamically selecting a speaker, collecting responses, and broadcasting messages. Speaker selection can be guided by role-play prompts.",
+    "Result": "Enables dynamic task solving, fosters flexible collaboration, often leading to higher success rates and fewer LLM calls compared to fixed workflows.",
+    "Related Patterns": [
+      "Multi-Agent Conversation",
+      "Dynamic Conversation Flow",
+      "Automated Agent Chat (Autoreply Mechanism)",
+      "Role-Play Prompting"
+    ],
+    "Uses": "Dynamic task solving (e.g., coding, web scraping), multi-user problem solving"
+  },
+  {
+    "Pattern Name": "Dynamic Conversation Flow",
+    "Problem": "Predefined conversation orders are insufficient for complex, unpredictable tasks where the next step or speaker depends on the ongoing conversation status and context.",
+    "Context": "Multi-agent systems requiring adaptive workflows, such as group chats or scenarios where agents need to make real-time decisions about who to interact with next.",
+    "Solution": "Implement custom reply functions and triggers (e.g., for nested chat or group chat speaker transitions) or use LLM-driven function calls to dynamically decide the conversation flow based on the current conversation status and context.",
+    "Result": "Enables flexible and adaptive multi-agent workflows, suitable for dynamic task solving, and improves efficiency by guiding interactions.",
+    "Related Patterns": [
+      "Group Chat",
+      "Nested Chat",
+      "Automated Agent Chat (Autoreply Mechanism)"
+    ],
+    "Uses": "Dynamic task solving, group chat speaker selection, LLM-driven function calls"
+  },
+  {
+    "Pattern Name": "Retrieval Augmentation",
+    "Problem": "LLMs have intrinsic limitations regarding factual accuracy, access to up-to-date information, or knowledge of private/domain-specific data.",
+    "Context": "Question-answering, code generation, or any task requiring external, up-to-date, or proprietary knowledge that is not part of the LLM's training data.",
+    "Solution": "Integrate a context retriever (e.g., vector database) with an LLM-backed agent. The agent retrieves relevant documents/chunks based on the query and uses them as context for generating responses.",
+    "Result": "Mitigates LLM limitations, improves factuality, enables use of external/private knowledge, boosts performance on knowledge-intensive tasks.",
+    "Related Patterns": [
+      "Tool-Augmented Agent",
+      "Interactive Retrieval"
+    ],
+    "Uses": "Question-answering (Natural Questions dataset), code generation based on specific codebases"
+  },
+  {
+    "Pattern Name": "Interactive Retrieval",
+    "Problem": "Initial retrieval attempts might not provide sufficient or relevant context, leading to incomplete or incorrect LLM responses, and the system needs a mechanism to request more information.",
+    "Context": "Retrieval-augmented systems where the LLM needs to signal when more context is required to answer a question or complete a task.",
+    "Solution": "The LLM-based assistant is instructed to reply with a specific phrase (e.g., 'UPDATE CONTEXT') if it cannot find information in the current context. This triggers the user proxy agent to retrieve more relevant chunks and update the context for the assistant, initiating further retrieval attempts.",
+    "Result": "Improves performance on QA tasks, enables more robust retrieval augmentation, reduces 'I don't know' responses when information is available but not initially retrieved, and allows for dynamic context updates.",
+    "Related Patterns": [
+      "Retrieval Augmentation",
+      "Human-in-the-Loop Agent"
+    ],
+    "Uses": "Question-answering"
+  },
+  {
+    "Pattern Name": "LLM as a Planner (with Executor)",
+    "Problem": "Embodied agents or systems need to decompose high-level goals into actionable steps and execute them in an environment, often requiring iterative planning and feedback.",
+    "Context": "Interactive decision-making tasks in simulated or real-world environments (e.g., ALFWorld, MiniWoB) where an agent needs to generate and execute a sequence of actions.",
+    "Solution": "An LLM-backed assistant agent generates plans and action decisions (e.g., using ReAct prompting), which are then executed by a separate executor agent. The executor agent interacts with the environment, performs actions, and reports results/observations as feedback back to the assistant.",
+    "Result": "Enables LLMs to tackle complex, multi-step tasks in interactive environments, facilitates task decomposition and execution, and allows for iterative refinement of plans based on environmental feedback.",
+    "Related Patterns": [
+      "Tool-Augmented Agent",
+      "Grounding Agent"
+    ],
+    "Uses": "ALFWorld (household environments), MiniWoB (web interaction tasks)"
+  },
+  {
+    "Pattern Name": "Grounding Agent",
+    "Problem": "LLM-based agents may lack commonsense knowledge, struggle with physical world constraints, or get stuck in repetitive errors, especially in interactive or rule-bound environments.",
+    "Context": "Decision-making tasks where agents need to adhere to physical laws, game rules, or commonsense knowledge to avoid flawed plans or error loops.",
+    "Solution": "Introduce a specialized agent that supplies crucial commonsense knowledge or rule reminders to the decision-making agent, particularly when early signs of recurring errors are detected or at the start of a task.",
+    "Result": "Significantly enhances the system's ability to avoid error loops, improves adherence to rules and commonsense, boosts task success rate, and provides a modular way to inject external knowledge.",
+    "Related Patterns": [
+      "LLM as a Planner (with Executor)",
+      "Game-Playing Agent (with Rule Enforcement)"
+    ],
+    "Uses": "ALFWorld (commonsense knowledge), Conversational Chess (game rules)"
+  },
+  {
+    "Pattern Name": "Multi-Agent Coordination (Commander-Subordinate)",
+    "Problem": "Orchestrating complex workflows involving multiple specialized agents to achieve a common goal, managing communication flow, and maintaining context/memory across interactions.",
+    "Context": "Applications requiring a division of labor among agents, where one agent oversees and directs others, and user interactions need to be managed (e.g., supply chain optimization).",
+    "Solution": "Design a 'Commander' agent responsible for receiving user questions, coordinating with specialized 'subordinate' agents (e.g., Writer, Safeguard), directing communication flow, and handling memory tied to user interactions. The Commander executes code and requests interpretation.",
+    "Result": "Streamlined complex workflows, improved productivity, effective division of labor, context-aware decision-making, and reduced manual intervention.",
+    "Related Patterns": [
+      "Role-Based Agent Specialization",
+      "Adversarial Agent Interaction",
+      "Multi-Agent Conversation"
+    ],
+    "Uses": "Supply chain optimization (OptiGuide)"
+  },
+  {
+    "Pattern Name": "Role-Based Agent Specialization",
+    "Problem": "Complex tasks benefit from dividing responsibilities among agents with distinct expertise, improving efficiency and focus.",
+    "Context": "Multi-agent systems where different aspects of a task (e.g., code generation, safety checking, interpretation) can be handled by dedicated agents.",
+    "Solution": "Assign specific roles and responsibilities to individual agents (e.g., Writer for crafting code and interpretation, Safeguard for checking code safety), allowing them to focus on their area of expertise and contribute to a larger workflow.",
+    "Result": "Improved performance, modularity, reduced code complexity, better handling of specialized sub-tasks, and clear accountability for different parts of the workflow.",
+    "Related Patterns": [
+      "Multi-Agent Coordination (Commander-Subordinate)",
+      "Adversarial Agent Interaction"
+    ],
+    "Uses": "Supply chain optimization (Writer, Safeguard agents)"
+  },
+  {
+    "Pattern Name": "Adversarial Agent Interaction",
+    "Problem": "Ensuring quality, safety, or correctness of outputs by having agents critically evaluate each other's work, preventing errors or malicious actions.",
+    "Context": "Tasks where generated outputs (e.g., code, plans) need to be validated against specific criteria, security concerns, or potential risks before execution or finalization.",
+    "Solution": "Design an agent (e.g., Safeguard) to act as a 'virtual adversarial checker,' critically screening the outputs of other agents (e.g., generated code) and raising issues if criteria are not met (e.g., security red flags, execution failures).",
+    "Result": "Improved safety, quality assurance, prevention of errors or malicious outputs, and a robust validation mechanism within the multi-agent system.",
+    "Related Patterns": [
+      "Role-Based Agent Specialization",
+      "Multi-Agent Coordination (Commander-Subordinate)"
+    ],
+    "Uses": "Supply chain optimization (Safeguard checking code safety)"
+  },
+  {
+    "Pattern Name": "Game-Playing Agent (with Rule Enforcement)",
+    "Problem": "Developing interactive game applications where agents (human or AI) play by specific rules, and moves need validation to maintain game integrity.",
+    "Context": "Conversational games (e.g., chess) where players communicate in natural language, and a system needs to parse moves, apply game rules, and provide feedback.",
+    "Solution": "Implement player agents (human or LLM-powered) and a separate 'board agent' that acts as a third party. The board agent provides game information, parses natural language moves into structured formats (e.g., UCI), validates moves against standard rules, and responds with errors if moves are illegal, prompting players to re-propose.",
+    "Result": "Natural, flexible, and engaging game dynamics; maintained game integrity; reduced hallucination of invalid moves by player agents; simplified development through modular design.",
+    "Related Patterns": [
+      "Grounding Agent",
+      "Human-in-the-Loop Agent",
+      "Customizable Conversable Agent"
+    ],
+    "Uses": "Conversational Chess"
+  },
+  {
+    "Pattern Name": "Inner Monologue (via Nested Chat)",
+    "Problem": "An agent needs to perform internal reasoning, self-reflection, or complex sub-computations without directly exposing these steps to the main conversation, mimicking human thought processes.",
+    "Context": "Enhancing an agent's reasoning and problem-solving capabilities by allowing it to 'think aloud' or consult internal sub-agents for complex decisions or critiques.",
+    "Solution": "Utilize the Nested Chat pattern where one agent holds the current conversation while invoking conversations with other agents as its 'inner monologue' to accomplish sub-tasks, reflect, or generate critiques, before formulating and sending its reply to the original sender.",
+    "Result": "Realizes self-reflection, improves LLM reasoning and problem-solving capability, allows for more complex internal processing and decision-making, and aligns with the 'Society of Mind' concept.",
+    "Related Patterns": [
+      "Nested Chat"
+    ],
+    "Uses": "Self-reflection, complex internal reasoning, critique generation"
+  },
+  {
+    "Pattern Name": "Role-Play Prompting",
+    "Problem": "Guiding LLM-backed agents to adopt specific personas or behaviors for effective collaboration, task execution, or dynamic interaction management.",
+    "Context": "Multi-agent conversations where agents need to adhere to defined roles (e.g., Assistant, Critic, Engineer) or for dynamic speaker selection in group chats to ensure appropriate contributions.",
+    "Solution": "Incorporate natural language instructions in the agent's system message or prompts to explicitly define its role, responsibilities, and expected behavior within the conversation.",
+    "Result": "Agents exhibit consistent and appropriate behavior for their assigned roles, improves collaboration, enhances dynamic speaker selection, and leads to more effective consideration of conversation context and role alignment.",
+    "Related Patterns": [
+      "Customizable Conversable Agent",
+      "Group Chat",
+      "Hybrid Control (Natural Language & Code)"
+    ],
+    "Uses": "AssistantAgent system message, dynamic speaker selection in group chat"
+  },
+  {
+    "Pattern Name": "Grounding Prompting",
+    "Problem": "Ensuring LLM outputs adhere to specific constraints, facts, or external information, and preventing hallucinations or irrelevant responses.",
+    "Context": "LLM-backed agents generating code, making decisions, or providing information where accuracy, adherence to rules, or specific output formats are critical.",
+    "Solution": "Include natural language instructions in the prompt (e.g., system message) to guide the LLM to confine its outputs, verify answers, include verifiable evidence, or adhere to specific formats, making it easier for other agents to consume.",
+    "Result": "Reduces hallucinations, improves factual accuracy, ensures outputs are consumable by other agents or systems, and helps maintain consistency and reliability.",
+    "Related Patterns": [
+      "Hybrid Control (Natural Language & Code)",
+      "Customizable Conversable Agent"
+    ],
+    "Uses": "AssistantAgent system message (e.g., 'confine LLM outputs,' 'include verifiable evidence'), guiding agents to make legal moves in games (though a dedicated agent is often more robust)"
+  }
+]

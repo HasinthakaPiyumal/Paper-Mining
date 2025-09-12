@@ -1,0 +1,120 @@
+[
+  {
+    "Pattern Name": "LLM as an Agent with Tool Use (Web Browsing)",
+    "Problem": "Large Language Models (LLMs) lack real-time, external knowledge and the ability to perform actions beyond text generation, limiting their utility for tasks requiring up-to-date information or interaction with external systems.",
+    "Context": "Tasks requiring an LLM to gather information from the web, navigate interfaces, or perform multi-step operations to answer questions or complete tasks.",
+    "Solution": "Integrate an LLM with a text-based web browsing environment, allowing it to issue commands (e.g., search, click, scroll, quote) and receive contextual observations (e.g., current page text, search results). The LLM acts as an agent within this environment, making decisions based on its observations and issuing actions.",
+    "Result": "Enables LLMs to perform complex, long-form question answering, access up-to-date information, and interact with external tools, significantly expanding their capabilities beyond static knowledge.",
+    "Related Patterns": [
+      "Behavior Cloning (for Agent Policy Learning)",
+      "Reward Modeling (for Preference-based Learning)",
+      "Reinforcement Learning from Human Feedback (RLHF)",
+      "Rejection Sampling (Best-of-N)",
+      "Reference Collection for Verifiability/Fact-checking",
+      "Retrieval-Augmented Generation (RAG)"
+    ],
+    "Uses": "Long-form question answering, web automation, information retrieval, interactive systems, data collection."
+  },
+  {
+    "Pattern Name": "Behavior Cloning (for Agent Policy Learning)",
+    "Problem": "Training an AI agent from scratch in a complex environment with a large action space is sample-inefficient and difficult, especially when the agent needs to learn specific interaction protocols (e.g., browser commands).",
+    "Context": "Initializing an agent's policy or teaching it specific interaction patterns in an environment where human demonstrations of desired behavior are available.",
+    "Solution": "Collect human demonstrations of the task within the environment (e.g., human experts using the web browser) and use supervised learning (fine-tuning) to train the agent to imitate these actions and commands.",
+    "Result": "Provides a strong baseline policy, enables the agent to understand the environment's interaction format, and significantly reduces the exploration problem for subsequent reinforcement learning, making the agent functional from the outset.",
+    "Related Patterns": [
+      "LLM as an Agent with Tool Use (Web Browsing)",
+      "Reward Modeling (for Preference-based Learning)",
+      "Reinforcement Learning from Human Feedback (RLHF)",
+      "Rejection Sampling (Best-of-N)"
+    ],
+    "Uses": "Agent initialization, learning interaction protocols, supervised fine-tuning of LLMs for interactive tasks, data generation for further training."
+  },
+  {
+    "Pattern Name": "Reward Modeling (for Preference-based Learning)",
+    "Problem": "Directly optimizing for subjective qualities (e.g., factual accuracy, coherence, overall usefulness) in AI-generated outputs is hard because these qualities are difficult to quantify with a simple, programmatic reward function.",
+    "Context": "Optimizing AI systems (especially LLMs or agents) for subjective human preferences where direct human labeling of every output is infeasible, but pairwise comparisons of outputs are collectible.",
+    "Solution": "Train a separate model (the Reward Model) to predict human preferences (e.g., an Elo score) based on comparisons of AI-generated outputs. This model takes an output (e.g., an answer with references) and assigns a scalar reward, which then provides a quantifiable signal for further optimization.",
+    "Result": "Translates subjective human preferences into a quantifiable reward signal, enabling scalable optimization of AI outputs for complex, human-centric criteria that are otherwise hard to define programmatically.",
+    "Related Patterns": [
+      "Behavior Cloning (for Agent Policy Learning)",
+      "Reinforcement Learning from Human Feedback (RLHF)",
+      "Rejection Sampling (Best-of-N)"
+    ],
+    "Uses": "AI alignment, preference learning, quality optimization, subjective evaluation, fine-tuning LLMs for human-preferred outputs."
+  },
+  {
+    "Pattern Name": "Reinforcement Learning from Human Feedback (RLHF)",
+    "Problem": "Fine-tuning an agent's policy to maximize a complex, subjective reward function (often derived from human preferences) in an interactive environment, especially when direct human feedback is too slow or expensive for every step.",
+    "Context": "Improving an agent's performance in an environment where a Reward Model can provide a dense reward signal, and the agent needs to learn to explore and exploit the environment to achieve higher rewards.",
+    "Solution": "Use a reinforcement learning algorithm (e.g., Proximal Policy Optimization - PPO) to fine-tune the agent's policy. The Reward Model's output is used as the environment reward, and a KL penalty to the initial policy (e.g., the Behavior Cloning policy) is often added to mitigate over-optimization and mode collapse.",
+    "Result": "Further optimizes the agent's policy beyond behavior cloning, leading to higher performance according to the learned reward function and better alignment with human preferences, often surpassing human demonstrator performance.",
+    "Related Patterns": [
+      "LLM as an Agent with Tool Use (Web Browsing)",
+      "Behavior Cloning (for Agent Policy Learning)",
+      "Reward Modeling (for Preference-based Learning)",
+      "Rejection Sampling (Best-of-N)"
+    ],
+    "Uses": "Agent policy optimization, AI alignment, complex task learning, fine-tuning LLMs for interactive tasks, improving subjective quality of outputs."
+  },
+  {
+    "Pattern Name": "Rejection Sampling (Best-of-N)",
+    "Problem": "Improving the quality of AI-generated outputs (e.g., answers, actions) by leveraging a Reward Model without requiring additional training of the generative model, especially when inference-time compute is available.",
+    "Context": "When a Reward Model is available to score multiple generated outputs, and the goal is to select the highest-quality output from a set of candidates at inference time.",
+    "Solution": "Generate 'N' candidate outputs from the base model (e.g., a Behavior Cloning or RL policy). Use the Reward Model to score each candidate, and then select the candidate with the highest reward score as the final output.",
+    "Result": "Significantly improves the quality of outputs according to the Reward Model, often outperforming direct generation from the base policy, by effectively 'filtering' for better samples. This method requires more inference-time compute but no additional training.",
+    "Related Patterns": [
+      "Reward Modeling (for Preference-based Learning)",
+      "Behavior Cloning (for Agent Policy Learning)",
+      "Reinforcement Learning from Human Feedback (RLHF)"
+    ],
+    "Uses": "Quality improvement, output selection, leveraging reward models at inference time, fine-tuning LLMs for better output quality without further training."
+  },
+  {
+    "Pattern Name": "Reference Collection for Verifiability/Fact-checking",
+    "Problem": "AI-generated answers, especially from LLMs, can suffer from hallucinations or factual inaccuracies, making it difficult for humans to trust or verify the information provided.",
+    "Context": "AI systems generating factual information or answers to questions where accuracy, transparency, and verifiability are critical for user trust and evaluation.",
+    "Solution": "Design the AI system (e.g., an agent browsing the web) to explicitly identify and collect supporting passages (references) from its information sources while generating an answer. These references are then presented alongside the answer, often with citations.",
+    "Result": "Enhances the factual accuracy of answers, makes AI outputs more transparent, allows human evaluators to more easily assess factual accuracy, and builds user trust by providing traceable sources for claims.",
+    "Related Patterns": [
+      "LLM as an Agent with Tool Use (Web Browsing)",
+      "Retrieval-Augmented Generation (RAG)",
+      "AI Debate (for Fact-checking/Robustness)"
+    ],
+    "Uses": "Factual question answering, summarization, content generation, truthfulness, academic research assistance."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs), despite vast pre-training, can struggle with up-to-date information, domain-specific knowledge, or factual accuracy, leading to 'hallucinations' or outdated information.",
+    "Context": "Generating answers or text that requires access to external, up-to-date, or specific knowledge bases beyond the LLM's training data.",
+    "Solution": "Integrate a retrieval mechanism (e.g., a search engine, a document database, or an active browsing agent) that fetches relevant information based on the input query. The LLM then uses this retrieved information as additional context to generate a more informed, accurate, and current response.",
+    "Result": "Reduces hallucinations, improves factual accuracy, provides access to current and specific information, and enhances the overall quality and trustworthiness of generated text by grounding it in external data.",
+    "Related Patterns": [
+      "LLM as an Agent with Tool Use (Web Browsing)",
+      "Reference Collection for Verifiability/Fact-checking"
+    ],
+    "Uses": "Open-domain question answering, knowledge-intensive NLP tasks, summarization, content creation, chatbots."
+  },
+  {
+    "Pattern Name": "AI Debate (for Fact-checking/Robustness)",
+    "Problem": "Evaluating the factual accuracy and robustness of AI-generated claims, especially in complex or subjective domains, is challenging and prone to human bias or oversight, and simple reference checking might be insufficient (e.g., cherry-picking references).",
+    "Context": "When high-stakes factual accuracy or robust reasoning is required from AI systems, and a single AI's output or a simple evaluation process is not sufficient to ensure reliability.",
+    "Solution": "Train multiple AI models to 'debate' a claim, with some models arguing for and others against, by finding supporting and refuting evidence. A human or another AI then judges the debate to determine the truthfulness or robustness of the claim, considering all presented evidence.",
+    "Result": "Improves the reliability and trustworthiness of AI systems by forcing them to consider counter-evidence and present a more balanced assessment, mitigating issues like cherry-picking references and enhancing the overall truthfulness of AI outputs.",
+    "Related Patterns": [
+      "Reference Collection for Verifiability/Fact-checking",
+      "Recursive Reward Modeling / Iterated Amplification"
+    ],
+    "Uses": "Fact-checking, truthfulness, robustness, AI alignment, complex reasoning, safety-critical AI applications."
+  },
+  {
+    "Pattern Name": "Recursive Reward Modeling / Iterated Amplification",
+    "Problem": "Scaling human oversight and evaluation to increasingly complex AI systems, where humans might struggle to fully understand or evaluate the AI's internal workings or complex outputs due to cognitive limitations or time constraints.",
+    "Context": "Developing highly capable AI systems where direct human evaluation of the final output becomes too difficult or time-consuming, and human evaluators need assistance.",
+    "Solution": "Train an AI to assist humans in evaluating other AI systems or its own outputs. This can involve the AI breaking down complex tasks into simpler sub-tasks, finding evidence, or explaining its reasoning, which humans can then more easily evaluate. This process can be recursive, with AIs helping to evaluate other AIs that are helping humans.",
+    "Result": "Enables more scalable and accurate human oversight of complex AI systems, potentially leading to better alignment, safety, and the ability to train AIs on tasks that are too complex for direct human supervision.",
+    "Related Patterns": [
+      "AI Debate (for Fact-checking/Robustness)"
+    ],
+    "Uses": "AI alignment, scalable oversight, complex task evaluation, AI safety research, advanced human-AI collaboration."
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "Pattern Name": "Retriever-Aware Training (RAT)",
+    "Problem": "Large Language Models (LLMs) struggle to effectively utilize retrieved documentation, especially when it's imperfect or irrelevant, leading to distraction and poor performance. They also struggle to adapt to test-time changes in API documentation (e.g., version updates, argument changes).",
+    "Context": "Training LLMs for tool usage, specifically API invocation, where documentation is dynamic, vast, and retrievers have imperfect recall.",
+    "Solution": "Augment the instruction-tuned dataset by appending potentially incorrect or irrelevant retrieved documentation to the user prompt, while providing the accurate ground truth in the LLM response. This teaches the LLM to judge the relevance and accuracy of retrieved documents at inference time, using relevant information and ignoring irrelevant context.",
+    "Result": "Improves LLM accuracy in API invocation, substantially mitigates hallucination, and enables the model to adapt dynamically to test-time changes in API documentation.",
+    "Related Patterns": [
+      "Self-Instruct Finetuning for API Calls",
+      "Constraint-Aware API Invocation"
+    ],
+    "Uses": "Enhancing LLM performance and adaptability in tool-use scenarios, particularly with frequently updated API documentation; building robust LLM agents that interact with external systems."
+  },
+  {
+    "Pattern Name": "Self-Instruct Finetuning for API Calls",
+    "Problem": "Manually creating a large, diverse, and high-quality dataset of natural language instructions and corresponding API calls for finetuning LLMs is labor-intensive and time-consuming.",
+    "Context": "Developing LLMs capable of accurately generating API calls from natural language prompts across a wide range of functionalities and libraries.",
+    "Solution": "Leverage a powerful, pre-trained LLM (e.g., GPT-4) to automatically generate synthetic instruction-API pairs. This involves providing a few hand-crafted in-context examples and reference API documentation, then instructing the LLM to generate real-world use cases that invoke specific APIs, ensuring the generated instructions do not contain API names or hints.",
+    "Result": "Efficiently curates a comprehensive and diverse dataset of instruction-API pairs, enabling effective instruction finetuning of LLMs for accurate API selection and generation.",
+    "Related Patterns": [
+      "Retriever-Aware Training (RAT)",
+      "Constraint-Aware API Invocation"
+    ],
+    "Uses": "Training LLMs for program synthesis, tool invocation, and API generation tasks; dataset generation for specialized LLM applications."
+  },
+  {
+    "Pattern Name": "Constraint-Aware API Invocation",
+    "Problem": "Large Language Models (LLMs) often fail to interpret and respond to user requests that include specific non-functional constraints (e.g., performance, resource usage, accuracy, cost, latency) when selecting or invoking APIs.",
+    "Context": "Users need LLMs to choose APIs that not only fulfill a functional requirement but also adhere to specific quantitative or qualitative trade-offs and limitations.",
+    "Solution": "Incorporate instructions containing explicit constraints (e.g., 'model with less than 10M parameters,' 'accuracy of at least 70%') into the LLM's training dataset. This trains the model to comprehend both the functional description and the embedded constraint parameters, enabling it to reason about and categorize API calls accordingly.",
+    "Result": "Enables LLMs to make more nuanced and appropriate API selections by considering and respecting user-defined constraints, leading to more tailored and practical outputs.",
+    "Related Patterns": [
+      "Retriever-Aware Training (RAT)",
+      "Self-Instruct Finetuning for API Calls"
+    ],
+    "Uses": "Building agentic LLMs that can make informed decisions in complex environments; personalized tool recommendations; resource-optimized task execution; intelligent API gateways."
+  },
+  {
+    "Pattern Name": "AST-based API Verification and Hallucination Metric",
+    "Problem": "Evaluating the functional correctness of LLM-generated API calls is challenging due to the existence of multiple functionally equivalent solutions and the impracticality of executing every generated code. Identifying and quantifying hallucination (imagined API calls) is also difficult.",
+    "Context": "Assessing the accuracy, correctness, and reliability of LLMs in generating code or API calls for program synthesis and tool-use tasks.",
+    "Solution": "Utilize Abstract Syntax Tree (AST) subtree matching to compare the structure of LLM-generated API calls against a curated database of known, correct API calls. Functional correctness is determined by whether the generated API's AST is a subtree of a reference API's AST, accounting for optional arguments. Hallucination is specifically defined and measured as an API call whose AST is not a subtree of *any* API in the database, indicating an entirely imagined or non-existent tool.",
+    "Result": "Provides a robust, scalable, and offline evaluation metric that accurately measures both functional correctness and the rate of hallucination in LLM-generated API calls, showing strong correlation with human evaluation.",
+    "Related Patterns": [],
+    "Uses": "Benchmarking LLMs for code generation, API invocation, and program synthesis; developing more reliable LLM-powered coding assistants; automated code review for LLM-generated code."
+  }
+]

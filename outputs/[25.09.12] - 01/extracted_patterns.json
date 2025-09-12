@@ -1,0 +1,56 @@
+[
+  {
+    "Pattern Name": "Planning-Retrieval-Reasoning Framework",
+    "Problem": "Large Language Models (LLMs) often provide incorrect or outdated answers because they lack up-to-date knowledge and can 'hallucinate' during their reasoning process, making them untrustworthy. [cite: 13, 26, 27]",
+    "Context": "This pattern is for knowledge-intensive tasks where answers must be factually correct and based on a reliable source of information, such as a Knowledge Graph (KG). [cite: 14, 29, 30]",
+    "Solution": "Implement a three-stage process. First, use an LLM as a **Planner** to generate a high-level plan for answering a question; this plan takes the form of a 'relation path' grounded in the KG. [cite: 17, 60] Second, use this plan to **Retrieve** concrete, factual 'reasoning paths' from the KG. [cite: 18, 61] Third, feed these retrieved paths to the LLM, which acts as a **Reasoner** to synthesize a final, faithful answer. [cite: 18, 61]",
+    "Result": "The LLM's reasoning becomes faithful (fact-based) and interpretable, as the final answer is directly tied to verifiable data from the KG. [cite: 16] This framework significantly improves performance on KG reasoning tasks and reduces errors from hallucination and outdated knowledge. [cite: 20, 343]",
+    "Related Patterns": [
+      "Relation Path as a Faithful Plan",
+      "Interpretable Reasoning via KG Paths"
+    ],
+    "Uses": "Knowledge base question answering (KGQA), fact-checking systems, and any application requiring verifiable, high-stakes reasoning."
+  },
+  {
+    "Pattern Name": "Relation Path as a Faithful Plan",
+    "Problem": "LLMs can generate incorrect or nonsensical steps in their reasoning chains, leading to wrong conclusions. [cite: 150] For example, when asked for a person's brother, an LLM might incorrectly reason through a 'has a daughter' relationship. [cite: 27, 45]",
+    "Context": "This pattern is applied within a reasoning framework where an LLM needs to devise a multi-step plan to find an answer within a structured knowledge source like a KG. [cite: 24, 149]",
+    "Solution": "Instead of letting the LLM generate a free-form plan, constrain the plan to be a **relation path**—a sequence of relationships that exist within the KG's schema (e.g., `child_of` → `has_son`). [cite: 57, 155] This path serves as a verifiable and grounded plan that guides the subsequent data retrieval process. [cite: 17, 160]",
+    "Result": "The reasoning plan becomes inherently faithful to the structure of the knowledge source, preventing the LLM from hallucinating invalid reasoning steps. [cite: 160] Using stable relation paths also allows for the retrieval of the most up-to-date entities and facts from the KG. [cite: 154]",
+    "Related Patterns": [
+      "Planning-Retrieval-Reasoning Framework"
+    ],
+    "Uses": "Generating logical queries for databases, defining multi-step actions for AI agents interacting with a structured environment, and complex question answering over KGs."
+  },
+  {
+    "Pattern Name": "Instruction Tuning for Knowledge Distillation",
+    "Problem": "Out-of-the-box LLMs have no inherent knowledge of the specific schema (i.e., the types of relationships and entities) of a custom Knowledge Graph, so they cannot generate valid plans or correctly interpret retrieved data from it. [cite: 169, 171]",
+    "Context": "This pattern is used when an LLM needs to be adapted to reason effectively over a specific, external KG. [cite: 19]",
+    "Solution": "Fine-tune the LLM on two targeted instruction-based tasks to 'distill' knowledge from the KG into the model. [cite: 19, 172] The first task, **Planning Optimization**, teaches the LLM to generate valid relation paths by training it on question-path pairs. [cite: 64, 172] The second, **Retrieval-Reasoning Optimization**, teaches the LLM to generate correct answers based on provided reasoning paths. [cite: 65, 173]",
+    "Result": "The LLM becomes proficient at both generating faithful plans that are grounded in the KG's structure and correctly reasoning over the data retrieved using those plans. [cite: 193, 200]",
+    "Related Patterns": [],
+    "Uses": "Adapting general-purpose LLMs for specialized domains with custom knowledge bases, such as in enterprise search, medical research, or legal analysis."
+  },
+  {
+    "Pattern Name": "Modular, Plug-and-Play Planning Component",
+    "Problem": "Constantly fine-tuning every new or updated LLM to work with a specific Knowledge Graph is expensive and inefficient. [cite: 321]",
+    "Context": "This pattern is useful when building a flexible reasoning system that should work with various LLMs without requiring retraining for each one. [cite: 19]",
+    "Solution": "Design the **planning module**—the component responsible for generating relation paths—as a separate, specialized tool. [cite: 63] This trained module can then be used 'plug-and-play' during inference. Its output (the relation path) is used to retrieve factual context from the KG, which is then fed to any arbitrary, general-purpose LLM to perform the final reasoning step. [cite: 314]",
+    "Result": "The performance of various off-the-shelf LLMs (like ChatGPT, Alpaca, LLaMA2) is substantially improved on knowledge-intensive tasks without any fine-tuning of the LLMs themselves. [cite: 319, 320] This creates a reusable and efficient architecture for enhancing different models. [cite: 321]",
+    "Related Patterns": [
+      "Planning-Retrieval-Reasoning Framework"
+    ],
+    "Uses": "Creating enterprise-level AI systems that can leverage different LLM providers, building research tools for benchmarking LLM reasoning, and developing flexible agentic frameworks."
+  },
+  {
+    "Pattern Name": "Interpretable Reasoning via KG Paths",
+    "Problem": "The reasoning process of LLMs is often a 'black box,' making it difficult to understand how an answer was derived and whether it can be trusted. [cite: 28]",
+    "Context": "This pattern is applied in systems where transparency and explainability are critical, such as in legal, medical, or financial applications. [cite: 28]",
+    "Solution": "Use the concrete **reasoning paths** retrieved from the Knowledge Graph as a direct, human-readable explanation for the final answer. [cite: 62, 122] The system can present these paths (e.g., 'The Northern District is a part of Israel' and 'Israel has a Parliamentary system') alongside the final answer to show the step-by-step logic. [cite: 336]",
+    "Result": "The system's output becomes **interpretable** and **trustworthy**, as users can see and verify the factual basis for each step of the reasoning process. [cite: 16, 339]",
+    "Related Patterns": [
+      "Planning-Retrieval-Reasoning Framework"
+    ],
+    "Uses": "Explainable AI (XAI) systems, automated reporting, and debugging tools for complex reasoning tasks."
+  }
+]

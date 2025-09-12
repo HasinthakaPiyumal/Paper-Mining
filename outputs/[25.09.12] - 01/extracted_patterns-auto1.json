@@ -1,0 +1,15 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (RoG) / Plan-Retrieve-Reason",
+    "Problem": "Large Language Models (LLMs) lack up-to-date knowledge and are prone to hallucination during complex reasoning tasks, leading to incorrect, untrustworthy, and uninterpretable results.",
+    "Context": "Knowledge-intensive reasoning tasks, such as multi-hop Question Answering over a Knowledge Graph (KGQA), where factual accuracy, faithfulness to a knowledge source, and interpretability are critical.",
+    "Solution": "Implement a three-stage framework: 1) **Planning:** Use an LLM to generate an abstract plan (specifically, a 'relation path' like 'person -> born_in -> city') that is grounded in an external Knowledge Graph (KG). 2) **Retrieval:** Use the generated plan to retrieve concrete, valid 'reasoning paths' (e.g., 'Joe Biden -> born_in -> Scranton') from the KG. 3) **Reasoning:** Provide the original query and the retrieved reasoning paths to an LLM to synthesize a final, faithful, and explainable answer.",
+    "Result": "Achieves more faithful, accurate, and interpretable reasoning by grounding the LLM's process in a reliable knowledge source. It mitigates hallucinations, incorporates up-to-date knowledge, and provides an explicit reasoning chain for explainability. The planning module can be used in a plug-and-play manner with different LLMs.",
+    "Related Patterns": [],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "Complex reasoning over structured data",
+      "High-stakes scenarios requiring factual grounding (e.g., legal judgment, medical diagnosis)"
+    ]
+  }
+]

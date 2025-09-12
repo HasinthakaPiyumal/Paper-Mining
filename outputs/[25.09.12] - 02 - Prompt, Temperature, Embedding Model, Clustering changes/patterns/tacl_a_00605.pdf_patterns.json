@@ -1,0 +1,38 @@
+[
+  {
+    "Pattern Name": "InContext Retrieval-Augmented Language Model (InContext RALM)",
+    "Problem": "Large Language Models (LLMs) inherently lack access to external, up-to-date, or domain-specific knowledge, leading to factual inaccuracies, hallucinations, and an inability to provide source attribution. Existing Retrieval-Augmented Language Model (RALM) approaches often require significant modifications to the LM architecture and dedicated retraining, hindering their widespread adoption and deployment, especially when LMs are accessed via API.",
+    "Context": "Building or deploying LLM-based applications where factual accuracy, up-to-date information, and source attribution are critical, but direct modification or extensive retraining of the base LLM is impractical, costly, or impossible (e.g., using proprietary LLMs via API). The base LM is frozen and off-the-shelf.",
+    "Solution": "Augment a frozen, off-the-shelf Language Model by dynamically prepending relevant retrieved documents to its input context. This 'document reading' mechanism involves simple concatenation of retrieved text with the input prefix, without altering the LM's architecture or weights. The 'document selection' can initially use general-purpose retrievers (e.g., BM25) and can be further optimized by techniques like reranking. Key parameters like retrieval stride (how often to retrieve) and retrieval query length (how much context to use for the query) are optimized for performance and cost.",
+    "Result": "Substantial improvements in language modeling performance (e.g., perplexity), mitigation of factual inaccuracies, and provision of a natural source attribution mechanism. Enables the use of retrieval augmentation with pre-trained LMs, even via API access, significantly simplifying deployment and increasing the prevalence of LM grounding.",
+    "Related Patterns": [
+      "Zero-Shot Reranking",
+      "Predictive Reranking"
+    ],
+    "Uses": "Language modeling, open-domain question answering (ODQA), factual text generation, scenarios requiring up-to-date information, applications where LLM fine-tuning is not feasible or desirable."
+  },
+  {
+    "Pattern Name": "Zero-Shot Reranking",
+    "Problem": "Initial document retrieval mechanisms (e.g., lexical search like BM25 or general-purpose dense retrievers) may not optimally rank documents for the specific task of language model generation. They might lack semantic understanding or fail to prioritize documents most relevant to the *upcoming* text, leading to suboptimal grounding for the LLM.",
+    "Context": "An InContext RALM (or similar retrieval-augmented system) is already in place, providing a set of top-k candidate documents from an initial retriever. The goal is to improve the relevance of the single document (or small set of documents) presented to the LLM, without requiring additional training data or complex model training for the reranker. The generation LM's log probabilities are accessible, or a smaller proxy LM can be used.",
+    "Solution": "Utilize an existing Language Model (either the generation LM itself or a smaller, faster LM) to perform zero-shot reranking of the top-k candidate documents retrieved by an initial retriever. The LM scores each candidate document by evaluating the probability of a short segment of the *target text* (or a proxy, like the immediate prefix) given the document and the current context. The document yielding the highest probability is selected for augmentation.",
+    "Result": "Improved LM performance by providing more semantically relevant grounding documents compared to using only the top-1 document from the initial retriever. Enables better document selection without dedicated reranker training, making it suitable for scenarios where training data is scarce, computational resources are limited, or when the generation LM is only accessible via API.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model (InContext RALM)",
+      "Predictive Reranking"
+    ],
+    "Uses": "Enhancing document selection in RALM systems, improving factual accuracy and coherence of generated text, optimizing retrieval for specific LM tasks, API-constrained LLM environments."
+  },
+  {
+    "Pattern Name": "Predictive Reranking",
+    "Problem": "While zero-shot reranking improves document selection, it might not be fully optimized for the specific nuances of the target LM task and corpus. A more specialized reranker could further enhance the relevance of retrieved documents for LM generation by learning directly from the LM's signal.",
+    "Context": "An InContext RALM (or similar retrieval-augmented system) is in place, providing candidate documents. Training data from the target corpus is available, allowing for supervised learning. The goal is to train a reranker that is highly specialized in selecting documents that maximize the LM's ability to predict upcoming text.",
+    "Solution": "Train a dedicated, bidirectional reranker (e.g., a fine-tuned transformer-based classifier like RoBERTa) to score the relevance of candidate documents. This reranker is trained in a self-supervised manner, using the generation LM's own probabilities of predicting upcoming text (given a document and prefix) as the target signal. The reranker learns to predict which document will best 'help' the LM, effectively optimizing document selection for the specific LM task and corpus.",
+    "Result": "Achieves significant additional gains in LM performance compared to off-the-shelf retrievers or zero-shot reranking, by providing highly optimized document selection. This approach leverages domain-specific data to tailor the retrieval process precisely to the LM's needs, leading to lower perplexity and improved generation quality.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model (InContext RALM)",
+      "Zero-Shot Reranking"
+    ],
+    "Uses": "Maximizing LM performance in RALM systems, fine-tuning document selection for specific domains or tasks, scenarios where high-quality training data is available for reranker training, improving factual consistency and coherence of generated text."
+  }
+]

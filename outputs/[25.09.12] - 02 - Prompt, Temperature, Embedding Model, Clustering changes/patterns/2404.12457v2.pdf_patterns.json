@@ -1,0 +1,38 @@
+[
+  {
+    "Pattern Name": "Prefix-Aware Knowledge Tree Caching with Hierarchical Memory Management",
+    "Problem": "In Retrieval-Augmented Generation (RAG), Large Language Model (LLM) attention mechanisms are sensitive to the order of retrieved documents, meaning Key-Value (KV) tensors for the same document vary based on preceding tokens. This makes traditional caching difficult. Additionally, GPU memory is limited, requiring a multi-level caching strategy for long RAG sequences.",
+    "Context": "RAG systems where retrieved documents are injected into LLM prompts, and their order significantly impacts KV tensor computation and generation quality. The system needs to efficiently manage and share KV cache across fast (GPU) and slower (host) memory tiers.",
+    "Solution": "Organize document KV tensors in a 'knowledge tree' (a prefix tree based on document IDs), where each path represents a specific sequence of documents and nodes hold the KV tensors. This structure allows sharing common prefixes across requests and efficient retrieval while respecting document order. Nodes are dynamically placed in a GPU and host memory hierarchy, with more frequently accessed documents in faster GPU memory. A Prefix-aware GreedyDualSizeFrequency (PGDSF) replacement policy manages node placement and eviction, calculating priority based on access frequency, KV tensor size, last access time, and a prefix-aware recomputation cost (considering the cost of computing KV tensors for non-cached tokens and the impact of preceding documents). A 'swap-out-only-once' strategy minimizes GPU-host data transfer.",
+    "Result": "Minimizes cache miss rate, ensures the most valuable KV tensors are retained in appropriate memory tiers, adapts to memory hierarchy and prefix sensitivity, and significantly reduces redundant computation for RAG, leading to improved Time-To-First-Token (TTFT) and throughput.",
+    "Related Patterns": [
+      "Dynamic Speculative Pipelining for RAG",
+      "Cache-Aware Request Reordering for RAG"
+    ],
+    "Uses": "Efficient KV cache management for Retrieval-Augmented Generation (RAG) systems, optimizing LLM inference for knowledge-intensive tasks, RAGCache system."
+  },
+  {
+    "Pattern Name": "Dynamic Speculative Pipelining for RAG",
+    "Problem": "The retrieval (often CPU-bound) and LLM generation (GPU-bound) steps in RAG are typically executed sequentially, leading to idle GPU resources during retrieval and increased end-to-end latency, especially when retrieval latency is substantial.",
+    "Context": "RAG systems where retrieval and generation are distinct, sequential phases, and there's an opportunity to overlap these operations to reduce overall latency and improve resource utilization.",
+    "Solution": "Dynamically overlap knowledge retrieval and LLM inference. The vector search continuously produces 'candidate documents' (e.g., top-k documents in its queue) in stages. The LLM engine initiates 'speculative generation' early using these candidates. If subsequent candidate documents from the vector search differ from the previous ones, the current speculative generation is terminated, and a new one begins. If the candidates match the final retrieved documents, the speculative generation results are returned directly. This pipelining is dynamically enabled based on system load (e.g., only if the number of pending LLM requests falls below a predetermined maximum batch size for prefill iteration).",
+    "Result": "Significantly reduces end-to-end latency by minimizing the non-overlapping time between retrieval and generation, improves resource utilization (CPU and GPU), and controls the overhead of incorrect speculative generations under varying system loads, contributing to lower TTFT.",
+    "Related Patterns": [
+      "Prefix-Aware Knowledge Tree Caching with Hierarchical Memory Management",
+      "Cache-Aware Request Reordering for RAG"
+    ],
+    "Uses": "Reducing latency in RAG systems, optimizing resource utilization in hybrid CPU/GPU ML workflows, RAGCache system."
+  },
+  {
+    "Pattern Name": "Cache-Aware Request Reordering for RAG",
+    "Problem": "Unpredictable arrival patterns of user requests in RAG systems can lead to inefficient cache utilization and 'cache thrashing' (frequent swapping of cached items), especially when requests referring to the same documents are not processed consecutively.",
+    "Context": "RAG serving systems that maintain a shared Key-Value (KV) cache for retrieved documents, where the order of processing incoming requests can significantly impact cache hit rates and overall system throughput.",
+    "Solution": "Implement a priority-based request scheduling mechanism. Incoming requests are managed in a priority queue and reordered for processing based on an 'OrderPriority' metric: `OrderPriority = Cached Length / Computation Length`. This metric prioritizes requests that are likely to enhance cache efficiency by having a larger portion of their required context already cached relative to the computation needed for the uncached part. To prevent 'starvation' of lower-priority requests, a reordering window size is set, ensuring all requests are processed within a defined timeframe.",
+    "Result": "Improves the cache hit rate, reduces total computation time by maximizing KV cache reuse, optimizes resource utilization, and mitigates cache volatility, leading to higher throughput and lower TTFT under high request rates.",
+    "Related Patterns": [
+      "Prefix-Aware Knowledge Tree Caching with Hierarchical Memory Management",
+      "Dynamic Speculative Pipelining for RAG"
+    ],
+    "Uses": "Optimizing cache efficiency in RAG serving, improving throughput and latency in LLM inference systems with shared caches, RAGCache system."
+  }
+]

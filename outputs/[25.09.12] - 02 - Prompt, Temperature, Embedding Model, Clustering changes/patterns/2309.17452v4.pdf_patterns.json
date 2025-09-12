@@ -1,0 +1,24 @@
+[
+  {
+    "Pattern Name": "Tool-Integrated Reasoning",
+    "Problem": "Large Language Models (LLMs) struggle with complex mathematical problems that require both abstract, semantic analysis and precise, rigorous computation or symbolic manipulation. Existing approaches (pure natural language reasoning or pure program synthesis) have complementary weaknesses: natural language excels at planning and abstract reasoning but fails at precise computation, while programs excel at computation but lack nuanced reasoning and error handling.",
+    "Context": "Designing LLM-based agents for tasks demanding a combination of high-level strategic reasoning (e.g., problem decomposition, semantic analysis) and low-level, accurate execution of operations (e.g., equation solving, symbolic manipulation, complex arithmetic) that are beyond the LLM's inherent capabilities.",
+    "Solution": "The agent interleaves natural language rationales with program-based tool use. The LLM generates a natural language rationale to analyze the problem, plan, or explain a step. When a sub-task requires precise computation or external capabilities, the LLM generates a program based on the preceding rationale. This program is executed by an external tool (e.g., computation library, symbolic solver), yielding an output. The execution output is fed back to the LLM, which then generates the next natural language rationale to continue reasoning, make adjustments, or finalize the answer. This process repeats until the problem is solved.",
+    "Result": "Synergistically combines the analytical prowess of language with the computational efficiency of tools, significantly improving performance on complex quantitative tasks, reducing the gap with closed-source models, and demonstrating superior generalization.",
+    "Related Patterns": [
+      "Output Space Shaping"
+    ],
+    "Uses": "Mathematical problem-solving, scientific reasoning, complex quantitative tasks, any domain where LLMs need to combine abstract reasoning with precise external computation."
+  },
+  {
+    "Pattern Name": "Output Space Shaping",
+    "Problem": "When training LLMs for complex, multi-step tasks involving tool use (e.g., via imitation learning), relying solely on a limited set of high-quality, human-curated trajectories can restrict the model's output space. This leads to inflexibility in exploring diverse, plausible reasoning paths during inference and can result in improper tool-use behavior.",
+    "Context": "Fine-tuning LLMs for agentic behavior or tool-use, especially when the initial training data, while high-quality, lacks sufficient diversity to cover all valid reasoning trajectories or potential error scenarios. The goal is to improve robustness, generalization, and the model's ability to self-correct or explore alternative solutions.",
+    "Solution": "To encourage diversity and mitigate improper behavior, the training process is augmented with a two-pronged approach: 1) **Sampling Diverse Trajectories:** The model (after initial imitation learning) is used to sample multiple diverse tool-use trajectories for each training problem. Valid trajectories (those leading to correct answers without errors) are retained. 2) **Correcting Invalid Trajectories:** Invalid trajectories (those with wrong answers or tool-use errors) are identified. A more capable 'teacher model' (e.g., a larger LLM or a previously trained, stronger version) is then used to correct the subsequent portions of these invalid trajectories, effectively turning them into valid ones. The model is then retrained on a combined dataset consisting of the original high-quality trajectories, the newly sampled valid trajectories, and the teacher-corrected invalid trajectories.",
+    "Result": "Significantly boosts reasoning accuracy, encourages the exploration of diverse plausible reasoning steps, and reduces improper tool-use behavior. It provides greater benefits for smaller models and difficult problems, improving generalization and robustness.",
+    "Related Patterns": [
+      "Tool-Integrated Reasoning"
+    ],
+    "Uses": "Improving the robustness and generalization of LLM agents, data augmentation for complex reasoning and tool-use tasks, fine-tuning models for self-correction and error recovery in agentic workflows."
+  }
+]
