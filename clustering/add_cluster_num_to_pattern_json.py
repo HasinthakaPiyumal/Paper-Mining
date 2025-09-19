@@ -18,9 +18,10 @@ def add_cluster_numbers_to_json(input_file, output_file, cluster_file):
         json.dump(data, f, indent=2)
 
 if __name__ == "__main__":
-    input_file = "../extracted_patterns.json"
-    output_file = f"full_patterns_with_clusters.json"
-    cluster_file = "patterns_with_50_clusters.json" # Output from clustering notebook
+    folder_path = "/home/hasinthaka/Documents/Projects/AI/AI Pattern Mining/Paper Mining/outputs/[25.09.12] - 02 - Prompt, Temperature, Embedding Model, Clustering changes"
+    input_file = f"{folder_path}/extracted_patterns.json"
+    output_file = f"{folder_path}/full_patterns_with_clusters.json"
+    cluster_file = f"{folder_path}/patterns_with_26_clusters.json" # Output from clustering notebook
     add_cluster_numbers_to_json(input_file, output_file, cluster_file)
     df = pd.read_json(output_file)
     df.to_csv("full_patterns_with_clusters.csv", index=False)

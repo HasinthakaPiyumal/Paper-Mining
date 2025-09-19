@@ -1,0 +1,882 @@
+[
+    {
+        "Pattern Name":"LLM-Augmented Knowledge Base",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as Semantic Content Encoder",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Instruction Tuning for Recommendation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as Explainable Recommender",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as Direct Recommender (via In-Context Learning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Chain-of-Thought Prompting for Reasoning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM for AutoML and Architecture Search",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as Conversational Recommender Agent",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Memory-Augmented LLM",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool-Augmented LLM",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as Personalized AIGC Creator",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agent-Computer Interface (ACI)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Concise and Structured Environment Feedback",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Guardrails for Agent Actions",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Compact and Efficient Agent Actions",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM-Assisted Symbolic World Model Construction",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as Heuristic\/Seed Planner",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM with External Tools",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Corrective Reprompting \/ Iterative Plan Refinement",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Interactive Intent Clarification",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Prompt-Based Tool Understanding",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Introspective Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Extrospective Planning (Iterative Replanning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multi-Agent Collaboration",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Formalized Reasoning Augmentation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Parallel Tool Execution",
+        "cluster":1
+    },
+    {
+        "Pattern Name":"Demonstration-Based Tool Learning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Feedback-Driven Tool Learning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Unified Tool Interface",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Meta Tool Learning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Curriculum Tool Learning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"AI-Optimized Tool Design",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"AI-Driven Tool Creation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Personalized Tool Manipulation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Proactive Agent Design",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Knowledge Conflict Resolution",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Task Decomposition",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multiplan Selection",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"External Planner-Aided Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reflection and Refinement",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Memory-Augmented Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as a Generative Planner",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Hierarchical Planning with LLMs",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Grounded Replanning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Prompt Design for LLM Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval-Augmented Generation (RAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Cognitive Architecture for Language Agents (CoALA)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Working Memory for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Episodic Memory for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Semantic Memory for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Procedural Memory for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Grounding Actions",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval Augmented Generation (RAG) for Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM-based Reasoning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agent Self-Improvement (Learning Actions)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Deliberative Decision Making (Planning with LLMs)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Prompt Engineering & Chaining",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"End-to-End Retrieval Augmented Generation for Domain Adaptation (RAGend2end)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Statement Reconstruction (Auxiliary Training Signal)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Grounded Language Models (GLAM)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as High-Level Planner",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Finetuning LLMs on Expert Trajectories (Behavioral Cloning for LLMs)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Online Decision Transformer (Pre-training with Offline RL + Online Finetuning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reinforcement Learning from Human Feedback (RLHF)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Distributed LLM Policies (Lamorel)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"InContext Retrieval-Augmented Language Model (InContext RALM)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Zero-Shot Reranking",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Predictive Reranking",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retriever-Aware Training (RAT)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Self-Instruct Finetuning for API Calls",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Constraint-Aware API Invocation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"AST-based API Verification and Hallucination Metric",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"ThinkonGraph (ToG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Relation-based ThinkonGraph (ToGR)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Knowledge Traceability and Correctability",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM-KG (Loose Coupling)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Lightweight Pruning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval Augmented Generation (RAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval Augmented Fine-Tuning (RAFT)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Knowledge-Grounded Generation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Automated Feedback Loop for LLM Refinement",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agentic Iterative Self-Refinement",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multi-Agent Conversation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Customizable Conversable Agent",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Human-in-the-Loop Agent",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool-Augmented Agent",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Automated Agent Chat (Autoreply Mechanism)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Hybrid Control (Natural Language & Code)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Two-Agent Chat",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Sequential Chat",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Nested Chat",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Group Chat",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Dynamic Conversation Flow",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval Augmentation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Interactive Retrieval",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as a Planner (with Executor)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Grounding Agent",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multi-Agent Coordination (Commander-Subordinate)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Role-Based Agent Specialization",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Adversarial Agent Interaction",
+        "cluster":2
+    },
+    {
+        "Pattern Name":"Game-Playing Agent (with Rule Enforcement)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Inner Monologue (via Nested Chat)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Role-Play Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Grounding Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval-Augmented Generation (RAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Single-step RAG",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multi-step RAG",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Adaptive Retrieval-Augmented Generation (AdaptiveRAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Query Complexity Classifier",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Chain-of-Thought Reasoning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Interpretable Global Surrogate Model",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Local Surrogate Explanation (LIME-like)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Game-Theoretic Feature Attribution (SHAP-like)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Local Rule-Based Explanation (Anchor\/LORE-like)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Counterfactual Explanation",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"LACE (Local Pattern-Based Explanation with Prediction Difference)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Interactive Human-in-the-Loop Explanation Tool (xPlain)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Subgroup Divergence Analysis (DivExplorer Algorithm)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Interactive Subgroup Divergence Exploration Tool (DivExplorer System)",
+        "cluster":3
+    },
+    {
+        "Pattern Name":"Prefix-Aware Knowledge Tree Caching with Hierarchical Memory Management",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Dynamic Speculative Pipelining for RAG",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Cache-Aware Request Reordering for RAG",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Memory Augmentation for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool-Augmented LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tree\/Graph-based Search for LLM Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Environmental Feedback Loop for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"ReAct (Reasoning and Acting)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reflexion (Verbal Reinforcement Learning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Chain of Thought (CoT) Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multi-Constraint, Long-Horizon Planning for LLM Agents",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval-Augmented Generation (RAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Code-Based Tool Augmentation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as a Planner (for Tool Use)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Decomposed Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Self-Reflection \/ Feedback-Driven Planning (ReAct)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool Description & Few-Shot Prompting for Tool Use",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Emergent Tool Composition \/ Innovation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Long-Term Memory \/ Experience-Based Learning (for Agents)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool-Integrated Reasoning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Output Space Shaping",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Iterative Task Solving",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"One-step Task Solving",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Chain-of-Thought (CoT) Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool Graph Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Adaptive Tool Documentation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retriever-Augmented Tool Selection",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM-Guided Tool Selection",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool Reranking",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Parameter Extraction and Formatting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Error Handling Mechanisms (for Tool Calling)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Information Integration for Response Generation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Direct Insertion for Response Generation",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"ReACT (Reasoning and Acting)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool-Augmented Fine-tuning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Context Compression (for Tool Outputs)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Multi-Agent Collaboration (for Tool Learning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Self-Verification (for Tool Selection\/Calling)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tool Learning with MultiModal Inputs",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Distinguish Business Logic from ML Models",
+        "cluster":4
+    },
+    {
+        "Pattern Name":"DataAlgorithmServingEvaluator",
+        "cluster":5
+    },
+    {
+        "Pattern Name":"Event-driven ML Microservices",
+        "cluster":6
+    },
+    {
+        "Pattern Name":"ParameterServer Abstraction",
+        "cluster":7
+    },
+    {
+        "Pattern Name":"ClosedLoop Intelligence",
+        "cluster":8
+    },
+    {
+        "Pattern Name":"Federated Learning",
+        "cluster":9
+    },
+    {
+        "Pattern Name":"ML Versioning",
+        "cluster":10
+    },
+    {
+        "Pattern Name":"Handshake",
+        "cluster":11
+    },
+    {
+        "Pattern Name":"Isolate and Validate Output of Model",
+        "cluster":12
+    },
+    {
+        "Pattern Name":"Canary Model",
+        "cluster":13
+    },
+    {
+        "Pattern Name":"Decouple Training Pipeline from Production Pipeline",
+        "cluster":14
+    },
+    {
+        "Pattern Name":"Descriptive Data Type for Rich Information",
+        "cluster":15
+    },
+    {
+        "Pattern Name":"Design Holistically about Data Collection and Feature Extraction",
+        "cluster":16
+    },
+    {
+        "Pattern Name":"Reuse Code between Training Pipeline and Serving Pipeline",
+        "cluster":17
+    },
+    {
+        "Pattern Name":"Secure Aggregation",
+        "cluster":9
+    },
+    {
+        "Pattern Name":"Workflow Pipeline",
+        "cluster":18
+    },
+    {
+        "Pattern Name":"Distinguish Business Logic from ML Model",
+        "cluster":4
+    },
+    {
+        "Pattern Name":"Encapsulating ML Models within Rule-based Safeguards",
+        "cluster":12
+    },
+    {
+        "Pattern Name":"AI Pipeline",
+        "cluster":19
+    },
+    {
+        "Pattern Name":"Two-Phase Predictions",
+        "cluster":20
+    },
+    {
+        "Pattern Name":"Ethics Credentials",
+        "cluster":21
+    },
+    {
+        "Pattern Name":"Deploy Canary Model",
+        "cluster":13
+    },
+    {
+        "Pattern Name":"Agent Profiling",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agent Memory Management",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agent Planning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agent Action Execution",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Finetuning for Agent Capability Acquisition",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Prompt and Mechanism Engineering for Agent Capability Acquisition",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Context-Driven ML Solution Design",
+        "cluster":22
+    },
+    {
+        "Pattern Name":"Anomaly Detection Strategy Selection",
+        "cluster":23
+    },
+    {
+        "Pattern Name":"LLM as an Agent with Tool Use (Web Browsing)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Behavior Cloning (for Agent Policy Learning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reward Modeling (for Preference-based Learning)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reinforcement Learning from Human Feedback (RLHF)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Rejection Sampling (Best-of-N)",
+        "cluster":24
+    },
+    {
+        "Pattern Name":"Reference Collection for Verifiability\/Fact-checking",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval-Augmented Generation (RAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"AI Debate (for Fact-checking\/Robustness)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Recursive Reward Modeling \/ Iterated Amplification",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"ReAct (Reasoning and Acting)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Chain-of-Thought (CoT) Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Self-Consistency (CoT-SC)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Combining Internal and External Knowledge",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Inner Monologue (IM)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Least-to-Most Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Zero-shot Chain-of-Thought (Zero-shot CoT)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Selection-Inference",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"STaR (Self-Taught Reasoner)",
+        "cluster":25
+    },
+    {
+        "Pattern Name":"Faithful Reasoning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Scratchpads",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"SayCan",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval-Augmented Generation (RAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Unified Reranker-Generator LLM (RankRAG)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Chain-of-Thought (CoT) Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Tree of Thoughts \/ Graph of Thoughts",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Plan-and-Solve Prompting \/ Decomposed Prompting",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Agentic LLM with Tool Use",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reasoning Verification (Entailer)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Monte-Carlo Planning for Faithful Reasoning (FAME)",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Retrieval-Augmented Reasoning",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"LLM as a Semantic Parser",
+        "cluster":0
+    },
+    {
+        "Pattern Name":"Reasoning on Graphs (RoG)",
+        "cluster":0
+    }
+]

@@ -13,8 +13,9 @@ def open_json_file_as_object(file_path):
         return json.load(file)
 
 if __name__ == "__main__":
-    input_file = "clustering/full_patterns_with_clusters.json"
-    output_file = "summarized_patterns.json"
+    folder_path = "/home/hasinthaka/Documents/Projects/AI/AI Pattern Mining/Paper Mining/outputs/[25.09.12] - 02 - Prompt, Temperature, Embedding Model, Clustering changes"
+    input_file = f"{folder_path}/full_patterns_with_clusters.json"
+    output_file = f"{folder_path}/summarized_patterns.json"
 
     print(f"Loading patterns from {input_file}")
     patterns = open_json_file_as_object(input_file)

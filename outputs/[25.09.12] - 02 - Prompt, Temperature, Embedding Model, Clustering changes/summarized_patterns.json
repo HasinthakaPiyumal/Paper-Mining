@@ -1,0 +1,327 @@
+[
+  {
+    "Pattern Name": "Holistic LLM Agentic Framework",
+    "Problem": "Large Language Models (LLMs) inherently suffer from limitations such as knowledge cutoffs, factual hallucinations, limited context windows, and struggles with complex multi-step reasoning or precise computation. Traditional AI systems often lack deep semantic understanding, adaptability, explainability, and efficient mechanisms for knowledge acquisition and interaction with dynamic environments. Designing and deploying robust, personalized, and scalable AI solutions for complex, real-world tasks requires overcoming these challenges, ensuring factual accuracy, continuous learning, and seamless human-AI collaboration.",
+    "Context": "Developing highly capable, adaptable, and robust AI systems that leverage Large Language Models (LLMs) as their core intelligence. These systems operate in dynamic, knowledge-intensive, interactive, and often multi-modal environments, requiring sophisticated reasoning, access to external information and tools, continuous learning, and alignment with human needs and preferences. Applications span from advanced recommender systems and conversational AI to autonomous agents for complex task automation, robotics, and scientific discovery.",
+    "Solution": "This framework integrates a Large Language Model (LLM) as the central cognitive engine, augmented by a comprehensive suite of specialized modules and adaptive strategies:\n\n1.  **LLM as Central Intelligence & Orchestrator**:\n    *   **Core Reasoning**: The LLM performs complex reasoning (e.g., Chain-of-Thought, Tree/Graph of Thoughts, Plan-and-Solve, Least-to-Most, Scratchpads, Selection-Inference, Faithful Reasoning) to break down problems and derive conclusions.\n    *   **Intent Understanding**: Actively clarifies vague user queries (Interactive Intent Clarification) to accurately infer user intent.\n    *   **Direct Generation**: Leverages LLMs for direct generation of recommendations, personalized content (AIGC), and natural language explanations.\n\n2.  **Dynamic Knowledge & Memory System**:\n    *   **Multi-Tiered Memory**: Implements Working Memory (for current context, goals, intermediate thoughts), Episodic Memory (for past experiences and trajectories), Semantic Memory (for explicit world knowledge and facts), and Procedural Memory (for executable skills and agent code) to overcome context window limitations and enable long-term statefulness.\n    *   **Retrieval-Augmented Generation (RAG)**: Integrates external, non-parametric knowledge bases (e.g., vector databases, knowledge graphs, document stores) for factual accuracy, up-to-date information, and domain-specific knowledge.\n        *   **Adaptive Retrieval**: Employs dynamic retrieval strategies (e.g., Single-step, Multi-step, AdaptiveRAG with Query Complexity Classifier), reranking (Zero-Shot, Predictive, Unified Reranker-Generator LLM), and efficient caching (Prefix-Aware Knowledge Tree Caching, Dynamic Speculative Pipelining, Cache-Aware Request Reordering) to optimize knowledge access.\n        *   **Knowledge Graph Integration**: Leverages LLMs to augment, construct, and reason over Knowledge Graphs (e.g., LLM-Augmented Knowledge Base, ThinkonGraph, Reasoning on Graphs, LLM-KG Loose Coupling, LLM as Semantic Parser) for deep, multi-hop reasoning and explainability.\n\n3.  **Advanced Tool Integration & Interaction**:\n    *   **Tool Orchestration**: Equips the LLM to act as a Planner (for Tool Use), autonomously breaking down tasks, generating tool chains, and iteratively solving problems (e.g., ReAct, Self-Reflection/Feedback-Driven Planning, Decomposed Planning, Tool Graph Planning).\n    *   **Tool Learning & Adaptation**: Facilitates tool understanding (Prompt-Based, Demonstration-Based, Feedback-Driven, Curriculum, Meta Tool Learning), tool creation (AI-Driven), and AI-optimized tool design (Modularity, New I/O Formats, Unified Tool Interface, Adaptive Tool Documentation).\n    *   **Robust Tool Execution**: Implements mechanisms for Parameter Extraction & Formatting, Error Handling, Self-Verification of tool selection/calling, Guardrails for Agent Actions, and Grounding Actions (e.g., converting text commands to physical/digital actions).\n    *   **Agent-Computer Interface (ACI)**: Provides a tailored abstraction layer for agents to interact with complex digital environments, offering concise feedback and compact actions.\n    *   **Multimodal Interaction**: Integrates multimodal tools and encoders (Tool Learning with MultiModal Inputs) to process diverse user intents.\n\n4.  **Adaptive Planning & Decision-Making**:\n    *   **Hierarchical Planning**: Decomposes complex, long-horizon tasks into high-level subgoals (LLM) and low-level executable actions (specialized planners/executors).\n    *   **Grounded & Iterative Planning**: Employs closed-loop systems (e.g., Grounded Replanning, Environmental Feedback Loop, SayCan) where the LLM dynamically updates plans based on environmental feedback, observations, and self-reflection, ensuring physical grounding and robustness to failures.\n    *   **Multi-Strategy Planning**: Generates and evaluates multiple alternative plans (Multiplan Selection), integrates with external symbolic or neural planners (External Planner-Aided Planning, LLM as Heuristic/Seed Planner).\n    *   **Constraint-Aware Planning**: Manages multiple interdependent constraints (Multi-Constraint, Long-Horizon Planning, Constraint-Aware API Invocation).\n    *   **Formal Reasoning**: Incorporates external formalisms (Formalized Reasoning Augmentation, LLM-Assisted Symbolic World Model Construction) for precise and controllable reasoning.\n\n5.  **Continuous Learning & Self-Improvement**:\n    *   **Finetuning & Alignment**: Adapts LLMs for specific tasks, domains, or behaviors through instruction tuning, behavioral cloning from expert trajectories, online reinforcement learning (e.g., Grounded Language Models - GLAM, Online Decision Transformer), and Reinforcement Learning from Human Feedback (RLHF) to align with human preferences.\n    *   **Prompt & Mechanism Engineering**: Utilizes Prompt Engineering & Chaining, Prompt Design for LLM Planning, Grounding Prompting, and other specialized mechanisms to guide LLM behavior and enable learning without altering core parameters.\n    *   **Automated Feedback & Reflection**: Implements Automated Feedback Loops (e.g., Utility modules, Agentic Iterative Self-Refinement, Reflection and Refinement - Reflexion) to iteratively refine LLM responses and actions.\n    *   **Experience-Based Learning**: Stores and retrieves past experiences and learned strategies (Long-Term Memory / Experience-Based Learning) for continuous improvement.\n\n6.  **Multi-Agent Systems & Collaboration**:\n    *   **Agent Design**: Defines Customizable Conversable Agents with specific roles (Agent Profiling, Role-Based Agent Specialization) and capabilities.\n    *   **Conversation Management**: Facilitates autonomous interaction, coordination, and negotiation among agents (e.g., Automated Agent Chat, Dynamic Conversation Flow, Two-Agent, Sequential, Nested, Group Chat, Inner Monologue).\n    *   **Human-AI Collaboration**: Integrates human feedback, oversight, and intervention (Human-in-the-Loop Agent) at configurable points.\n    *   **Coordination & Debate**: Manages complex workflows (Multi-Agent Coordination - Commander-Subordinate) and enhances robustness through AI Debate.\n\n7.  **Verification, Grounding & Explainability**:\n    *   **Factual Verification**: Resolves knowledge conflicts, verifies reasoning steps (Reasoning Verification - Entailer, Monte-Carlo Planning for Faithful Reasoning), and collects references for fact-checking.\n    *   **Knowledge Traceability**: Provides explicit reasoning paths (Knowledge Traceability and Correctability) for human inspection and debugging.\n    *   **Grounded Actions**: Ensures actions adhere to physical laws, game rules, or commonsense knowledge (Grounding Agent, Game-Playing Agent with Rule Enforcement).\n    *   **Self-Correction**: Employs Self-Consistency (CoT-SC) and Corrective Reprompting to improve robustness and accuracy.\n\n8.  **Output Generation & Integration**:\n    *   **Semantic Encoding**: Utilizes LLMs as powerful semantic encoders for textual content.\n    *   **Information Integration**: Synthesizes diverse tool outputs (text, numbers, code, images) with internal knowledge (Information Integration for Response Generation), often employing Context Compression for lengthy outputs, or Direct Insertion for simple ones.",
+    "Result": "A highly capable, robust, and adaptable AI system that transcends the limitations of standalone LLMs. It achieves:\n*   **Enhanced Accuracy & Factual Consistency**: Significantly reduces hallucinations and provides grounded, verifiable responses by leveraging external, up-to-date knowledge.\n*   **Superior Reasoning & Problem-Solving**: Tackles complex, multi-step, long-horizon tasks through structured planning, iterative refinement, and integration of formal reasoning.\n*   **Broadened Capabilities**: Interacts effectively with diverse real-world environments and tools (digital, physical, multimodal), performing complex computations and accessing specialized data.\n*   **Increased Adaptability & Learning**: Continuously learns from experience, human feedback, and environmental interactions, adapting to new tasks, domains, and user preferences.\n*   **Improved Explainability & Trust**: Provides transparent reasoning paths, source attribution, and mechanisms for human oversight and correction, fostering user trust.\n*   **Greater Efficiency & Scalability**: Optimizes resource utilization, reduces latency, and scales to complex workflows and large knowledge bases.\n*   **Personalization & Proactivity**: Understands nuanced user intent, provides tailored assistance, and can initiate actions autonomously.\n*   **Modular & Flexible Design**: Allows for the composition of specialized agents and components, simplifying development and maintenance of complex AI applications.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Tool-Augmented LLM",
+      "Chain-of-Thought (CoT) Prompting",
+      "ReAct (Reasoning and Acting)",
+      "Memory-Augmented LLM",
+      "Instruction Tuning for Recommendation",
+      "LLM as Conversational Recommender Agent",
+      "Agent-Computer Interface (ACI)",
+      "Reinforcement Learning from Human Feedback (RLHF)",
+      "Agent Planning",
+      "Multi-Agent Conversation"
+    ],
+    "Uses": [
+      "Open-domain Question Answering",
+      "Conversational AI",
+      "Recommender Systems (content-based, cross-domain, explainable, personalized)",
+      "Autonomous Agents (web, embodied, robotics)",
+      "Complex Task Automation",
+      "Software Engineering & Code Generation",
+      "Scientific Discovery & Reasoning",
+      "Personalized Assistants",
+      "Fact-checking & Verification",
+      "Knowledge Graph Construction & Reasoning",
+      "Automated Machine Learning (AutoML) & Architecture Search",
+      "Multi-modal AI Applications",
+      "Interactive Simulations & Games",
+      "Decision Support Systems",
+      "Customer Service Chatbots",
+      "Online Advertising & E-commerce Content Generation"
+    ]
+  },
+  {
+    "Pattern Name": "Parallel Tool Execution",
+    "Problem": "Sequential execution of tools can be inefficient for complex tasks where certain subtasks do not depend on each other.",
+    "Context": "Multi-step, multi-tool scenarios where subtasks might be independent and could be processed concurrently.",
+    "Solution": "Determine the dependencies among different subtasks and effectively switch between parallel and sequential execution of tools to optimize efficiency.",
+    "Result": "Improved execution efficiency for complex tasks by allowing independent subtasks to be processed simultaneously.",
+    "Related Patterns": [],
+    "Uses": "Workflow orchestration, complex task automation, multi-tool agents."
+  },
+  {
+    "Pattern Name": "Adversarial Agent Interaction",
+    "Problem": "Ensuring quality, safety, or correctness of outputs by having agents critically evaluate each other's work, preventing errors or malicious actions.",
+    "Context": "Tasks where generated outputs (e.g., code, plans) need to be validated against specific criteria, security concerns, or potential risks before execution or finalization.",
+    "Solution": "Design an agent (e.g., Safeguard) to act as a 'virtual adversarial checker,' critically screening the outputs of other agents (e.g., generated code) and raising issues if criteria are not met (e.g., security red flags, execution failures).",
+    "Result": "Improved safety, quality assurance, prevention of errors or malicious outputs, and a robust validation mechanism within the multi-agent system.",
+    "Related Patterns": [
+      "Role-Based Agent Specialization",
+      "Multi-Agent Coordination (Commander-Subordinate)"
+    ],
+    "Uses": "Supply chain optimization (Safeguard checking code safety)"
+  },
+  {
+    "Pattern Name": "Comprehensive Black-Box Explainability and Analysis Framework",
+    "Problem": "Complex, black-box AI models inherently lack transparency, making it difficult to: understand their overall decision logic and global behavior; explain specific individual predictions in a human-understandable way; quantify the fair contribution of each feature to an individual prediction; provide qualitative, rule-based insights into local decision logic; determine minimal changes to inputs that would alter a prediction (counterfactuals); identify and characterize data subgroups where the model behaves divergently or exhibits bias; and facilitate human understanding, debugging, and trust through interactive exploration.",
+    "Context": "When high-performing but opaque AI models are deployed, and there is a critical need for holistic understanding, individual prediction justification, quantitative feature attribution, actionable insights, and rigorous analysis of model behavior across diverse data segments. This is crucial for model validation, debugging, fairness assessment, bias detection, and building user trust in sensitive applications.",
+    "Solution": "Implement a multi-faceted framework that integrates various XAI techniques to provide comprehensive insights into black-box models:\n\n1.  **Global Understanding**: Employ an Interpretable Global Surrogate Model by training a simpler, transparent model on the predictions of the black-box model to approximate its overall behavior.\n2.  **Local Prediction Explanation**: Utilize Local Surrogate Explanation (LIME-like) methods to generate perturbed samples around an instance and train a local interpretable model to explain individual predictions with feature importance. Apply Game-Theoretic Feature Attribution (SHAP-like) to quantify the fair and consistent contribution of each feature to an individual prediction using Shapley values. Extract Local Rule-Based Explanations (Anchor/LORE-like, LACE) to provide qualitative IF-THEN rules or patterns describing the conditions for a specific prediction in a local neighborhood, potentially combining with prediction difference quantification.\n3.  **Actionable Insights**: Generate Counterfactual Explanations by finding the minimal changes to an input that would flip the model's prediction to a desired outcome.\n4.  **Subgroup Analysis**: Perform Subgroup Divergence Analysis (DivExplorer Algorithm) to identify and characterize data subgroups where the black-box model's behavior significantly deviates from its overall performance, using divergence metrics and Shapley values for item contributions.\n5.  **Interactive Exploration**: Integrate these explanation and analysis methods into Interactive Human-in-the-Loop Explanation Tools (xPlain, DivExplorer System). These tools provide user interfaces for inspecting, comparing, and performing 'what-if' analysis on individual explanations; visualizing and drilling down into divergent subgroups and their contributing factors; and defining custom rules and viewing aggregated explanation metadata. \n\nThis framework allows for a tailored approach, selecting the most appropriate explanation type based on the user's need (global vs. local, quantitative vs. qualitative, descriptive vs. actionable).",
+    "Result": "A significantly enhanced understanding of black-box AI models, leading to: improved global transparency and overall decision logic comprehension; clear, human-understandable explanations for individual predictions, fostering trust; fair and consistent quantification of feature contributions; actionable insights for users to achieve desired outcomes or understand model sensitivity; systematic identification and characterization of model biases and errors within specific data subgroups; and facilitated debugging, validation, and comparison of models through interactive exploration. Overall, a more responsible, trustworthy, and debuggable AI system.",
+    "Related Patterns": [
+      "Interpretable Global Surrogate Model",
+      "Local Surrogate Explanation (LIME-like)",
+      "Game-Theoretic Feature Attribution (SHAP-like)",
+      "Local Rule-Based Explanation (Anchor/LORE-like)",
+      "Counterfactual Explanation",
+      "LACE (Local Pattern-Based Explanation with Prediction Difference)",
+      "Interactive Human-in-the-Loop Explanation Tool (xPlain)",
+      "Subgroup Divergence Analysis (DivExplorer Algorithm)",
+      "Interactive Subgroup Divergence Exploration Tool (DivExplorer System)"
+    ],
+    "Uses": [
+      "Global model understanding",
+      "Model validation",
+      "Debugging",
+      "Local prediction explanation",
+      "Building trust",
+      "Fairness analysis",
+      "Bias detection",
+      "Quantitative debugging",
+      "Qualitative debugging",
+      "Human-in-the-loop validation",
+      "Actionable explanations",
+      "Understanding model sensitivity",
+      "XAI",
+      "Error analysis",
+      "Responsible AI",
+      "Model comparison",
+      "Ethical AI",
+      "Testing"
+    ]
+  },
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "ML application systems are complex due to regularly retrained, non-deterministic ML components, and evolving business requirements and ML algorithms. There's a need to isolate failures and changes between business logic and ML models.",
+    "Context": "Any ML application system where outputs depend on ML techniques, integrating machine learning components with traditional business logic, and where ML components and business logic are subject to frequent changes, require independent management, frequent updates, and exhibit non-deterministic behavior.",
+    "Solution": "Define clear APIs between traditional and ML components. Place business and ML components with different responsibilities into distinct layers (e.g., Data Layer, Logic Layer, Presentation Layer), separating business logic and inference engine. Divide data flows into three (Business Logic Data Flow, ML Runtime Data Flow, ML Development Data Flow).",
+    "Result": "Decoupling traditional business and ML components allows ML components to be monitored and adjusted independently to meet user requirements and changing inputs, and helps developers debug ML application systems easily. This improves management of complexity, retraining, and changing requirements in ML systems by clearly separating concerns.",
+    "Related Patterns": [
+      "ClosedLoop Intelligence",
+      "DataAlgorithmServingEvaluator"
+    ],
+    "Uses": "Chatbot systems, any ML application system with ML-dependent outputs."
+  },
+  {
+    "Pattern Name": "DataAlgorithmServingEvaluator",
+    "Problem": "Prediction systems need to connect various data processing pipeline pieces into one coherent system and support prototyping predictive models.",
+    "Context": "Prediction systems that require a structured approach to integrate data sources, algorithms, serving, and evaluation components.",
+    "Solution": "Separate components like MVC for ML: data (data source and data preparator), algorithms (serving and evaluator).",
+    "Result": "Creates a coherent system for prediction and facilitates prototyping predictive models.",
+    "Related Patterns": [
+      "ClosedLoop Intelligence",
+      "Distinguish Business Logic from ML Models"
+    ],
+    "Uses": "Prediction systems."
+  },
+  {
+    "Pattern Name": "Event-driven ML Microservices",
+    "Problem": "Frequent prototyping of ML models and constant changes necessitate agile development teams to build, deploy, and maintain complex data pipelines.",
+    "Context": "Environments where ML models are frequently prototyped and changed, leading to complex data pipelines that require agility in development and maintenance.",
+    "Solution": "Construct pipelines by chaining together multiple microservices, where each service listens for data arrival and performs its designated task.",
+    "Result": "Enables agility in building, deploying, and maintaining complex ML data pipelines.",
+    "Related Patterns": [],
+    "Uses": "Building, deploying, and maintaining complex ML data pipelines."
+  },
+  {
+    "Pattern Name": "ParameterServer Abstraction",
+    "Problem": "Lack of widely accepted abstractions for distributed learning.",
+    "Context": "Distributed learning environments where data and workloads need to be distributed across worker nodes, and global parameters need to be maintained.",
+    "Solution": "Distribute both data and workloads over worker nodes, while server nodes maintain globally shared parameters (represented as vectors and matrices).",
+    "Result": "Provides a structured abstraction for managing parameters and workloads in distributed ML training.",
+    "Related Patterns": [],
+    "Uses": "Distributed learning."
+  },
+  {
+    "Pattern Name": "ClosedLoop Intelligence",
+    "Problem": "Addressing big, open-ended, time-changing, or intrinsically hard problems with ML.",
+    "Context": "ML systems designed to tackle complex, evolving, or difficult problems that benefit from continuous feedback and interaction.",
+    "Solution": "Connect machine learning to the user and close the loop. Design clear interactions along with implicit and direct outputs.",
+    "Result": "Improves the ability of ML systems to address complex problems by incorporating user feedback and interaction.",
+    "Related Patterns": [
+      "Distinguish Business Logic from ML Models",
+      "DataAlgorithmServingEvaluator"
+    ],
+    "Uses": "Systems addressing big, open-ended, time-changing, or intrinsically hard problems."
+  },
+  {
+    "Pattern Name": "Secure Federated Learning",
+    "Problem": "Standard machine learning approaches require centralizing training data, which is often not feasible due to privacy concerns or data locality. Furthermore, in such distributed learning scenarios, the system needs to communicate and aggregate model updates in a secure, efficient, scalable, and fault-tolerant way while preserving individual data privacy.",
+    "Context": "Scenarios where training data cannot be centralized on one machine or in a datacenter due to privacy concerns or data locality (e.g., mobile devices, sensitive enterprise data). This is particularly relevant in distributed machine learning settings, such as Federated Learning, where individual device data must remain private while contributing to a global model.",
+    "Solution": "Employ Federated Learning, enabling devices to collaboratively learn a shared prediction model while keeping all training data on the device. This involves training local models on device-specific data and then securely aggregating these local model updates. Secure aggregation techniques are used to encrypt and combine these updates (e.g., calculating totals and averages) without individual examination, ensuring that individual contributions remain private.",
+    "Result": "Enables collaborative model learning and deployment while preserving data privacy, reducing data transfer, and ensuring secure, efficient, scalable, and fault-tolerant aggregation of model updates.",
+    "Related Patterns": [],
+    "Uses": "Mobile phones, privacy-sensitive data, distributed learning without data centralization, secure aggregation of model updates in various distributed ML scenarios."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "ML models and their multiple versions can change the behavior of overall ML applications, making reproducibility difficult.",
+    "Context": "ML application development where model changes, data changes, or training system changes can impact application behavior and require reproducibility.",
+    "Solution": "Record the ML model structure, training data, and training system to ensure a reproducible training process.",
+    "Result": "Ensures a reproducible training process and helps manage the impact of ML model changes on application behavior.",
+    "Related Patterns": [],
+    "Uses": "Managing ML model changes, ensuring reproducibility of training processes."
+  },
+  {
+    "Pattern Name": "Handshake",
+    "Problem": "An ML system depends on inputs delivered outside of the normal release process, leading to potential issues if these inputs change unexpectedly.",
+    "Context": "ML systems that rely on external data sources or inputs that are not managed within the standard software release cycle.",
+    "Solution": "Create a handshake normalization process, regularly check for significant changes in external inputs, and send ALERTS.",
+    "Result": "Provides a mechanism to monitor and manage external data dependencies, preventing unexpected behavior due to input changes.",
+    "Related Patterns": [],
+    "Uses": "Managing external data dependencies for ML systems, ensuring input stability."
+  },
+  {
+    "Pattern Name": "Robust ML Output Safeguarding",
+    "Problem": "Machine learning models are inherently unstable, vulnerable to adversarial attacks, susceptible to noise and data drift, and their predictions cannot be guaranteed correct, making them unsuitable for direct use in safety or security-critical functions.",
+    "Context": "Deploying ML models in production, especially in safety or security-critical applications, or in environments where robustness, security, reliability, and resistance to adversarial attacks are paramount, given the inherent vulnerabilities of ML models.",
+    "Solution": "Encapsulate ML models within deterministic rule-based safeguards. This mechanism decides how to handle prediction results, often based on additional quality checks, and can be complemented by redundant and diverse architectures to further mitigate and absorb the inherent low robustness of ML models.",
+    "Result": "Mitigates instability, vulnerability to attacks, and low robustness of ML models, significantly reducing the risk of negative impacts from incorrect predictions. This improves their reliability and security in production, though it results in a more complex architecture.",
+    "Related Patterns": [],
+    "Uses": "Improving robustness, security, and reliability of ML models in production, especially in safety or security-critical applications."
+  },
+  {
+    "Pattern Name": "Canary Model Deployment and Monitoring",
+    "Problem": "Safely deploying new or updated ML models to production while mitigating risks of performance degradation or bugs, and simultaneously monitoring their behavior for quality, explainability, and performance differences without impacting all users.",
+    "Context": "Deploying new or updated ML models to a production environment where minimizing the risk of regressions, performance degradation, or unexpected behavior is critical, and where understanding model behavior, detecting performance differences, or providing explanations for predictions is crucial.",
+    "Solution": "Deploy the new or updated ML model alongside the existing production model. Route a small, controlled percentage of live inference requests to this 'canary' model. Simultaneously, monitor its performance, prediction quality, and behavior (e.g., by comparing its predictions to the primary model or a surrogate model) to detect regressions, performance degradation, or unexpected outcomes. If the canary model performs acceptably, gradually increase the traffic routed to it, eventually replacing the old model. If issues are detected, roll back or improve the new model.",
+    "Result": "Minimizes the impact of potential bugs, regressions, or low-quality predictions on the majority of users. Provides a robust mechanism for continuous model monitoring, detecting performance degradation, and understanding prediction differences, which can contribute to explainability. However, it requires additional serving and monitoring infrastructure.",
+    "Related Patterns": [],
+    "Uses": [
+      "Safe model deployment",
+      "Progressive rollout",
+      "Model monitoring",
+      "Explainability",
+      "Detecting performance degradation"
+    ]
+  },
+  {
+    "Pattern Name": "Decouple Training Pipeline from Production Pipeline",
+    "Problem": "It is necessary to separate and quickly change the ML data workload and stabilize the training workload to maximize efficiency.",
+    "Context": "ML development and deployment environments where training and production workloads have different requirements (e.g., training needs flexibility and experimentation, production needs stability and efficiency).",
+    "Solution": "Physically isolate different workloads to different machines. Then optimize the machine configurations and network usage for each.",
+    "Result": "Maximizes efficiency by allowing independent optimization and management of ML training and production workloads, and enables quicker changes to data workloads.",
+    "Related Patterns": [],
+    "Uses": "Managing ML training and production environments, optimizing resource allocation."
+  },
+  {
+    "Pattern Name": "Descriptive Data Type for Rich Information",
+    "Problem": "The rich information used and produced by ML systems is often encoded with plain data types (e.g., raw floats, integers), losing semantic meaning and making systems less robust or interpretable.",
+    "Context": "Designing ML systems where interpretability, robustness, and clear understanding of model parameters and predictions are important.",
+    "Solution": "Design a robust system where model parameters (e.g., logodds multiplier, decision threshold) and predictions carry explicit information about their meaning and origin.",
+    "Result": "Creates a more robust and interpretable system by embedding rich semantic information into ML-related data types.",
+    "Related Patterns": [],
+    "Uses": "Improving interpretability, robustness, and clarity of ML model parameters and predictions."
+  },
+  {
+    "Pattern Name": "Design Holistically about Data Collection and Feature Extraction",
+    "Problem": "The system to prepare data in an ML-friendly format can become a 'pipeline jungle,' making management difficult and costly.",
+    "Context": "Developing ML systems that involve complex data preparation, cleaning, and feature engineering processes.",
+    "Solution": "Avoid 'pipeline jungles' by adopting a holistic approach to data collection and feature extraction from the outset.",
+    "Result": "Dramatically reduces ongoing costs and complexity associated with managing ML data pipelines.",
+    "Related Patterns": [],
+    "Uses": "Designing ML data collection and feature extraction processes to prevent complexity."
+  },
+  {
+    "Pattern Name": "Training-Serving Consistency through Code Reuse",
+    "Problem": "Training-serving skew can occur due to discrepancies in how data is handled between the training and serving pipelines, leading to inconsistent model behavior and degraded performance in production.",
+    "Context": "ML systems where consistency between the data processing logic used during model training and model inference is critical to avoid performance degradation and ensure reliable model predictions.",
+    "Solution": "Implement a strategy to reuse the exact same data processing code (e.g., feature engineering, data normalization, data transformation) between the training pipeline and the serving (inference) pipeline. This ensures that data is prepared identically in both environments. For example, shared libraries or modules can encapsulate this logic, including preparing objects that store results in an understandable way for humans.",
+    "Result": "Prevents training-serving skew, ensuring consistent data handling and model performance across training and serving environments, thereby improving model reliability, accuracy, and maintainability in production.",
+    "Related Patterns": [],
+    "Uses": "Ensuring consistency and preventing skew between ML training and serving pipelines, particularly for critical data preprocessing and post-processing steps."
+  },
+  {
+    "Pattern Name": "Workflow Pipeline",
+    "Problem": "Creating an end-to-end reproducible training and deployment pipeline for a machine learning component is difficult. Data science notebooks can run a whole pipeline but they do not scale.",
+    "Context": "Developing and deploying machine learning components where reproducibility, scalability, and maintainability of the pipeline steps are crucial.",
+    "Solution": "Make each pipeline step a separate containerized service. Services are orchestrated and chained together to form pipelines that can be run via REST API calls.",
+    "Result": "The portability, scalability, and maintainability of the individual pipeline steps is improved at the cost of an overall more complex solution.",
+    "Related Patterns": [],
+    "Uses": "Presented at AWS Blog."
+  },
+  {
+    "Pattern Name": "AI Pipeline",
+    "Problem": "Complex prediction or synthesis use cases are often difficult to accomplish with a single AI tool or model.",
+    "Context": "Scenarios requiring the combination of multiple AI capabilities or models to achieve a complex, multi-step AI task during inference.",
+    "Solution": "Divide the problem into smaller consecutive steps, then combine several existing AI tools or custom models into an inference-time AI pipeline where each specialized tool or model is responsible for a single step.",
+    "Result": "More tools and models need to be integrated, but the provided result is of higher quality. Each step can be optimized individually.",
+    "Related Patterns": [],
+    "Uses": "Typical computer vision inference pipelines."
+  },
+  {
+    "Pattern Name": "Two-Phase Predictions",
+    "Problem": "Executing large, complex models can be time-consuming and costly, especially if lightweight clients like mobile or IoT devices are involved.",
+    "Context": "Deploying ML models to resource-constrained or latency-sensitive clients, where a full, complex model inference is not always necessary or feasible.",
+    "Solution": "Split the prediction into two phases. A simple, fast model is executed first on the client. Afterwards, a large, complex model is optionally executed in the cloud for deeper insights.",
+    "Result": "Prediction response time is reduced for some cases. The number of large, expensive predictions is reduced. The client has a fallback model when there is no Internet connection.",
+    "Related Patterns": [],
+    "Uses": "Voice activation in AI assistants like Alexa or Google Assistant."
+  },
+  {
+    "Pattern Name": "Ethics Credentials",
+    "Problem": "Responsible AI requirements are either omitted or mostly stated as high-level objectives and not specified explicitly in a verifiable way as expected system outputs. Because of this, users may trust an AI system less or even refrain from using it.",
+    "Context": "Developing AI systems where building user trust, ensuring ethical compliance, and demonstrating responsible AI practices are critical.",
+    "Solution": "Provide verifiable ethics credentials for your AI system or component. Using publicly accessible and trusted data infrastructure, the credentials can be verified as proof of ethical compliance. Additionally, users may also have to verify their credentials before getting access to the AI system.",
+    "Result": "Trust and system acceptance increases and awareness of ethical issues is raised. However, a trusted public data infrastructure is needed and credentials need to be maintained and potentially refreshed from time to time.",
+    "Related Patterns": [],
+    "Uses": []
+  },
+  {
+    "Pattern Name": "Context-Driven ML Solution Design",
+    "Problem": "Designing effective and efficient ML solutions is challenging due to the need to align ML algorithms, data preparation, and evaluation metrics with specific business objectives, user preferences, data characteristics, and non-functional requirements (NFRs).",
+    "Context": "Developing ML systems for various business problems (e.g., loan approval, fraud detection, task assignment) where the optimal ML approach is highly dependent on the operational environment, available data, and desired system qualities.",
+    "Solution": "Systematically capture and utilize 'Contexts' (User Contexts, Data Contexts, Model Contexts) and 'Softgoals' (NFRs) to guide the selection and configuration of ML algorithms, data preparation steps, and evaluation metrics. This involves:\n    - **Algorithm Selection:** Choosing algorithms based on their applicability given User, Data, and Model Contexts, and their known contributions to Softgoals (e.g., 'kNearest Neighbor is applicable when Users desire simplicity', 'Na\u00efve Bayes is applicable when Features are independent').\n    - **Data Preparation:** Specifying data transformations and cleansing steps that are conditional on Data Contexts and the requirements of chosen algorithms (e.g., 'Perform data normalization on numerical features when using kMeans algorithm').\n    - **Evaluation Metric Selection:** Determining appropriate performance indicators based on User Contexts and business priorities (e.g., 'Precision should be used for evaluation when Users desire a low rate of false-positives').",
+    "Result": "Leads to ML solutions that are better tailored to specific business problems, more robust to varying conditions, and more aligned with user and business needs, reducing development time and improving solution quality.",
+    "Related Patterns": [
+      "Anomaly Detection Strategy Selection"
+    ],
+    "Uses": "Loan approval systems, fraud detection systems, task assignment systems, and any ML application requiring adaptive design based on contextual factors and quality attributes."
+  },
+  {
+    "Pattern Name": "Anomaly Detection Strategy Selection",
+    "Problem": "Effectively detecting anomalies requires choosing the right ML approach (e.g., supervised, semi-supervised, unsupervised) based on the availability and nature of labeled anomaly data.",
+    "Context": "Building systems for anomaly detection (e.g., fraud detection, intrusion detection) where the dataset might contain either labeled examples of both normal and anomalous behavior, or only examples of normal behavior.",
+    "Solution": "Implement a conditional strategy based on data availability:\n    - If labeled examples of both anomalous and non-anomalous data are available, employ a supervised anomaly detection approach.\n    - If only labeled examples of non-anomalous data are present (and anomalies are rare or unknown), employ a semi-supervised anomaly detection approach.",
+    "Result": "Ensures the most appropriate and effective anomaly detection model is selected and trained given the constraints of data labeling, leading to higher detection rates and reduced false positives/negatives.",
+    "Related Patterns": [
+      "Context-Driven ML Solution Design"
+    ],
+    "Uses": "Fraud detection in insurance claims, network intrusion detection, manufacturing quality control, medical anomaly detection."
+  },
+  {
+    "Pattern Name": "Rejection Sampling (Best-of-N)",
+    "Problem": "Improving the quality of AI-generated outputs (e.g., answers, actions) by leveraging a Reward Model without requiring additional training of the generative model, especially when inference-time compute is available.",
+    "Context": "When a Reward Model is available to score multiple generated outputs, and the goal is to select the highest-quality output from a set of candidates at inference time.",
+    "Solution": "Generate 'N' candidate outputs from the base model (e.g., a Behavior Cloning or RL policy). Use the Reward Model to score each candidate, and then select the candidate with the highest reward score as the final output.",
+    "Result": "Significantly improves the quality of outputs according to the Reward Model, often outperforming direct generation from the base policy, by effectively 'filtering' for better samples. This method requires more inference-time compute but no additional training.",
+    "Related Patterns": [
+      "Reward Modeling (for Preference-based Learning)",
+      "Behavior Cloning (for Agent Policy Learning)",
+      "Reinforcement Learning from Human Feedback (RLHF)"
+    ],
+    "Uses": [
+      "Quality improvement",
+      "Output selection",
+      "Leveraging reward models at inference time",
+      "Fine-tuning LLMs for better output quality without further training"
+    ]
+  },
+  {
+    "Pattern Name": "STaR (Self-Taught Reasoner)",
+    "Problem": "Acquiring large datasets of high-quality, human-annotated reasoning rationales for fine-tuning LLMs is expensive and time-consuming, limiting the scalability of reasoning improvements.",
+    "Context": "Improving LLM reasoning capabilities through fine-tuning, especially when human-annotated rationales are scarce or difficult to obtain at scale.",
+    "Solution": "Bootstrap the reasoning process by having the LLM generate its own rationales for problem-solving. These self-generated rationales are then filtered (e.g., by checking if they lead to correct answers) and used to fine-tune the model, iteratively improving its reasoning abilities without extensive human annotation.",
+    "Result": "Enables LLMs to learn and improve their reasoning capabilities with less reliance on expensive human-annotated rationales, making the process more scalable and efficient for enhancing reasoning.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting"
+    ],
+    "Uses": "Improving reasoning in LLMs, generating rationales for fine-tuning."
+  }
+]
