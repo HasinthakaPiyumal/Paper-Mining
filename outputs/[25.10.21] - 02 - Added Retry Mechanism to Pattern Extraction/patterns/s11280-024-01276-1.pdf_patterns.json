@@ -1,0 +1,95 @@
+[
+  {
+    "Pattern Name": "LLM-Augmented Knowledge Graph Construction/Completion",
+    "Problem": "Traditional knowledge graphs are sparse, limited, and expensive to construct or complete, leading to incomplete information for recommender systems and reduced personalization performance.",
+    "Context": "Recommender systems that rely on knowledge graphs for rich semantic information, understanding mutual relations between users/items, and providing explainability.",
+    "Solution": "Leverage Large Language Models (LLMs) to retrieve factual knowledge, store common sense, and perform knowledge distillation. LLMs are used to construct more comprehensive knowledge graphs or complete missing facts/relations within existing ones, including tasks like entity discovery, coreference resolution, and relation extraction.",
+    "Result": "More extensive and up-to-date knowledge bases, improved understanding of relations between entities, enhanced cross-domain recommendations, and ultimately better recommendation accuracy, relevance, and personalization.",
+    "Related Patterns": [
+      "Tool-Augmented LLM Agent"
+    ],
+    "Uses": "Recommender systems, information retrieval, knowledge management, entity linking."
+  },
+  {
+    "Pattern Name": "LLM-based Content Interpretation",
+    "Problem": "Content features in content-based recommendation can be sparse, and conventional methods (statistical models, basic neural networks) may not fully exploit textual content's potential or capture deep semantic information effectively.",
+    "Context": "Recommender systems that utilize textual content (e.g., news articles, product descriptions, reviews) as features to understand item properties and user preferences.",
+    "Solution": "Employ pretrained language models (like BERT, GPT, or larger LLMs) as powerful content interpreters to transform textual data into rich, deep semantic feature embeddings. This involves fine-tuning or designing task-specific pretraining tasks to align LLMs with recommendation objectives, and using techniques like knowledge distillation for efficiency.",
+    "Result": "Enhanced understanding and interpretation of textual content, improved feature representations, mitigation of cold-start problems, facilitation of cross-domain recommendations, and better recommendation accuracy.",
+    "Related Patterns": [],
+    "Uses": "Content-based recommender systems, news recommendation, product recommendation, sequential recommendation, zero-shot/cross-domain recommendation."
+  },
+  {
+    "Pattern Name": "LLM-Generated Explainable Recommendations",
+    "Problem": "Traditional explainable recommendation methods often rely on predefined templates, lack adaptability, suffer from limited expressiveness (e.g., long-range dependence issues), and are tightly coupled with specific recommendation models, diminishing user trust and generalizability.",
+    "Context": "Recommender systems where users desire comprehensible, persuasive, and reliable justifications for recommendations, especially for black-box models or complex multi-model cascades.",
+    "Solution": "Leverage LLMs' remarkable generative ability in language tasks and their unique in-context learning capabilities (zero-shot, few-shot, Chain-of-Thought prompting) to craft customized, natural language explanations for recommendations. LLMs can interpret complex model behaviors and generate explanations that are precise, adaptable, and agnostic to the underlying recommendation model's architecture.",
+    "Result": "Improved transparency, persuasiveness, and reliability of recommendations; enhanced user trust and satisfaction; adaptable and personalized explanations; and a versatile, scalable interpretational framework for recommendation models.",
+    "Related Patterns": [
+      "LLM as Direct Recommender (In-Context Learning / Chain-of-Thought)",
+      "LLM-Powered Conversational Recommender Agent",
+      "LLM-Powered Personalized Content Generation (AIGC)"
+    ],
+    "Uses": "Explainable AI, recommender systems, human-AI interaction, model interpretation."
+  },
+  {
+    "Pattern Name": "LLM as Direct Recommender (In-Context Learning / Chain-of-Thought)",
+    "Problem": "Traditional recommender systems require explicit training or fine-tuning for each task and domain, and may struggle with complex reasoning to infer user interests from natural language inputs.",
+    "Context": "Scenarios requiring quick recommendations without extensive model retraining, or where complex reasoning is needed to infer user preferences from natural language inputs.",
+    "Solution": "Utilize LLMs' in-context learning (zero-shot/few-shot prompting) to directly generate recommendations (e.g., rating prediction, ranking prediction) based on natural language instructions and demonstrations. For complex tasks, employ Chain-of-Thought (CoT) prompting to enable step-by-step reasoning, breaking down problems and iteratively approaching solutions.",
+    "Result": "Ability to make predictions on new cases without explicit tuning, improved recommendation performance through multi-step reasoning, and leveraging LLMs' commonsense knowledge for open-domain recommendations.",
+    "Related Patterns": [
+      "LLM-Generated Explainable Recommendations",
+      "LLM-Powered Conversational Recommender Agent"
+    ],
+    "Uses": "Rating prediction, ranking prediction, sequential recommendation, open-domain recommendation."
+  },
+  {
+    "Pattern Name": "LLM-Assisted AutoML (e.g., NAS, Feature Selection)",
+    "Problem": "Automated Machine Learning (AutoML) in recommender systems involves complex search spaces (embedding size, features, interactions, model architecture) and costly manual setup, requiring efficient search strategies. Recommender systems often lack strong domain-specific knowledge regarding informative components.",
+    "Context": "Optimizing recommender system components (e.g., neural network architectures, feature sets, embedding sizes) where traditional AutoML methods can be time-consuming or lack domain-specific knowledge.",
+    "Solution": "Leverage LLMs' generative, memorization, and reasoning capabilities to assist in AutoML tasks. This can involve generating candidate network architectures, acting as a black-box agent to suggest better-performing architectures based on past trials, or integrating LLMs as mutation and crossover operators within genetic algorithms for Neural Architecture Search (NAS).",
+    "Result": "Reduced search space for optimal architectures, generation of reasonable architectures, potential for better performance than direct reasoning over the whole space, and improved efficiency in AutoML processes for recommender systems.",
+    "Related Patterns": [],
+    "Uses": "Neural Architecture Search (NAS), feature selection, hyperparameter optimization in recommender systems."
+  },
+  {
+    "Pattern Name": "LLM-Powered Conversational Recommender Agent",
+    "Problem": "Traditional conversational recommender systems (CRSs) suffer from scalability issues, lack synergy between components, require substantial supervised data, or struggle with domain-specific knowledge and long-term memory in multi-turn dialogues.",
+    "Context": "Building interactive recommendation systems that understand user intent through natural language dialogue, adapt recommendations in real-time, and provide personalized assistance.",
+    "Solution": "Employ LLMs as the core dialogue module for CRSs, leveraging their inherent conversational capabilities. Address challenges by: 1) **Domain Adaptation:** Fine-tuning LLMs with domain-specific dialogue data (potentially generated by user simulators) or integrating traditional recommendation models as external tools. 2) **Tool Integration:** Guiding LLMs with prompt engineering (e.g., Chain-of-Thought, ReAct) to effectively utilize external tools (like recommendation engines, databases) for domain-specific knowledge and actions. 3) **Long-Term Memory:** Implementing memory modules (e.g., MemPrompt, user profile modules) to extract and store meaningful user facts, retrieving relevant information for long conversations to overcome token limits.",
+    "Result": "More intelligent and knowledgeable conversational agents, improved understanding of user intents, seamless and delightful user experience, ability to provide reasonable recommendations in open and private domains, and enhanced handling of long, complex dialogues.",
+    "Related Patterns": [
+      "Tool-Augmented LLM Agent",
+      "LLM-Augmented Knowledge Graph Construction/Completion",
+      "LLM as Direct Recommender (In-Context Learning / Chain-of-Thought)",
+      "LLM-Generated Explainable Recommendations",
+      "LLM-Powered Personalized Content Generation (AIGC)"
+    ],
+    "Uses": "Conversational recommender systems, personalized assistants, interactive search, customer service chatbots."
+  },
+  {
+    "Pattern Name": "Tool-Augmented LLM Agent",
+    "Problem": "LLMs, despite their broad capabilities, have limitations in specific domain knowledge, real-time information access, complex multi-modal tasks, and avoiding hallucinations. They also struggle with temporal generalization and controlling their behavior within specific domains.",
+    "Context": "Building intelligent systems where LLMs need to perform complex tasks that require external, specialized knowledge, real-time data, or specific computational capabilities beyond their inherent linguistic abilities.",
+    "Solution": "Augment LLMs with external tools, enabling them to act as controllers that select, manage, and utilize these tools. This involves: 1) **Tool Selection & Execution:** LLMs break down complex tasks, convert them into executable instructions for specialized tools (e.g., search engines, recommendation engines, databases, calculators, visual models, APIs), and aggregate their outputs. 2) **Reasoning & Acting (ReAct):** LLMs generate both reasoning paths and task-specific actions, delegating actions to tools and using external feedback to guide further reasoning. 3) **Tool Generation:** LLMs can even be empowered to directly generate new tools (e.g., LATM). 4) **Memory Augmentation:** Tools like vector databases or user profile modules can provide external memory for domain-specific or temporal information.",
+    "Result": "Enhanced task-solving capabilities, access to knowledge beyond LLMs' training data, reduced hallucinations, improved accuracy and efficiency for personalized systems, ability to handle multi-modal tasks, and better control over LLM behavior in specific domains.",
+    "Related Patterns": [
+      "LLM-Powered Conversational Recommender Agent",
+      "LLM-Augmented Knowledge Graph Construction/Completion"
+    ],
+    "Uses": "Conversational AI, personalized systems, complex task automation, multi-modal AI, knowledge-intensive applications, web browsing agents."
+  },
+  {
+    "Pattern Name": "LLM-Powered Personalized Content Generation (AIGC)",
+    "Problem": "Traditional content creation for personalization (e.g., ad copy, product descriptions) often relies on predefined templates or struggles to fully capture and adapt to individual user interests and preferences, leading to less appealing or effective content. Sparse feedback further complicates personalization.",
+    "Context": "Scenarios where customized, appealing digital content (text, images, multi-modal) needs to be generated to match specific user interests and preferences, especially in online advertising, e-commerce, or creative applications.",
+    "Solution": "Leverage LLMs' powerful generative abilities and deep understanding of human intention to create personalized content. This involves: 1) **Intent Reasoning:** LLMs reason about user personalized intent and interest from instructions. 2) **Feedback Integration:** Applying strategies like Reinforcement Learning from Human Feedback (RLHF) or multi-round conversational feedback to fine-tune models and better capture explicit user preferences. 3) **Cross-Modal Generation:** Utilizing LLMs with cross-modal knowledge bases to empower realistic creation of diverse content types (text, visual, audio).",
+    "Result": "More appealing and effective customized content, improved capture of user intent, alleviation of sparse feedback problems, and enhanced user experiences and business growth in personalized scenarios.",
+    "Related Patterns": [
+      "LLM-Powered Conversational Recommender Agent",
+      "LLM-Generated Explainable Recommendations"
+    ],
+    "Uses": "Online advertising, e-commerce, personalized marketing, creative content generation, chatbots, digital media."
+  }
+]

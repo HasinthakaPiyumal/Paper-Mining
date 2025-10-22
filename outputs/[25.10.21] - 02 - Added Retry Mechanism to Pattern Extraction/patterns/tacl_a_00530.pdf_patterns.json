@@ -1,0 +1,50 @@
+[
+  {
+    "Pattern Name": "Retrieval Augmented Generation (RAG)",
+    "Problem": "Large language models (LLMs) suffer from hallucinations, lack interpretability, and have limited parametric memory, especially for knowledge-intensive tasks. Traditional Open-Domain Question Answering (ODQA) pipelines feature separate, non-differentiable retriever and reader stages.",
+    "Context": "Knowledge-intensive NLP tasks such as Open-Domain Question Answering (ODQA), summarization, and conversational AI, where factual accuracy, interpretability, and access to up-to-date external knowledge are crucial.",
+    "Solution": "Combine a neural retriever (non-parametric memory) with a generative language model (parametric memory) into a single, differentiable architecture. The retriever selects relevant passages from an external knowledge base, which are then fed to the generator to condition its output. The loss function can finetune both the generator and the question encoder simultaneously.",
+    "Result": "Reduced hallucinations, increased factual consistency, higher interpretability, and improved performance in knowledge-intensive tasks by leveraging external, up-to-date knowledge. It merges retriever and reader stages into one differentiable architecture.",
+    "Related Patterns": [
+      "End-to-End Retriever Adaptation for RAG (RAGend2end)",
+      "Statement Reconstruction (Auxiliary Signal)"
+    ],
+    "Uses": "Open-Domain Question Answering, summarization, chatbot frameworks, knowledge-grounded conversational tasks."
+  },
+  {
+    "Pattern Name": "End-to-End Retriever Adaptation for RAG (RAGend2end)",
+    "Problem": "Original RAG models struggle with domain adaptation because their retriever's passage encoder and the external knowledge base encodings are fixed during finetuning, making it computationally expensive and ineffective to adapt to new, specialized domains. Pre-trained retrievers (like DPR) are often trained on general domains (e.g., Wikipedia) and perform poorly on specialized domains.",
+    "Context": "Adapting Retrieval Augmented Generation (RAG) models to specialized, domain-specific knowledge bases (e.g., healthcare, news, conversations) for Open-Domain Question Answering (ODQA) and other knowledge-intensive tasks, where the retriever needs to learn domain-specific relevance.",
+    "Solution": "Extend the RAG architecture to be fully end-to-end trainable, allowing joint training of both the retriever (question and passage encoders) and the generator. Crucially, the external knowledge base's encodings and index are dynamically and asynchronously updated during the training process to reflect the adapting passage encoder.",
+    "Result": "Significant performance improvements in domain adaptation for RAG-like architectures, better adaptation of the retriever component to specific domains, and improved overall accuracy. It allows the retriever to be trained with QA pairs, eliminating the need for gold-standard passages for separate DPR training, and can also improve general ODQA performance on in-domain datasets.",
+    "Related Patterns": [
+      "Retrieval Augmented Generation (RAG)",
+      "Asynchronous Knowledge Base Update",
+      "Statement Reconstruction (Auxiliary Signal)"
+    ],
+    "Uses": "Domain-specific Open-Domain Question Answering, training neural retrievers for domain-specific applications, adapting RAG models to new knowledge domains, improving general ODQA performance on in-domain datasets."
+  },
+  {
+    "Pattern Name": "Asynchronous Knowledge Base Update",
+    "Problem": "Dynamically updating the embeddings and index of a large external knowledge base during the end-to-end training of retrieval-augmented models is computationally intensive (e.g., reencoding can take GPU hours, reindexing CPU hours) and can significantly stall the main training loop, hindering efficiency.",
+    "Context": "Training large-scale retrieval-augmented models (like RAGend2end) that require iterative updates to the external knowledge base's passage embeddings and its search index (e.g., FAISS) to reflect changes from an adapting passage encoder, especially when the knowledge base contains millions of passages.",
+    "Solution": "Decouple the knowledge base reencoding and reindexing processes from the main model training loop. Run these updates asynchronously using dedicated computational resources (e.g., separate GPUs for reencoding, multiple CPU cores for FAISS reindexing). Implement a mechanism to ensure reindexing follows reencoding and to load the newly updated index into the main training loop once available, while the main loop continues processing with potentially 'stale' but recent gradients.",
+    "Result": "Enables efficient end-to-end training of retrieval-augmented models with dynamic knowledge bases, prevents the main training loop from stalling, and facilitates continuous adaptation of the knowledge base without prohibitive computational overhead. Allows for the use of larger knowledge bases during training.",
+    "Related Patterns": [
+      "End-to-End Retriever Adaptation for RAG (RAGend2end)"
+    ],
+    "Uses": "Efficient training of retrieval-augmented models, MLOps for dynamic knowledge base management in ML pipelines, large-scale model training with external memory, continuous adaptation of knowledge bases."
+  },
+  {
+    "Pattern Name": "Statement Reconstruction (Auxiliary Signal)",
+    "Problem": "Enhancing a retrieval-augmented model's ability to learn deeper domain-specific knowledge and improve both its retriever and generator components, especially when explicit QA pairs for a new domain might be limited or insufficient, or to provide a richer learning signal.",
+    "Context": "Training retrieval-augmented models (like RAG or RAGend2end) on domain-specific data, where a richer understanding of the domain's content is desired beyond direct question-answering, and to provide an additional learning objective.",
+    "Solution": "Introduce an auxiliary training task where the model is prompted to reconstruct a given concise, factual statement by retrieving and utilizing relevant passages from its external knowledge base. A special control token (e.g., 'p') is prepended to the retrieved passages to differentiate this reconstruction task from the primary task (e.g., QA). Crucially, the input statement itself should be excluded from the knowledge base to prevent trivial memorization or overfitting on lexical content.",
+    "Result": "Forces the model to gain more domain-specific knowledge, improves the performance of both the retriever (by learning to find relevant information for reconstruction) and the generator (by learning to synthesize information from retrieved passages), leading to better overall domain adaptation and accuracy. This signal can moderately improve performance even without end-to-end retriever adaptation.",
+    "Related Patterns": [
+      "Retrieval Augmented Generation (RAG)",
+      "End-to-End Retriever Adaptation for RAG (RAGend2end)"
+    ],
+    "Uses": "Domain adaptation for retrieval-augmented models, improving knowledge acquisition in generative models, multi-task learning for LLMs, enhancing retriever and generator capabilities."
+  }
+]

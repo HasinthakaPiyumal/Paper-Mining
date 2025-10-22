@@ -1,0 +1,36 @@
+[
+  {
+    "Pattern Name": "Retrieval Augmented Fine-Tuning (RAFT)",
+    "Problem": "Adapting pretrained Large Language Models (LLMs) for domain-specific Retrieval Augmented Generation (RAG) to achieve high accuracy from provided documents, while simultaneously ensuring robustness against imperfect retrieval (i.e., the presence of distractor documents). Existing RAG methods often fail to leverage fixed domain learning opportunities, and current finetuning approaches either don't integrate RAG or don't account for retrieval imperfections during training.",
+    "Context": "Specialized domains (e.g., legal, medical, enterprise knowledge bases, code repositories) where LLMs are employed for tasks like question answering, requiring precise information extraction and reasoning from a specific collection of documents in an 'open-book' setting.",
+    "Solution": "A novel finetuning strategy that prepares training data to explicitly teach the LLM how to utilize relevant documents and ignore irrelevant ones. This involves:\n1.  **Training Data Construction:** Each training instance consists of a question (Q), a set of documents (Dk), and a Chain-of-Thought (CoT) style answer (A). Dk includes both 'golden' (relevant) and 'distractor' (irrelevant) documents.\n2.  **Distractor Integration Strategy:** For a significant portion (P) of the training data, golden documents are included alongside distractors. For the remaining portion (1-P), only distractor documents are provided, compelling the model to learn to identify and disregard irrelevant information or infer without direct context.\n3.  **Chain-of-Thought with Verbatim Citation:** The model is trained to generate detailed, step-by-step reasoning processes that explicitly cite verbatim sequences from the relevant documents to support its answer.",
+    "Result": "Significantly improves the LLM's ability to answer questions accurately in domain-specific open-book settings, enhances its capacity for reasoning, and significantly increases its robustness to distracting information in retrieved contexts. The model learns to better process and extract useful information from provided documents.",
+    "Related Patterns": [
+      "Distractor-Aware Training",
+      "Chain-of-Thought Finetuning"
+    ],
+    "Uses": "Domain-specific Question Answering, API call generation, medical research QA, enterprise knowledge management, any application requiring LLMs to perform robust RAG on specialized document collections."
+  },
+  {
+    "Pattern Name": "Distractor-Aware Training",
+    "Problem": "Large Language Models (LLMs) are susceptible to being misled or distracted by irrelevant information (distractor documents) within the context provided by a retrieval system, leading to decreased accuracy and reliability in Retrieval Augmented Generation (RAG) tasks. Training solely on perfectly relevant contexts can make models brittle to real-world retrieval imperfections.",
+    "Context": "LLM applications that rely on RAG, where the retriever might return a mix of relevant and irrelevant documents, and the LLM needs to effectively filter out noise to focus on pertinent information. This is particularly relevant in domain-specific RAG where the model is expected to be highly accurate on a known document set.",
+    "Solution": "A training methodology that explicitly exposes the LLM to distractor documents during finetuning. This includes:\n1.  **Mixed Context Training:** Incorporating both golden (relevant) and distractor (irrelevant) documents in the training context for a majority of instances.\n2.  **Negative Context Training:** For a controlled portion (1-P) of the training data, providing only distractor documents (without the golden document) alongside the question, forcing the model to learn to identify and ignore irrelevant information or to rely on its internal knowledge when no relevant context is present.\n3.  **Optimizing Distractor Ratio:** Experimentally determining the optimal proportion (P) of training data with golden documents and the number of distractor documents to include to maximize robustness.",
+    "Result": "Enhances the LLM's ability to discern and disregard irrelevant content, making it more robust to noisy retrieval outputs and fluctuations in the number of documents presented at test time. This leads to more consistent and accurate performance in RAG scenarios.",
+    "Related Patterns": [
+      "Retrieval Augmented Fine-Tuning (RAFT)"
+    ],
+    "Uses": "Improving the robustness of RAG systems, mitigating the 'lost in the middle' problem, enhancing LLM performance in environments with imperfect information retrieval, preparing LLMs for real-world retrieval scenarios."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought Finetuning",
+    "Problem": "Training LLMs with only direct question-answer pairs can lead to superficial learning, overfitting to concise answers, and a lack of transparent reasoning, which can limit accuracy and make it difficult to debug or understand model decisions. This is especially problematic when the model needs to derive answers from provided context.",
+    "Context": "Finetuning LLMs for tasks that require complex reasoning, multi-step problem-solving, or explainable outputs, particularly in question-answering scenarios where the source of information is provided and needs to be referenced.",
+    "Solution": "During the finetuning process, the LLM is trained on examples where the target output is not just the final answer, but a detailed, step-by-step reasoning process (Chain-of-Thought) that logically leads to the answer. This reasoning often includes explicit citations or references to the source context (e.g., verbatim quotes).",
+    "Result": "Improves the model's ability to perform complex reasoning, enhances its overall accuracy and robustness by guiding its internal understanding, prevents overfitting to simple answers, and provides more interpretable and verifiable outputs. It also helps the model learn to extract and utilize information from context more effectively.",
+    "Related Patterns": [
+      "Retrieval Augmented Fine-Tuning (RAFT)"
+    ],
+    "Uses": "Enhancing reasoning capabilities in LLMs, improving explainability of AI systems, complex question answering, multi-hop reasoning, fact verification, improving context utilization in RAG."
+  }
+]

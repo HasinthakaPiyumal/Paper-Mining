@@ -1,0 +1,38 @@
+[
+  {
+    "Pattern Name": "LLM as an API Invoker",
+    "Problem": "Large Language Models (LLMs) are inherently knowledge-bound and lack the ability to interact with the dynamic, vast, and frequently updated landscape of external tools and APIs, limiting their capacity to perform complex, real-world computational tasks.",
+    "Context": "Building AI systems where LLMs need to extend their capabilities beyond text generation to execute actions, access real-time information, or perform computations by interacting with external software services and APIs.",
+    "Solution": "Design an LLM-centric system that integrates the LLM with a comprehensive database of external APIs and a mechanism to select, generate, and potentially execute appropriate API calls based on natural language instructions. This involves specialized training (e.g., instruction finetuning, retriever-aware training) to enable the LLM to understand user intent, reason about tool availability and constraints, and output functionally correct API invocations.",
+    "Result": "Transforms LLMs into flexible, agentic interfaces capable of interacting with the digital world, accessing dynamic knowledge bases, performing complex computational tasks, and mitigating issues like hallucination by grounding responses in executable actions.",
+    "Related Patterns": [
+      "Retriever-Aware Training (RAT)",
+      "Self-Instruct Finetuning for API Invocation"
+    ],
+    "Uses": "Agentic AI systems, automated workflows, program synthesis, data analysis, robotics, enhancing LLM reliability and applicability."
+  },
+  {
+    "Pattern Name": "Self-Instruct Finetuning for API Invocation",
+    "Problem": "Generating high-quality, diverse, and constrained instruction-API call pairs for finetuning LLMs to accurately invoke APIs is labor-intensive and difficult to scale, especially when considering the nuances of API arguments and real-world constraints.",
+    "Context": "Training LLMs to generate specific, functionally correct API calls from natural language prompts, where the LLM needs to understand both the functional description and various embedded constraints (e.g., performance, parameter size).",
+    "Solution": "Leverage a powerful, pre-trained LLM (e.g., GPT-4) to automatically generate synthetic instruction-API pairs. This process involves providing a few in-context examples and reference API documentation, then prompting the LLM to create diverse real-world use cases that necessitate specific API calls. Crucially, the generating LLM is instructed to avoid explicit API names or hints in the instructions, forcing it to focus on the functional intent and constraints. These generated pairs form the instruction-tuning dataset for the target LLM.",
+    "Result": "Creates a scalable and diverse dataset for instruction-tuning, enabling the target LLM to comprehend user instructions, reason about API functionality and constraints, and generate accurate API calls, forming a strong foundation for tool-use capabilities.",
+    "Related Patterns": [
+      "LLM as an API Invoker",
+      "Retriever-Aware Training (RAT)"
+    ],
+    "Uses": "Generating training data for LLM tool-use, instruction-tuning LLMs for program synthesis, enabling LLMs to understand and respond to API constraints."
+  },
+  {
+    "Pattern Name": "Retriever-Aware Training (RAT)",
+    "Problem": "LLMs trained for tool use often struggle with dynamic external documentation (e.g., frequently updated API docs) and can be distracted by irrelevant or inaccurate information provided by imperfect retrievers at inference time, leading to hallucinations and reduced accuracy.",
+    "Context": "Finetuning LLMs for tasks requiring interaction with external, dynamic knowledge bases (like API documentation) where a retriever is used to provide context, but the retrieved information might be imperfect or change over time.",
+    "Solution": "During the instruction-tuning phase, augment the user prompt with retrieved documentation (which may be imperfect or even irrelevant) while simultaneously providing the accurate ground truth in the LLM's response. This trains the LLM to critically evaluate the retrieved context at inference time: if the retrieved document is relevant, the LLM utilizes it to fill in details; if irrelevant, the LLM learns to ignore it and rely on its internal, domain-specific knowledge acquired during training.",
+    "Result": "Enhances the LLM's ability to adapt to test-time changes in external documentation, significantly improves performance by effectively utilizing retrieved information, and substantially mitigates hallucination errors by teaching the LLM to discern relevant from irrelevant context.",
+    "Related Patterns": [
+      "LLM as an API Invoker",
+      "Self-Instruct Finetuning for API Invocation"
+    ],
+    "Uses": "Training LLMs for robust API invocation, adapting LLMs to evolving external knowledge, reducing hallucination in retrieval-augmented generation (RAG) systems, improving LLM reasoning with external tools."
+  }
+]

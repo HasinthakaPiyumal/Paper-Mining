@@ -1,0 +1,38 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) often lack access to up-to-date, long-tail, or domain-specific knowledge, leading to factual inaccuracies or 'hallucinations' in their generated responses. They also cannot adapt to specific domains and tasks without modifying model weights.",
+    "Context": "LLMs are used for tasks requiring factual accuracy, current information, or specialized domain knowledge, such as question answering, content generation, or chatbots. The goal is to leverage external knowledge without retraining the LLM.",
+    "Solution": "Combine an LLM with an external retrieval system. A retriever (e.g., a dense embedding-based retriever) first fetches top-k relevant documents or contexts from a collection of documents or external database for a given question. These retrieved contexts are then provided to the LLM as additional input, guiding its generation process.",
+    "Result": "LLMs can access and incorporate external, verifiable knowledge, significantly reducing hallucinations, improving factual accuracy, and enabling adaptation to specific domains and tasks without modifying model weights.",
+    "Related Patterns": [
+      "Unified Instruction Tuning for Reranking and Generation (RankRAG)",
+      "Retrieve-Rerank-Generate Pipeline"
+    ],
+    "Uses": "Knowledge-intensive Question Answering (QA), chatbots, content generation, domain adaptation, fact verification."
+  },
+  {
+    "Pattern Name": "Unified Instruction Tuning for Reranking and Generation (RankRAG)",
+    "Problem": "Standard Retrieval-Augmented Generation (RAG) pipelines face several limitations: LLMs struggle with processing too many retrieved contexts (due to efficiency and accuracy drop); initial dense retrievers may have limited capacity or recall, leading to irrelevant contexts; and separate expert ranking models often lack the zero-shot generalization capabilities of versatile LLMs. There is a fundamental tradeoff between recall (achieved by retrieving a larger 'k') and precision (achieved by a smaller 'k').",
+    "Context": "Building an RAG system where a single LLM needs to efficiently and accurately leverage external knowledge, especially when initial retrieval is imperfect, context windows are limited, or a dedicated, less generalizable reranker is undesirable. The goal is to enhance the LLM's ability to filter out irrelevant contexts and generate high-quality answers.",
+    "Solution": "Instruction-tune a *single* LLM for the dual purpose of context ranking (reranking) and answer generation. This involves a two-stage training process: 1. **Stage I (Supervised Fine-Tuning - SFT)**: General instruction-following on high-quality datasets. 2. **Stage II (Unified Instruction Tuning)**: Blending various datasets, including SFT data, context-rich QA, retrieval-augmented QA (with gold and hard-negative contexts), context ranking data (query-passage relevance, True/False), and retrieval-augmented ranking data (identifying multiple relevant passages from a set). All these tasks are unified into a standardized `x c y` (question-context-answer) format to facilitate effective knowledge transfer and mutual enhancement of capabilities.",
+    "Result": "The LLM gains improved context selection abilities, enhanced robustness to irrelevant contexts, and better zero-shot generalization to new domains compared to traditional expert ranking models. This leads to higher accuracy in RAG tasks, even with a modest amount of ranking-specific training data, and allows for a more efficient retrieve-rerank-generate pipeline.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Retrieve-Rerank-Generate Pipeline"
+    ],
+    "Uses": "Knowledge-intensive NLP tasks, Open-domain QA, Fact verification, Conversational QA, Domain-specific RAG, improving RAG robustness to noisy retrieval, reducing reliance on separate reranker models."
+  },
+  {
+    "Pattern Name": "Retrieve-Rerank-Generate Pipeline",
+    "Problem": "A standard Retrieve-then-Generate RAG pipeline can suffer from suboptimal context quality. The initial retriever might return a broad set of contexts, some of which are irrelevant or noisy, leading to a 'lost in the middle' problem for the LLM or a trade-off between recall (retrieving many contexts) and precision (providing only highly relevant contexts). The limited capacity of embedding models also constrains relevance estimation.",
+    "Context": "An RAG system where the quality and precision of retrieved contexts are critical for the final generation, and a simple 'retrieve-then-generate' approach is insufficient to ensure optimal context relevance. This is particularly relevant when dealing with a large initial set of retrieved documents (N) from which a smaller, highly relevant set (K) needs to be selected for the LLM.",
+    "Solution": "Introduce an explicit reranking step between the initial retrieval and the final generation. 1. **Retrieve**: An initial retriever (e.g., dense embedding-based) fetches a larger set of top-N candidate contexts from the corpus. 2. **Rerank**: A reranker (which can be a specialized model or an instruction-tuned LLM, like in RankRAG) evaluates the relevance of these N contexts to the query and selects a smaller, more precise set of top-K contexts (where K < N). This step often involves cross-encoding or relevance scoring. 3. **Generate**: The LLM then generates the answer based on these refined top-K contexts and the original question.",
+    "Result": "Improves the quality and relevance of contexts provided to the LLM, leading to more accurate and less noisy generations. This mitigates the negative impact of irrelevant contexts, allows for a better balance between recall (initial broad retrieval) and precision (subsequent focused reranking), and enhances the LLM's ability to produce correct answers.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Unified Instruction Tuning for Reranking and Generation (RankRAG)"
+    ],
+    "Uses": "High-stakes RAG applications, complex multi-hop QA, scenarios with noisy initial retrieval, long-context LLMs where efficiency and precision are crucial, improving overall RAG performance, fact verification."
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "Large Language Models (LLMs) struggle with complex, multi-step tasks that require both dynamic reasoning and interaction with external environments. Existing approaches either focus on static internal reasoning (Chain-of-Thought, prone to hallucination and error propagation) or action generation without abstract reasoning (Act-only, lacks planning and working memory), leading to limited reactive capabilities, knowledge updates, and interpretability.",
+    "Context": "LLMs are used as agents in diverse language and decision-making tasks, including question answering (HotpotQA, FEVER), text-based games (ALFWorld), and web navigation (WebShop), where external information (e.g., Wikipedia API) or environmental interaction is crucial.",
+    "Solution": "Augment the LLM's action space to include both verbal reasoning traces (\"thoughts\") and domain-specific actions. The model generates these thoughts and actions in an interleaved manner. Thoughts allow the model to dynamically reason, create/maintain/adjust high-level plans, track progress, handle exceptions, and incorporate commonsense knowledge. Actions allow the model to interface with and gather additional information from external sources (e.g., knowledge bases, environments).",
+    "Result": "Significantly improves task performance, interpretability, trustworthiness, and diagnosability compared to reasoning-only or acting-only baselines. Overcomes issues like hallucination and error propagation by grounding reasoning in external observations. Enables robust decision-making and efficient exploration in complex environments.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Act-only Prompting",
+      "Robust Knowledge Retrieval and Reasoning",
+      "Human-in-the-Loop Thought Editing",
+      "Inner Monologue (Embodied Reasoning)"
+    ],
+    "Uses": "Multihop Question Answering, Fact Verification, Text-based Games, Web Navigation, Embodied Agents"
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "Large Language Models (LLMs) need to perform multi-step reasoning to solve complex tasks (e.g., arithmetic, commonsense, symbolic reasoning) but may not explicitly show their reasoning process.",
+    "Context": "LLMs are prompted to solve tasks that require intermediate reasoning steps.",
+    "Solution": "Prompt the LLM to generate a series of intermediate reasoning steps or \"thoughts\" before providing the final answer. This makes the LLM's internal reasoning process explicit.",
+    "Result": "Elicits emergent reasoning capabilities in LLMs, improving performance on complex tasks. However, it is a static, internal process, not grounded in external reality, which can lead to fact hallucination and error propagation.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)",
+      "Robust Knowledge Retrieval and Reasoning"
+    ],
+    "Uses": "Arithmetic reasoning, Commonsense reasoning, Symbolic reasoning, General problem-solving with LLMs"
+  },
+  {
+    "Pattern Name": "Act-only Prompting",
+    "Problem": "Large Language Models (LLMs) need to generate sequences of actions to interact with external environments for task completion, but without explicit verbal reasoning.",
+    "Context": "LLMs are used as agents in interactive environments (e.g., web browsers, text-based games) where the primary goal is to execute domain-specific actions.",
+    "Solution": "Prompt the LLM to directly generate a sequence of domain-specific actions based on the current observation and task goal, without generating intermediate \"thoughts\" or reasoning traces.",
+    "Result": "Enables LLMs to interact with environments and perform actions. However, without explicit reasoning, models often struggle with complex goal decomposition, tracking progress, handling exceptions, or incorporating external information effectively, leading to repetitive or hallucinated actions and lower success rates on long-horizon tasks.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)"
+    ],
+    "Uses": "Web navigation, Text-based games, Simple interactive decision-making"
+  },
+  {
+    "Pattern Name": "Robust Knowledge Retrieval and Reasoning",
+    "Problem": "LLMs, when relying solely on internal knowledge (CoT), can hallucinate facts. When relying solely on external interaction (ReAct), they might struggle with flexible reasoning structure or non-informative search results. A single approach may not be optimal for all knowledge-intensive tasks.",
+    "Context": "Knowledge-intensive reasoning tasks (e.g., multi-hop question answering, fact verification) where both the LLM's internal knowledge and access to external, up-to-date information are valuable.",
+    "Solution": "Combine the strengths of ReAct and Chain-of-Thought with Self-Consistency (CoTSC) using heuristic-based switching. If ReAct fails to return an answer within a set number of steps (indicating difficulty with external search or reasoning), back off to CoTSC to leverage internal reasoning. Conversely, if CoTSC's internal knowledge is not confident (e.g., low consensus among multiple samples), back off to ReAct to retrieve external, factual information.",
+    "Result": "Achieves superior performance by leveraging the factual grounding of ReAct and the reasoning structure formulation of CoT/CoTSC. Reduces hallucination and improves robustness by dynamically choosing the most appropriate knowledge source and reasoning strategy.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)",
+      "Chain-of-Thought Prompting"
+    ],
+    "Uses": "HotpotQA, FEVER, Open-domain Question Answering, Fact Verification"
+  },
+  {
+    "Pattern Name": "Human-in-the-Loop Thought Editing",
+    "Problem": "AI agents, especially LLM-based ones, can exhibit undesirable behaviors, make errors, or hallucinate. Correcting these issues typically requires retraining or complex policy adjustments, which are difficult and time-consuming.",
+    "Context": "An LLM-based agent (like ReAct) generates explicit reasoning traces (\"thoughts\") alongside actions in an interactive environment.",
+    "Solution": "Provide a mechanism for human operators to inspect and directly edit the agent's generated reasoning traces (thoughts) during its operation. By modifying a few thoughts, the human can guide the agent's subsequent reasoning and actions.",
+    "Result": "Enables real-time, intuitive, and effective correction or control of the agent's behavior. Improves human alignment, diagnosability, and trustworthiness. Simplifies the process of correcting agent errors compared to modifying actions or model parameters.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)"
+    ],
+    "Uses": "Debugging agent behavior, Guiding agent exploration, Human-AI collaboration, Policy steering in interactive AI systems"
+  },
+  {
+    "Pattern Name": "Inner Monologue (Embodied Reasoning)",
+    "Problem": "Embodied agents need to motivate their actions and track the environment state to achieve goals, but often lack explicit internal reasoning beyond direct observations.",
+    "Context": "Embodied agents interacting with physical or simulated environments, requiring planning and decision-making.",
+    "Solution": "Inject explicit feedback from the environment into the agent's context as an \"inner monologue.\" This monologue typically reiterates observations of the environment state and what needs to be completed for the goal.",
+    "Result": "Provides a limited form of verbal reasoning that helps ground actions in the environment state. However, this approach is often restricted to simple state reiteration and lacks the flexibility for high-level goal decomposition, complex planning, or incorporating commonsense knowledge, making it less effective for diverse reasoning types compared to more flexible reasoning patterns.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)"
+    ],
+    "Uses": "Robotic action planning, Embodied agent decision-making, State tracking in interactive environments"
+  }
+]

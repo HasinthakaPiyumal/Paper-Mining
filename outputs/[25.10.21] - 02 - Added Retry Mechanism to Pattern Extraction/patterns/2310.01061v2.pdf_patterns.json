@@ -1,0 +1,24 @@
+[
+  {
+    "Pattern Name": "KG-Grounded Planning and Structural Retrieval-Augmented Reasoning",
+    "Problem": "Large Language Models (LLMs) often suffer from factual hallucinations and lack up-to-date, domain-specific knowledge, leading to unfaithful or incorrect reasoning, especially for complex, multi-hop questions. Traditional retrieval-augmented methods may overlook the crucial structural information within Knowledge Graphs (KGs), treating them as flat fact bases.",
+    "Context": "Designing LLM-based systems for knowledge-intensive tasks like Knowledge Graph Question Answering (KGQA) where factual accuracy, multi-hop reasoning, and interpretability are paramount, and a structured knowledge source (KG) is available.",
+    "Solution": "A multi-stage framework where an LLM is first prompted and instruction-tuned to generate 'faithful plans' in the form of relation paths (sequences of relations) that are explicitly grounded and validated against a Knowledge Graph. These KG-grounded plans then guide a retrieval mechanism (e.g., constrained breadth-first search) to extract specific 'reasoning paths' (instances of the relation path with actual entities) from the KG. This ensures that the LLM's subsequent reasoning is based on verifiable structural information. The LLM is jointly optimized through planning optimization (distilling KG knowledge for plan generation) and retrieval-reasoning optimization (enabling reasoning based on retrieved paths).",
+    "Result": "Enhances the factual accuracy, faithfulness, and interpretability of LLM reasoning by leveraging the structured and up-to-date knowledge from KGs. It reduces hallucinations, mitigates the lack of knowledge, and enables robust multi-hop reasoning by providing a structured, verifiable basis for inference. The planning module can be seamlessly integrated with other LLMs during inference to improve their performance without retraining.",
+    "Related Patterns": [
+      "LLM-Guided Path Filtering and Synthesis"
+    ],
+    "Uses": "Knowledge Graph Question Answering (KGQA), complex factual reasoning, agentic planning in knowledge-rich environments, factual verification, multi-hop question answering."
+  },
+  {
+    "Pattern Name": "LLM-Guided Path Filtering and Synthesis",
+    "Problem": "When multiple potential reasoning paths or evidence snippets are retrieved from a knowledge source (e.g., a Knowledge Graph) to answer a question, some retrieved items may be noisy, irrelevant, or redundant. Simply aggregating them can lead to incorrect or less precise answers, diminishing the trustworthiness of the LLM's output.",
+    "Context": "LLM-based systems that rely on retrieving external knowledge (especially structured paths) to augment their reasoning, where the retrieved information might contain noise or require selective interpretation before generating a final answer.",
+    "Solution": "An instruction-tuned Large Language Model (LLM) is employed as a 'reasoning module' to process a set of retrieved reasoning paths along with the original question. The LLM is specifically trained and prompted to identify the most relevant and correct paths, effectively filtering out noise and irrelevant information. It then synthesizes a faithful and interpretable answer by reasoning over only the validated and important paths, often providing explicit explanations based on these selected paths.",
+    "Result": "Improves the precision and trustworthiness of LLM-generated answers by intelligently sifting through retrieved evidence and removing noise. It also provides interpretable explanations by explicitly showing which paths were used for the final reasoning, enhancing transparency and user confidence.",
+    "Related Patterns": [
+      "KG-Grounded Planning and Structural Retrieval-Augmented Reasoning"
+    ],
+    "Uses": "Knowledge Graph Question Answering (KGQA), multi-evidence reasoning, factual verification, explainable AI, noise reduction in retrieval-augmented generation."
+  }
+]

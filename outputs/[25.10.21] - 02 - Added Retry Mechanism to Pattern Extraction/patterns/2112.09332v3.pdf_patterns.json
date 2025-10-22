@@ -1,0 +1,106 @@
+[
+  {
+    "Pattern Name": "Behavior Cloning (Fine-tuning)",
+    "Problem": "Pretrained language models lack the specific knowledge or interaction patterns required for novel tasks, especially those involving tool use or complex environments. Training from scratch is inefficient.",
+    "Context": "Adapting large language models to specific tasks, environments, or interaction styles where human demonstrations of desired behavior are available. Used as an initial policy.",
+    "Solution": "Fine-tune a large pretrained language model using supervised learning on a dataset of human demonstrations (expert trajectories), where human actions or outputs serve as labels.",
+    "Result": "The model learns to mimic human behavior, providing a functional baseline policy for the target task and environment.",
+    "Related Patterns": [
+      "Reward Modeling (from Human Preferences)",
+      "Reinforcement Learning from Human Feedback",
+      "Rejection Sampling (Best-of-N)",
+      "Tool Use (Web Browsing Environment)"
+    ],
+    "Uses": "Adapting LMs for tool use, specific question answering formats, agentic tasks, generating initial policies for RLHF."
+  },
+  {
+    "Pattern Name": "Tool Use (Web Browsing Environment)",
+    "Problem": "Language models are limited by their training data cutoff, lack real-time information, and struggle with complex, multi-step information retrieval and synthesis from external, dynamic sources like the internet.",
+    "Context": "Tasks requiring up-to-date, external knowledge, grounding answers in verifiable sources, or performing multi-step interactions with web-based interfaces.",
+    "Solution": "Provide the language model with a structured, text-based environment that allows it to interact with external tools, specifically a web search engine (e.g., Bing API) for retrieval and a web browser (with actions like click, scroll, find, quote) for navigation and information extraction.",
+    "Result": "The model gains the ability to access and synthesize real-time, external information, significantly improving factual accuracy, reducing hallucinations, and enabling dynamic interaction with the web.",
+    "Related Patterns": [
+      "Reference Collection / Grounding",
+      "Behavior Cloning (Fine-tuning)",
+      "Reinforcement Learning from Human Feedback",
+      "Tripwire Tests"
+    ],
+    "Uses": "Long-form question answering, fact-checking, agentic web interaction, information synthesis."
+  },
+  {
+    "Pattern Name": "Reference Collection / Grounding",
+    "Problem": "Evaluating the factual accuracy and trustworthiness of AI-generated answers is difficult, subjective, and time-consuming for humans. Models may hallucinate or provide unverified information, leading to a lack of trust.",
+    "Context": "Tasks where factual accuracy is paramount, human evaluation of AI outputs is required, or building user trust in AI systems is important.",
+    "Solution": "Design the AI system to explicitly identify, extract, and cite supporting passages (references) from the external sources (e.g., web pages) it uses to formulate its answer. These references are then presented alongside the generated answer.",
+    "Result": "Facilitates more accurate and less noisy human evaluation of factual accuracy, increases transparency into the model's reasoning, and allows end-users to verify information independently.",
+    "Related Patterns": [
+      "Tool Use (Web Browsing Environment)",
+      "Reward Modeling (from Human Preferences)",
+      "AI Safety via Debate / Recursive Reward Modeling / Iterated Amplification"
+    ],
+    "Uses": "Long-form question answering, summarization, fact-checking, content generation requiring verifiability."
+  },
+  {
+    "Pattern Name": "Reward Modeling (from Human Preferences)",
+    "Problem": "Directly optimizing for complex, subjective qualities of AI outputs (e.g., \"answer quality,\" \"coherence,\" \"usefulness,\" \"factual accuracy\" as perceived by humans) is challenging with standard loss functions. Supervised learning on demonstrations alone may not surpass human performance.",
+    "Context": "Improving AI system performance beyond imitation learning, aligning AI outputs with nuanced human values and preferences, especially for tasks with subjective evaluation criteria.",
+    "Solution": "Collect a dataset of human comparisons between pairs of model-generated outputs for the same input (e.g., \"which answer is better?\"). Train a separate neural network (the reward model) to predict these human preferences, outputting a scalar reward score for any given output.",
+    "Result": "Provides a scalable and quantifiable objective function that captures complex human preferences, enabling further optimization of the AI policy to generate outputs that humans prefer.",
+    "Related Patterns": [
+      "Behavior Cloning (Fine-tuning)",
+      "Reinforcement Learning from Human Feedback",
+      "Rejection Sampling (Best-of-N)",
+      "AI Safety via Debate / Recursive Reward Modeling / Iterated Amplification"
+    ],
+    "Uses": "Reinforcement Learning from Human Feedback (RLHF), fine-tuning for subjective quality, AI alignment, evaluation metric for generative models."
+  },
+  {
+    "Pattern Name": "Reinforcement Learning from Human Feedback (RLHF)",
+    "Problem": "Behavior cloning may not achieve optimal performance, generalize well, or fully align with complex human preferences. Directly optimizing for subjective human preferences is difficult.",
+    "Context": "Refining a language model's policy to maximize human-preferred outcomes, especially after an initial behavior cloning phase, and for tasks involving dynamic environments or long-horizon decision-making.",
+    "Solution": "Fine-tune the language model's policy using a reinforcement learning algorithm (e.g., Proximal Policy Optimization - PPO), where the reward signal is provided by a pre-trained reward model (which itself was trained on human preferences). A KL divergence penalty to the initial policy (e.g., the BC model) is often added to prevent the policy from diverging too far from the initial learned behavior and to maintain output coherence.",
+    "Result": "Optimizes the model's behavior to generate outputs that are highly preferred by humans, often surpassing the quality achieved by supervised fine-tuning alone, and can adapt to dynamic environments.",
+    "Related Patterns": [
+      "Behavior Cloning (Fine-tuning)",
+      "Reward Modeling (from Human Preferences)",
+      "Tool Use (Web Browsing Environment)"
+    ],
+    "Uses": "Dialogue systems, summarization, agentic control, long-form question answering, aligning generative models."
+  },
+  {
+    "Pattern Name": "Rejection Sampling (Best-of-N)",
+    "Problem": "Generating consistently high-quality outputs from a language model's policy can be challenging, especially when the policy is noisy, the task is complex, or the desired output quality is high. Reinforcement learning training can be unstable or computationally expensive.",
+    "Context": "Improving the quality of AI-generated outputs at inference time, leveraging a reward model without requiring additional policy training, or when inferencetime compute is more readily available than training compute.",
+    "Solution": "At inference time, sample multiple candidate outputs (N) from the model's policy (e.g., a Behavior Cloned or RL-trained model). Then, use a pre-trained reward model to score each candidate and select the one with the highest reward score as the final output.",
+    "Result": "Significantly improves the quality and human preference of the final output by selecting the most optimal option among several candidates, often outperforming direct generation from the policy. It can be a simpler and more stable alternative to RL for quality improvement.",
+    "Related Patterns": [
+      "Behavior Cloning (Fine-tuning)",
+      "Reward Modeling (from Human Preferences)",
+      "Reinforcement Learning from Human Feedback"
+    ],
+    "Uses": "Long-form question answering, creative text generation, code generation, any generative task where quality can be objectively or subjectively scored."
+  },
+  {
+    "Pattern Name": "AI Safety via Debate / Recursive Reward Modeling / Iterated Amplification",
+    "Problem": "Ensuring true factual accuracy, mitigating cherry-picking of evidence, and robustly aligning AI systems with complex human values becomes increasingly difficult as models become more capable and tasks more subjective or open-ended. Human evaluation alone may be insufficient or prone to bias.",
+    "Context": "Advanced AI safety and alignment research, mitigating sophisticated forms of model misbehavior (e.g., cherry-picking references, reinforcing biases), and scaling human oversight to highly complex AI systems.",
+    "Solution": "Employ methods where AI models are trained to assist in their own evaluation or to engage in adversarial processes. Examples include training models to find evidence both for and against claims (debate), or decomposing complex evaluative judgments into simpler, verifiable sub-judgments (recursive reward modeling, iterated amplification).",
+    "Result": "Aims to improve the robustness, transparency, and trustworthiness of AI systems by making the evaluation and alignment process more thorough, less prone to human cognitive biases, and potentially scalable with AI assistance.",
+    "Related Patterns": [
+      "Reference Collection / Grounding",
+      "Reward Modeling (from Human Preferences)"
+    ],
+    "Uses": "AI safety research, complex fact-checking, advanced AI alignment, mitigating sophisticated model biases."
+  },
+  {
+    "Pattern Name": "Tripwire Tests",
+    "Problem": "AI systems with agentic capabilities, especially those interacting with the real world (e.g., live web access), can exhibit unpredictable or exploitative behaviors that pose risks. It's challenging to anticipate and prevent all potential harms.",
+    "Context": "Deploying and monitoring agentic AI systems, particularly those with external tool access or real-world interaction capabilities, where safety and risk mitigation are critical.",
+    "Solution": "Implement specific, pre-defined tests or monitoring mechanisms designed to detect early signs of undesirable, exploitative, or unsafe model behaviors. These \"tripwires\" trigger alerts or interventions when certain thresholds or patterns of risky actions are observed.",
+    "Result": "Provides an early warning system for potentially harmful AI behaviors, allowing developers to identify and address risks proactively before they escalate or cause significant damage.",
+    "Related Patterns": [
+      "Tool Use (Web Browsing Environment)"
+    ],
+    "Uses": "AI safety, monitoring agentic systems, risk mitigation in deployment, identifying emergent undesirable behaviors."
+  }
+]

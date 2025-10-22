@@ -1,0 +1,38 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large pretrained language models (LLMs) often suffer from factual inaccuracies, hallucination, and an inability to easily update or provide provenance for their internal knowledge, especially on knowledge-intensive tasks. Their implicit knowledge base is difficult to expand or revise.",
+    "Context": "Knowledge-intensive Natural Language Processing (NLP) tasks that require generating text, such as open-domain question answering, fact verification, or complex content generation. The system needs to access and precisely manipulate external factual knowledge beyond what is stored in its parameters.",
+    "Solution": "Combine a pretrained parametric memory (a seq2seq language model, e.g., BART) with a non-parametric, explicit memory (a dense vector index of text documents, e.g., Wikipedia). A neural retriever (e.g., Dense Passage Retriever - DPR) is used to dynamically fetch the top-K most relevant documents based on the input query. The generator then conditions its text generation on both the original input and the retrieved documents. The entire system (retriever and generator) is finetuned end-to-end by treating the retrieved documents as latent variables and marginalizing over their probabilities.\n\nTwo main strategies for marginalization are:\n*   **RAG-Sequence:** Uses the same retrieved document to generate the complete output sequence, marginalizing over the top-K documents for the entire sequence probability.\n*   **RAG-Token:** Allows for drawing a different latent document for each target token, enabling the generator to combine content from multiple documents when producing an answer.",
+    "Result": "Achieves state-of-the-art performance on various knowledge-intensive NLP tasks. Generates more factual, specific, and diverse language compared to parametric-only models. Reduces hallucination and provides a degree of interpretability by allowing inspection of the retrieved knowledge. Enables dynamic updates of world knowledge without retraining the core model.",
+    "Related Patterns": [
+      "Dynamic Knowledge Update",
+      "Explainable AI (XAI) through Retrieved Evidence"
+    ],
+    "Uses": "Open-domain Question Answering (extractive and abstractive), Fact Verification, Jeopardy Question Generation, general knowledge-intensive NLP tasks requiring factual grounding."
+  },
+  {
+    "Pattern Name": "Dynamic Knowledge Update",
+    "Problem": "Parametric-only AI models (like large language models) store knowledge implicitly in their parameters, making it difficult and computationally expensive to update their world knowledge as facts change or new information becomes available. This leads to stale or incorrect outputs over time.",
+    "Context": "AI systems that require access to current and evolving factual knowledge, where frequent knowledge updates are necessary without incurring the high computational cost of full model retraining. This is particularly relevant for models deployed in dynamic environments or those that need to reflect recent events.",
+    "Solution": "Design the AI system with a clear separation between parametric knowledge (learned weights of the model) and non-parametric, explicit knowledge (an external, indexed database of text or other data). The non-parametric memory component can be easily replaced or updated (e.g., by rebuilding a document index) at test time without modifying or retraining the core parametric model. The model accesses this external memory via a retrieval mechanism.",
+    "Result": "Enables rapid and cost-effective updates to the model's world knowledge. Ensures the AI system remains current and factual with minimal operational overhead. Avoids expensive and time-consuming retraining cycles for knowledge updates.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Explainable AI (XAI) through Retrieved Evidence"
+    ],
+    "Uses": "Any AI application where knowledge currency is critical, such as real-time question answering, chatbots, information retrieval, and systems operating in rapidly changing domains (e.g., news, finance, medical information)."
+  },
+  {
+    "Pattern Name": "Explainable AI (XAI) through Retrieved Evidence",
+    "Problem": "Large language models (LLMs) often act as black boxes, making it difficult to understand the factual basis of their outputs, leading to issues like hallucination, lack of trust, and challenges in debugging. Providing provenance for generated text is an open research problem for parametric-only models.",
+    "Context": "AI systems, especially generative models, operating in domains where transparency, trustworthiness, and the ability to provide factual grounding or provenance for outputs are critical. This includes applications where users or developers need to inspect the source of information to verify claims or understand the model's 'reasoning'.",
+    "Solution": "Integrate an explicit, human-readable non-parametric memory (e.g., a dense vector index of raw text documents like Wikipedia) with a generative AI model. A neural retriever dynamically fetches the most relevant documents based on the input query. The generative model then conditions its output on these retrieved documents. By exposing the retrieved documents alongside the generated output, the system provides direct evidence or provenance, allowing users to inspect the factual sources that influenced the generation.",
+    "Result": "Enhances the interpretability and trustworthiness of AI models by providing explicit factual grounding for generated text. Allows for inspection of the knowledge sources, helping to trace the origin of information and identify potential factual errors or hallucinations. Improves debugging capabilities and user confidence in the AI system's outputs.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Dynamic Knowledge Update"
+    ],
+    "Uses": "Question Answering, Fact Verification, content generation, legal and medical AI applications, and any AI system requiring verifiable, auditable, or transparent outputs."
+  }
+]

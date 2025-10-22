@@ -1,0 +1,188 @@
+
+You are given a candidate AI design pattern. Your task is to evaluate it using 20 questions about problem clarity, solution robustness, context-awareness, results validation, and practical usability. Answer each question briefly as "Yes", "No", or "Partially".
+
+Output the result as a JSON array using these short keys:
+
+Problem & Context (Questions 1-5):
+    q1: Does the problem clearly describe a recurring AI challenge?
+    q2: Is the problem specific enough to understand what is failing or suboptimal?
+    q3: Does the problem mention why naive or existing solutions are insufficient?
+    q4: Is the context explained clearly, showing where and when the problem occurs?
+    q5: Is it related to AI?
+
+Solution Evaluation (Questions 6-10):
+    q6: Is the solution actionable and reproducible for someone implementing it?
+    q7: Does the solution show how it directly addresses the problem?
+    q8: Is the solution generalizable beyond a single dataset, tool, or model?
+    q9: Does the solution encourage robustness against edge cases or unexpected inputs?
+    q10: Are any trade-offs or limitations of the solution mentioned?
+
+Result & Validation (Questions 11-14):
+    q11: Does the pattern describe measurable improvement or benefits?
+    q12: Are the results clearly linked to the problem and solution?
+    q13: Does it provide evidence (quantitative or qualitative) that the solution works?
+    q14: Are the results likely to be reproducible in other settings?
+
+Related Patterns & Reusability (Questions 15-18):
+    q15: Does the pattern relate to other known patterns in a meaningful way?
+    q16: Can the pattern be combined with other patterns to solve larger problems?
+    q17: Is the pattern reusable for similar AI tasks in different domains?
+    q18: Does the pattern indicate when it should or should not be used?
+
+Practical Insight (Questions 19-20):
+    q19: Does the pattern provide insight that could help engineers avoid common mistakes?
+    q20: Does it encourage learning and improvement in AI system design beyond just solving 
+         the immediate problem?
+
+
+- score calculate like this - yes 5,no 0 , partialy 2.5 - (max total 100)
+
+Input Pattern Candidates:
+[
+  {
+    "Pattern Name": "Interactive File Viewer",
+    "Problem": "Traditional command-line tools (`cat`, `head`, `tail`) are suboptimal for LM agents to inspect file content due to verbosity (flooding context), lack of intuitive navigation (stateless scrolling, complex line arithmetic), and inability to quickly identify specific code sections. Agents are also sensitive to the window size, where too little or too much content lowers performance.",
+    "Context": "LM agents need to understand file content, perform fine-grained localization, and grasp relationships between intra-file entities within a codebase.",
+    "Solution": "Implement a specialized, interactive file viewer that presents a window of a limited number of lines (e.g., 100) at a time, displays the full path of the open file, total lines, and indicators of omitted lines (before/after the current window), and offers simple commands for navigation (`scrolldown`, `scrollup`, `goto` specific line). It is designed to be complementary to other tools like the file editor.",
+    "Result": "Provides a focused, contextualized view of code snippets, enables precise navigation, and facilitates understanding without overwhelming the LM's context window.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context-Aware History Management",
+      "Consolidated File Editor"
+    ],
+    "Uses": "Automated software engineering, code inspection, debugging."
+  },
+  {
+    "Pattern Name": "Consolidated File Editor",
+    "Problem": "Command-line editing methods (e.g., `sed`, file redirection) are cumbersome, error-prone, require complex argument specification for multi-line edits, and lack immediate, clear feedback on changes, making it difficult for LM agents to reliably modify code.",
+    "Context": "LM agents need to create and modify code files efficiently and accurately as part of problem-solving (e.g., applying fixes, writing reproduction scripts).",
+    "Solution": "Provide a single, powerful `edit` command that works in conjunction with the interactive file viewer (using line numbers for precise range specification), allows multi-line replacement in a single action, automatically displays the updated file content immediately after the edit, and integrates guardrails (e.g., syntax checking) to prevent invalid edits.",
+    "Result": "Simplifies the editing process, reduces the need for complex arithmetic, provides immediate visual feedback, and improves the reliability and efficiency of code modification.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Interactive File Viewer",
+      "Error-Mitigating Guardrails",
+      "Context-Aware History Management"
+    ],
+    "Uses": "Automated software engineering, bug fixing, code generation with execution feedback."
+  },
+  {
+    "Pattern Name": "Error-Mitigating Guardrails",
+    "Problem": "LM agents frequently introduce errors (e.g., syntax errors, invalid commands) during interaction, and often struggle to recognize these mistakes or recover from them, leading to error propagation and wasted turns.",
+    "Context": "LM agents performing actions that can introduce structural or functional errors into the environment (e.g., editing code, issuing commands).",
+    "Solution": "Integrate automated checks (guardrails) into the interface that detect common mistakes (e.g., code syntax errors via a linter), prevent invalid actions from being applied (e.g., discard edits that introduce syntax errors), and provide specific, concise error messages and context (e.g., before/after snippets for code edits) to help the agent understand and correct the mistake. This also includes curbing verbose search results.",
+    "Result": "Helps agents recognize and quickly correct errors, prevents cascading failures, and improves recovery rates, leading to more robust and efficient agent performance.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Consolidated File Editor",
+      "Context-Aware History Management",
+      "LM-Centric Search & Navigation"
+    ],
+    "Uses": "Automated software engineering, any agentic system where actions can lead to detectable errors, MLOps (for specific ML workflow error handling)."
+  },
+  {
+    "Pattern Name": "Context-Aware History Management",
+    "Problem": "LMs have finite context windows, and a verbose, unmanaged history of interactions (commands, observations, error messages) can quickly consume the context, leading to 'lost in the middle' phenomena, reduced performance, and increased computational cost. Outdated information can also confuse the agent.",
+    "Context": "Maintaining an effective and efficient interaction history for an LM agent over multiple turns in a digital environment.",
+    "Solution": "Implement history processors and prompt templates that keep agent context concise and informative. This includes collapsing old observations (e.g., beyond the last 5 turns) into single-line placeholders (preserving structure but removing verbose content), providing clear, concise error messages that guide recovery without adding excessive noise, and formatting prompts to include high-level instructions, documentation, and general strategy tips. It also includes omitting all past error messages except the first for a given malformed generation.",
+    "Result": "Maintains essential information about the plan and action history, reduces unnecessary context, allows for more interaction cycles, avoids showing outdated information, and improves LM performance and cost-efficiency.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "LM-Centric Search & Navigation",
+      "Interactive File Viewer",
+      "Consolidated File Editor",
+      "Error-Mitigating Guardrails",
+      "In-Context Learning with Demonstrations"
+    ],
+    "Uses": "Any multi-turn LM agent interaction, prompt engineering for long-running tasks, LLM-specific context optimization."
+  },
+  {
+    "Pattern Name": "In-Context Learning with Demonstrations",
+    "Problem": "LM agents may struggle with understanding proper command usage, expected interaction formats, or effective problem-solving strategies in a new interactive environment, leading to errant responses and inefficient task completion.",
+    "Context": "Initializing an LM agent in a novel interactive environment (e.g., a custom ACI) where it needs to learn how to effectively use available tools and follow interaction protocols.",
+    "Solution": "Provide the agent with a 'demonstration template' that includes a successful trajectory of interactions (a sequence of thoughts, actions, and environment feedback) from a similar task instance. This demonstration can be presented as a single message or as separate messages in the history, depending on the model's sensitivity.",
+    "Result": "Helps agents understand proper command usage, reduces the rate of errant responses, and provides a concrete example of a successful problem-solving approach, improving initial performance and reducing the need for extensive trial-and-error.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context-Aware History Management"
+    ],
+    "Uses": "Prompt design, agent initialization, learning new tool usage, improving adherence to interaction formats."
+  },
+  {
+    "Pattern Name": "LLM-Assisted Symbolic World Model Construction",
+    "Problem": "LLMs struggle with direct, reliable planning for complex tasks, but possess vast common-world knowledge. Manually creating accurate symbolic world models (e.g., PDDL) for classical planners is complex and requires specialized expertise.",
+    "Context": "Building AI agents that require robust, verifiable plans, especially in domains where direct LLM planning is unreliable or costly. Users may lack expertise in formal planning languages like PDDL.",
+    "Solution": "Leverage LLMs to generate symbolic world models (e.g., PDDL action models) from natural language descriptions of actions and domain context. This involves structured prompt engineering, including detailed instructions, few-shot examples, domain and action descriptions, and a dynamically updated list of predicates for consistency. The process can be iterative, running generation multiple times or refining based on initial outputs. LLMs are also used to provide natural language descriptions for newly defined predicates to aid human understanding.",
+    "Result": "Production of high-quality, explicit, and verifiable symbolic world models that can be used by sound domain-independent planners. Reduces the need for specialized PDDL expertise from users and facilitates knowledge acquisition by leveraging the LLM's common-world knowledge.",
+    "Related Patterns": [
+      "LLM as a Feedback Interface for Symbolic Models",
+      "External Planner Augmentation",
+      "LLM Planner with Symbolic Validation"
+    ],
+    "Uses": "Robotics, household automation, task planning for embodied agents, domain model acquisition."
+  },
+  {
+    "Pattern Name": "LLM as a Feedback Interface for Symbolic Models",
+    "Problem": "Correcting errors in symbolic world models (like PDDL) requires specialized knowledge. Feedback from automated validators or human experts is often in natural language or technical error messages, making direct integration difficult for non-expert users.",
+    "Context": "After an initial symbolic world model (e.g., PDDL) is generated, it may contain syntax or factual errors. Automated validators or human domain experts provide corrective feedback.",
+    "Solution": "Utilize an LLM as an intermediary to translate symbolic model components (e.g., PDDL actions, predicates) into natural language for user inspection. Subsequently, translate natural language corrective feedback (from humans or validator messages) back into precise modifications for the underlying symbolic model, often through a continuous, dialogue-based interaction with the LLM.",
+    "Result": "Enables efficient and accessible error correction of symbolic models by non-experts, improving model accuracy and reducing cognitive load. Bridges the gap between natural language feedback and formal symbolic representations.",
+    "Related Patterns": [
+      "LLM-Assisted Symbolic World Model Construction"
+    ],
+    "Uses": "Interactive AI system development, human-in-the-loop model refinement, MLOps for domain model validation."
+  },
+  {
+    "Pattern Name": "External Planner Augmentation",
+    "Problem": "LLMs alone are unreliable for generating correct and executable plans for complex, long-horizon tasks due to reasoning limitations and lack of physical plausibility.",
+    "Context": "AI agents require robust and verifiable plans for sequential decision-making tasks. An LLM has been used to acquire a symbolic world model and translate user instructions into goal specifications.",
+    "Solution": "Leverage an LLM to construct a symbolic world model (e.g., PDDL) and to translate user instructions into symbolic goal specifications (e.g., PDDL goals). Then, feed this LLM-generated symbolic model and goal to a traditional, sound domain-independent planner (e.g., Fast Downward) to reliably find a satisficing or optimal plan.",
+    "Result": "Combines the common-world knowledge and natural language understanding of LLMs for model and goal acquisition with the correctness guarantees and search capabilities of classical planners, achieving high success rates for planning tasks.",
+    "Related Patterns": [
+      "LLM-Assisted Symbolic World Model Construction"
+    ],
+    "Uses": "Robotics, automated task execution, reliable planning for embodied agents, bridging LLM capabilities with classical AI."
+  },
+  {
+    "Pattern Name": "LLM Planner with Symbolic Validation",
+    "Problem": "LLM-generated plans often contain errors (e.g., unmet preconditions, logical inconsistencies) and LLMs may get stuck in repetitive error loops, leading to low success rates, despite their ability to incorporate implicit commonsense constraints.",
+    "Context": "An LLM is employed to generate plans, but its inherent unreliability necessitates a mechanism to improve plan correctness while still benefiting from its 'commonsense' reasoning or ability to incorporate implicit constraints.",
+    "Solution": "An LLM generates a plan, which is then validated against an LLM-acquired symbolic world model (e.g., PDDL) using a plan validation system (e.g., VAL). The validation feedback (e.g., unmet preconditions or goal conditions) is translated into natural language and provided back to the LLM planner through iterative reprompting, enabling the LLM to refine its plan.",
+    "Result": "Significantly improves the correctness and executability of LLM-generated plans by providing structured, actionable feedback. This approach allows for the integration of LLM's implicit knowledge (e.g., human preferences, ordering constraints) while mitigating its inherent unreliability through external verification.",
+    "Related Patterns": [
+      "LLM-Assisted Symbolic World Model Construction",
+      "External Planner Augmentation"
+    ],
+    "Uses": "Embodied agents, interactive planning, scenarios where LLM's commonsense is valuable but requires grounding and verification, human-aligned planning."
+  },
+  {
+    "Pattern Name": "LLM as Controller/Planner",
+    "Problem": "Complex, multi-step tasks require intelligent decomposition, planning, and dynamic adaptation, which traditional models struggle with.",
+    "Context": "Foundation models interacting with a set of specialized tools and an environment. The model needs to bridge user instructions with tool functionalities.",
+    "Solution": "A foundation model acts as a central 'Controller' that understands user intent, decomposes complex tasks into subtasks, selects appropriate tools, and generates executable action plans. This planning can be 'introspective' (static, without intermediate feedback) or 'extrospective' (iterative, dynamically adjusting plans based on feedback from the environment and user).",
+    "Result": "Enables foundation models to effectively tackle complex, long-horizon tasks, automate intricate processes, and perform grounded actions in real-world or simulated environments.",
+    "Related Patterns": [
+      "Feedback Loop",
+      "Chain-of-Thought (CoT) Prompting",
+      "Multi-Agent Collaboration",
+      "Formalized Reasoning Augmentation",
+      "Personalized Tool Learning",
+      "Knowledge Conflict Resolution",
+      "Tool-Augmented Code Generation",
+      "Tool-Augmented Scientific Discovery"
+    ],
+    "Uses": [
+      "General tool learning",
+      "Embodied agents",
+      "Multi-step question answering",
+      "Robotics",
+      "Vision-and-language navigation"
+    ]
+  }
+]
+
+Output Example:
+
+
+ "name":NAME_OF_PATTERN,"q1": "Yes", "q2": "Yes", "q3": "Partially", "q4": "Yes", "q5": "Yes", "q6": "Yes", "q7": "Yes","q8": "Yes", "q9": "Yes", "q10": "Partially", "q11": "Yes", "q12": "Yes", "q13": "Yes", "q14": "Yes", "q15": "Yes", "q16": "Yes", "q17": "Yes", "q18": "Yes", "q19": "Yes", "q20": "Yes","score":100
+

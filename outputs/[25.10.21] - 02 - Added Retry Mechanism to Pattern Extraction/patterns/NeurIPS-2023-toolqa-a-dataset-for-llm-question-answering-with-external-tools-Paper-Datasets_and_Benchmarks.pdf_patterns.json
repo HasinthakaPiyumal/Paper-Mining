@@ -1,0 +1,104 @@
+[
+  {
+    "Pattern Name": "Tool-Augmented LLM",
+    "Problem": "Large Language Models (LLMs) suffer from limitations such as hallucination, weak numerical reasoning, and reliance on potentially outdated or biased internal knowledge.",
+    "Context": "LLMs performing question answering, fact-checking, or other tasks where accuracy, up-to-dateness, or specialized reasoning (e.g., numerical, domain-specific) is critical.",
+    "Solution": "Integrate LLMs with external tools (e.g., retrieval systems, math calculators, code interpreters, databases, graph tools) to access up-to-date, fact-checked knowledge and perform complex computations or specialized operations.",
+    "Result": "Mitigates hallucination, enhances numerical and logical reasoning, provides access to current, external, and specialized knowledge, and improves overall task performance.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (RAG)",
+      "LLM as Code Interpreter",
+      "LLM as a Planner",
+      "Self-Reflection",
+      "Long-Term Memory for LLMs",
+      "ReAct (Reasoning and Acting)"
+    ],
+    "Uses": "General Question Answering, Fact-checking, Mathematical Reasoning, Code Interpretation, Information Retrieval, Database Operations, Graph Traversal."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "LLMs may hallucinate or provide outdated, non-specific, or ungrounded information due to limitations of their pre-trained knowledge.",
+    "Context": "LLMs requiring access to up-to-date, specific, or factual information not present in their training data, especially in open-domain question answering or knowledge-intensive tasks.",
+    "Solution": "Use a retrieval mechanism (e.g., sparse or dense retrieval) to extract relevant knowledge from an external corpus (e.g., text documents, databases) and provide it to the LLM as context before generating a response.",
+    "Result": "Enhances factual accuracy, reduces hallucination, provides access to current and specific information, and grounds LLM responses in verifiable external knowledge.",
+    "Related Patterns": [
+      "Tool-Augmented LLM"
+    ],
+    "Uses": "Open-domain Question Answering, Fact-checking, Timely Information Retrieval, Scientific Information Extraction."
+  },
+  {
+    "Pattern Name": "LLM as Code Interpreter",
+    "Problem": "LLMs exhibit weaknesses in precise numerical reasoning, complex logical operations, or accurate manipulation of structured data (e.g., tables, databases).",
+    "Context": "Tasks requiring exact calculations, logical execution, or interaction with structured data sources where LLMs' internal reasoning might be insufficient or error-prone.",
+    "Solution": "Enable LLMs to generate and execute code (e.g., Python, SQL) using external interpreters or tools, and then use the execution results to inform their response or perform subsequent actions.",
+    "Result": "Significantly improves numerical reasoning accuracy, allows for precise and verifiable structured data manipulation, and enables complex logical operations beyond LLM's inherent capabilities.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "LLM as a Planner"
+    ],
+    "Uses": "Mathematical Question Answering, Tabular Data Querying, Database Operations, Complex Reasoning Tasks, Event Extraction."
+  },
+  {
+    "Pattern Name": "LLM as a Planner",
+    "Problem": "LLMs struggle with complex, long-horizon, multi-step tasks that require sequential decision-making, decomposition into sub-tasks, and coordination of multiple tools or actions.",
+    "Context": "Agentic LLMs or systems where tasks can be broken down into a series of intermediate steps, each potentially solvable by a specific tool or action, and where the order of operations matters.",
+    "Solution": "Use an LLM to autonomously generate a sequence of intermediate reasoning steps or actions (a plan) to solve a complex task. This plan can involve calling various external tools or internal reasoning steps.",
+    "Result": "Enables LLMs to tackle complex, multi-step problems by breaking them down into manageable sub-tasks, improving planning efficiency and task completion for long-horizon tasks.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "Self-Reflection",
+      "ReAct (Reasoning and Acting)",
+      "Chain-of-Thought (CoT) Prompting"
+    ],
+    "Uses": "Multi-tool Orchestration, Complex Question Answering, Robotics, Vision-and-language navigation, General Problem Solving."
+  },
+  {
+    "Pattern Name": "Self-Reflection",
+    "Problem": "LLMs may make errors, generate infeasible plans, or produce suboptimal actions, especially in multi-step reasoning or tool-use scenarios, without a mechanism to detect and correct themselves.",
+    "Context": "LLMs executing multi-step plans or using external tools where intermediate results, environmental feedback, or error messages can indicate flaws in reasoning or execution.",
+    "Solution": "Design a mechanism where the LLM evaluates its previous actions or generated outputs based on feedback (e.g., execution traces, error messages, environmental observations) and iteratively refines its plan, reasoning, or subsequent actions.",
+    "Result": "Improves the robustness, accuracy, and adaptability of LLM-generated plans and tool use, allowing for dynamic error correction and learning from execution failures.",
+    "Related Patterns": [
+      "LLM as a Planner",
+      "ReAct (Reasoning and Acting)"
+    ],
+    "Uses": "Multi-tool Orchestration, Complex Reasoning, Agentic Behavior, Code Generation and Debugging."
+  },
+  {
+    "Pattern Name": "Long-Term Memory for LLMs",
+    "Problem": "LLMs have limited context windows and cannot retain information or learn from past interactions beyond a single session, leading to repetitive errors, inconsistent behavior, or inability to adapt over time.",
+    "Context": "Agentic LLMs or conversational AI systems requiring persistent knowledge, learned behaviors, or adaptation over extended interactions, multiple tasks, or across different sessions.",
+    "Solution": "Augment LLMs with an external memory system (e.g., vector database, knowledge graph, episodic memory) to store and retrieve past experiences, learned policies, or relevant information, overcoming the context window limitation.",
+    "Result": "Enables LLMs to learn from past successes and failures, adapt to new situations, maintain consistent behavior over time, and access a broader range of historical context.",
+    "Related Patterns": [
+      "Tool-Augmented LLM"
+    ],
+    "Uses": "Agentic AI, Personalization, Conversational AI, Reinforcement Learning from Human Feedback."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "LLMs struggle with complex reasoning tasks, often producing incorrect or non-transparent answers, and may fail to decompose problems effectively.",
+    "Context": "LLMs performing tasks that require multi-step reasoning, logical deduction, problem decomposition, or where transparency into the reasoning process is desired.",
+    "Solution": "Prompt the LLM to generate intermediate reasoning steps (a 'chain of thought') before providing the final answer. This can be achieved through few-shot examples demonstrating step-by-step reasoning or by simply adding a prompt like 'Let's think step by step'.",
+    "Result": "Improves LLM's reasoning abilities, leads to more accurate answers for complex tasks, and provides transparency into the LLM's thought process, making it easier to debug or understand failures.",
+    "Related Patterns": [
+      "LLM as a Planner",
+      "ReAct (Reasoning and Acting)"
+    ],
+    "Uses": "Mathematical Reasoning, Complex Question Answering, Logical Deduction, General Problem Solving."
+  },
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "LLMs need to perform complex tasks requiring both sophisticated reasoning and dynamic interaction with external environments or tools, while also adapting based on real-time feedback.",
+    "Context": "Agentic LLMs needing to solve multi-step problems by interleaving internal thought processes (reasoning) with external actions (tool calls) and observing the environment's response.",
+    "Solution": "Prompt the LLM to generate a sequence of interleaved 'Thought', 'Action', and 'Observation' steps. The 'Thought' step involves internal reasoning, 'Action' involves calling an external tool, and 'Observation' is the feedback received from the tool's execution, which then informs the next 'Thought'.",
+    "Result": "Enables robust, adaptive, and explainable problem-solving by synergizing reasoning with dynamic tool use and self-correction based on environmental feedback.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "LLM as a Planner",
+      "Self-Reflection",
+      "Chain-of-Thought (CoT) Prompting"
+    ],
+    "Uses": "Multi-tool Orchestration, Complex Question Answering, Embodied Agents, Interactive Problem Solving, Web Navigation."
+  }
+]

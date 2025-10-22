@@ -1,0 +1,103 @@
+[
+  {
+    "Pattern Name": "Tool-Augmented LLM Agent",
+    "Problem": "Large Language Models (LLMs) have limited capabilities and access to real-world, dynamic, or specific information, and cannot directly interact with external systems.",
+    "Context": "LLM-powered agents needing to perform actions in an environment, acquire specific, up-to-date information, or interact with external APIs/databases.",
+    "Solution": "Equip LLMs with external tools (e.g., search APIs, databases) that they can call based on their reasoning. The agent uses language to decide which tool to use and how to use it, and then processes the tool's output.",
+    "Result": "Expands LLM capabilities beyond their training data, allows access to real-world data, enables complex actions, and facilitates interaction with dynamic environments.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)",
+      "Reflexion (with Verbal Reinforcement Learning)",
+      "Grounded Planning"
+    ],
+    "Uses": "Information retrieval, complex task execution, interacting with dynamic environments, web agents, embodied agents."
+  },
+  {
+    "Pattern Name": "LLM Agent Memory Management",
+    "Problem": "LLMs have limited context windows (short-term memory) and lack persistent, retrievable long-term memory, making it difficult to maintain context or recall past information over long interactions or complex tasks.",
+    "Context": "LLM agents performing long-horizon tasks, requiring recall of past interactions, observations, or learned knowledge, or needing to manage information to avoid exceeding token limits.",
+    "Solution": "Implement mechanisms for both short-term (e.g., in-context learning, working memory management via tools like 'NotebookWrite' to record necessary information and prevent context accumulation) and long-term memory (e.g., memory summarization, retrieval-augmented generation from external knowledge bases).",
+    "Result": "Enables agents to maintain context over long interactions, recall relevant information, learn from past experiences, and manage token limits effectively.",
+    "Related Patterns": [
+      "Grounded Planning"
+    ],
+    "Uses": "Long-running conversations, complex planning, agent learning, managing information in partially observable environments."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting / Step-by-Step Reasoning",
+    "Problem": "LLMs struggle with complex reasoning tasks, often producing incorrect direct answers, especially for multi-step problems.",
+    "Context": "LLMs performing multi-step reasoning, problem-solving, or planning where intermediate logical steps are beneficial.",
+    "Solution": "Prompt the LLM to generate intermediate reasoning steps before providing a final answer (e.g., by adding 'Let's think step by step' to the prompt, as in Zero-Shot CoT). This encourages the model to break down the problem.",
+    "Result": "Improves reasoning capabilities, leads to more accurate and explainable outputs, and enhances performance on complex tasks.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)",
+      "Reflexion (with Verbal Reinforcement Learning)",
+      "Tree of Thoughts (ToT) / Graph of Thoughts (GoT)"
+    ],
+    "Uses": "Mathematical problem-solving, logical deduction, complex decision-making, planning."
+  },
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "LLM agents need to dynamically interleave reasoning and action to solve complex tasks in interactive and dynamic environments, where observations from actions inform subsequent decisions.",
+    "Context": "LLM agents operating in environments where actions yield observations, and subsequent reasoning depends on these observations (e.g., using tools to gather information).",
+    "Solution": "Structure the agent's interaction as an iterative loop of 'Thought -> Action -> Observation'. The LLM generates a 'Thought' (reasoning), then an 'Action' (e.g., calling a tool), and receives an 'Observation' (tool output or environment feedback), which then informs the next 'Thought'.",
+    "Result": "Enables dynamic adaptation, effective tool use, robust problem-solving, and improved performance in interactive environments.",
+    "Related Patterns": [
+      "Tool-Augmented LLM Agent",
+      "Chain-of-Thought (CoT) Prompting / Step-by-Step Reasoning",
+      "Reflexion (with Verbal Reinforcement Learning)",
+      "Multi-Constraint Planning"
+    ],
+    "Uses": "Embodied agents, web agents, complex planning with external tools, information collection."
+  },
+  {
+    "Pattern Name": "Reflexion (with Verbal Reinforcement Learning)",
+    "Problem": "LLM agents can make errors, get stuck in dead loops, or fail to adapt their plans based on environment feedback, requiring a mechanism for self-correction and learning from past failures.",
+    "Context": "LLM agents performing complex, long-horizon tasks where iterative improvement, self-correction, and learning from erroneous attempts are crucial.",
+    "Solution": "Incorporate a 'reflection' mechanism where the agent reviews its past actions and observations, identifies errors (e.g., invalid actions, repetitive actions, budget overruns), and generates high-level insights or 'verbal reinforcement' to guide future attempts or refine its reasoning process.",
+    "Result": "Improves agent robustness, reduces repetitive errors, enhances learning capabilities, and allows agents to dynamically adjust plans based on feedback.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)",
+      "Chain-of-Thought (CoT) Prompting / Step-by-Step Reasoning",
+      "Multi-Constraint Planning"
+    ],
+    "Uses": "Complex planning, long-horizon tasks, self-improving agents, error recovery."
+  },
+  {
+    "Pattern Name": "Tree of Thoughts (ToT) / Graph of Thoughts (GoT)",
+    "Problem": "Linear reasoning (like basic Chain-of-Thought) can be insufficient for problems requiring exploration of multiple reasoning paths, evaluating different options, or backtracking from dead ends in a search space.",
+    "Context": "LLM agents solving problems that benefit from exploring alternative solutions, evaluating different branches of reasoning, or managing a complex search space.",
+    "Solution": "Represent the reasoning process as a tree or graph structure. At each step, the LLM generates multiple 'thoughts' or states (nodes), evaluates their promise, and explores promising branches. This allows for deliberate problem-solving, including backtracking when a path proves unfeasible.",
+    "Result": "Enables more deliberate and robust problem-solving, especially for combinatorial, search-heavy, or multi-path reasoning tasks, by allowing exploration and pruning of thought processes.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting / Step-by-Step Reasoning"
+    ],
+    "Uses": "Complex planning, puzzle-solving, strategic decision-making, optimizing solution searches."
+  },
+  {
+    "Pattern Name": "Multi-Constraint Planning",
+    "Problem": "LLM agents struggle to holistically consider and satisfy multiple explicit (e.g., budget, room rules) and implicit (e.g., commonsense, non-conflicting transportation) constraints simultaneously during complex planning, leading to infeasible or suboptimal plans.",
+    "Context": "Planning tasks (like travel planning) that involve numerous interdependent decisions and a variety of hard and commonsense constraints that must all be met for a plan to be feasible.",
+    "Solution": "Design planning strategies that explicitly track, evaluate, and reconcile multiple constraints throughout the planning process. This might involve iterative refinement, constraint propagation, feedback mechanisms that penalize constraint violations (as seen in Reflexion), or specialized constraint-checking modules.",
+    "Result": "Enables agents to generate feasible plans that adhere to all specified and implicit constraints, improving the quality and practicality of the generated plans.",
+    "Related Patterns": [
+      "ReAct (Reasoning and Acting)",
+      "Reflexion (with Verbal Reinforcement Learning)",
+      "Grounded Planning"
+    ],
+    "Uses": "Travel planning, logistics, resource allocation, scheduling, any complex planning with diverse requirements."
+  },
+  {
+    "Pattern Name": "Grounded Planning",
+    "Problem": "LLMs can hallucinate or generate information that is inconsistent with real-world data or the provided environment, leading to infeasible or incorrect plans, especially when dealing with partially observable environments or mass information.",
+    "Context": "LLM agents generating plans or making decisions that rely on external, factual, or dynamic information (e.g., flight schedules, restaurant availability, accommodation details) retrieved via tools.",
+    "Solution": "Ensure that all information used in the plan is explicitly retrieved from a reliable, external knowledge source (e.g., a database, APIs) and that the generated plan strictly adheres to this retrieved information. This involves robust tool use for information collection, careful management of retrieved data (e.g., via memory tools like NotebookWrite), and validation of generated content against the source.",
+    "Result": "Reduces hallucinations, increases the factual accuracy and feasibility of generated plans, and ensures consistency with the operational environment.",
+    "Related Patterns": [
+      "Tool-Augmented LLM Agent",
+      "LLM Agent Memory Management",
+      "Multi-Constraint Planning"
+    ],
+    "Uses": "Any LLM application requiring factual accuracy, planning with real-world data, agent interaction with databases, web agents."
+  }
+]

@@ -1,0 +1,48 @@
+[
+  {
+    "Pattern Name": "Local Agnostic attribute Contribution Explanation (LACE)",
+    "Problem": "Black-box machine learning models lack interpretability for individual predictions, making it difficult to understand the reasons behind specific decisions, especially in critical applications. Existing local explanation methods often provide only qualitative or quantitative insights, or suffer from instability and computational complexity for attribute interactions.",
+    "Context": "Explaining individual predictions of any black-box classification model for structured data, where understanding the specific factors influencing a decision is crucial for trust, debugging, and compliance (e.g., GDPR's 'right to explanation').",
+    "Solution": "1. **Locality Capture:** Identify the K-nearest neighbors of the instance to be explained from the training data, labeled by the black-box model.\n2. **Local Model Training:** Train a local interpretable model (an associative classifier, e.g., L3) on these K-neighbors to extract local rules, representing relevant patterns (conjunctions of attribute-value pairs) that jointly determine the prediction in that locality.\n3. **Prediction Difference Estimation:** Quantify the influence of individual attribute values and the identified relevant patterns on the prediction using a removal-based technique (marginalization) to compute the 'prediction difference' (how the prediction probability changes when an attribute or pattern is omitted). This overcomes exponential complexity by focusing only on patterns identified by the local model.\n4. **Automatic Locality Tuning:** Employ a heuristic, instance-based algorithm to automatically select the optimal 'K' (number of neighbors) by evaluating the 'locality approximation' (deviation between full information removal and union itemset removal).\n5. **Visualization:** Present the qualitative (local rules) and quantitative (prediction differences) explanations via a bar plot.",
+    "Result": "Provides a comprehensive, dual-form (qualitative rules and quantitative feature importance) explanation for individual black-box model predictions. It highlights both individual attribute contributions and the joint effect of attribute subsets, improving stability and computational efficiency compared to other methods.",
+    "Related Patterns": [
+      "Divergent Subgroup Analysis (DivExplorer)",
+      "Interactive Model Inspection (XPLAIN)"
+    ],
+    "Uses": "MLOps, AI–Human Interaction, Knowledge & Reasoning"
+  },
+  {
+    "Pattern Name": "Interactive Model Inspection (XPLAIN)",
+    "Problem": "Black-box models hinder active human exploration and understanding of AI behavior, making it difficult for experts to test hypotheses, detect errors, and debug models effectively.",
+    "Context": "When human experts need to actively interact with and inspect the reasons behind individual AI predictions for structured data, for purposes like building trust, validating model decisions, and debugging unexpected behaviors.",
+    "Solution": "1. **Leverage Local Explanations:** Integrate a local explanation method (like LACE) to generate class-dependent and model-agnostic explanations for individual instances.\n2. **Interactive User Interface:** Provide a user interface that enables:\n    - **Explanation Viewing:** Display explanations for both correctly and misclassified instances.\n    - **Comparative Analysis:** Allow comparison of explanations across different target classes and multiple classifiers.\n    - **Hypothesis Testing (User Rules):** Enable users to define and quantify the relevance of their own hypothesized rules (attribute combinations).\n    - **What-If Analysis:** Support interactive modification of instance attribute values to observe changes in predictions and explanations.\n    - **Aggregated Insights:** Provide 'explanation metadata' by aggregating multiple local explanations to derive global insights (e.g., average attribute/item importance per class).",
+    "Result": "Facilitates human-in-the-loop analysis of AI models, enabling deeper understanding of local and aggregated global behaviors, supporting model debugging, validation, and trust-building through active investigation.",
+    "Related Patterns": [
+      "Local Agnostic attribute Contribution Explanation (LACE)"
+    ],
+    "Uses": "AI–Human Interaction, MLOps, Knowledge & Reasoning"
+  },
+  {
+    "Pattern Name": "Divergent Subgroup Analysis (DivExplorer)",
+    "Problem": "Identifying and characterizing specific data subgroups where a machine learning model exhibits peculiar or anomalous behavior (e.g., significantly higher false positive/negative rates, lower accuracy, or biased outcomes) compared to its overall performance. Existing methods often require manual subgroup definition or lack exhaustive exploration, potentially missing critical subgroups or corrective behaviors.",
+    "Context": "Model validation, testing, fairness auditing, bias detection, and general understanding of model behavior at a group level for any black-box classification model (and generalizable to scoring/ranking systems) on structured data.",
+    "Solution": "1. **Divergence Definition:** Introduce 'divergence' as a measure of the difference in a chosen performance statistic (e.g., FPR, FNR, error rate, accuracy) for a specific data subgroup (defined by a pattern) compared to the overall dataset.\n2. **Pattern-Based Subgroup Characterization:** Characterize data subgroups using intrinsically interpretable 'patterns' (conjunctions of attribute-value pairs).\n3. **Exhaustive Frequent Pattern Mining:** Leverage efficient frequent pattern mining (FPM) algorithms to automatically and exhaustively extract *all* frequent itemsets (patterns with support above a threshold) and compute their divergence. This ensures no significant divergent subgroups are missed.\n4. **Statistical Significance:** Measure the statistical significance of divergence using a Bayesian approach (Beta distribution and Welch's t-test) for Boolean outcome functions.\n5. **Item Contribution Quantification (Shapley Values):** Quantify the contribution of individual 'items' (attribute-value pairs) to the divergence of a specific pattern using Shapley values.\n6. **Global Item Divergence:** Generalize Shapley values to define 'global item divergence,' which estimates an item's overall contribution to divergence across all patterns, capturing effects of item associations.\n7. **Corrective Item Identification:** Identify 'corrective items' that, when added to a pattern, reduce its divergence, revealing nuanced model behaviors.\n8. **Summarization:** Implement post-exploration pruning to reduce redundancy in the output of divergent itemsets.",
+    "Result": "Automatic, exhaustive, and interpretable identification and characterization of divergent data subgroups. Provides insights into model strengths, weaknesses, and potential biases at a granular level, supporting model debugging, fairness assessment, and responsible AI development.",
+    "Related Patterns": [
+      "Local Agnostic attribute Contribution Explanation (LACE)",
+      "Interactive Subgroup Exploration (DivExplorer System)"
+    ],
+    "Uses": "MLOps, AI–Human Interaction, Knowledge & Reasoning, Personalization"
+  },
+  {
+    "Pattern Name": "Interactive Subgroup Exploration (DivExplorer System)",
+    "Problem": "Users need dynamic and interactive capabilities to explore and understand classifier behavior across data subgroups, identify problematic areas, and analyze the factors contributing to anomalous performance.",
+    "Context": "When human experts need to interactively investigate and understand how an AI model performs across different segments of structured data, especially for ethical implications, fairness auditing, or debugging.",
+    "Solution": "1. **Leverage Subgroup Divergence Algorithm:** Integrate a subgroup divergence analysis algorithm (like DivExplorer algorithm) to identify and quantify anomalous behaviors in data subgroups.\n2. **Interactive User Interface:** Provide a user interface that enables:\n    - **Divergent Itemset Display:** Present a sortable table of itemsets ranked by their divergence (e.g., FPR, FNR).\n    - **Redundancy Pruning:** Allow users to prune redundant itemsets for a more concise summary.\n    - **Local Contribution Analysis:** Display bar graphs showing individual item contributions (Shapley values) to the divergence of a selected itemset.\n    - **Lattice Visualization:** Provide an interactive lattice view of itemset subsets to explore divergence changes and identify corrective items.\n    - **Global Influence Analysis:** Show global item divergence to understand overall item impact.\n    - **Drill-down and Search:** Enable searching for specific itemsets or exploring supersets of an itemset of interest.",
+    "Result": "Facilitates dynamic, human-in-the-loop exploration of AI model behavior in data subgroups, enabling effective debugging, bias identification, and deeper understanding of group-level performance through interactive visualization and analysis.",
+    "Related Patterns": [
+      "Divergent Subgroup Analysis (DivExplorer)"
+    ],
+    "Uses": "AI–Human Interaction, MLOps, Knowledge & Reasoning"
+  }
+]

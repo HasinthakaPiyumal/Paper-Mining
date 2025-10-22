@@ -10,54 +10,6 @@ if not os.environ.get("GOOGLE_API_KEY"):
 
 llm = init_chat_model("gemini-2.5-flash", model_provider="google_genai", temperature=0)
 
-# Configurations for text splitting
-# splitter = RecursiveCharacterTextSplitter(
-#     chunk_size=3000,
-#     chunk_overlap=200,
-#     separators=["\n\n", "\n", " ", ""]
-# )
-
-# Prompt template for pattern extraction
-# pattern_extraction_prompt = """
-# You are an expert in AI design patterns.
-
-# An AI design pattern is a proven, reusable solution to a recurring problem 
-# in the design, development, or deployment of AI/ML systems. 
-# It captures the essence of a solution in a structured way, making it easier 
-# to apply in similar contexts. 
-
-# You will be given the text of a research paper. 
-# Your task is to carefully scan the text and extract **all AI design patterns** mentioned.
-
-# For each pattern, identify the following fields:
-# - Pattern Name
-# - Problem
-# - Context
-# - Solution
-# - Result
-# - Related Patterns
-# - Uses
-
-# AI Design Patterns are:
-# 1. Classical AI
-# 2. Generative AI Patterns
-# 3. Agentic AI Patterns
-# 4. Prompt Design Patterns
-# 5. MLOps Patterns
-# 6. AI–Human Interaction Patterns
-# 7. LLM-specific Patterns
-# 8. Tools Integration Patterns
-# 9. Knowledge & Reasoning Patterns
-# 10. Planning Patterns
-# 11. Personalization Pattern
-
-# Return the output strictly as a JSON array.
-# Do not include explanations outside JSON.
-
-# Paper text:
-# {text}
-# """
-
 pattern_extraction_prompt = """
 An AI design pattern is a proven, reusable solution to a recurring problem specifically within AI/ML system design, development, or deployment. It addresses challenges inherent to building machine learning, agentic behavior, or data-driven intelligence.
 
@@ -116,26 +68,13 @@ Paper text:
 {text}
 """
 
-# pattern_extraction_prompt = """
-# An AI design pattern is a proven, reusable solution to a recurring problem specifically within AI/ML system design, development, or deployment. It addresses challenges inherent to building machine learning, agentic behavior, or data-driven intelligence.
-# Given a research paper text, extract only the true AI design patterns mentioned.
+retry_prompt = pattern_extraction_prompt+"""
+if there are any missing design patterns from the paper text, extract them as well and add to the below json array.
+if there is any issue with bellow json format, correct it and return only the json array.
 
-# For each pattern, include:
-# - Pattern Name
-# - Problem
-# - Context
-# - Solution
-# - Result
-# - Related Patterns (only other extracted patterns)
-# - Uses
-
-# If patterns are mostly similar in their problem, solution, or context, merge them into a single entry. When merging, combine their names, uses, and related patterns.
-
-# Return the output strictly as a JSON array.
-
-# Paper text:
-# {text}
-# """
+Extracted patterns so far:
+{extracted_patterns}
+"""
 
 
 summary_prompt = """
@@ -179,9 +118,15 @@ def extract_patterns_from_text(text):
         input_variables=["text"]
     )
 
-    chain = prompt | llm
-    result = chain.invoke({"text": text})
-    return remove_json_header_footer(result.content)
+    prompt_2 = PromptTemplate(
+        template=retry_prompt,
+        input_variables=["text", "extracted_patterns"]
+    )
+
+    iter_1 = llm.invoke(prompt.format(text=text))
+    iter_2 = llm.invoke(prompt_2.format(text=text, extracted_patterns=iter_1.content))
+    iter_3 = llm.invoke(prompt_2.format(text=text, extracted_patterns=iter_2.content))
+    return remove_json_header_footer(iter_3.content)
 
 def extract_patterns(file_path):
     text = load_text_file(file_path)

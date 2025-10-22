@@ -1,0 +1,33 @@
+[
+  {
+    "Pattern Name": "InContext Retrieval-Augmented Language Model (InContext RALM)",
+    "Problem": "Language Models (LMs) inherently suffer from factual inaccuracies, lack direct source attribution, and struggle to incorporate up-to-date or domain-specific external knowledge. Existing Retrieval-Augmented Language Modeling (RALM) approaches often require modifying the LM's architecture or extensive retraining, which complicates deployment, increases costs, and is impossible for LMs accessed via API.",
+    "Context": "Building intelligent systems that leverage large, pre-trained Language Models, especially when those LMs are 'frozen' (i.e., their weights cannot be modified) or are only accessible through an API. The goal is to ground LM generation with external knowledge without altering the core LM.",
+    "Solution": "Instead of modifying the LM's internal architecture, relevant documents retrieved from an external knowledge source are simply prepended (concatenated) to the LM's input prompt. This 'zero-effort document reading mechanism' allows the frozen LM to process the external information as part of its standard input sequence, effectively conditioning its generation on the retrieved context. Design choices like 'retrieval stride' (how often to retrieve) and 'retrieval query length' (how much prefix context to use for the query) are optimized for performance and runtime.",
+    "Result": "Substantial improvements in LM performance (e.g., perplexity reduction), mitigation of factual inaccuracies, and provision of a natural source attribution mechanism. This approach significantly simplifies the deployment of retrieval-augmented systems and enables the use of off-the-shelf LMs for knowledge-intensive tasks.",
+    "Related Patterns": [
+      "LM-Oriented Document Reranking"
+    ],
+    "Uses": [
+      "Enhancing language modeling performance",
+      "Improving factual consistency in text generation",
+      "Open-domain question answering (ODQA)",
+      "Enabling knowledge grounding for LMs accessed via API"
+    ]
+  },
+  {
+    "Pattern Name": "LM-Oriented Document Reranking",
+    "Problem": "Initial document retrieval, especially using lexical methods (e.g., BM25), often provides a set of candidate documents but may not select the single most relevant or semantically appropriate document for a specific Language Model (LM) generation task. These retrievers may lack the nuanced semantic understanding required to optimize for LM performance.",
+    "Context": "Applied within Retrieval-Augmented Language Models (RALMs), such as InContext RALM, where a primary retriever has already identified a top-k set of candidate documents. The objective is to refine this selection to maximize the main LM's performance, potentially with constraints like limited access to the main LM's internal states or log probabilities.",
+    "Solution": "This pattern encompasses two main approaches:\n1.  **Zero-Shot Reranking:** Utilize an existing Language Model (which can be smaller or different from the main LM, and can operate without access to the main LM's log probabilities) to score the relevance of each candidate document. This is achieved by estimating the probability of a short, upcoming text segment (or a relevant part of the current prefix) given the candidate document. The document yielding the highest probability is selected.\n2.  **Predictive Reranking (Trained):** Train a dedicated, specialized reranker (e.g., a fine-tuned bidirectional transformer) to learn which document from the top-k candidates will best aid the main LM in predicting subsequent tokens. This reranker is trained in a self-supervised manner, using the main LM's signal (e.g., maximizing the probability of the actual next tokens given the document).",
+    "Result": "Significant further performance gains for the main LM beyond initial retrieval, by providing a more precisely selected and semantically relevant grounding document. This leads to improved language modeling metrics (e.g., lower perplexity) and better performance on downstream tasks like question answering.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model"
+    ],
+    "Uses": [
+      "Optimizing document selection for Retrieval-Augmented Language Models",
+      "Improving the quality of retrieved context for LLMs",
+      "Enhancing factual accuracy and coherence in generated text"
+    ]
+  }
+]

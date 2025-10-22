@@ -1,0 +1,173 @@
+[
+  {
+    "Pattern Name": "Prompt Chaining",
+    "Problem": "Single LLM calls may not be sufficient for complex tasks, requiring targeted reasoning, decomposition, or iterative refinement.",
+    "Context": "Tasks requiring sequential reasoning, multi-step problem-solving, or iterative improvement, where the output of one LLM interaction can inform the next.",
+    "Solution": "Define a sequence of LLM calls, where the output or intermediate reasoning from one call is used to construct the prompt for a subsequent call. This can involve eliciting targeted reasoning, generating intermediate steps, or dynamically adapting prompts based on previous outputs.",
+    "Result": "Enables the LLM to perform increasingly complicated algorithms, multi-step problem-solving, and iterative refinement, extending its capabilities beyond single-turn interactions.",
+    "Related Patterns": [
+      "Reason and Act (ReAct)",
+      "LLM-Guided Tree Search (Tree of Thoughts / ToT)",
+      "Learning to Reason (Prompt Template Update)"
+    ],
+    "Uses": "Self-Critique, SelectionInference, Retrieval Augmented Generation (RAG), Socratic Models, general multi-step reasoning."
+  },
+  {
+    "Pattern Name": "Tool Use / API Integration",
+    "Problem": "LLMs have limited inherent knowledge, computational capabilities, and direct interaction with external systems or real-time data.",
+    "Context": "Tasks that require accessing up-to-date information, performing precise calculations, interacting with digital environments (e.g., websites, databases), or executing specific functions beyond the LLM's internal knowledge.",
+    "Solution": "Enable the LLM to call external functions, APIs, or specialized models (referred to as 'tools'). The LLM's output is parsed to identify the intent to use a tool, its name, and arguments. The tool's output is then provided back to the LLM as additional context.",
+    "Result": "Augments the LLM's capabilities by providing access to external knowledge, computation, and interaction, effectively grounding its reasoning in the real world and expanding its action space.",
+    "Related Patterns": [
+      "Grounded Actions",
+      "Reason and Act (ReAct)",
+      "Hybrid Planning (Language + Code)"
+    ],
+    "Uses": "Wikipedia API interaction, search engines, calculators, translators, web manipulation, code execution, database queries."
+  },
+  {
+    "Pattern Name": "Memory-Augmented Agent",
+    "Problem": "Large Language Models (LLMs) are inherently stateless, lacking the ability to persist information across interactions, learn from experience, or maintain long-term knowledge necessary for complex, multi-step agentic behavior.",
+    "Context": "Agents designed for long-term interaction, continuous learning, or tasks requiring access to historical data, factual knowledge, or learned procedures.",
+    "Solution": "Integrate the LLM with explicit memory modules that store and manage different types of information:\n- **Working Memory**: A short-term, active data structure for current perceptual inputs, goals, intermediate reasoning, and information retrieved from long-term memories. It persists across individual LLM calls within a decision cycle.\n- **Episodic Memory**: Stores sequences of past experiences, observations, and actions (e.g., event flows, game trajectories) for later retrieval and reflection.\n- **Semantic Memory**: Stores an agent's knowledge about the world and itself (e.g., facts, manuals, inferences), which can be read-only or updated.\n- **Procedural Memory**: Stores the agent's explicit code, learned skills, and prompt templates, defining how the agent operates and interacts.",
+    "Result": "Transforms stateless LLMs into stateful agents capable of maintaining context, learning from experience, accumulating knowledge, and executing multi-step tasks over extended periods.",
+    "Related Patterns": [
+      "Reflective Agent / Self-Refinement",
+      "Skill Library / Procedural Learning",
+      "Grounded Actions"
+    ],
+    "Uses": "Generative Agents, Voyager, Reflexion, any agent requiring persistent state, learning, or knowledge access."
+  },
+  {
+    "Pattern Name": "Reason and Act (ReAct)",
+    "Problem": "Agents need to perform complex tasks in interactive environments by dynamically interleaving reasoning (to plan and analyze) and acting (to execute and gather feedback).",
+    "Context": "Interactive environments (digital or physical) where an agent's actions influence the environment, and subsequent observations require re-evaluation and adaptation of plans.",
+    "Solution": "Implement a decision cycle where the LLM first performs an internal 'reasoning' action to analyze the current situation, observations, and internal state, and then generates an 'acting' (grounding) action to interact with the external environment. The environmental feedback from the action is then incorporated into the next reasoning step, creating a continuous feedback loop.",
+    "Result": "Achieves synergistic effects where the LLM's reasoning guides its actions, and the environmental feedback from actions informs and refines subsequent reasoning, leading to more robust and adaptive task completion.",
+    "Related Patterns": [
+      "Grounded Actions",
+      "Prompt Chaining",
+      "LLM-Guided Tree Search (Tree of Thoughts / ToT)"
+    ],
+    "Uses": "Wikipedia API interaction, text games, web navigation, general interactive problem-solving."
+  },
+  {
+    "Pattern Name": "LLM-Guided Tree Search (Tree of Thoughts / ToT)",
+    "Problem": "Solving complex reasoning problems that require exploring multiple potential paths, evaluating intermediate steps, and potentially backtracking from unproductive lines of thought, which is challenging for sequential, autoregressive LLM generation.",
+    "Context": "Tasks such as mathematical puzzles (e.g., Game of 24), creative writing, or complex planning where intermediate 'thoughts' or states can be generated, evaluated, and explored in a structured manner.",
+    "Solution": "The LLM is used to generate multiple 'thoughts' or candidate intermediate steps at each decision point. These thoughts are then evaluated (e.g., by the LLM itself, heuristics, or simulation) to assess their promise. A tree search algorithm (e.g., Breadth-First Search, Depth-First Search, Monte Carlo Tree Search) is employed to explore the space of thoughts, allowing for global exploration, local backtracking, and foresight.",
+    "Result": "Significantly improves the LLM's ability to solve complex reasoning problems by enabling more deliberate, systematic exploration of solution spaces and recovery from errors, leading to higher quality and more robust outcomes.",
+    "Related Patterns": [
+      "Prompt Chaining",
+      "Meta-Reasoning for Efficiency",
+      "Hybrid Planning (Language + Code)"
+    ],
+    "Uses": "Game of 24, creative writing, crosswords, complex planning, general reasoning tasks requiring exploration."
+  },
+  {
+    "Pattern Name": "Skill Library / Procedural Learning",
+    "Problem": "Agents operating in complex, open-ended environments need to acquire, store, and reuse a growing repertoire of specialized, code-based skills or procedures to efficiently interact with the world and solve diverse tasks.",
+    "Context": "Environments (e.g., robotics, virtual worlds like Minecraft) where complex actions can be decomposed into reusable sub-procedures, and new capabilities can be learned and codified.",
+    "Solution": "Maintain a long-term procedural memory that functions as a 'skill library' storing code-based grounding procedures. The agent can learn new skills (e.g., by generating code based on reasoning and environmental feedback) and add them to this library. Existing skills can be retrieved and composed hierarchically or used as atomic actions.",
+    "Result": "Enables agents to incrementally build a robust and extensible set of capabilities, leading to improved exploration, mastery of complex task hierarchies, and better generalization to unseen tasks by leveraging learned, reusable components.",
+    "Related Patterns": [
+      "Memory-Augmented Agent",
+      "Reflective Agent / Self-Refinement",
+      "Hybrid Planning (Language + Code)",
+      "Learning to Reason (Prompt Template Update)"
+    ],
+    "Uses": "Voyager (Minecraft), robotic task learning, automated code generation for specific domains."
+  },
+  {
+    "Pattern Name": "Reflective Agent / Self-Refinement",
+    "Problem": "Agents often make errors, encounter failures, or perform suboptimally, and need a mechanism to learn from these experiences to improve their future decision-making and behavior.",
+    "Context": "Agents operating in environments where feedback (success/failure, observations) is available, and there's a need for continuous improvement and adaptation over time.",
+    "Solution": "The agent uses its LLM to critically analyze past experiences, particularly failures or suboptimal trajectories, stored in episodic memory. This 'reflection' process generates insights, identifies causes of errors, or formulates new knowledge (e.g., heuristics, constraints, semantic inferences) that are then stored in long-term memory (e.g., semantic memory) or used to refine the agent's procedural knowledge (e.g., prompt templates, code).",
+    "Result": "Enhances the agent's ability to learn autonomously from its own experiences, leading to more robust, adaptive, and intelligent behavior by preventing recurrence of past mistakes and accumulating valuable operational knowledge.",
+    "Related Patterns": [
+      "Memory-Augmented Agent",
+      "Skill Library / Procedural Learning",
+      "Prompt Chaining",
+      "Learning to Reason (Prompt Template Update)",
+      "Meta-Reasoning for Efficiency"
+    ],
+    "Uses": "Reflexion (learning from failed episodes), Generative Agents (generating reflections on events), SelfCritique (iterative refinement with self-feedback)."
+  },
+  {
+    "Pattern Name": "Hybrid Planning (Language + Code)",
+    "Problem": "Traditional planning often requires structured world models or logical predicates, which can be rigid and difficult to scale, while pure language-based planning can lack precision, executability, and verifiability.",
+    "Context": "Complex tasks requiring both high-level conceptual understanding, flexible reasoning, and precise, verifiable execution, especially in domains with physical or simulated interactions.",
+    "Solution": "Integrate LLM-based natural language reasoning for high-level plan generation, goal decomposition, and conceptual understanding with code-based planning or execution for low-level, deterministic actions, simulations, or structured world model interactions. The LLM can translate natural language plans into executable code or structured world model commands, and potentially write and execute simulation code on the fly to evaluate plan consequences.",
+    "Result": "Combines the flexibility and commonsense reasoning of LLMs with the precision, verifiability, and executability of traditional code, leading to more robust, adaptable, and effective planning in complex environments.",
+    "Related Patterns": [
+      "LLM-Guided Tree Search (Tree of Thoughts / ToT)",
+      "Skill Library / Procedural Learning",
+      "Tool Use / API Integration",
+      "Multimodal Reasoning"
+    ],
+    "Uses": "Robotics, planning in PDDL domains, agents that generate and execute simulation code, general complex task planning."
+  },
+  {
+    "Pattern Name": "Meta-Reasoning for Efficiency",
+    "Problem": "LLM inference is computationally expensive and slow, making it impractical to apply deep, exhaustive reasoning for every decision, especially in real-time or resource-constrained environments.",
+    "Context": "Agents needing to make decisions efficiently, balancing the computational cost of reasoning with the potential utility of a more deliberate plan.",
+    "Solution": "Implement mechanisms that allow the agent to adaptively control and optimize its reasoning process. This involves estimating the potential utility or value of further planning/reasoning, dynamically allocating computational resources (e.g., deciding how deep to search in a tree), amortizing reasoning costs (e.g., by finetuning smaller LLMs or caching results), or routing between different, pre-defined decision subprocedures based on context.",
+    "Result": "Improves the overall efficiency and responsiveness of LLM-based agents by intelligently managing computational resources, ensuring that complex reasoning is applied only when its benefits outweigh its costs.",
+    "Related Patterns": [
+      "LLM-Guided Tree Search (Tree of Thoughts / ToT)",
+      "Reflective Agent / Self-Refinement"
+    ],
+    "Uses": "Adaptive planning, real-time decision-making, resource-constrained agents."
+  },
+  {
+    "Pattern Name": "Grounded Actions",
+    "Problem": "Large Language Models (LLMs) primarily process and generate text, but intelligent agents need to interact with and perceive diverse external environments (physical, digital, human dialogue) that are often multimodal or require specific interfaces.",
+    "Context": "Any agent designed to operate beyond a purely textual, internal reasoning loop, requiring interaction with the real world or structured digital systems.",
+    "Solution": "Implement 'grounding procedures' that bridge the gap between the LLM's textual domain and the external environment. This involves:\n- **Perceptual Input Processing**: Converting multimodal observations (e.g., images, audio, sensor data) into textual descriptions or representations that the LLM can process (e.g., using vision-language models or captioning models).\n- **Action Execution**: Translating the LLM's textual action outputs (e.g., high-level commands, API calls) into executable commands for physical actuators, digital interfaces, or dialogue systems.",
+    "Result": "Enables LLM-based agents to perceive their surroundings, execute actions in the real world, and receive meaningful feedback, effectively transforming complex external interactions into a text-based 'game' that the LLM can understand and influence.",
+    "Related Patterns": [
+      "Tool Use / API Integration",
+      "Reason and Act (ReAct)",
+      "Memory-Augmented Agent",
+      "Multimodal Reasoning",
+      "Multi-Agent Collaboration"
+    ],
+    "Uses": "Robotics (SayCan, Voyager), web manipulation (ReAct), dialogue systems, game interaction."
+  },
+  {
+    "Pattern Name": "Multimodal Reasoning",
+    "Problem": "Large Language Models (LLMs) are primarily text-based, but intelligent agents need to perceive and reason over diverse, non-linguistic modalities (e.g., images, audio) from real-world environments.",
+    "Context": "Agents operating in environments that provide multimodal observations, such as robotics, web navigation with visual elements, or human-computer interaction involving visual cues.",
+    "Solution": "Integrate multimodal capabilities into the agent's reasoning process. This can be achieved through two main approaches:\n1. **Modular Approach**: Use a separate, specialized model (e.g., a Vision-Language Model (VLM) or a captioning model) to convert non-linguistic perceptual data into textual descriptions, which are then fed to the LLM for reasoning.\n2. **Integrated Approach**: Employ a natively multimodal LLM that can directly process interleaved image and text inputs, allowing for reasoning over both modalities simultaneously.",
+    "Result": "Enables LLM-based agents to understand and interact with multimodal environments, bridging the gap between textual reasoning and real-world perception, though with tradeoffs in modularity versus tight coupling.",
+    "Related Patterns": [
+      "Grounded Actions",
+      "Hybrid Planning (Language + Code)"
+    ],
+    "Uses": "Robotics, vision-and-language navigation, GUI agents, general embodied AI."
+  },
+  {
+    "Pattern Name": "Learning to Reason (Prompt Template Update)",
+    "Problem": "The effectiveness of LLM-based reasoning is highly dependent on the quality and specificity of prompt instructions, which are often manually designed and may not generalize or adapt well to new tasks or evolving contexts.",
+    "Context": "Agents that need to improve their reasoning capabilities, adapt to new tasks, or optimize their interaction with the LLM over time without constant human intervention.",
+    "Solution": "Enable the agent to autonomously learn and update its own reasoning procedures, specifically by modifying or generating prompt templates. This can involve inferring optimal prompt instructions from input-output examples or reflecting on past performance to refine the structure and content of prompts used for subsequent LLM calls.",
+    "Result": "Allows the agent to self-improve its reasoning strategies, leading to more effective and adaptable LLM interactions, reducing reliance on fixed, human-designed prompts, and enhancing task-solving capabilities.",
+    "Related Patterns": [
+      "Reflective Agent / Self-Refinement",
+      "Skill Library / Procedural Learning",
+      "Prompt Chaining"
+    ],
+    "Uses": "Automatic Prompt Engineering (APE), self-improving agents, adaptive task solving."
+  },
+  {
+    "Pattern Name": "Multi-Agent Collaboration",
+    "Problem": "Complex tasks may exceed the capabilities of a single language agent, or benefit from diverse perspectives, division of labor, and robust verification mechanisms.",
+    "Context": "Scenarios requiring social interaction, debate, collaborative problem-solving, or enhanced safety and robustness through collective intelligence, such as social simulations, software development, or complex decision-making.",
+    "Solution": "Design a system where multiple language agents interact with each other, often through dialogue or shared environments, to achieve a common objective. Agents can be assigned specialized roles, contribute diverse knowledge, engage in debate to refine solutions, or work in parallel to solve sub-problems.",
+    "Result": "Enables more sophisticated problem-solving, robust decision-making, and the simulation of social dynamics, leveraging the collective intelligence and varied capabilities of multiple LLM-based agents.",
+    "Related Patterns": [
+      "Grounded Actions"
+    ],
+    "Uses": "Social simulation, debate, collaborative software development, multi-agent task solving, improved safety mechanisms."
+  }
+]

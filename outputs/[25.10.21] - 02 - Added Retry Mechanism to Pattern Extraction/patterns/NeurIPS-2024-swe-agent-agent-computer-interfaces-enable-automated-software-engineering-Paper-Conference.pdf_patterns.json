@@ -1,0 +1,100 @@
+[
+  {
+    "Pattern Name": "Agent-Computer Interface (ACI)",
+    "Problem": "Language Model (LM) agents struggle to reliably interact with and interpret feedback from general-purpose human-designed software interfaces (e.g., Linux shell, IDEs) when performing complex tasks in digital environments. This leads to inefficiency, errors, and hampered performance due to LMs' unique needs and limitations (e.g., lack of visual understanding, context window constraints, sensitivity to verbose/inconsistent feedback).",
+    "Context": "LM agents are deployed to automate complicated tasks in digital environments (e.g., software engineering, web navigation, computer control) that require iterative actions and feedback.",
+    "Solution": "Introduce an abstraction layer (ACI) between the LM agent and the computer. This interface is specially built for LMs, offering a tailored set of simple, compact, and efficient actions, along with specific, concise, and informative feedback about command effects and environment state. It also incorporates guardrails and context management to complement an LM's limitations and abilities.",
+    "Result": "Substantially enhances the LM agent's ability to interact with the computer, improving task performance, reducing errors, and making complex digital work more effective.",
+    "Related Patterns": [
+      "LM-Centric Search & Navigation",
+      "Interactive File Viewer",
+      "Consolidated File Editor",
+      "Error-Mitigating Guardrails",
+      "Context-Aware History Management",
+      "In-Context Learning with Demonstrations"
+    ],
+    "Uses": "Automated software engineering, web navigation, computer control, robotics (where digital environment can be molded)."
+  },
+  {
+    "Pattern Name": "LM-Centric Search & Navigation",
+    "Problem": "General-purpose search and navigation tools (e.g., `grep`, `find`, `ls`, `cd`) are inefficient and often produce verbose, overwhelming, or inconsistent results for LM agents, making it difficult for them to reliably and efficiently locate relevant files and content within large codebases. Iterative search (like in Vim/VSCode) can also lead to exhaustive, inefficient behavior.",
+    "Context": "LM agents need to efficiently find specific files, functions, or strings within a repository to understand issues or plan edits, without overwhelming their context window.",
+    "Solution": "Provide specialized, LM-friendly search commands (`findfile`, `searchfile`, `searchdir`) that output summarized, concise results (e.g., limit to 50 matches), suggest refining queries if too many results are found, and have simple usage patterns with consistent output formats.",
+    "Result": "Enables efficient keyword-driven localization at both directory and file levels, reduces context window bloat, and improves the agent's ability to zoom in on problematic code areas.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context-Aware History Management",
+      "Error-Mitigating Guardrails"
+    ],
+    "Uses": "Automated software engineering, code debugging, repository-level tasks."
+  },
+  {
+    "Pattern Name": "Interactive File Viewer",
+    "Problem": "Traditional command-line tools (`cat`, `head`, `tail`) are suboptimal for LM agents to inspect file content due to verbosity (flooding context), lack of intuitive navigation (stateless scrolling, complex line arithmetic), and inability to quickly identify specific code sections. Agents are also sensitive to the window size, where too little or too much content lowers performance.",
+    "Context": "LM agents need to understand file content, perform fine-grained localization, and grasp relationships between intra-file entities within a codebase.",
+    "Solution": "Implement a specialized, interactive file viewer that presents a window of a limited number of lines (e.g., 100) at a time, displays the full path of the open file, total lines, and indicators of omitted lines (before/after the current window), and offers simple commands for navigation (`scrolldown`, `scrollup`, `goto` specific line). It is designed to be complementary to other tools like the file editor.",
+    "Result": "Provides a focused, contextualized view of code snippets, enables precise navigation, and facilitates understanding without overwhelming the LM's context window.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context-Aware History Management",
+      "Consolidated File Editor"
+    ],
+    "Uses": "Automated software engineering, code inspection, debugging."
+  },
+  {
+    "Pattern Name": "Consolidated File Editor",
+    "Problem": "Command-line editing methods (e.g., `sed`, file redirection) are cumbersome, error-prone, require complex argument specification for multi-line edits, and lack immediate, clear feedback on changes, making it difficult for LM agents to reliably modify code.",
+    "Context": "LM agents need to create and modify code files efficiently and accurately as part of problem-solving (e.g., applying fixes, writing reproduction scripts).",
+    "Solution": "Provide a single, powerful `edit` command that works in conjunction with the interactive file viewer (using line numbers for precise range specification), allows multi-line replacement in a single action, automatically displays the updated file content immediately after the edit, and integrates guardrails (e.g., syntax checking) to prevent invalid edits.",
+    "Result": "Simplifies the editing process, reduces the need for complex arithmetic, provides immediate visual feedback, and improves the reliability and efficiency of code modification.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Interactive File Viewer",
+      "Error-Mitigating Guardrails",
+      "Context-Aware History Management"
+    ],
+    "Uses": "Automated software engineering, bug fixing, code generation with execution feedback."
+  },
+  {
+    "Pattern Name": "Error-Mitigating Guardrails",
+    "Problem": "LM agents frequently introduce errors (e.g., syntax errors, invalid commands) during interaction, and often struggle to recognize these mistakes or recover from them, leading to error propagation and wasted turns.",
+    "Context": "LM agents performing actions that can introduce structural or functional errors into the environment (e.g., editing code, issuing commands).",
+    "Solution": "Integrate automated checks (guardrails) into the interface that detect common mistakes (e.g., code syntax errors via a linter), prevent invalid actions from being applied (e.g., discard edits that introduce syntax errors), and provide specific, concise error messages and context (e.g., before/after snippets for code edits) to help the agent understand and correct the mistake. This also includes curbing verbose search results.",
+    "Result": "Helps agents recognize and quickly correct errors, prevents cascading failures, and improves recovery rates, leading to more robust and efficient agent performance.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Consolidated File Editor",
+      "Context-Aware History Management",
+      "LM-Centric Search & Navigation"
+    ],
+    "Uses": "Automated software engineering, any agentic system where actions can lead to detectable errors, MLOps (for specific ML workflow error handling)."
+  },
+  {
+    "Pattern Name": "Context-Aware History Management",
+    "Problem": "LMs have finite context windows, and a verbose, unmanaged history of interactions (commands, observations, error messages) can quickly consume the context, leading to 'lost in the middle' phenomena, reduced performance, and increased computational cost. Outdated information can also confuse the agent.",
+    "Context": "Maintaining an effective and efficient interaction history for an LM agent over multiple turns in a digital environment.",
+    "Solution": "Implement history processors and prompt templates that keep agent context concise and informative. This includes collapsing old observations (e.g., beyond the last 5 turns) into single-line placeholders (preserving structure but removing verbose content), providing clear, concise error messages that guide recovery without adding excessive noise, and formatting prompts to include high-level instructions, documentation, and general strategy tips. It also includes omitting all past error messages except the first for a given malformed generation.",
+    "Result": "Maintains essential information about the plan and action history, reduces unnecessary context, allows for more interaction cycles, avoids showing outdated information, and improves LM performance and cost-efficiency.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "LM-Centric Search & Navigation",
+      "Interactive File Viewer",
+      "Consolidated File Editor",
+      "Error-Mitigating Guardrails",
+      "In-Context Learning with Demonstrations"
+    ],
+    "Uses": "Any multi-turn LM agent interaction, prompt engineering for long-running tasks, LLM-specific context optimization."
+  },
+  {
+    "Pattern Name": "In-Context Learning with Demonstrations",
+    "Problem": "LM agents may struggle with understanding proper command usage, expected interaction formats, or effective problem-solving strategies in a new interactive environment, leading to errant responses and inefficient task completion.",
+    "Context": "Initializing an LM agent in a novel interactive environment (e.g., a custom ACI) where it needs to learn how to effectively use available tools and follow interaction protocols.",
+    "Solution": "Provide the agent with a 'demonstration template' that includes a successful trajectory of interactions (a sequence of thoughts, actions, and environment feedback) from a similar task instance. This demonstration can be presented as a single message or as separate messages in the history, depending on the model's sensitivity.",
+    "Result": "Helps agents understand proper command usage, reduces the rate of errant responses, and provides a concrete example of a successful problem-solving approach, improving initial performance and reducing the need for extensive trial-and-error.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context-Aware History Management"
+    ],
+    "Uses": "Prompt design, agent initialization, learning new tool usage, improving adherence to interaction formats."
+  }
+]

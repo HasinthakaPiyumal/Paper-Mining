@@ -1,0 +1,183 @@
+[
+  {
+    "Pattern Name": "Single Invocation Tool Learning",
+    "Problem": "LLMs need to solve complex problems by interacting with tools, but the overhead of continuous feedback loops might be undesirable for simpler or well-defined tasks.",
+    "Context": "Tasks where a complete plan can be formulated upfront, and tool execution is expected to be straightforward without needing dynamic adjustments. Often seen in early studies on tool learning (e.g., Toolformer, HuggingGPT).",
+    "Solution": "Upon receiving a user question, the LLM analyzes the intent, plans all necessary subtasks, and directly generates a response based on the results returned by the selected tools, without considering the possibility of errors during the process or altering the plan based on tool feedback.",
+    "Result": "Provides a direct, pre-planned approach to tool use, suitable for tasks with predictable outcomes and lower complexity, prioritizing speed over dynamic adaptation.",
+    "Related Patterns": [
+      "Dynamic and Feedback-driven Planning"
+    ],
+    "Uses": "Early tool learning systems, simpler tasks where a fixed plan is sufficient, scenarios prioritizing speed over dynamic adaptation."
+  },
+  {
+    "Pattern Name": "Dynamic and Feedback-driven Planning",
+    "Problem": "Generating a perfect, detailed plan upfront for complex tasks is challenging and prone to errors, especially in dynamic environments or when intermediate results are uncertain. LLMs need to adapt their approach dynamically and learn from execution.",
+    "Context": "LLM agents interacting with an environment (e.g., using tools) where actions provide feedback that can inform subsequent reasoning, requiring dynamic adjustment, error handling, and refinement of plans based on intermediate tool feedback. This is also referred to as 'planning with feedback' or 'interleaved decomposition'.",
+    "Solution": "The LLM does not commit to a complete task plan upfront. Instead, it allows for iterative interactions with tools, adjusting subtasks progressively based on tool feedback, refining its plan continuously in response to tool results. This involves generating thoughts, taking actions, observing outcomes, and using this feedback to refine subsequent reasoning and actions (e.g., ReACT, RestGPT's Coarse-to-Fine Online Planning, PLUTO's autoregressive planning, Sum2Act's progress summarization, TPLLaMA's learning from failed explorations, Themis's autoregressive reasoning, STE's trial and error, and general error handling mechanisms). Plans can start coarse and become progressively refined.",
+    "Result": "Improves problem-solving capabilities, adaptability, and robustness for complex tasks by allowing dynamic adjustments, error recovery, and continuous refinement of plans.",
+    "Related Patterns": [
+      "Single Invocation Tool Learning",
+      "Structured Task Decomposition and Execution",
+      "Graph-based Tool Selection and Planning",
+      "Dynamic Parameterization for Tool Calling",
+      "Feedback-driven Response Refinement"
+    ],
+    "Uses": "Advanced tool learning systems, complex multi-step tasks, agentic systems requiring dynamic adaptation, error handling, and continuous self-correction, open-world API interaction."
+  },
+  {
+    "Pattern Name": "Structured Task Decomposition and Execution",
+    "Problem": "Complex tasks require breaking down into manageable sub-problems and executing them in a logical, often sequential or conditional, manner. LLMs need structured methods to navigate potential tool sequences and integrate abstract reasoning with concrete execution.",
+    "Context": "LLM agents needing to plan for complex tasks that involve multiple tools, where dependencies exist, and the execution might involve both high-level strategic thinking and detailed API calls.",
+    "Solution": "Decomposes the target task into a sequence of sub-problems or a structured plan (e.g., a decision tree, a graph of tools, or an abstract reasoning chain). The LLM then navigates this structure, selecting and executing tools sequentially or conditionally. This can involve leveraging prompts to decompose tasks (CoT), constructing an action space as a decision tree (ToolChain), using a structured framework for agents (TPTU), decomposing tasks into toolkits for problem-solving via a chain-of-solving (Toolink), training LLMs to decode abstract reasoning chains and then reify them with concrete tool calls (COA), or generating a feasible API calling plan and then executable code (SOAY).",
+    "Result": "Provides a systematic and efficient mechanism for LLMs to plan and execute multi-step tool usage, improving the coherence, correctness, and effectiveness of tool sequences for complex problems.",
+    "Related Patterns": [
+      "Dynamic and Feedback-driven Planning",
+      "Graph-based Tool Selection and Planning",
+      "Dynamic Parameterization for Tool Calling"
+    ],
+    "Uses": "Multi-step tool use, API orchestration, complex workflows with conditional tool calls, tasks requiring both strategic planning and precise execution."
+  },
+  {
+    "Pattern Name": "Budget-constrained Planning for Tool Use",
+    "Problem": "LLM agents need to efficiently manage costs (e.g., API call costs, computational resources) while solving user queries, especially in resource-sensitive applications.",
+    "Context": "LLM agents operating in environments with explicit cost constraints for tool usage, where an optimal balance between task completion and resource expenditure is required.",
+    "Solution": "Creates an optimal plan for tool usage under budget constraints, allowing LLMs to efficiently manage costs while solving user queries (BTP). This involves selecting tools and sequences that minimize cost while achieving the objective.",
+    "Result": "Enables cost-effective operation of LLM agents, making tool learning more practical for real-world applications with resource limitations.",
+    "Related Patterns": [
+      "Structured Task Decomposition and Execution",
+      "Dynamic and Feedback-driven Planning"
+    ],
+    "Uses": "Commercial API usage, resource-limited environments, cost-optimized agent design."
+  },
+  {
+    "Pattern Name": "LLM-Augmented Tool Retrieval",
+    "Problem": "Traditional tool retrieval methods (e.g., TFIDF, BM25, SentenceBert) might not fully capture user intent or align with the LLM's operational needs, especially with diverse tool descriptions or when the query phrasing doesn't directly match documentation.",
+    "Context": "LLM agents needing to retrieve relevant tools from a large library, where direct keyword matching might be insufficient, and the LLM's understanding can enhance retrieval.",
+    "Solution": "Leverages the LLM's intelligence to improve tool retrieval. This can involve instructing the LLM to generate a 'fictitious' ideal tool description based on the query, which is then used for search (CRAFT). Alternatively, the LLM can provide feedback on retrieved tools, which is used to progressively refine retrieval instructions and align retrieval with tool usage (ProTIP).",
+    "Result": "Improves tool retrieval accuracy and relevance by incorporating the LLM's semantic understanding and operational experience, bridging the gap between user intent and tool documentation.",
+    "Related Patterns": [
+      "Adaptive and Hierarchy-aware Tool Reranking",
+      "Graph-based Tool Selection and Planning"
+    ],
+    "Uses": "Tool selection from large libraries, improving semantic matching for tool retrieval, adaptive tool retrieval systems."
+  },
+  {
+    "Pattern Name": "Adaptive and Hierarchy-aware Tool Reranking",
+    "Problem": "Simple retrieval methods might return a broad set of tools, and the optimal tool might not be at the top, especially considering tool novelty or structural relationships within the tool library.",
+    "Context": "LLM agents needing to select the most appropriate tool from a pre-filtered list, where tools might have hierarchical relationships or varying degrees of familiarity (seen vs. unseen).",
+    "Solution": "After an initial retrieval phase, a reranking method is applied that considers differences between seen and unseen tools and the hierarchical structure of the tool library to adaptively reorder the candidate tools (ToolRerank).",
+    "Result": "Improves the precision of tool selection by refining the order of retrieved tools, making it easier for the LLM to pick the most relevant and appropriate tool, especially in complex or evolving tool environments.",
+    "Related Patterns": [
+      "LLM-Augmented Tool Retrieval",
+      "Graph-based Tool Selection and Planning"
+    ],
+    "Uses": "Fine-grained tool selection, managing large and structured tool libraries, improving performance with novel tools."
+  },
+  {
+    "Pattern Name": "Graph-based Tool Selection and Planning",
+    "Problem": "Selecting the next appropriate tool in a sequence can be complex when many tools are available and their interdependencies are not linear, and errors can propagate through sequential decisions.",
+    "Context": "LLM agents needing to select tools from a library where tools have defined relationships (e.g., input/output compatibility, functional dependencies) that can be modeled as a graph, and systematic exploration of decision paths is needed.",
+    "Solution": "Organizes tools into a directed graph. The LLM navigates this graph, starting from an initial tool node, iteratively selecting subsequent tools based on the current task state and the graph structure until the task is completed. This can involve leveraging Depth-First Search (DFS) on a preconstructed tool graph to identify solutions (ControlLLM, DFSDT), integrating Graph Neural Networks (GNNs) with LLMs for efficient and accurate subtask selection within task graphs (SGC), or using GNNs for completeness-oriented tool retrieval (COLT).",
+    "Result": "Facilitates coherent and effective sequential tool selection and planning by leveraging the structural relationships between tools and systematically exploring decision branches, improving overall workflow and task completion rate while reducing error propagation.",
+    "Related Patterns": [
+      "Structured Task Decomposition and Execution",
+      "Dynamic and Feedback-driven Planning",
+      "Adaptive and Hierarchy-aware Tool Reranking"
+    ],
+    "Uses": "Multi-tool orchestration, complex workflows, agentic systems with structured tool libraries, error-prone environments."
+  },
+  {
+    "Pattern Name": "Intent-driven Gating for Tool Selection",
+    "Problem": "When a large number of tools are available, even after initial retrieval, the LLM might still face a broad set of options, leading to inefficiency or incorrect selection.",
+    "Context": "LLM agents needing to make a final tool selection from a candidate list, where the user's intent can be precisely identified and used to filter options.",
+    "Solution": "Narrows down tool selection by adding an 'intent-driven gating' mechanism. This gate uses the LLM's understanding of the user's specific intent to filter out irrelevant tools from the candidate list before the final selection (GeckOpt).",
+    "Result": "Improves the efficiency and accuracy of LLM-based tool selection by focusing the LLM's attention on the most relevant tools, reducing cognitive load and potential for error.",
+    "Related Patterns": [
+      "Adaptive and Hierarchy-aware Tool Reranking"
+    ],
+    "Uses": "Large tool libraries, fine-grained tool selection, optimizing LLM decision-making."
+  },
+  {
+    "Pattern Name": "Self-verification for Tool Selection",
+    "Problem": "Distinguishing between closely related or ambiguous candidate tools, ensuring the most accurate selection.",
+    "Context": "LLM making a critical tool selection decision from a set of similar options.",
+    "Solution": "The LLM employs a self-verification method, distinguishing between close candidates by self-asking contrastive questions during tool selection (ToolVerifier).",
+    "Result": "Enhanced accuracy and reliability of tool selection by enabling the LLM to critically evaluate and confirm its choices.",
+    "Related Patterns": [
+      "Dynamic and Feedback-driven Planning"
+    ],
+    "Uses": "High-stakes tool selection, reducing ambiguity in tool choice, improving decision-making robustness."
+  },
+  {
+    "Pattern Name": "Multi-agent Collaborative Tool Calling",
+    "Problem": "Managing the complexity of parameter extraction and tool invocation within a single LLM can be overwhelming, leading to errors or inefficiencies.",
+    "Context": "LLM systems where different aspects of tool interaction (e.g., planning, parameter extraction, execution) can be delegated to specialized agents.",
+    "Solution": "Introduces a multi-agent collaborative framework featuring a specialized 'execution agent' tasked specifically with parameter extraction and tool calling. This agent works in conjunction with other agents (ConAgents).",
+    "Result": "Improves the accuracy and robustness of tool calling by distributing responsibilities among specialized agents, allowing each to focus on its core task and reducing the cognitive load on a single LLM.",
+    "Related Patterns": [
+      "Dynamic Parameterization for Tool Calling"
+    ],
+    "Uses": "Complex agentic systems, robust tool interaction, distributed AI architectures."
+  },
+  {
+    "Pattern Name": "Toolken-based Tool Calling",
+    "Problem": "Integrating tool calls seamlessly into the LLM's generation process without disrupting its natural language flow or requiring complex parsing.",
+    "Context": "LLM agents needing to invoke tools as part of their text generation, where the transition between natural language and tool invocation should be smooth.",
+    "Solution": "Uses special tokens, called 'toolkens,' within the LLM's vocabulary. Upon predicting a toolken, the LLM switches to a special mode to generate the required input parameters for the tool and then integrates the tool's output back into the generation process (ToolkenGPT).",
+    "Result": "Enables seamless and efficient integration of tool calls within the LLM's generative process, making tool usage feel more natural and less disruptive.",
+    "Related Patterns": [
+      "Dynamic Parameterization for Tool Calling"
+    ],
+    "Uses": "Generative AI, LLM-based agents, interactive systems requiring dynamic tool invocation."
+  },
+  {
+    "Pattern Name": "Dynamic Parameterization for Tool Calling",
+    "Problem": "Identifying and populating all necessary parameters for a tool can be challenging, especially if some parameters depend on information not directly available in the initial query or need to be determined in real-time during complex reasoning.",
+    "Context": "LLM agents needing to call tools where some parameters might be missing, require information from other tools, or need to be dynamically configured based on the ongoing reasoning process.",
+    "Solution": "Employs intelligent strategies to dynamically determine and populate tool parameters. This can involve 'reverse thinking' (selecting a final tool for a task and then identifying/acquiring missing parameters by choosing additional tools, Reverse Chain) or autoregressive reasoning to dynamically decide which tools to call and how to pass parameters based on the current context (Themis).",
+    "Result": "Ensures complete and accurate parameter population for tool calls, even when information is distributed, requires intermediate tool invocations, or needs real-time configuration, improving the reliability and flexibility of tool execution.",
+    "Related Patterns": [
+      "Dynamic and Feedback-driven Planning",
+      "Structured Task Decomposition and Execution",
+      "Multi-agent Collaborative Tool Calling",
+      "Toolken-based Tool Calling"
+    ],
+    "Uses": "Complex tool parameterization, multi-tool workflows where parameters are interdependent, agentic systems requiring flexible and context-aware tool invocation."
+  },
+  {
+    "Pattern Name": "Direct Tool Output Insertion",
+    "Problem": "How to present tool outputs to the user in a straightforward manner.",
+    "Context": "Early tool learning systems or simple tasks where tool outputs are concise and directly interpretable by the user.",
+    "Solution": "Directly inserts the output of tools into the generated response. For example, if the user query is 'How is the weather today?', LLMs produce a response like 'Its Weather', which is subsequently replaced with the result returned by the tool (e.g., from 'Its Weather' to 'Its rainy', as seen in TALM, Toolformer, ToolkenGPT).",
+    "Result": "Simple and direct presentation of tool results, but can affect user experience if outputs are unpredictable or raw.",
+    "Related Patterns": [
+      "Intelligent Information Integration for Response Generation"
+    ],
+    "Uses": "Simple tool outputs, early-stage tool learning, basic information retrieval."
+  },
+  {
+    "Pattern Name": "Intelligent Information Integration for Response Generation",
+    "Problem": "Raw tool outputs can be diverse, complex, lengthy, or in various formats (text, numbers, code, images), making them unsuitable for direct presentation to users and potentially exceeding LLM context windows.",
+    "Context": "LLM agents receiving diverse and potentially complex outputs from tools, needing to synthesize this information into a coherent, user-friendly response while managing context length.",
+    "Solution": "Incorporates the output of tools into the context as input to the LLM, enabling the LLM to craft a superior reply based on the information provided by the tool and its internal knowledge. This involves strategies like schema-based simplification for lengthy results (RestGPT), context compression (e.g., truncation in ToolLLaMA or using a compressor like ReCOMP), or schema-free adaptive extraction where an observing agent dynamically generates a function to extract the target output (ConAgents).",
+    "Result": "Provides more comprehensive, accurate, and user-friendly responses by leveraging the LLM's ability to process and synthesize complex information from multiple sources, while efficiently managing context constraints.",
+    "Related Patterns": [
+      "Direct Tool Output Insertion",
+      "Feedback-driven Response Refinement"
+    ],
+    "Uses": "Complex tool outputs, multi-tool scenarios, enhancing user experience, generating comprehensive answers, managing context window limits."
+  },
+  {
+    "Pattern Name": "Feedback-driven Response Refinement",
+    "Problem": "Initial responses generated by LLMs, even with tool outputs, might not be optimal or fully satisfy user intent, requiring further improvement.",
+    "Context": "LLM agents generating responses based on tool outputs, where there's an opportunity to improve the quality of the response by incorporating feedback (e.g., from subsequent tool calls, self-reflection, or user interaction).",
+    "Solution": "Refines the response generated by LLMs using tool feedback (e.g., results from subsequent tool invocations, or internal self-correction mechanisms like CRITIC) rather than just generating a response after the initial tool call. This approach is often found to be more effective.",
+    "Result": "Produces higher-quality, more accurate, and more satisfying responses by allowing for iterative improvement based on new information or self-assessment.",
+    "Related Patterns": [
+      "Intelligent Information Integration for Response Generation",
+      "Dynamic and Feedback-driven Planning"
+    ],
+    "Uses": "Enhancing response quality, self-correction in LLM agents, complex conversational systems."
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "Pattern Name": "Tool-Integrated Reasoning Agent",
+    "Problem": "Large Language Models (LLMs) struggle with complex mathematical problems because natural language reasoning excels in semantic analysis, planning, and abstract reasoning but lacks precision in computation, symbolic manipulation, and algorithmic processing. Conversely, program-based methods excel in rigorous operations and can outsource intricate calculations to specialized tools but face challenges in nuanced reasoning, planning, and error handling.",
+    "Context": "Designing LLM-based systems for tasks that require both abstract, high-level reasoning (e.g., planning, semantic analysis) and precise, external computation or symbolic manipulation (e.g., mathematical problem-solving, scientific reasoning).",
+    "Solution": "An agent (like TORA) that synergistically interleaves natural language reasoning (rationales) with program-based tool use. The agent first generates natural language reasoning steps. When reaching a point where program-based tool use is more appropriate for a subtask (e.g., equation solving), it generates a program for an external tool (e.g., computation library, symbolic solver). The execution output from the tool is then fed back to the agent for subsequent natural language processing, including tool use adjustments, subtask solving, or answer finalization. This iterative cycle of rationale-program-execution-output-rationale continues until a final answer is derived.",
+    "Result": "Amalgamates the analytical prowess of language with the computational efficiency of tools, significantly improving performance on complex quantitative tasks. It enables multi-round self-correction, robust answer finalization, and largely reduces the performance gap with larger, closed-source models, while also displaying superior generalization to out-of-distribution tasks.",
+    "Related Patterns": [
+      "Synthetic Data Generation for Tool Use",
+      "Imitation Learning for Tool Use",
+      "Output Space Shaping for Tool Use"
+    ],
+    "Uses": "Mathematical problem-solving, scientific reasoning, complex data analysis, agentic systems requiring interaction with external APIs or environments, and any domain demanding both high-level reasoning and precise external computation."
+  },
+  {
+    "Pattern Name": "Synthetic Data Generation for Tool Use",
+    "Problem": "Training tool-integrated agents requires interactive tool-use trajectories (interleaved rationales, programs, and outputs), which are often absent in existing datasets that typically contain only natural language rationales or raw code. Manually curating such high-quality, interactive trajectories is labor-intensive, time-consuming, and difficult to scale.",
+    "Context": "Developing tool-integrated LLMs for complex tasks where high-quality, interactive demonstrations of tool use are needed for training, but are not readily available or scalable through human annotation.",
+    "Solution": "Leverage a powerful, often larger or proprietary, LLM (acting as a 'teacher' or 'oracle' model, e.g., GPT-4) to synthesize interactive tool-use trajectories. This involves: 1. **Prompt Curation:** Designing detailed prompts with clear instructions and diverse few-shot examples that demonstrate the desired interleaved natural language reasoning and program-based tool use format. 2. **Iterative Generation:** Feeding the problem and the curated prompt to the teacher LLM, allowing it to iteratively generate rationales, programs, execute programs (with external tools), and incorporate the execution outputs. 3. **Trajectory Filtering and Sampling:** Applying greedy decoding or nucleus sampling to generate multiple trajectories, then filtering them to retain only those that yield correct answers and are free of tool-use errors (e.g., tool-use errors or wrong answers).",
+    "Result": "Creates a high-quality, diverse, and scalable corpus of interactive tool-use trajectories (e.g., TORACORPUS) suitable for imitation learning, enabling the training of smaller, open-source models to perform complex tool-augmented reasoning. This addresses the data scarcity challenge for training such agents.",
+    "Related Patterns": [
+      "Tool-Integrated Reasoning Agent",
+      "Imitation Learning for Tool Use",
+      "Output Space Shaping for Tool Use"
+    ],
+    "Uses": "Bootstrapping training data for new AI capabilities, scaling data generation for complex multi-modal or multi-step tasks, transferring knowledge from powerful models to smaller ones, and creating specialized datasets for agentic behavior."
+  },
+  {
+    "Pattern Name": "Imitation Learning for Tool Use",
+    "Problem": "Training an LLM to effectively use external tools in a multi-step, interactive reasoning process, especially when direct reinforcement learning is complex or high-quality human demonstrations are scarce.",
+    "Context": "An LLM needs to learn to generate interleaved natural language rationales and program-based tool calls based on observed expert behavior. A corpus of high-quality, interactive tool-use trajectories (e.g., generated by a stronger model or human experts) is available.",
+    "Solution": "Fine-tune the LLM on a curated corpus of interactive tool-use trajectories (e.g., `r1a1o1...rn`) by minimizing the negative log-likelihood loss on the trajectory, conditioned on the problem and all preceding steps. This teaches the model to mimic the demonstrated sequence of reasoning, program generation, and response to tool outputs.",
+    "Result": "The model learns to generate interleaved natural language reasoning and program-based tool calls, achieving state-of-the-art performance in tool-augmented tasks by directly mimicking expert demonstrations, even with a relatively small-scale corpus.",
+    "Related Patterns": [
+      "Tool-Integrated Reasoning Agent",
+      "Synthetic Data Generation for Tool Use",
+      "Output Space Shaping for Tool Use"
+    ],
+    "Uses": "Training LLMs for agentic behavior, tool-augmented reasoning, complex problem-solving, and tasks requiring multi-step interaction with external environments or APIs, particularly when expert demonstrations are available."
+  },
+  {
+    "Pattern Name": "Output Space Shaping for Tool Use",
+    "Problem": "An LLM initially trained via imitation learning on tool-use trajectories may have a restricted output space, leading to inflexibility in exploring diverse reasoning paths and improper tool-use behavior during inference. This is particularly true when the initial training data (e.g., TORACORPUS) mostly demonstrates only one valid trajectory per problem, hindering the model's ability to generalize or self-correct.",
+    "Context": "An LLM has been initially trained using imitation learning on a corpus of tool-use trajectories, but its performance, robustness, or generalization capabilities need improvement due to limited diversity or potential errors in the initial training data.",
+    "Solution": "This pattern involves augmenting the training data and retraining the model: 1. **Trajectory Sampling:** Use the current (imitation-learned) model to sample diverse tool-use trajectories for the training problems (e.g., using nucleus sampling). 2. **Validation & Correction:** Retain valid (correct and error-free) sampled trajectories. For invalid trajectories (e.g., wrong answers, tool-use errors), identify the point of failure (e.g., `e_j = l_1...l_j`) and leverage a stronger 'teacher model' (e.g., a 34B model can serve as the teacher for a 7B model) to complete the subsequent steps with greedy decoding, forming new corrected valid trajectories. 3. **Retraining:** Retrain the LLM on an augmented dataset comprising the original imitation learning corpus, the newly sampled valid trajectories, and the teacher-corrected trajectories. This expands the model's understanding of plausible and correct reasoning paths.",
+    "Result": "Encourages the diversity of plausible reasoning steps, significantly reduces improper tool-use behavior, and boosts the model's reasoning performance and generalization capabilities across different problem-solving paths. This strategy yields considerable improvements, especially for smaller models, and enhances the model's ability to handle complex and difficult problems.",
+    "Related Patterns": [
+      "Tool-Integrated Reasoning Agent",
+      "Imitation Learning for Tool Use",
+      "Synthetic Data Generation for Tool Use"
+    ],
+    "Uses": "Enhancing the robustness, flexibility, and generalization of LLMs in tool-augmented reasoning tasks, improving error handling and self-correction capabilities, and refining models trained on limited or less diverse expert demonstrations."
+  }
+]

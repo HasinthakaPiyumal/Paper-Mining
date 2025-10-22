@@ -1,0 +1,92 @@
+[
+  {
+    "Pattern Name": "Workflow Pipeline",
+    "Problem": "Creating an end-to-end reproducible training and deployment pipeline for a machine learning component is difficult, and data science notebooks do not scale for this purpose.",
+    "Context": "Machine learning development and deployment, where reproducibility and scalability of training and deployment are crucial.",
+    "Solution": "Each pipeline step is made a separate containerized service. These services are then orchestrated and chained together to form pipelines that can be run via REST API calls.",
+    "Result": "Improved portability, scalability, and maintainability of individual pipeline steps, though at the cost of increased overall solution complexity.",
+    "Related Patterns": [],
+    "Uses": "MLOps, reproducible ML training and deployment."
+  },
+  {
+    "Pattern Name": "TwoPhase Predictions",
+    "Problem": "Executing large, complex ML models can be time-consuming and costly especially if lightweight clients (like mobile or IoT devices) are involved.",
+    "Context": "Scenarios requiring fast prediction response times or where computational resources on the client side are limited, and a full complex model execution is not always necessary.",
+    "Solution": "The prediction process is split into two phases. A simple, fast model is executed first on the client device. Subsequently, a larger, more complex model is optionally executed in the cloud for deeper insights if needed.",
+    "Result": "Reduced prediction response time for some cases, a decrease in the number of large expensive predictions, and a fallback model for the client when there is no Internet connection.",
+    "Related Patterns": [],
+    "Uses": "Voice activation in AI assistants (e.g., Alexa, Google Assistant), mobile AI applications, IoT devices."
+  },
+  {
+    "Pattern Name": "Encapsulating ML Models within Rulebased Safeguards",
+    "Problem": "It is impossible to guarantee the correctness of ML model predictions, making them unsuitable for direct use in safety or security-related functions. ML models are also unstable and vulnerable to adversarial attacks, data noise, and drift.",
+    "Context": "AI systems where incorrect predictions could have significant negative impacts on safety or security, or where model robustness is a concern.",
+    "Solution": "Introduce a deterministic rule-based mechanism that decides how to handle prediction results, potentially based on additional quality checks, before they are acted upon.",
+    "Result": "Reduced risk of negative impacts from incorrect predictions, but the overall architecture becomes more complex.",
+    "Related Patterns": [],
+    "Uses": "Safety-critical AI systems, security-sensitive AI applications, systems requiring high robustness against model vulnerabilities."
+  },
+  {
+    "Pattern Name": "AI Pipelines",
+    "Problem": "Complex prediction or synthesis use cases are often difficult to accomplish effectively with a single AI tool or model.",
+    "Context": "Inference-time scenarios where a multi-step process involving different specialized AI tools or models is required to achieve a high-quality result for a complex task.",
+    "Solution": "Divide the overall problem into smaller, consecutive steps. Then, combine several existing AI tools or custom models into an inference-time AI pipeline, where each specialized tool or model is responsible for a single step.",
+    "Result": "Higher quality results are provided, and each step in the pipeline can be optimized individually, though more tools and models need to be integrated.",
+    "Related Patterns": [],
+    "Uses": "Typical computer vision inference pipelines, complex AI prediction or synthesis tasks."
+  },
+  {
+    "Pattern Name": "Ethics Credentials",
+    "Problem": "Responsible AI requirements are often stated as high-level objectives but are not explicitly specified in a verifiable way as expected system outputs, leading to reduced user trust or reluctance to use the AI system.",
+    "Context": "AI systems where user trust, ethical compliance, and responsible AI practices are critical for adoption and societal acceptance.",
+    "Solution": "Provide verifiable ethics credentials for the AI system or component. These credentials can be verified using publicly accessible and trusted data infrastructure as proof of ethical compliance. Additionally, users may also need to verify their own credentials before accessing the AI system.",
+    "Result": "Increased trust and system acceptance, raised awareness of ethical issues. Requires a trusted public data infrastructure and ongoing maintenance/refreshing of credentials.",
+    "Related Patterns": [],
+    "Uses": "Responsible AI systems, AI systems requiring transparency and accountability regarding ethical guidelines."
+  },
+  {
+    "Pattern Name": "Deploy Canary Model",
+    "Problem": "When a new ML model is trained with assumed better prediction quality but its not certain if this will carry over to production. Additionally, there could be other quality issues with the new model that should not affect all users in production at once.",
+    "Context": "Deploying new or updated ML models to production environments where the impact of potential bugs or performance degradation needs to be minimized for the general user base.",
+    "Solution": "Deploy the new model in addition to the existing ones and route a small number of requests to it to evaluate its performance. If this test is successful, all existing models can be replaced. If not, the new model needs to be improved.",
+    "Result": "Only a small number of users are subjected to potential bugs or low-quality predictions. Requires additional serving and monitoring infrastructure.",
+    "Related Patterns": [],
+    "Uses": "MLOps, A/B testing for ML models, safe deployment of new ML models."
+  },
+  {
+    "Pattern Name": "Batch Serving",
+    "Problem": "Predictions need to be carried out asynchronously over large volumes of data (e.g., generating personalized playlists weekly), where near-realtime predictions are not required.",
+    "Context": "Scenarios involving large-scale, non-realtime ML inference tasks, often for data aggregation, reporting, or periodic updates.",
+    "Solution": "Utilize distributed data processing infrastructure (e.g., based on MapReduce) to asynchronously perform complex ML inference tasks across a large number of computing nodes. Individual predictions are then aggregated back into a single result.",
+    "Result": "Flexible management of server resources strictly according to demand, ability to rerun jobs in case of error, and no requirement for high availability in the server system. Requires a job management server and the ability to split tasks across multiple workers.",
+    "Related Patterns": [],
+    "Uses": "Generating personalized playlists, large-scale data analysis with ML, periodic ML-driven reports."
+  },
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Model",
+    "Problem": "Machine Learning (ML) systems are complex because their ML components must be retrained regularly and have an intrinsic non-deterministic behavior. Business requirements for these systems, as well as ML algorithms, change over time.",
+    "Context": "Designing ML systems where clear separation of concerns is needed between the stable business logic and the evolving, often non-deterministic, ML components.",
+    "Solution": "Define clear APIs between traditional and ML components. Place business and ML components with different responsibilities into distinct layers. Data flows are also divided into three distinct parts.",
+    "Result": "Improved maintainability, flexibility, and easier management of changes in both business requirements and ML models.",
+    "Related Patterns": [],
+    "Uses": "Building robust and maintainable ML-driven applications, managing complexity in systems with evolving ML models."
+  },
+  {
+    "Pattern Name": "Microservice Vertical Pattern",
+    "Problem": "When there is a need to run several ML inferences in a specific order or when multiple inferences have dependencies on each other for a single request.",
+    "Context": "Deploying prediction models as services where a sequence of models needs to be executed synchronously to fulfill a client request.",
+    "Solution": "Deploy prediction models in separate servers or containers as services. Prediction requests are executed from top to bottom synchronously, and the results are gathered to respond to the client.",
+    "Result": "Enables complex, multi-stage inference workflows with dependencies.",
+    "Related Patterns": [],
+    "Uses": "Chained ML models for a single prediction, multi-step inference processes."
+  },
+  {
+    "Pattern Name": "Microservice Horizontal Pattern",
+    "Problem": "When a workflow can execute multiple predictions in parallel or when multiple prediction results need to be integrated at the end for a single request.",
+    "Context": "Deploying prediction models as services where multiple models can be run concurrently to fulfill a client request, or where an integrated prediction from several models is required.",
+    "Solution": "Multiple models are deployed in parallel. A single request can be sent to these models simultaneously to acquire multiple predictions or an integrated prediction.",
+    "Result": "Improved throughput and reduced latency for workflows that can leverage parallel inference.",
+    "Related Patterns": [],
+    "Uses": "Ensemble models, A/B testing (if results are integrated), parallel feature extraction with multiple models."
+  }
+]

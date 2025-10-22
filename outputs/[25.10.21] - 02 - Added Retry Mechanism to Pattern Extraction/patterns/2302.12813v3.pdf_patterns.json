@@ -1,0 +1,86 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Iterative LLM Refinement",
+    "Problem": "Blackbox LLMs suffer from hallucinations, lack access to up-to-date or domain-specific knowledge, and often require multiple attempts to generate high-quality, grounded responses for complex tasks. Fine-tuning is expensive or impossible.",
+    "Context": "Building AI agents or applications that rely on fixed, blackbox LLMs (e.g., ChatGPT) for mission-critical tasks requiring factual accuracy, dynamic information, and iterative improvement of generated content.",
+    "Solution": "A modular framework (LLMAUGMENTER) that augments a blackbox LLM with external knowledge retrieval, automated response evaluation, and iterative prompt revision. It involves:\n1.  **Knowledge Consolidator**: Retrieves and processes external evidence.\n2.  **Contextualized Prompt Engineering**: Constructs prompts incorporating query, history, consolidated knowledge, and feedback.\n3.  **LLM**: Generates candidate responses.\n4.  **Automated Feedback Loop for LLM Refinement**: Evaluates responses and generates feedback.\n5.  **Policy-Guided LLM Orchestration**: Orchestrates the sequence of these actions, including iterative calls to the LLM with revised prompts.\n6.  **Working Memory**: Tracks the current state of the interaction.",
+    "Result": "Significantly reduces LLM hallucinations, improves factual grounding, and enhances the quality and alignment of LLM responses with task requirements, without requiring LLM fine-tuning.",
+    "Related Patterns": [
+      "Automated Feedback Loop for LLM Refinement",
+      "Contextualized Prompt Engineering",
+      "Knowledge Consolidator",
+      "Policy-Guided LLM Orchestration",
+      "Working Memory"
+    ],
+    "Uses": "Task-oriented dialog, open-domain question answering, information-seeking systems, customer service."
+  },
+  {
+    "Pattern Name": "Knowledge Consolidator",
+    "Problem": "LLMs lack inherent access to dynamic, proprietary, or highly specific external knowledge, leading to factual errors (hallucinations) and outdated information. Raw retrieved data can be noisy, incomplete, or difficult for LLMs to directly utilize.",
+    "Context": "LLM applications requiring responses grounded in external, dynamic, or task-specific knowledge (e.g., web documents, databases, customer reviews, Wikipedia articles, structured tables).",
+    "Solution": "A modular component designed to retrieve, enrich, and structure external knowledge. It typically includes:\n1.  **Retriever**: Generates search queries and fetches raw evidence from various external sources (e.g., Bing Search, REST APIs for databases, dense models like DPR).\n2.  **Entity Linker**: Enriches raw evidence by linking entities to related context (e.g., Wikipedia descriptions).\n3.  **Evidence Chainer**: Prunes irrelevant information and forms coherent 'evidence chains' or reasoning paths, making the knowledge more digestible and relevant for LLM consumption. The consolidated evidence is then sent to Working Memory.",
+    "Result": "Provides the LLM with high-quality, consolidated, and relevant external knowledge, enabling grounded and accurate responses while mitigating hallucinations.",
+    "Related Patterns": [
+      "Contextualized Prompt Engineering",
+      "Retrieval-Augmented Iterative LLM Refinement",
+      "Working Memory"
+    ],
+    "Uses": "Information-seeking dialog, open-domain question answering, customer service, factual content generation."
+  },
+  {
+    "Pattern Name": "Automated Feedback Loop for LLM Refinement",
+    "Problem": "Initial LLM generations may be unsatisfactory (e.g., ungrounded, irrelevant, or not meeting specific criteria). Manual human review and correction are not scalable for continuous improvement.",
+    "Context": "Improving the quality, factuality, alignment, and adherence to specific requirements of LLM-generated responses in an automated and iterative manner.",
+    "Solution": "A 'Utility' module evaluates a candidate LLM response using task-specific utility functions (e.g., Knowledge F1 for groundedness, fluency scores, rule-based checks, or even self-criticism by another LLM). If the response fails to meet a predefined utility threshold, the module generates actionable feedback (e.g., 'The response is inconsistent with the knowledge. Please generate again,' or more detailed suggestions). This feedback is then incorporated into the subsequent prompt for the LLM, guiding it to revise and improve its next generation. This process iterates until a satisfactory response is produced or a maximum number of iterations is reached. The utility score and feedback are stored in Working Memory.",
+    "Result": "Enables iterative self-correction and refinement of LLM outputs, significantly improving their quality, groundedness, and alignment with desired criteria, reducing the need for human intervention.",
+    "Related Patterns": [
+      "Contextualized Prompt Engineering",
+      "Policy-Guided LLM Orchestration",
+      "Retrieval-Augmented Iterative LLM Refinement",
+      "Working Memory"
+    ],
+    "Uses": "Information-seeking dialog, customer service, content generation, safety moderation, adherence to style guides."
+  },
+  {
+    "Pattern Name": "Policy-Guided LLM Orchestration",
+    "Problem": "In complex AI systems involving LLMs and multiple external tools/modules, determining the optimal sequence of actions (e.g., when to retrieve knowledge, when to query the LLM, when to seek feedback, when to respond) is non-trivial and dynamic.",
+    "Context": "Designing AI agents that interact with LLMs and other components (like knowledge bases, utility functions) in a multi-step, goal-oriented manner, where the interaction flow needs to be adaptive.",
+    "Solution": "A 'Policy' module selects the next system action based on the current dialog state (captured in a Working Memory). The policy can be:\n1.  **Rule-based**: Manually crafted IF-THEN rules encoding domain-specific knowledge.\n2.  **Trainable**: A neural network model (e.g., T5) optimized using reinforcement learning (e.g., REINFORCE) to maximize an expected reward, learning from human-system interactions or user simulators.\nActions include calling the Knowledge Consolidator, Prompt Engine, or sending a final response.",
+    "Result": "Enables the AI agent to intelligently orchestrate interactions between the LLM and other modules, leading to more efficient, adaptive, and goal-oriented task completion. Facilitates learning optimal strategies for complex interactions.",
+    "Related Patterns": [
+      "Automated Feedback Loop for LLM Refinement",
+      "Retrieval-Augmented Iterative LLM Refinement",
+      "Working Memory"
+    ],
+    "Uses": "Task-oriented dialog, complex question answering, autonomous agents, conversational AI."
+  },
+  {
+    "Pattern Name": "Contextualized Prompt Engineering",
+    "Problem": "Eliciting precise, grounded, and high-quality responses from blackbox LLMs requires more than simple instructions; it demands a rich, dynamically constructed context that guides the model effectively.",
+    "Context": "Interacting with LLMs, especially blackbox ones, to generate specific, grounded, or iteratively refined outputs in dynamic conversational or information-seeking scenarios.",
+    "Solution": "A dedicated 'Prompt Engine' component dynamically constructs comprehensive text prompts for the LLM. This involves integrating various contextual elements from Working Memory into a coherent prompt string:\n1.  Clear task instructions.\n2.  The current user query (q).\n3.  Relevant dialog history (hq).\n4.  Consolidated external evidence (e, obtained from a Knowledge Consolidator).\n5.  Automated feedback (f, generated by a Utility module) to guide iterative revisions.",
+    "Result": "Significantly improves the relevance, factual grounding, and quality of LLM-generated responses by providing rich, dynamic context and explicit guidance, enabling the LLM to better align with task requirements and iterative feedback.",
+    "Related Patterns": [
+      "Automated Feedback Loop for LLM Refinement",
+      "Knowledge Consolidator",
+      "Retrieval-Augmented Iterative LLM Refinement",
+      "Working Memory"
+    ],
+    "Uses": "All LLM-based applications, especially those requiring external knowledge, iterative refinement, or complex conversational context."
+  },
+  {
+    "Pattern Name": "Working Memory",
+    "Problem": "In multi-turn or iterative AI agent interactions, it's crucial to maintain and update a comprehensive understanding of the current state, including user input, system's internal processing, and historical context, to enable coherent and goal-oriented behavior.",
+    "Context": "AI agents, especially conversational or task-oriented ones, that engage in multi-step processes, require iterative refinement, or need to remember past interactions and internal states to inform future actions.",
+    "Solution": "A dedicated module that tracks and stores the 'dialog state' or 'agentic state.' This state is typically a structured data representation (e.g., a sixtuple: user query 'q', consolidated evidence 'e', LLM-generated candidate responses 'o', utility score 'u', verbalized feedback 'f', and dialog history 'hq'). It acts as a central repository for all essential information relevant to the ongoing conversation or task, which is updated by various modules.",
+    "Result": "Provides a consistent, up-to-date, and structured view of the interaction, enabling other modules (Policy, Knowledge Consolidator, Prompt Engine, Utility) to access, update, and leverage necessary information for decision-making and response generation. Facilitates coherent multi-turn interactions and iterative refinement.",
+    "Related Patterns": [
+      "Automated Feedback Loop for LLM Refinement",
+      "Contextualized Prompt Engineering",
+      "Knowledge Consolidator",
+      "Policy-Guided LLM Orchestration",
+      "Retrieval-Augmented Iterative LLM Refinement"
+    ],
+    "Uses": "Task-oriented dialog systems, conversational AI, autonomous agents, iterative content generation, complex question answering."
+  }
+]

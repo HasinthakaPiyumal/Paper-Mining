@@ -1,0 +1,29 @@
+[
+  {
+    "Pattern Name": "Solution Pattern",
+    "Problem": "Organizations struggle to derive business value from ML due to inherent complexities in ML solution development, requiring specialized skills and knowledge transfer, and difficulty in translating business problems into ML solutions.",
+    "Context": "Designing and developing ML solutions for commonly-known and recurring business analytics problems, especially when transferring ML design knowledge among developers or when developers are new to ML.",
+    "Solution": "Represent ML designs as 'Solution Patterns' which are conceptual models comprising:\n-   **Business View:** Actors, Decision Goals, Question Goals, Insights (to translate business problems to ML).\n-   **Analytics View:** Analytics Goals, Algorithms, Indicators (metrics), Softgoals (non-functional requirements) (to design and compare ML solutions).\n-   **Data Preparation View:** Entities, Operators, Data Flows (to describe data transformation).\n-   **Contexts:** User Contexts, Data Contexts, Model Contexts (to specify applicability and configuration based on user needs, data characteristics, and model parameters).\n-   **Parameters:** Algorithm configuration values.\nThese patterns provide reusable answers to questions about ML applicability, algorithm choice, configuration, evaluation, NFRs, and data preparation.",
+    "Result": "Efficient transfer of ML design knowledge among developers; reduced time and cost of ML development efforts by starting with proven techniques; constrains the solution space based on critical qualities; provides a convenient and easy-to-understand visual encapsulation of ML design; facilitates semi-automated support for using patterns in real-world scenarios.",
+    "Related Patterns": ["Context-Driven ML Adaptation", "NFR-Guided ML Design"],
+    "Uses": "Business analytics, fraud detection, loan approval, task assignment, general ML solution design and documentation."
+  },
+  {
+    "Pattern Name": "Context-Driven ML Adaptation",
+    "Problem": "Selecting appropriate ML algorithms, data preparation steps, evaluation metrics, and configurations is complex and highly dependent on specific conditions, leading to suboptimal choices or extensive trial-and-error.",
+    "Context": "Designing and implementing ML solutions where the optimal approach varies based on user preferences, characteristics of the dataset, or specific model configuration requirements.",
+    "Solution": "Incorporate explicit 'Contexts' (User Contexts, Data Contexts, Model Contexts) into the ML design process. These contexts define conditions under which specific algorithms are applicable, data transformations are recommended, evaluation metrics are suitable, or model parameters should be set. A 'Context Analyzer' component can verify these contexts at runtime or design time to guide the selection and configuration of ML components.",
+    "Result": "Systematic discovery of alternative ML approaches based on verified conditions; improved applicability and performance of ML solutions by tailoring them to specific contexts; reduced exploration and experimentation efforts by narrowing down the solution space; facilitates semi-automated workflow generation for ML pipelines.",
+    "Related Patterns": ["Solution Pattern", "NFR-Guided ML Design"],
+    "Uses": "Algorithm selection, data preprocessing, model configuration, evaluation metric choice, anomaly detection (e.g., supervised vs. semi-supervised based on data availability), handling redundant attributes."
+  },
+  {
+    "Pattern Name": "NFR-Guided ML Design",
+    "Problem": "ML solution design often focuses primarily on predictive performance, neglecting critical non-functional requirements (NFRs) like interpretability, speed, memory, or tolerance to missing values, leading to solutions that are not practical or acceptable in real-world business contexts.",
+    "Context": "Designing ML solutions where various NFRs are important to stakeholders and need to be considered alongside predictive accuracy.",
+    "Solution": "Explicitly incorporate 'Softgoals' (representing NFRs) into the ML design process. Document how different ML algorithms are known to contribute positively or negatively to these softgoals. A 'Quality Evaluator' component can analyze these influences and recommend algorithms to be included or excluded based on the importance and priority of softgoals provided by the modeler.",
+    "Result": "ML solutions that better meet business and operational quality requirements; informed trade-offs between predictive performance and NFRs; constrains the solution space by filtering algorithms based on NFR compatibility.",
+    "Related Patterns": ["Solution Pattern", "Context-Driven ML Adaptation"],
+    "Uses": "Algorithm selection, model comparison, ensuring interpretability, managing resource constraints (speed, memory), handling data quality issues (e.g., tolerance to missing values)."
+  }
+]

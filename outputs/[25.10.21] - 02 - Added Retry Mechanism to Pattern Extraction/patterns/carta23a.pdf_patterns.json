@@ -1,0 +1,72 @@
+[
+  {
+    "Pattern Name": "Grounded Language Models (GLAM)",
+    "Problem": "Large Language Models (LLMs) suffer from a lack of functional grounding in interactive environments, leading to misalignment between their abstract knowledge and environmental dynamics, which limits their functional competence and ability to solve tasks. There is a need for LLMs to act as agent policies, perceive action outcomes, and incrementally update their knowledge through interaction.",
+    "Context": "An agent operates in interactive textual environments (e.g., BabyAIText) designed for studying higher-level functional grounding and solving spatial/navigation tasks. The environment provides goal descriptions, textual observations, and sparse, task-conditioned rewards. The LLM is used directly as the agent's policy.",
+    "Solution": "The LLM is used as the agent's policy. A prompt is constructed by combining the task description, current textual observation, and the set of possible actions. The LLM's language modeling heads are used to compute the conditional probability of tokens composing each possible action, which are then normalized (e.g., via softmax) to form a probability distribution over actions. The LLM policy is then finetuned using online Reinforcement Learning (specifically PPO), leveraging external task-conditioned rewards from the environment and collected observations. A value head is added on top of the LLM's last layer for value approximation in PPO.",
+    "Result": "The LLM quickly adapts and learns to solve various spatial and navigation problems, demonstrating significantly improved sample efficiency and enhanced generalization abilities to new objects and tasks (e.g., out-of-vocabulary nouns, unseen in-vocabulary objects). It achieves functional grounding, aligning its internal symbols with external environmental dynamics.",
+    "Related Patterns": [
+      "LLM as High-Level Planner",
+      "Reinforcement Learning from Human Feedback (RLHF)",
+      "LLM Action Mapping",
+      "Behavioral Cloning for LLM Policy Initialization",
+      "Scalable LLM Policy Execution"
+    ],
+    "Uses": "Language-conditioned Reinforcement Learning, embodied agents in textual environments, learning complex tasks with LLM prior knowledge, functional grounding of LLMs, interactive decision-making."
+  },
+  {
+    "Pattern Name": "LLM as High-Level Planner",
+    "Problem": "Embodied agents need to generate abstract plans or sequences of actions to solve complex, long-horizon goals. Directly using LLMs for low-level actions can lead to ungrounded behavior or require extensive external mechanisms due to their lack of direct interaction with the environment.",
+    "Context": "Robotics setups or textual environments where an agent needs to perform multi-step tasks. LLMs possess extensive prior knowledge that can be leveraged for generating abstract plans or action sequences.",
+    "Solution": "An LLM is employed to suggest high-level plans or sequences of actions. These abstract plans are then executed by a separate, lower-level agent or system. To improve grounding and effectiveness, external mechanisms can be integrated, such as affordance functions to rerank LLM-proposed actions, closed-loop feedback between the LLM planner and an agent actor, or a 'reporter' component that observes the environment and provides useful information back to the planner.",
+    "Result": "LLMs provide useful prior knowledge for guiding agents, enabling them to tackle complex, long-horizon tasks by decomposing them into manageable high-level steps. This approach improves decision-making by leveraging LLM's abstract reasoning while offloading low-level control to more grounded systems.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "Robotics, embodied AI, decision-making in complex environments, hierarchical planning, leveraging LLM prior knowledge for task decomposition."
+  },
+  {
+    "Pattern Name": "Reinforcement Learning from Human Feedback (RLHF)",
+    "Problem": "Aligning the generated text of Large Language Models (LLMs) with subjective human preferences and values, which are difficult to capture with traditional loss functions or explicit rules.",
+    "Context": "LLMs are used for natural language generation tasks (e.g., summarization, dialogue, instruction following) where the quality of output is best judged by humans. Text generation is framed as a sequential decision-making problem.",
+    "Solution": "An LLM is finetuned using Reinforcement Learning (commonly PPO). A separate reward model is first trained on a dataset of human preferences (e.g., human rankings of different LLM outputs). This learned reward model then provides a scalar reward to the LLM for each generated token or sequence, guiding the LLM to produce outputs that are more aligned with human preferences.",
+    "Result": "LLMs generate more human-aligned, helpful, and less harmful outputs. This approach can achieve better performance in subjective tasks, often with models having fewer parameters than larger models trained without such feedback.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "Improving LLM alignment, natural language generation, chatbot development, content creation, ethical AI, instruction following."
+  },
+  {
+    "Pattern Name": "Scalable LLM Policy Execution",
+    "Problem": "Using very large LLMs (hundreds of millions to billions of parameters) as agent policies in interactive environments is computationally expensive. Frequent forward passes for action probability computation, especially across multiple parallel environments, make online Reinforcement Learning intractable with a single LLM instance due to slow inference and training.",
+    "Context": "Online RL finetuning of LLMs, where the agent interacts with multiple parallel environments (e.g., 32 BabyAIText environments), requiring frequent and fast inference to compute action probabilities and subsequent gradient updates for large LLM policies.",
+    "Solution": "Deploy multiple LLM workers (instances) in parallel, potentially distributed across multiple GPUs. For inference, the action scoring task is distributed among these workers, with each worker handling a subset of actions or environments, achieving a quasilinear time decrease. For training, distributed data parallelism is implemented to compute gradients of minibatches in parallel across workers, which are then gathered to update the models. A client-server architecture can manage communication and dispatch calls (e.g., using a library like Lamorel).",
+    "Result": "Achieves a quasilinear scaling with the number of deployed LLMs, making the online RL finetuning of large LLMs tractable and enabling experiments at scale. It overcomes the computational bottleneck of large LLMs in interactive learning loops, allowing for efficient training and inference.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "Large-scale LLM-based Reinforcement Learning, MLOps for LLM policies, distributed AI training/inference, high-throughput LLM inference for agent control."
+  },
+  {
+    "Pattern Name": "LLM Action Mapping",
+    "Problem": "How to effectively translate the output of a Large Language Model (LLM), which typically generates text or token probabilities, into a discrete action from a predefined action space for an agent in an interactive environment.",
+    "Context": "An LLM is used as an agent's policy in an environment with a discrete set of possible actions. The LLM needs to select one of these actions based on a given prompt (observation + goal).",
+    "Solution": "Several approaches can be used: \n1. **Text Generation & Ad-hoc Mapping:** The LLM generates a sequence of text. If this sequence matches a possible action, that action is chosen. Otherwise, an ad-hoc mapping or fallback mechanism is used.\n2. **Action Heads:** A MultiLayer Perceptron (MLP) with outputs corresponding to the action space is added on top of the LLM's last layer. A single forward pass computes probabilities for all actions.\n3. **Conditional Token Probability (used by GLAM):** For each possible action (represented as a sequence of tokens), its conditional probability given the prompt is computed by multiplying the probabilities of its constituent tokens using the LLM's language modeling heads. These log probabilities are then normalized (e.g., with a softmax function) to obtain a probability distribution over the entire action space.",
+    "Result": "Enables LLMs to directly control agents by selecting actions from a discrete set, leveraging their language understanding capabilities. The conditional token probability method (Option 3) is robust to any textual action space, avoids ad-hoc mapping, and directly utilizes pretrained LLM operations and language modeling priors.",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "LLM-based agent policies, language-conditioned control, interactive AI, prompt design for action selection, textual environments."
+  },
+  {
+    "Pattern Name": "Behavioral Cloning for LLM Policy Initialization",
+    "Problem": "Large Language Models (LLMs) lack direct experience in interactive environments, making training from scratch sample inefficient and potentially leading to poor initial performance. Online Reinforcement Learning can be slow to converge without a good starting policy.",
+    "Context": "Using LLMs as agent policies in environments where expert trajectories (sequences of observations and corresponding optimal actions) are available. This is often a precursor to online finetuning.",
+    "Solution": "An LLM is finetuned on a dataset of expert trajectories using Behavioral Cloning (BC). This involves training the LLM in a supervised learning manner to imitate the actions taken by an expert agent given specific observations. For example, using Causal Language Modeling with the prompt as input and the expert's action as the label.",
+    "Result": "Provides the LLM with initial competence and a baseline policy, allowing it to perform basic tasks in the environment. This can warm-start subsequent online RL training. However, policies trained solely with BC may perform worse than those trained with online Reinforcement Learning due to a lack of functional grounding through direct interaction and can be less robust to novel situations (e.g., invented words or out-of-distribution states).",
+    "Related Patterns": [
+      "Grounded Language Models (GLAM)"
+    ],
+    "Uses": "LLM policy pre-training, imitation learning for LLMs, bootstrapping LLM agents, warm-starting RL training, offline RL for policy initialization."
+  }
+]

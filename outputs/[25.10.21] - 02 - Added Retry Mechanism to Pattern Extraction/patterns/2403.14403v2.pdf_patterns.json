@@ -1,0 +1,114 @@
+[
+  {
+    "Pattern Name": "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)",
+    "Problem": "One-size-fits-all retrieval-augmented Large Language Model (LLM) approaches are inefficient for simple queries and insufficient for complex ones, leading to unnecessary computational overhead or inadequate responses.",
+    "Context": "LLM-based Question Answering (QA) systems dealing with a wide range of query complexities, from straightforward to multi-step, where both efficiency and accuracy are critical.",
+    "Solution": "Dynamically select the most suitable retrieval-augmented LLM strategy (non-retrieval, single-step, or multi-step) for each incoming query. This selection is operationalized by a smaller Language Model (classifier) trained to predict the query's complexity level.",
+    "Result": "Enhances overall efficiency and accuracy of QA systems by adaptively allocating resources, handling simpler queries efficiently and complex queries effectively, outperforming static or less granular adaptive approaches.",
+    "Related Patterns": [
+      "Query Complexity Classifier",
+      "Single-Step Retrieval-Augmented QA",
+      "Multi-Step Retrieval-Augmented QA",
+      "Entity Frequency-based Adaptive Retrieval",
+      "Self-Reflective RAG (Critique-based Adaptive RAG)"
+    ],
+    "Uses": "Open-domain Question Answering, adaptive LLM applications, resource-optimized generative AI, intelligent query routing."
+  },
+  {
+    "Pattern Name": "Query Complexity Classifier",
+    "Problem": "Adaptive AI systems require a reliable and efficient mechanism to determine the inherent complexity of an incoming query to inform dynamic strategy selection.",
+    "Context": "Systems like AdaptiveRAG that aim to optimize performance and resource usage by tailoring their operational strategy to the input's complexity, rather than applying a uniform approach.",
+    "Solution": "Train a smaller Language Model (classifier) to categorize incoming queries into predefined complexity levels (e.g., straightforward, moderate, complex). The training data for this classifier is automatically constructed by leveraging predicted outcomes of different RAG strategies and inherent biases in existing datasets (e.g., single-hop vs. multi-hop datasets).",
+    "Result": "Enables adaptive AI systems to accurately assess query complexity, leading to more informed and efficient strategy selection, and contributing positively to overall system performance.",
+    "Related Patterns": [
+      "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)"
+    ],
+    "Uses": "Adaptive Retrieval-Augmented Generation, dynamic workflow orchestration in AI, intelligent routing for LLM queries, personalized AI experiences."
+  },
+  {
+    "Pattern Name": "Single-Step Retrieval-Augmented QA",
+    "Problem": "Large Language Models (LLMs) may generate factually incorrect answers or lack current knowledge, as their knowledge is limited to their parametric memory.",
+    "Context": "Question Answering (QA) tasks where answers are typically found within a single relevant document from an external knowledge base, suitable for single-hop queries.",
+    "Solution": "Retrieve a relevant document from an external knowledge source based on the input query. Then, incorporate this retrieved information into the LLM's input (e.g., as context) to augment its knowledge and enable it to formulate a more accurate and current response.",
+    "Result": "Improves the accuracy and currency of LLM-generated answers for single-hop queries by providing supplementary external context, mitigating hallucination and outdated information.",
+    "Related Patterns": [
+      "Multi-Step Retrieval-Augmented QA",
+      "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)"
+    ],
+    "Uses": "Open-domain QA, fact-checking, knowledge grounding for LLMs, simple information retrieval tasks."
+  },
+  {
+    "Pattern Name": "Multi-Step Retrieval-Augmented QA",
+    "Problem": "Single-step retrieval-augmented approaches are insufficient for complex queries that require synthesizing information from multiple source documents and performing multi-hop reasoning.",
+    "Context": "Question Answering (QA) tasks involving complex queries that necessitate connecting and aggregating information across several documents, often requiring iterative reasoning and deeper understanding.",
+    "Solution": "The LLM interacts with a retrieval module in multiple rounds. In each step, new documents are retrieved, and the LLM progressively refines its understanding, accumulating context (e.g., previous documents and intermediate answers) to formulate a comprehensive final answer. This iterative process can involve query decomposition or interleaved reasoning.",
+    "Result": "Effectively handles complex, multi-hop queries by building a more extensive foundation of information and reasoning, but is resource-intensive due to repeated LLM and retriever accesses.",
+    "Related Patterns": [
+      "Single-Step Retrieval-Augmented QA",
+      "Decomposition-based Multi-Step RAG",
+      "Chain-of-Thought RAG (Interleaved CoT and Retrieval)",
+      "Confidence-based Iterative Retrieval",
+      "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)"
+    ],
+    "Uses": "Complex open-domain QA, multi-hop reasoning, knowledge graph completion, advanced information synthesis."
+  },
+  {
+    "Pattern Name": "Decomposition-based Multi-Step RAG",
+    "Problem": "Solving complex, multi-hop queries directly is challenging for LLMs and retrieval systems due to their intricate nature and the need to combine disparate pieces of information.",
+    "Context": "Multi-hop Question Answering (QA) scenarios where a complex query can be logically broken down into a series of simpler, more manageable single-hop sub-queries.",
+    "Solution": "First, decompose the complex multi-hop query into simpler single-hop sub-queries. Then, repeatedly access the LLM and retriever to solve each of these sub-queries. Finally, merge the solutions from the sub-queries to formulate a complete answer to the original complex query.",
+    "Result": "Simplifies the process of answering complex queries by breaking them into manageable, solvable parts, improving accuracy and tractability for multi-hop reasoning tasks.",
+    "Related Patterns": [
+      "Multi-Step Retrieval-Augmented QA",
+      "Chain-of-Thought RAG (Interleaved CoT and Retrieval)"
+    ],
+    "Uses": "Multi-hop QA, complex problem-solving with LLMs, structured reasoning, agentic planning."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought RAG (Interleaved CoT and Retrieval)",
+    "Problem": "LLMs need to perform complex reasoning while simultaneously accessing and integrating external knowledge to avoid hallucinations and improve factual accuracy, especially in knowledge-intensive tasks.",
+    "Context": "Knowledge-intensive tasks, particularly multi-hop Question Answering, where a logical sequence of thoughts needs to be generated and grounded in retrieved information to arrive at a correct answer.",
+    "Solution": "Interleave the generation of a 'Chain-of-Thought' (a logical sequence of intermediate reasoning steps) with document retrieval. The LLM generates a thought, then retrieves relevant documents based on that thought, and uses the retrieved information to continue or refine its reasoning chain, repeating this process until the final answer is derived.",
+    "Result": "Enhances the reasoning capabilities of LLMs by grounding their thought processes in external, retrieved knowledge, leading to more accurate, coherent, and often explainable answers.",
+    "Related Patterns": [
+      "Multi-Step Retrieval-Augmented QA",
+      "Decomposition-based Multi-Step RAG"
+    ],
+    "Uses": "Complex QA, knowledge-intensive reasoning, explainable AI, agentic planning with external tools."
+  },
+  {
+    "Pattern Name": "Confidence-based Iterative Retrieval",
+    "Problem": "LLMs may generate parts of sentences or answers with low confidence, indicating a potential lack of sufficient or accurate information, which can lead to errors.",
+    "Context": "Generative AI systems, especially those involved in iterative text generation or question answering, where the model can assess its confidence in its intermediate or generated output.",
+    "Solution": "During the generation process, if the LLM identifies tokens or sentences within its generated output that have low confidence, it triggers an additional retrieval step to fetch new, potentially more relevant documents. This new information is then used to refine or continue the generation, aiming to increase confidence and accuracy.",
+    "Result": "Improves the quality and factual accuracy of generated text by dynamically seeking additional grounding information when the model is uncertain, leading to more robust outputs.",
+    "Related Patterns": [
+      "Multi-Step Retrieval-Augmented QA"
+    ],
+    "Uses": "Generative AI, iterative QA, self-correction in LLMs, knowledge refinement."
+  },
+  {
+    "Pattern Name": "Entity Frequency-based Adaptive Retrieval",
+    "Problem": "Applying retrieval for all queries, especially simple ones, introduces unnecessary computational overhead, while not retrieving for complex queries leads to inaccuracies.",
+    "Context": "Retrieval-augmented LLM systems where query complexity can be approximated by the popularity or frequency of entities mentioned in the query.",
+    "Solution": "Assess the complexity of a query based on the frequency of entities it contains. Retrieval modules are only activated (or used more extensively) when the frequency of entities falls below a certain threshold, implying the query might be about less common knowledge and thus harder for the LLM's parametric memory alone.",
+    "Result": "Reduces computational overhead for common, easily answerable queries by avoiding unnecessary retrieval, while still leveraging retrieval for potentially harder queries, offering a basic form of adaptive resource allocation.",
+    "Related Patterns": [
+      "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)",
+      "Self-Reflective RAG (Critique-based Adaptive RAG)"
+    ],
+    "Uses": "Simple adaptive RAG, query routing, cost optimization in LLM inference, preliminary complexity assessment."
+  },
+  {
+    "Pattern Name": "Self-Reflective RAG (Critique-based Adaptive RAG)",
+    "Problem": "LLMs can generate ungrounded or factually incorrect information, and need a mechanism to dynamically decide when to retrieve, critique, or regenerate to improve output quality.",
+    "Context": "Generative AI systems that aim for higher accuracy and reliability, capable of internal self-evaluation and dynamic adaptation during the generation process.",
+    "Solution": "Train a sophisticated model that can dynamically perform three actions: retrieve (fetch external information), critique (evaluate its own generated text for quality, relevance, or factual accuracy), and generate (produce or refine text). This process allows the model to self-reflect and adapt its strategy based on the quality of its intermediate outputs.",
+    "Result": "Improves the overall quality, factual consistency, and reliability of generated text by enabling dynamic self-correction and informed information seeking, leading to more robust and accurate outputs.",
+    "Related Patterns": [
+      "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)",
+      "Entity Frequency-based Adaptive Retrieval"
+    ],
+    "Uses": "Generative AI, adaptive RAG, self-correcting LLMs, knowledge-intensive generation, agentic systems."
+  }
+]
