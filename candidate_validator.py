@@ -11,69 +11,23 @@ if not os.environ.get("GOOGLE_API_KEY"):
 
 llm = init_chat_model("gemini-2.5-flash", model_provider="google_genai", temperature=0)
 
-
-"""
-Prompt template for validating AI design pattern candidates using a comprehensive 20-question framework.
-
-This prompt evaluates candidate patterns across five key dimensions to ensure they meet the quality
-standards of well-defined design patterns. Each question is answered as "Yes", "No", or "Partially",
-with a scoring system (Yes=5, Partially=2.5, No=0) for a maximum score of 100.
-
-Evaluation Framework:
-
-Problem & Context (Questions 1-5):
-    q1: Does the problem clearly describe a recurring AI challenge?
-    q2: Is the problem specific enough to understand what is failing or suboptimal?
-    q3: Does the problem mention why naive or existing solutions are insufficient?
-    q4: Is the context explained clearly, showing where and when the problem occurs?
-    q5: Does the pattern highlight constraints or dynamic aspects of the context?
-
-Solution Evaluation (Questions 6-10):
-    q6: Is the solution actionable and reproducible for someone implementing it?
-    q7: Does the solution show how it directly addresses the problem?
-    q8: Is the solution generalizable beyond a single dataset, tool, or model?
-    q9: Does the solution encourage robustness against edge cases or unexpected inputs?
-    q10: Are any trade-offs or limitations of the solution mentioned?
-
-Result & Validation (Questions 11-14):
-    q11: Does the pattern describe measurable improvement or benefits?
-    q12: Are the results clearly linked to the problem and solution?
-    q13: Does it provide evidence (quantitative or qualitative) that the solution works?
-    q14: Are the results likely to be reproducible in other settings?
-
-Related Patterns & Reusability (Questions 15-18):
-    q15: Does the pattern relate to other known patterns in a meaningful way?
-    q16: Can the pattern be combined with other patterns to solve larger problems?
-    q17: Is the pattern reusable for similar AI tasks in different domains?
-    q18: Does the pattern indicate when it should or should not be used?
-
-Practical Insight (Questions 19-20):
-    q19: Does the pattern provide insight that could help engineers avoid common mistakes?
-    q20: Does it encourage learning and improvement in AI system design beyond just solving 
-         the immediate problem?
-
-Returns:
-    JSON array with pattern name, answers for q1-q20, and calculated score.
-"""
-
 pattern_extraction_prompt = """
-You are given a candidate AI design pattern. Your task is to evaluate it using 20 questions about problem clarity, solution robustness, context-awareness, results validation, and practical usability. Answer each question briefly as "Yes", "No", or "Partially".
+You are given a candidate AI design pattern. Your task is to evaluate it using 20 questions about problem clarity, solution robustness, context-awareness, results validation, and practical usability. Rate each question briefly as 0-10.
 
 Output the result as a JSON array using these short keys:
-
 Problem & Context (Questions 1-5):
-    q1: Does the problem clearly describe a recurring AI challenge?
-    q2: Is the problem specific enough to understand what is failing or suboptimal?
-    q3: Does the problem mention why naive or existing solutions are insufficient?
-    q4: Is the context explained clearly, showing where and when the problem occurs?
-    q5: Is it related to AI?
+    q1: A Recurring Problem – Does it state a specific, commonly encountered problem in software design that needs solving?
+    q2: Is the problem non-trivial and likely to appear in various contexts?
+    q3: A Specific Context – Does it describe the circumstances or conditions under which this problem typically arises?
+    q4: Does the problem mention why naive or existing solutions are insufficient?
+    q5: Is the pattern related to AI?
 
 Solution Evaluation (Questions 6-10):
-    q6: Is the solution actionable and reproducible for someone implementing it?
-    q7: Does the solution show how it directly addresses the problem?
-    q8: Is the solution generalizable beyond a single dataset, tool, or model?
-    q9: Does the solution encourage robustness against edge cases or unexpected inputs?
-    q10: Are any trade-offs or limitations of the solution mentioned?
+    q6: A Well-Defined Solution – Does it propose a concrete, structured solution involving specific roles, responsibilities, and collaborations between software elements (like classes or objects)?
+    q7: Is the solution abstract enough to be applied in different ways, not just one specific implementation?
+    q8: Does the solution encourage robustness against edge cases or unexpected inputs?
+    q9: Does it discuss the benefits of applying this solution (e.g., improved flexibility, reusability, maintainability)?
+    q10: Does it mention the potential drawbacks, limitations, or trade-offs involved?
 
 Result & Validation (Questions 11-14):
     q11: Does the pattern describe measurable improvement or benefits?
@@ -93,7 +47,7 @@ Practical Insight (Questions 19-20):
          the immediate problem?
 
 
-- score calculate like this - yes 5,no 0 , partialy 2.5 - (max total 100)
+- score calculate like this - as percentage of total rate of questions
 
 Input Pattern Candidates:
 {patterns_chunk}
@@ -101,7 +55,7 @@ Input Pattern Candidates:
 Output Example:
 
 
- "name":NAME_OF_PATTERN,"q1": "Yes", "q2": "Yes", "q3": "Partially", "q4": "Yes", "q5": "Yes", "q6": "Yes", "q7": "Yes","q8": "Yes", "q9": "Yes", "q10": "Partially", "q11": "Yes", "q12": "Yes", "q13": "Yes", "q14": "Yes", "q15": "Yes", "q16": "Yes", "q17": "Yes", "q18": "Yes", "q19": "Yes", "q20": "Yes","score":100
+ name:"NAME_OF_PATTERN,"q1": 8, "q2": 9, "q3": 7, "q4": 8, "q5": 10, "q6": 9, "q7": 8,"q8": 7, "q9": 9, "q10": 8, "q11": 9, "q12": 8, "q13": 7, "q14": 8, "q15": 9, "q16": 8, "q17": 9, "q18": 8, "q19": 9, "q20": 10,"score":85
 
 """
 
@@ -191,6 +145,7 @@ def save_patterns_to_file(patterns, output_path):
         json.dump(patterns, file, indent=2)
 
 if __name__ == "__main__":
-    file_path = "outputs/[25.10.21] - 02 - Added Retry Mechanism to Pattern Extraction/extracted_patterns.json"
+    # file_path = "outputs/[25.10.21] - 02 - Added Retry Mechanism to Pattern Extraction/extracted_patterns.json"
+    file_path = "outputs/[25.10.21] - 02 - Added Retry Mechanism to Pattern Extraction/interation_test/extracted_patterns-auto-reduced-1.json"
     validation_results = extract_patterns(file_path)
-    save_patterns_to_file(validation_results, "/".join(file_path.split("/")[:-1]) + "/validated_patterns_1.json")
+    save_patterns_to_file(validation_results, "/".join(file_path.split("/")[:-1]) + "/validated_patterns_extracted_patterns-auto-reduced-1.json")

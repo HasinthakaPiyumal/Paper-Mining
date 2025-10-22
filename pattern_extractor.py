@@ -30,6 +30,7 @@ For each pattern, include:
 - Result
 - Related Patterns (only other extracted patterns)
 - Uses
+- Thinking (add your reasoning steps.)
 
 If patterns are mostly similar in their problem, solution, or context, merge them into a single entry. When merging, combine their names, uses, and related patterns.
 
@@ -56,6 +57,7 @@ Valid AI Pattern:
 "Result": "Improves planning efficiency for long-horizon tasks.",
 "Related Patterns": "LLM as a Planner, Grounded Replanning",
 "Uses": "Robotics, Vision-and-language navigation"
+"Thinking": "Hierarchical planning can help break down complex tasks into manageable subtasks, making it easier for agents to plan and execute actions."
 
 Pattern to IGNORE (Not an AI Pattern):
 "Pattern Name": "Microservice Architecture",
@@ -68,9 +70,11 @@ Paper text:
 {text}
 """
 
-retry_prompt = pattern_extraction_prompt+"""
-if there are any missing design patterns from the paper text, extract them as well and add to the below json array.
+retry_prompt = """\
+following is a list of patterns and thinking on how it was extracted in JSON format and paper text from which those patterns were extracted. 
+Look for any patterns that are not identified from the paper. If there are any missing design patterns from the paper text, extract them as well and add to the below json array.
 if there is any issue with bellow json format, correct it and return only the json array.
+""" + pattern_extraction_prompt + """
 
 Extracted patterns so far:
 {extracted_patterns}
@@ -150,9 +154,12 @@ def summarize_patterns(patterns):
     return remove_json_annotations(summary.content)
 
 if __name__ == "__main__":
-    file_path = "/home/hasinthaka/Documents/Projects/AI/AI Pattern Mining/Paper Mining/cleaned_papers/cleaned_2310.01061v2.pdf.txt"
+    file_path = "cleaned_papers/cleaned_978-3-030-21290-2_39.pdf.txt"
     print('Extracting patterns from:', file_path)
-    for i in range(5):
+    output_dir = f"outputs/[25.10.21] - 02 - Added Retry Mechanism to Pattern Extraction/interation_test"
+    f_name = "prompt_refinement_with_thinking"
+    for i in range(1):
         patterns = extract_patterns(file_path)
         print('Extracted')
-        save_patterns_to_file(patterns, f"/home/hasinthaka/Documents/Projects/AI/AI Pattern Mining/Paper Mining/outputs/[25.09.12] - 01/extracted_patterns-auto-reduced-{i+1}.json")
+        os.makedirs(output_dir, exist_ok=True)
+        save_patterns_to_file(patterns, f"{output_dir}/{f_name}_{i}.json")

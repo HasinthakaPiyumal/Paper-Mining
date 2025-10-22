@@ -1,0 +1,125 @@
+[
+  {
+    "Pattern Name": "Business-to-ML Problem Translation",
+    "Problem": "Organizations struggle to bridge the gap between high-level business needs and concrete, well-defined machine learning problems, leading to misaligned or ineffective ML solutions.",
+    "Context": "The initial phase of any ML project where business stakeholders (Actors) have specific Decision Goals and Question Goals, but lack the expertise to formulate these into actionable ML tasks.",
+    "Solution": "Employ a structured approach to decompose business problems. This involves identifying Actors, their Decision Goals, and breaking these down into specific Question Goals. These Question Goals are then linked to potential ML Insights (e.g., a Predictive Model) that can provide answers. This process translates business needs into specific ML problems, identifying required inputs and desired outputs for ML solutions.",
+    "Result": "A clear, well-defined ML problem statement that directly addresses a business need, facilitating the design and development of relevant and impactful ML solutions.",
+    "Related Patterns": [
+      "Predictive Modeling (Classification)",
+      "Anomaly Detection",
+      "Partitional Clustering"
+    ],
+    "Uses": "Initial project scoping for ML initiatives, ensuring ML efforts are aligned with business value, defining the scope for data scientists.",
+    "Thinking": "The paper explicitly states, 'By linking actors and decisions to questions and insights a solution pattern translates a business problem into a set of welldened ML problems.' This is a distinct, initial step in the ML design process, focusing on problem formulation rather than the ML solution itself. It's about how to *frame* the problem for ML. It falls under 'MLOps' as it's about the process of setting up an ML project."
+  },
+  {
+    "Pattern Name": "Predictive Modeling (Classification)",
+    "Problem": "Automating decisions or predictions (e.g., approval/denial, categorization) based on historical data within business processes.",
+    "Context": "Business scenarios requiring a categorical or binary output from an ML model, where labeled historical data is available for training. Examples include loan approval, customer churn prediction, or medical diagnosis.",
+    "Solution": "Employ classification algorithms (e.g., kNearest Neighbor, Naive Bayes, Support Vector Machines) to learn patterns from input features and predict a discrete outcome. The solution involves defining relevant evaluation metrics (e.g., Accuracy, Precision) and considering non-functional requirements (e.g., Tolerance to missing values). Data preparation steps like normalization are also integrated.",
+    "Result": "An ML model capable of generating a predictive recommendation (e.g., Approve/YN) for new, unseen cases, translating a business problem into a well-defined ML solution.",
+    "Related Patterns": [
+      "Business-to-ML Problem Translation",
+      "Context-Aware ML Solution Design",
+      "Quality-Driven ML Algorithm Selection",
+      "Data Preparation for ML"
+    ],
+    "Uses": "Loan approval, fraud detection (as a supervised approach), customer segmentation, medical diagnosis.",
+    "Thinking": "This pattern is explicitly illustrated with the 'loan approval solution pattern' in Fig 1. It describes the application of classification algorithms to a business problem, including considerations for context, quality, and data preparation, making it a specific AI/ML design pattern. It falls under the 'Classical AI' category."
+  },
+  {
+    "Pattern Name": "Anomaly Detection",
+    "Problem": "Identifying rare, unusual, or fraudulent instances within a dataset that deviate significantly from the majority of data, often in situations with imbalanced data.",
+    "Context": "Business processes where the identification of outliers or abnormal events is critical, such as fraud detection in insurance claims, network intrusion detection, or equipment failure prediction. The availability of labeled fraud/non-fraud samples can vary.",
+    "Solution": "Apply specialized anomaly detection algorithms. The choice of algorithm can be guided by data availability: supervised approaches if both normal and anomalous samples are available, or semi-supervised/unsupervised approaches if only normal samples are present.",
+    "Result": "Identification of potential anomalies or assignment of anomaly scores to instances, enabling proactive intervention or investigation.",
+    "Related Patterns": [
+      "Business-to-ML Problem Translation",
+      "Context-Aware ML Solution Design",
+      "Quality-Driven ML Algorithm Selection",
+      "Data Preparation for ML"
+    ],
+    "Uses": "Fraud detection in insurance claims, network security, manufacturing quality control.",
+    "Thinking": "This pattern is explicitly illustrated with the 'fraud detection solution pattern' in Fig 2. It addresses a specific ML problem and discusses different algorithmic approaches based on data context, fitting the AI design pattern criteria. It falls under the 'Classical AI' category."
+  },
+  {
+    "Pattern Name": "Partitional Clustering",
+    "Problem": "Identifying inherent groupings or segments within unlabeled datasets to discover hidden structures, customer segments, or natural categories, without prior knowledge of these groups.",
+    "Context": "Scenarios where data is abundant but labels are scarce or non-existent, and the goal is to understand the underlying structure of the data. Examples include customer segmentation, document clustering, or anomaly detection (as a pre-processing step or for outlier identification).",
+    "Solution": "Apply partitional clustering algorithms (e.g., kMeans, mentioned in Data Context C7) to partition a dataset into a predefined number of clusters. The solution involves preparing data (e.g., performing data normalization on numerical features) to ensure algorithm effectiveness and considering contextual factors for algorithm applicability.",
+    "Result": "A dataset with identified clusters, allowing for insights into data structure, targeted interventions (e.g., personalized marketing), or as a step in more complex analytical workflows.",
+    "Related Patterns": [
+      "Business-to-ML Problem Translation",
+      "Context-Aware ML Solution Design",
+      "Quality-Driven ML Algorithm Selection",
+      "Data Preparation for ML"
+    ],
+    "Uses": "Customer segmentation, market basket analysis, document organization, image compression.",
+    "Thinking": "Fig 1 explicitly mentions 'Partitional clustering' as an Analytics Goal, and 'kMeans' as an algorithm, along with a specific data preparation step ('Perform data normalization on numerical features when using kMeans algorithm'). This is a distinct ML task (unsupervised learning) and warrants its own pattern. It falls under 'Classical AI'."
+  },
+  {
+    "Pattern Name": "Context-Aware ML Solution Design",
+    "Problem": "The optimal choice of ML algorithms, data preparation techniques, and model configurations is highly dependent on specific operational conditions, user preferences, and data characteristics, leading to sub-optimal or inapplicable solutions if not considered.",
+    "Context": "Any ML project where the solution needs to be adaptive and robust across varying user needs, data environments, or deployment scenarios.",
+    "Solution": "Explicitly model and verify different types of 'Contexts': User Contexts (reflecting user desires like simplicity), Data Contexts (capturing dataset characteristics like feature independence or noise), and Model Contexts (relating to algorithm configurations and parameter values). These contexts act as activation rules, guiding the selection of appropriate algorithms, metrics, and data preparation steps.",
+    "Result": "ML solutions that are dynamically tailored to the prevailing operational context, ensuring higher applicability, performance, and user satisfaction by making informed design choices.",
+    "Related Patterns": [
+      "Predictive Modeling (Classification)",
+      "Anomaly Detection",
+      "Partitional Clustering",
+      "Quality-Driven ML Algorithm Selection",
+      "Data Preparation for ML"
+    ],
+    "Uses": "Guiding algorithm selection based on user interpretability needs, adapting data preparation based on data quality, tuning model parameters based on dataset characteristics.",
+    "Thinking": "This pattern is a core component of the paper's 'solution patterns' and is described in detail in Section 3 ('Contexts'). It addresses the ML-specific challenge of adapting solutions based on various contextual factors, which is distinct from general software architecture. It's about how ML solutions are designed to be flexible and context-sensitive. It falls under the 'MLOps' or 'Classical AI' categories, specifically related to ML workflow design."
+  },
+  {
+    "Pattern Name": "Quality-Driven ML Algorithm Selection",
+    "Problem": "Choosing among multiple ML algorithms that can achieve a primary analytical goal, but have different trade-offs regarding non-functional requirements (NFRs) such as interpretability, speed, memory consumption, or robustness to missing data.",
+    "Context": "ML solution design where beyond predictive accuracy, specific quality attributes are critical for the system's success, user acceptance, or operational efficiency.",
+    "Solution": "Define 'Softgoals' representing critical NFRs (e.g., Tolerance to missing values, Speed of learning, Interpretability). Document the known 'Contribution links' (positive or negative influences) of candidate ML algorithms to these softgoals. Use this explicit knowledge to guide the selection of algorithms, prioritizing those that best align with the desired quality profile.",
+    "Result": "ML solutions that not only meet their analytical objectives but also satisfy crucial non-functional requirements, leading to more robust, performant, or user-friendly systems.",
+    "Related Patterns": [
+      "Predictive Modeling (Classification)",
+      "Anomaly Detection",
+      "Partitional Clustering",
+      "Context-Aware ML Solution Design"
+    ],
+    "Uses": "Selecting an algorithm for a real-time system (prioritizing speed), choosing an interpretable model for regulatory compliance, or opting for a robust algorithm when data quality is uncertain.",
+    "Thinking": "This pattern is also a core component of the paper's 'solution patterns' and is described in Section 3 ('Softgoals'). It addresses the ML-specific challenge of balancing performance with other quality attributes during algorithm selection, which is a key aspect of ML system design. It falls under the 'MLOps' or 'Classical AI' categories, specifically related to ML workflow design."
+  },
+  {
+    "Pattern Name": "Data Preparation for ML",
+    "Problem": "Raw datasets are often noisy, incomplete, inconsistent, or in a format unsuitable for direct consumption by machine learning algorithms, hindering model performance and applicability.",
+    "Context": "Virtually any ML project where data needs to be transformed from its raw state into a clean, consistent, and algorithm-compatible format.",
+    "Solution": "Implement a series of 'Data Preparation Tasks' using various 'Operators' connected by 'Data Flows.' Common operators include Data Normalization (scaling numerical features, e.g., for kMeans), Dimensionality Reduction (reducing features, e.g., to handle redundant attributes), Data Cleansing (handling missing values, noise removal), and Feature Engineering (creating new features).",
+    "Result": "A prepared dataset that is optimized for the chosen ML algorithms, leading to improved model training efficiency, better predictive performance, and broader applicability of algorithms.",
+    "Related Patterns": [
+      "Predictive Modeling (Classification)",
+      "Anomaly Detection",
+      "Partitional Clustering",
+      "Context-Aware ML Solution Design"
+    ],
+    "Uses": "Pre-processing data for classification, clustering, or regression tasks; preparing data for neural networks; handling high-dimensional datasets.",
+    "Thinking": "While 'data preparation' is a general concept, the paper frames it within the context of ML 'solution patterns' and mentions specific ML-relevant techniques like 'Dimensionality Reduction' and 'Data Normalization' as 'Operators' that are part of the ML solution design. This makes it specific enough to be an AI design pattern, focusing on the ML-specific transformations rather than general ETL. It falls under the 'MLOps' category, specifically related to ML data workflows."
+  },
+  {
+    "Pattern Name": "ML Workflow Orchestration (Context-Driven)",
+    "Problem": "Manually orchestrating the sequence of data preparation, algorithm selection, and model execution steps in an ML project is complex, error-prone, and difficult to adapt to changing contexts and quality requirements.",
+    "Context": "ML projects where the optimal sequence of operations (data preparation, algorithm choice, parameter tuning, evaluation) depends on dynamic factors like user preferences, data characteristics, and desired non-functional requirements.",
+    "Solution": "Implement a 'Workflow Planner' component that interprets verified contexts (User, Data, Model Contexts) and quality requirements (Softgoals). This planner dynamically suggests and orders the necessary data preparation steps and candidate ML algorithms, ensuring that appropriate configurations and metrics are applied. It acts as an intelligent orchestrator, guiding the ML pipeline based on the specific conditions and goals.",
+    "Result": "A semi-automated, adaptive ML workflow that efficiently executes the most suitable data preparation and modeling steps, reducing manual effort and improving the relevance and performance of the ML solution under varying conditions.",
+    "Related Patterns": [
+      "Business-to-ML Problem Translation",
+      "Context-Aware ML Solution Design",
+      "Quality-Driven ML Algorithm Selection",
+      "Data Preparation for ML",
+      "Predictive Modeling (Classification)",
+      "Anomaly Detection",
+      "Partitional Clustering"
+    ],
+    "Uses": "Automating and adapting ML pipelines for various business problems (e.g., loan approval, fraud detection, task assignment) where contextual factors dictate the optimal approach.",
+    "Thinking": "The 'Workflow Planner' component in the prototype architecture is described as interpreting verified contexts and candidate algorithms to specify the order of actions for data preparation and data mining. This is more than just a generic workflow; it's an intelligent, ML-specific orchestration driven by the contextual and quality patterns already identified. It ties together the other patterns into an executable sequence. This falls under MLOps, specifically workflow orchestration tailored for ML."
+  }
+]

@@ -1,42 +1,3 @@
-
-You are given a candidate AI design pattern. Your task is to evaluate it using 20 questions about problem clarity, solution robustness, context-awareness, results validation, and practical usability. Rate each question briefly as 0-10.
-
-Output the result as a JSON array using these short keys:
-Problem & Context (Questions 1-5):
-    q1: A Recurring Problem – Does it state a specific, commonly encountered problem in software design that needs solving?
-    q2: Is the problem non-trivial and likely to appear in various contexts?
-    q3: A Specific Context – Does it describe the circumstances or conditions under which this problem typically arises?
-    q4: Does the problem mention why naive or existing solutions are insufficient?
-    q5: Is the pattern related to AI?
-
-Solution Evaluation (Questions 6-10):
-    q6: A Well-Defined Solution – Does it propose a concrete, structured solution involving specific roles, responsibilities, and collaborations between software elements (like classes or objects)?
-    q7: Is the solution abstract enough to be applied in different ways, not just one specific implementation?
-    q8: Does the solution encourage robustness against edge cases or unexpected inputs?
-    q9: Does it discuss the benefits of applying this solution (e.g., improved flexibility, reusability, maintainability)?
-    q10: Does it mention the potential drawbacks, limitations, or trade-offs involved?
-
-Result & Validation (Questions 11-14):
-    q11: Does the pattern describe measurable improvement or benefits?
-    q12: Are the results clearly linked to the problem and solution?
-    q13: Does it provide evidence (quantitative or qualitative) that the solution works?
-    q14: Are the results likely to be reproducible in other settings?
-
-Related Patterns & Reusability (Questions 15-18):
-    q15: Does the pattern relate to other known patterns in a meaningful way?
-    q16: Can the pattern be combined with other patterns to solve larger problems?
-    q17: Is the pattern reusable for similar AI tasks in different domains?
-    q18: Does the pattern indicate when it should or should not be used?
-
-Practical Insight (Questions 19-20):
-    q19: Does the pattern provide insight that could help engineers avoid common mistakes?
-    q20: Does it encourage learning and improvement in AI system design beyond just solving 
-         the immediate problem?
-
-
-- score calculate like this - as percentage of total rate of questions
-
-Input Pattern Candidates:
 [
   {
     "Pattern Name": "Solution Pattern (for ML Design)",
@@ -44,10 +5,7 @@ Input Pattern Candidates:
     "Context": "Designing and developing machine learning solutions for recurring business analytics problems. There is a need to systematically organize, store, and present knowledge on various aspects of ML solution design, especially when ML expertise needs to be efficiently transferred or applied in real-world scenarios.",
     "Solution": "Represent generic and well-proven ML designs as 'Solution Patterns.' Each pattern is a conceptual model that integrates multiple views:\n1.  **Business View:** Links business problems (Actors, Decision Goals, Question Goals) to ML outcomes (Insights).\n2.  **Analytics View:** Defines applicable ML tasks (Analytics Goals), alternative algorithms (Algorithms with Means-End links), performance evaluation metrics (Indicators), and critical non-functional requirements (Softgoals) with their contributions from algorithms.\n3.  **Data Preparation View:** Describes necessary data (Entities), transformations (Operators), and data flows (Data Flows) to prepare data for ML algorithms.\n4.  **Contexts:** Incorporates User Contexts (user preferences), Data Contexts (data characteristics and recommendations), and Model Contexts (algorithm configurations and parameter recommendations) to define the applicability and configuration of solution components.\n5.  **Parameters:** Specifies configuration values required by algorithms.",
     "Result": "Provides a systematic and reusable framework for ML solution design, enhancing design effectiveness and speeding up development. It facilitates knowledge transfer among developers, reduces exploration and experimentation efforts, and helps constrain the solution space based on quality requirements and contextual factors. It offers a structured way to link business requirements to ML algorithms and data preparation techniques.",
-    "Related Patterns": [
-      "Contextual Algorithm Selection (Data-Driven)",
-      "NFR-Guided Algorithm Selection"
-    ],
+    "Related Patterns": ["Contextual Algorithm Selection (Data-Driven)", "NFR-Guided Algorithm Selection"],
     "Uses": "Designing ML solutions for business processes such as loan approval, fraud detection in insurance claims, and task assignment. Applicable for any recurring business analytics problem requiring a structured ML design approach."
   },
   {
@@ -56,10 +14,7 @@ Input Pattern Candidates:
     "Context": "Developing an ML solution for a problem (e.g., anomaly detection, classification) where the nature of the training data (e.g., availability of both positive and negative samples, or only negative samples) varies or is uncertain. The goal is to ensure the chosen algorithm is effective given the data constraints.",
     "Solution": "Integrate a decision mechanism within the ML design process that evaluates 'Data Contexts' (e.g., 'Both fraud and non-fraud samples are available' vs. 'Only non-fraud samples are present'). Based on the evaluation of these data contexts, dynamically select or recommend the most suitable ML algorithm or approach (e.g., supervised anomaly detection if both samples are available, semi-supervised if only non-fraud samples are present). This decision mechanism is part of the overall 'Solution Pattern' framework.",
     "Result": "Ensures that the ML solution adapts to the actual data availability, leading to more robust and effective model selection. It reduces the risk of applying an unsuitable algorithm and optimizes development efforts by guiding the choice based on concrete data characteristics.",
-    "Related Patterns": [
-      "Solution Pattern (for ML Design)",
-      "NFR-Guided Algorithm Selection"
-    ],
+    "Related Patterns": ["Solution Pattern (for ML Design)", "NFR-Guided Algorithm Selection"],
     "Uses": "Fraud detection (choosing between supervised and semi-supervised anomaly detection based on labeled fraud examples), intrusion detection, medical diagnosis, quality control, any ML problem where data labeling completeness varies."
   },
   {
@@ -68,16 +23,7 @@ Input Pattern Candidates:
     "Context": "Designing an ML solution where certain NFRs are critical for business value or system performance, and different algorithms have known performance characteristics or 'contributions' regarding these NFRs. The goal is to constrain the solution space to algorithms that align with desired quality attributes.",
     "Solution": "Within the ML design process, explicitly define critical NFRs as 'Softgoals.' For each potential ML algorithm, document its known 'Contribution links' (positive or negative influences) to these Softgoals. When an NFR is deemed critical, use this knowledge to recommend algorithms that positively contribute to it or exclude those that negatively impact it. For example, if robustness to redundant attributes is critical, neural network techniques might be recommended.",
     "Result": "Narrows down the solution space to algorithms that align with desired quality attributes, leading to ML systems that meet specific operational or user experience requirements. It helps manage trade-offs between different NFRs and algorithm choices.",
-    "Related Patterns": [
-      "Solution Pattern (for ML Design)",
-      "Contextual Algorithm Selection (Data-Driven)"
-    ],
+    "Related Patterns": ["Solution Pattern (for ML Design)", "Contextual Algorithm Selection (Data-Driven)"],
     "Uses": "Any ML project where NFRs (e.g., interpretability, speed of learning, memory consumption, tolerance to missing values, robustness to redundant attributes) are key drivers for algorithm selection and design."
   }
 ]
-
-Output Example:
-
-
- name:"NAME_OF_PATTERN,"q1": 8, "q2": 9, "q3": 7, "q4": 8, "q5": 10, "q6": 9, "q7": 8,"q8": 7, "q9": 9, "q10": 8, "q11": 9, "q12": 8, "q13": 7, "q14": 8, "q15": 9, "q16": 8, "q17": 9, "q18": 8, "q19": 9, "q20": 10,"score":85
-

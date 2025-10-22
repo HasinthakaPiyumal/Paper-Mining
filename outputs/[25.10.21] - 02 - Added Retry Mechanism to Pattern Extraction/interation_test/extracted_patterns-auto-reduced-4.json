@@ -1,0 +1,65 @@
+[
+  {
+    "Pattern Name": "Solution Pattern",
+    "Problem": "Organizations struggle to derive business value from ML due to inherent complexities in ML solution development, requiring specialized skills and knowledge transfer, and difficulty in translating business problems into ML solutions.",
+    "Context": "Designing and developing ML solutions for commonly-known and recurring business analytics problems, especially when transferring ML design knowledge among developers or when developers are new to ML.",
+    "Solution": "Represent ML designs as 'Solution Patterns' which are conceptual models comprising:\n-   **Business View:** Actors, Decision Goals, Question Goals, Insights (to translate business problems to ML).\n-   **Analytics View:** Analytics Goals, Algorithms, Indicators (metrics), Softgoals (non-functional requirements) (to design and compare ML solutions).\n-   **Data Preparation View:** Entities, Operators, Data Flows (to describe data transformation).\n-   **Contexts:** User Contexts, Data Contexts, Model Contexts (to specify applicability and configuration based on user needs, data characteristics, and model parameters).\n-   **Parameters:** Algorithm configuration values.\nThese patterns provide reusable answers to questions about ML applicability, algorithm choice, configuration, evaluation, NFRs, and data preparation.",
+    "Result": "Efficient transfer of ML design knowledge among developers; reduced time and cost of ML development efforts by starting with proven techniques; constrains the solution space based on critical qualities; provides a convenient and easy-to-understand visual encapsulation of ML design; facilitates semi-automated support for using patterns in real-world scenarios.",
+    "Related Patterns": ["Business-Driven ML Problem Framing", "ML Solution Design & Evaluation", "Contextual Data Preparation for ML", "Context-Driven ML Adaptation", "NFR-Guided ML Design", "Context-Aware ML Workflow Orchestration"],
+    "Uses": "Business analytics, fraud detection, loan approval, task assignment, general ML solution design and documentation."
+  },
+  {
+    "Pattern Name": "Business-Driven ML Problem Framing",
+    "Problem": "Organizations struggle to effectively translate high-level business objectives and questions into concrete, actionable machine learning problems, leading to misalignment between business needs and ML solutions.",
+    "Context": "The initial phase of an ML project, where business stakeholders and ML experts collaborate to define the scope and goals of the ML solution. This involves understanding business decisions, identifying information gaps, and determining how ML can provide insights.",
+    "Solution": "Employ a structured 'Business View' to explicitly link:\n-   **Actors:** The individuals or systems making decisions.\n-   **Decision Goals:** The high-level intentions of the actors.\n-   **Question Goals:** Specific questions whose answers are needed to achieve decision goals.\n-   **Insights:** The final outcomes of an ML solution (e.g., a predictive model's output) that answer the question goals.\nThis process ensures that ML efforts are directly tied to business value.",
+    "Result": "Clear and well-defined ML problems that are aligned with business objectives; improved communication and understanding between business and technical teams; ML solutions that directly address critical business decisions.",
+    "Related Patterns": ["Solution Pattern"],
+    "Uses": "ML project initiation, requirements elicitation, business case definition for ML, translating business needs into ML tasks (e.g., 'What would be the approval decision on the loan?' -> 'Predictive model for loan approval')."
+  },
+  {
+    "Pattern Name": "ML Solution Design & Evaluation",
+    "Problem": "Given a defined ML problem, selecting the most appropriate type of analytics, specific algorithms, and effective evaluation metrics is challenging due to the vast array of options and their trade-offs.",
+    "Context": "After the ML problem has been framed, the technical design phase where various ML approaches are considered, implemented, and assessed for their suitability.",
+    "Solution": "Utilize an 'Analytics View' to systematically design and evaluate ML solutions:\n-   **Analytics Goals:** High-level intentions for extracting insights (e.g., Prediction, Classification, Anomaly Detection).\n-   **Algorithms:** Specific procedures or tasks that carry out an Analytics Goal (e.g., kNearest Neighbor, Naive Bayes, SVM for Classification).\n-   **Indicators:** ML metrics (e.g., Accuracy, Precision) used to numerically evaluate algorithm performance.\nThis involves linking algorithms to analytics goals and specifying metrics for their assessment, often guided by contexts and NFRs.",
+    "Result": "A structured and systematic approach to choosing and comparing ML algorithms; clear understanding of algorithm applicability and performance; informed decisions on the technical implementation of ML solutions.",
+    "Related Patterns": ["Solution Pattern", "Context-Driven ML Adaptation", "NFR-Guided ML Design"],
+    "Uses": "Algorithm selection, model comparison, performance evaluation, anomaly detection, classification tasks."
+  },
+  {
+    "Pattern Name": "Contextual Data Preparation for ML",
+    "Problem": "Raw data is rarely in a suitable format for direct use by ML algorithms, requiring complex and often context-dependent transformation, cleansing, and feature engineering steps.",
+    "Context": "Any phase of an ML project where data needs to be transformed from its raw state into a format optimized for specific ML algorithms, considering data characteristics and algorithm requirements.",
+    "Solution": "Define 'Data Preparation Tasks' that consist of:\n-   **Entities & Attributes:** The datasets and their features.\n-   **Operators:** Specific transformation techniques (e.g., data normalization, dimensionality reduction, noise removal, missing values treatment).\n-   **Data Flows:** The sequence of operations.\nThese tasks are often guided by 'Data Contexts' (e.g., 'Perform data normalization on numerical features when using kMeans algorithm') which specify when certain transformations are applicable based on data properties.",
+    "Result": "Data that is correctly shaped and prepared for ML algorithms; improved model performance and reliability; systematic and context-aware data preprocessing workflows.",
+    "Related Patterns": ["Solution Pattern", "Context-Driven ML Adaptation"],
+    "Uses": "Data cleansing, feature engineering, data normalization, handling missing values, dimensionality reduction, preparing data for specific ML algorithms (e.g., kMeans, neural networks)."
+  },
+  {
+    "Pattern Name": "Context-Driven ML Adaptation",
+    "Problem": "Selecting appropriate ML algorithms, data preparation steps, evaluation metrics, and configurations is complex and highly dependent on specific conditions, leading to suboptimal choices or extensive trial-and-error.",
+    "Context": "Designing and implementing ML solutions where the optimal approach varies based on user preferences, characteristics of the dataset, or specific model configuration requirements.",
+    "Solution": "Incorporate explicit 'Contexts' (User Contexts, Data Contexts, Model Contexts) into the ML design process. These contexts define conditions under which specific algorithms are applicable, data transformations are recommended, evaluation metrics are suitable, or model parameters should be set. A 'Context Analyzer' component can verify these contexts at runtime or design time to guide the selection and configuration of ML components.",
+    "Result": "Systematic discovery of alternative ML approaches based on verified conditions; improved applicability and performance of ML solutions by tailoring them to specific contexts; reduced exploration and experimentation efforts by narrowing down the solution space; facilitates semi-automated workflow generation for ML pipelines.",
+    "Related Patterns": ["Solution Pattern", "NFR-Guided ML Design", "Context-Aware ML Workflow Orchestration", "ML Solution Design & Evaluation", "Contextual Data Preparation for ML"],
+    "Uses": "Algorithm selection, data preprocessing, model configuration, evaluation metric choice, anomaly detection (e.g., supervised vs. semi-supervised based on data availability), handling redundant attributes."
+  },
+  {
+    "Pattern Name": "NFR-Guided ML Design",
+    "Problem": "ML solution design often focuses primarily on predictive performance, neglecting critical non-functional requirements (NFRs) like interpretability, speed, memory, or tolerance to missing values, leading to solutions that are not practical or acceptable in real-world business contexts.",
+    "Context": "Designing ML solutions where various NFRs are important to stakeholders and need to be considered alongside predictive accuracy.",
+    "Solution": "Explicitly incorporate 'Softgoals' (representing NFRs) into the ML design process. Document how different ML algorithms are known to contribute positively or negatively to these softgoals. A 'Quality Evaluator' component can analyze these influences and recommend algorithms to be included or excluded based on the importance and priority of softgoals provided by the modeler.",
+    "Result": "ML solutions that better meet business and operational quality requirements; informed trade-offs between predictive performance and NFRs; constrains the solution space by filtering algorithms based on NFR compatibility.",
+    "Related Patterns": ["Solution Pattern", "Context-Driven ML Adaptation", "ML Solution Design & Evaluation", "Context-Aware ML Workflow Orchestration"],
+    "Uses": "Algorithm selection, model comparison, ensuring interpretability, managing resource constraints (speed, memory), handling data quality issues (e.g., tolerance to missing values)."
+  },
+  {
+    "Pattern Name": "Context-Aware ML Workflow Orchestration",
+    "Problem": "Automating or semi-automating the end-to-end ML pipeline (from data preparation to model execution and evaluation) is challenging, especially when the optimal sequence of steps and configurations depends on dynamic contexts and desired quality requirements.",
+    "Context": "Deploying and managing ML solutions in real-world scenarios where the ML workflow needs to adapt based on user input, data characteristics, model configurations, and non-functional requirements.",
+    "Solution": "Implement a 'Workflow Planner' component that:\n-   Interprets verified 'Contexts' (User, Data, Model Contexts) to determine applicable ML approaches.\n-   Considers 'Softgoals' (NFRs) and their influence on candidate algorithms to filter choices.\n-   Specifies the ordered sequence of actions to be executed by 'Data Preparator' and 'Data Miner' components.\n-   Ensures necessary data preparation and model configurations (e.g., parameter values) are collected and transmitted for execution.",
+    "Result": "Semi-automated generation and execution of adaptive ML analysis scenarios; dynamic adjustment of ML pipelines based on current conditions and priorities; streamlined ML development, testing, and deployment processes.",
+    "Related Patterns": ["Solution Pattern", "Context-Driven ML Adaptation", "NFR-Guided ML Design", "Business-Driven ML Problem Framing", "ML Solution Design & Evaluation", "Contextual Data Preparation for ML"],
+    "Uses": "Automated ML pipeline generation, adaptive ML systems, MLOps platforms, intelligent assistance for ML solution design."
+  }
+]
