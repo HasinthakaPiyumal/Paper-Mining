@@ -60,7 +60,6 @@ def generate_evaluation(correct_list, generated_json):
     try:
         result = json.loads(remove_json_header_footer(response.content))
     except json.JSONDecodeError:
-        # Retry logic could be implemented here
         result = {"error": "Failed to parse JSON from LLM response."}
     return result
 
