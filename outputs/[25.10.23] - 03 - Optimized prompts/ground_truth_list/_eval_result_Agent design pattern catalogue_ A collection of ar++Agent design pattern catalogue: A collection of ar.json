@@ -1,0 +1,27 @@
+{
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "correct": [
+    "Passive goal creator",
+    "Proactive goal creator",
+    "Prompt/response optimiser",
+    "Retrieval augmented generation",
+    "One-shot model querying",
+    "Incremental model querying",
+    "Single-path plan generator",
+    "Multi-path plan generator",
+    "Self-reflection",
+    "Cross-reflection",
+    "Human reflection",
+    "Voting-based cooperation",
+    "Role-based cooperation",
+    "Debate-based cooperation",
+    "Multimodal guardrails",
+    "Tool/agent registry",
+    "Agent adapter",
+    "Agent evaluator"
+  ],
+  "missing": [],
+  "extra": []
+}

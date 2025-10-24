@@ -1,0 +1,106 @@
+[
+  {
+    "Pattern Name": "Retrieval Augmented Fine-Tuning (RAFT)",
+    "Problem": "Pretrained Large Language Models (LLMs) struggle to accurately answer questions in domain-specific, open-book settings, especially when faced with imperfect retrieval (distractor documents) or when they need to effectively leverage external documents at test time. Existing finetuning methods often fail to incorporate Retrieval Augmented Generation (RAG) or account for retrieval imperfections during training, while in-context RAG methods do not fully leverage the learning opportunity of a fixed domain.",
+    "Context": "LLMs are increasingly employed in specialized domains (e.g., legal, medical, code repositories, enterprise documents) where the primary goal is to maximize accuracy based on a given set of documents. These LLMs are initially pretrained on vast general corpora and need adaptation to incorporate new, domain-specific information. Retrieval Augmented Generation (RAG) is a common inference-time technique, and Supervised Finetuning (SFT) is a common training-time adaptation technique.",
+    "Solution": "RAFT is a novel training recipe that combines instruction finetuning (IFT) with retrieval augmented generation (RAG). It involves preparing training data such that each data point contains a question (Q), a set of documents (Dk), and a Chain-of-Thought style answer (A) generated from one or more 'golden' documents (D). Crucially, the set Dk includes both 'golden' documents (containing the answer) and 'distractor' documents (irrelevant). For a fraction (1-P) of the training data, only distractor documents are included, compelling the model to memorize answers or indicate inability to answer from context. The model is trained to cite verbatim sequences from relevant documents and generate Chain-of-Thought reasoning, explicitly teaching it to ignore distractor documents.",
+    "Result": "RAFT significantly improves LLMs' ability to answer questions in open-book, in-domain settings, enhancing robustness against distracting retrieved information. It improves the model's ability to reason through Chain-of-Thought responses and citing sources. RAFT consistently outperforms Supervised Finetuning (with and without RAG) across various domain-specific datasets (PubMed, HotpotQA, Gorilla APIBench), demonstrating superior performance in reading and extracting information from in-domain documents, and even outperforming larger general-purpose models like GPT-3.5 in specific domain RAG tasks.",
+    "Related Patterns": [
+      "Retrieval Augmented Generation (RAG)",
+      "Supervised Finetuning (SFT)",
+      "Instruction Finetuning (IFT)",
+      "Chain-of-Thought (CoT) Enhanced Finetuning",
+      "Distractor Document Training",
+      "Partial Golden Document Exclusion (P-Fraction Training)",
+      "Open-Book LLM Adaptation",
+      "Contextual Citation"
+    ],
+    "Uses": [
+      "Adapting pretrained LLMs for specialized domains requiring high accuracy based on specific document collections.",
+      "Improving LLM performance in RAG-based question answering systems where retrieval might be imperfect.",
+      "Enhancing LLM reasoning capabilities in document-grounded tasks.",
+      "Building robust LLMs for enterprise knowledge bases, medical QA, code completion from documentation, etc."
+    ],
+    "Thinking": "RAFT is presented as the central contribution and 'novel adaptation strategy' in the paper. The abstract and Section 3 explicitly define its problem, context, solution (training recipe, data preparation with golden/distractor documents, CoT, verbatim citing), and results (improved performance, robustness). It's the overarching pattern that encompasses other specific techniques."
+  },
+  {
+    "Pattern Name": "Distractor Document Training",
+    "Problem": "Large Language Models (LLMs) are vulnerable to irrelevant text in retrieved documents, which can degrade performance in Retrieval Augmented Generation (RAG) settings. When top-k RAG is used, recall is often prioritized, leading to the inclusion of irrelevant content. Training solely with highly relevant documents can inadvertently diminish the model's ability to discern and disregard irrelevant information, making it less robust to imperfect retrieval.",
+    "Context": "LLMs are deployed in RAG systems where the retrieval pipeline often returns a mix of relevant ('golden') and irrelevant ('distractor') documents. The goal is to make LLMs robust to imperfect retrieval and enable them to focus solely on pertinent information within a given context.",
+    "Solution": "Integrate 'distractor' (irrelevant) documents alongside 'golden' (relevant) documents in the training data. The model is explicitly trained to ignore documents that do not help in answering the question. This methodology involves varying the number of distractor documents during training and, for a portion (1-P) of the training data, including only distractor documents to compel the model to either indicate it cannot answer or to rely on its internal knowledge.",
+    "Result": "This training approach enhances the model's ability to sift through irrelevant text and focus on pertinent information, making it more resilient to fluctuations in the number of documents encountered during testing. It improves performance on RAG tasks compared to training only with golden documents and prevents the model from becoming overly reliant on perfectly relevant contexts.",
+    "Related Patterns": [
+      "Retrieval Augmented Fine-Tuning (RAFT)",
+      "Robust RAG",
+      "Negative Sampling (conceptual similarity)",
+      "Partial Golden Document Exclusion (P-Fraction Training)"
+    ],
+    "Uses": [
+      "Training LLMs for RAG systems where the retriever's output may contain noise or irrelevant information.",
+      "Improving the resilience of LLMs to 'lost in the middle' problems with long contexts.",
+      "Developing LLMs that can effectively filter information from diverse document sets.",
+      "Enhancing model robustness in real-world RAG deployments."
+    ],
+    "Thinking": "This pattern is a core component of RAFT, explicitly detailed in Section 3 ('train the model to ignore those documents that dont help in answering the question which we call distractor documents') and Section 5 ('Making Model Robust to topK RAG'). The problem of LLMs' vulnerability to irrelevant text is clearly stated, and the solution of training with distractors is presented as a direct answer to this problem, with results shown in Figure 6."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Enhanced Finetuning",
+    "Problem": "Simply providing a concise answer to a question during finetuning may not be sufficient for complex reasoning tasks, can lead to rapid loss decrease and overfitting, and might not fully enrich the model's understanding. Models may struggle to derive relevant context or provide verifiable explanations for their answers.",
+    "Context": "Finetuning LLMs for question-answering tasks, especially in document-grounded settings, where there is a desire to improve model accuracy, reasoning capabilities, and robustness. The goal is for models to not just provide answers but also to explain *how* they arrived at them, often by referencing source documents.",
+    "Solution": "Generate training data where the answers include a 'Chain-of-Thought' (CoT) reasoning process. This reasoning chain should guide the model to the answer and appropriately reference (cite verbatim) the original context documents. The training process involves presenting the model with a question, context, and verified answers, then prompting it to form a reasoning chain that references the context. Tools like GPT-4 can be used to generate these CoT prompts.",
+    "Result": "Incorporating CoT significantly enhances training robustness and overall accuracy, preventing overfitting to concise answers. It enriches the model's understanding and improves its ability to reason, boosting model performance in question-answering tasks (e.g., 9.66% gain on HotpotQA, 14.93% on HuggingFace datasets). This approach also improves the model's ability to derive relevant context from provided documents.",
+    "Related Patterns": [
+      "Retrieval Augmented Fine-Tuning (RAFT)",
+      "Instruction Finetuning (IFT)",
+      "Contextual Citation",
+      "Self-Generated Instructions (if CoT is self-generated)"
+    ],
+    "Uses": [
+      "Improving the reasoning and explainability of LLMs in QA systems.",
+      "Training LLMs to provide verifiable answers by citing sources.",
+      "Enhancing the robustness and generalization of finetuned LLMs.",
+      "Developing LLMs for tasks requiring multi-hop reasoning or complex information extraction."
+    ],
+    "Thinking": "Section 4.2, titled 'Effect of CoT,' is dedicated to this pattern, clearly outlining the problem ('simply providing the answer... may not always be adequate... can lead to a rapid decrease in loss resulting in the model beginning to overfit') and the solution/result ('Incorporating a reasoning chain... can improve the overall accuracy and prevent overfitting... significantly enhances training robustness'). Section 3 also mentions 'A includes chainofthought reasoning... and inaddition clearly citing sources enhances the models accuracy.' Figure 3 illustrates the CoT prompt."
+  },
+  {
+    "Pattern Name": "Partial Golden Document Exclusion (P-Fraction Training)",
+    "Problem": "A common assumption in training LLMs for RAG tasks is that the 'golden' (answer-containing) document should always be included in the training context (P=100%). However, this intuitive approach might not lead to optimal performance and could hinder the model's ability to handle scenarios where the golden document is not perfectly retrieved or to rely on its internal knowledge when appropriate.",
+    "Context": "Finetuning LLMs for domain-specific RAG tasks where training data consists of questions, documents (golden and distractors), and answers. The objective is to optimize the model's performance in RAG tasks, including its ability to generalize and handle varying retrieval quality, and to understand the optimal balance between external context and internal knowledge.",
+    "Solution": "Instead of always including the golden document, incorporate a portion (1-P fraction) of the training data where the golden document is *excluded* from the context, and only distractor documents are provided. The model is still trained to generate the answer, potentially compelling it to memorize answers or indicate it cannot derive them from the provided (distractor-only) context. The hyperparameter 'P' (percentage of training instances with golden documents) is experimented with to find the optimal mix.",
+    "Result": "This strategy enhances the model's performance on RAG tasks, challenging the assumption that P=100% is always best. It proves beneficial for downstream tasks of answering questions related to documents, suggesting that mixing some data without the golden document in the context can be helpful for in-domain RAG. The optimal 'P' varies across datasets (e.g., 40-60% or 100% depending on the domain).",
+    "Related Patterns": [
+      "Retrieval Augmented Fine-Tuning (RAFT)",
+      "Distractor Document Training",
+      "Robust RAG Training",
+      "Negative Context Training"
+    ],
+    "Uses": [
+      "Optimizing training data preparation for RAG-finetuned LLMs.",
+      "Improving the model's ability to handle scenarios where the retriever might fail to provide the exact golden document.",
+      "Balancing reliance on external context versus internal knowledge during finetuning.",
+      "Fine-tuning models to be more robust to missing or imperfect relevant context."
+    ],
+    "Thinking": "Section 4.4, titled 'Should we train the LLM always with the golden context for RAG?', directly addresses this pattern. It poses the 'key question' about the proportion 'P' of golden documents in training data. The solution involves 'incorporating a portion of the training data without the golden document in the context (P < 100%)' and the results are discussed, with Figure 5 illustrating the impact of varying P. This is a distinct training data preparation strategy within RAFT."
+  },
+  {
+    "Pattern Name": "Contextual Citation",
+    "Problem": "LLMs may generate answers that are not directly supported by the provided context, leading to hallucinations or unverified claims. This reduces the trustworthiness and verifiability of the generated output, especially in critical domain-specific applications.",
+    "Context": "Training LLMs for document-grounded question answering, particularly in settings where accuracy, verifiability, and traceability to source documents are paramount. This pattern is often applied in conjunction with Chain-of-Thought reasoning to enhance explainability.",
+    "Solution": "During the finetuning process, the model is explicitly trained to include verbatim citations from the relevant source documents within its generated answers and reasoning chains. The training data is prepared such that correct answers demonstrate this behavior, typically by enclosing direct quotations from the context in specific markers (e.g., 'beginquote' and 'endquote'). This teaches the model to ground its responses in evidence.",
+    "Result": "Enhances the model's accuracy by ensuring answers are directly supported by the provided context. Significantly improves the verifiability and trustworthiness of the generated information. Strengthens the model's reasoning capabilities by linking logical steps to specific textual evidence, as demonstrated by improved performance in QA tasks.",
+    "Related Patterns": [
+      "Retrieval Augmented Fine-Tuning (RAFT)",
+      "Chain-of-Thought (CoT) Enhanced Finetuning",
+      "Document Grounding",
+      "Evidence-Based Generation"
+    ],
+    "Uses": [
+      "Developing highly reliable and verifiable QA systems for domains like legal, medical, or enterprise knowledge bases.",
+      "Improving the explainability and transparency of LLM outputs by showing the source of information.",
+      "Training models to extract and present direct evidence from documents.",
+      "Reducing hallucinations in LLM-generated content by enforcing grounding."
+    ],
+    "Thinking": "The paper explicitly states that RAFT 'accomplishes this by citing verbatim the right sequence from the relevant document' (Abstract) and that 'clearly citing sources enhances the models accuracy' (Section 3). Figure 3 provides a concrete example of a CoT answer that includes verbatim citations using 'beginquote' and 'endquote'. This is a distinct, actionable technique for grounding LLM outputs in source material, separate from the general concept of Chain-of-Thought reasoning."
+  }
+]

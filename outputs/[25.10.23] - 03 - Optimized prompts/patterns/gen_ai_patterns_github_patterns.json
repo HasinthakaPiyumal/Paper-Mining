@@ -1,0 +1,322 @@
+[
+  {
+    "Pattern Name": "Logits Masking",
+    "Problem": "Need to ensure generated text conforms to specific style rules for brand, accuracy, or compliance reasons.",
+    "Context": "Generating text with Large Language Models (LLMs) where specific output constraints are critical for brand consistency, factual accuracy, or regulatory compliance.",
+    "Solution": "Intercept the generation at the sampling stage to zero out probabilities of continuations that don't meet the rules.",
+    "Result": "Generated text adheres to predefined style rules, brand guidelines, accuracy requirements, or compliance standards, preventing undesirable outputs.",
+    "Related Patterns": "Not explicitly mentioned in the provided text.",
+    "Uses": "Use words associated with specific brand; avoid repeating factual information; make content compliant with style book.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'."
+  },
+  {
+    "Pattern Name": "Grammar",
+    "Problem": "Need text to conform to a specific format or data schema for downstream processing.",
+    "Context": "Generating structured or formally formatted text using LLMs, where the output needs to be machine-readable or adhere to a predefined data structure.",
+    "Solution": "Specify rules as a formal grammar (e.g., BNF) or schema that the model framework applies to constrain token generation.",
+    "Result": "Generated text strictly adheres to a specified formal grammar or data schema, enabling reliable and automated downstream processing.",
+    "Related Patterns": "Not explicitly mentioned in the provided text.",
+    "Uses": "Generating valid SQL timestamps; extracting structured data in a specific format; ensuring output conforms to JSON schema.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'."
+  },
+  {
+    "Pattern Name": "Style Transfer",
+    "Problem": "Need to convert content into a form that mimics specific tone and style that is difficult to express through rules, but can be shown through example conversions.",
+    "Context": "Transforming content's style and tone where rule-based approaches are insufficient, and the desired style can only be effectively demonstrated through examples.",
+    "Solution": "Use few-shot learning or model fine-tuning to teach the model how to convert content to the desired style.",
+    "Result": "Content is successfully converted to a desired tone and style, mimicking examples provided, without requiring explicit rule definition, leading to more natural and nuanced stylistic transformations.",
+    "Related Patterns": "Reverse Neutralization (shares the goal of style conversion).",
+    "Uses": "Rewriting generic content to match brand guidelines; converting academic papers to blog posts; transforming image and text content for different social media platforms or audiences.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified due to the similar objective of style transformation."
+  },
+  {
+    "Pattern Name": "Reverse Neutralization",
+    "Problem": "Need to generate content in a specific style that can be shown through example content.",
+    "Context": "Generating content in a specific, example-driven style, especially when direct generation in that style is complex or prone to errors.",
+    "Solution": "Use an LLM to generate content in an intermediate neutral form, and a fine-tuned LLM to convert that neutral form into the desired style.",
+    "Result": "Content is generated in a specific, example-driven style by first creating a neutral version and then transforming it, simplifying the style generation process and improving consistency.",
+    "Related Patterns": "Style Transfer (involves style conversion, but with an intermediate step).",
+    "Uses": "Generating letters in region-specific legalese; generating emails in personal style.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified due to the similar objective of style transformation, but with a distinct approach."
+  },
+  {
+    "Pattern Name": "Content Optimization",
+    "Problem": "Need to determine optimal style for content without knowing which factors matter.",
+    "Context": "Improving content effectiveness where the drivers of 'optimal' style are unknown, complex, or subjective, requiring an empirical approach.",
+    "Solution": "Generate pairs of content, compare them using an evaluator, create a preference dataset, and perform preference tuning.",
+    "Result": "The optimal style for content is identified and applied, leading to improved effectiveness (e.g., engagement, conversion), even when initial style factors are unknown, through an iterative learning process.",
+    "Related Patterns": "LLM-as-Judge (an LLM could serve as the evaluator).",
+    "Uses": "Optimizing ad copy, marketing content, or educational materials where effective style factors are unknown.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as LLM-as-Judge could be a component of the solution."
+  },
+  {
+    "Pattern Name": "Basic RAG",
+    "Problem": "Knowledge cutoff, confidential data, and hallucinations pose problems for zero-shot generation by LLMs.",
+    "Context": "Using LLMs for tasks requiring up-to-date, specific, or confidential knowledge beyond their training data, or when factual accuracy is paramount.",
+    "Solution": "Ground the response generated by the LLM by adding relevant information from a knowledge base into the prompt context.",
+    "Result": "LLM responses are more accurate, up-to-date, and less prone to hallucinations by leveraging external knowledge, and can handle confidential data by restricting the knowledge source.",
+    "Related Patterns": "Semantic Indexing, Indexing at Scale, Index-aware Retrieval, Node Postprocessing, Trustworthy Generation, Deep Search (all are enhancements or related components of RAG).",
+    "Uses": "The applications of RAG are constantly expanding as the technology evolves.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as the subsequent patterns in the 'Adding Knowledge' chapter, which build upon or enhance RAG."
+  },
+  {
+    "Pattern Name": "Semantic Indexing",
+    "Problem": "Traditional keyword indexing/lookup approaches fail when documents get more complex, contain different media types like images or tables, or bridge multiple domains.",
+    "Context": "Building knowledge bases for RAG systems that contain diverse and complex information, including multi-modal data, where simple keyword matching is insufficient for retrieval.",
+    "Solution": "Use embeddings to capture the meaning of texts, images, and other media types. Find relevant chunks by comparing the embedding of the chunk to that of the query.",
+    "Result": "Improved retrieval of relevant information from complex and multi-modal knowledge bases by understanding semantic meaning rather than just keywords, leading to more pertinent context for LLMs.",
+    "Related Patterns": "Basic RAG (Semantic Indexing is a core component of advanced RAG), Indexing at Scale, Index-aware Retrieval.",
+    "Uses": "Not explicitly stated in the provided text, but implied for RAG systems dealing with complex or multi-modal data.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution' directly from the table. 'Context' was inferred from the 'Problem' and the general application of RAG. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Uses' was marked as not explicitly stated. 'Related Patterns' were identified as other RAG-related patterns."
+  },
+  {
+    "Pattern Name": "Indexing at Scale",
+    "Problem": "Dealing with outdated or contradictory information in your knowledge base.",
+    "Context": "Managing large, dynamic knowledge bases for RAG systems where information can become stale, inconsistent, or overwhelming.",
+    "Solution": "Using metadata, query filtering, and result reranking.",
+    "Result": "A scalable and maintainable knowledge base for RAG systems that effectively handles outdated or contradictory information, improving retrieval quality and relevance for LLMs.",
+    "Related Patterns": "Basic RAG, Semantic Indexing, Node Postprocessing (reranking is a form of postprocessing).",
+    "Uses": "Not explicitly stated in the provided text, but implied for large-scale RAG deployments requiring robust knowledge management.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution' directly from the table. 'Context' was inferred from the 'Problem' and the general application of RAG. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Uses' was marked as not explicitly stated. 'Related Patterns' were identified as other RAG-related patterns, especially those dealing with retrieval and refinement."
+  },
+  {
+    "Pattern Name": "Index-aware Retrieval",
+    "Problem": "Comparing questions to chunks is problematic because the question itself will not appear in the knowledge base, may use synonyms or jargon, or may require holistic interpretation.",
+    "Context": "Enhancing retrieval in RAG systems where direct keyword matching between user queries and knowledge base chunks is insufficient due to semantic gaps or complex query intent.",
+    "Solution": "Hypothetical answers, query expansion, hybrid search, GraphRAG.",
+    "Result": "More accurate and relevant information retrieval by addressing semantic gaps, synonyms, jargon, and complex query interpretations between user questions and knowledge base content, leading to better LLM grounding.",
+    "Related Patterns": "Basic RAG, Semantic Indexing, Node Postprocessing.",
+    "Uses": "Not explicitly stated in the provided text, but implied for improving the effectiveness of RAG retrieval in challenging scenarios.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution' directly from the table. 'Context' was inferred from the 'Problem' and the general application of RAG. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Uses' was marked as not explicitly stated. 'Related Patterns' were identified as other RAG-related patterns, particularly those focused on improving retrieval."
+  },
+  {
+    "Pattern Name": "Node Postprocessing",
+    "Problem": "Irrelevant content, ambiguous entities, generic answers.",
+    "Context": "Refining the retrieved information in RAG systems before it's passed to the LLM, to improve the quality, specificity, and relevance of the final generated response.",
+    "Solution": "Reranking offer the ability to bring in a lot of other neat ideas: hybrid search, query expansion, filtering, contextual compression, disambiguation, personalization.",
+    "Result": "Improved quality of LLM responses by filtering out irrelevant content, resolving ambiguities, and providing more specific and personalized answers based on refined retrieved information.",
+    "Related Patterns": "Basic RAG, Indexing at Scale, Index-aware Retrieval (often used in conjunction with these to refine results).",
+    "Uses": "Not explicitly stated in the provided text, but implied for improving the output quality of RAG systems.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution' directly from the table. 'Context' was inferred from the 'Problem' and the general application of RAG. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Uses' was marked as not explicitly stated. 'Related Patterns' were identified as other RAG-related patterns, especially those focused on retrieval and refinement."
+  },
+  {
+    "Pattern Name": "Trustworthy Generation",
+    "Problem": "How to retain users’ trust given that there is no way to completely avoid errors.",
+    "Context": "Deploying LLM applications where user trust is paramount, despite the inherent possibility of errors, inaccuracies, or undesirable outputs.",
+    "Solution": "Out-of-domain detection, citations, guardrails, human feedback, corrective RAG, UX design can all help.",
+    "Result": "Increased user trust and confidence in LLM applications by implementing mechanisms to detect and mitigate errors, provide transparency (e.g., citations), allow for correction, and guide user expectations through UX design.",
+    "Related Patterns": "Guardrails, Basic RAG (specifically 'corrective RAG'), LLM-as-Judge (for human feedback and evaluation), Self-Check.",
+    "Uses": "Not explicitly stated in the provided text, but implied for any production LLM application where reliability and user confidence are critical.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution' directly from the table. 'Context' was inferred from the 'Problem' and the general challenges of LLM deployment. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Uses' was marked as not explicitly stated. 'Related Patterns' were identified as other patterns that contribute to reliability, safety, and evaluation."
+  },
+  {
+    "Pattern Name": "Deep Search",
+    "Problem": "RAG systems are less effective for complex information retrieval tasks because of context window constraints, query ambiguity, information verification, shallow reasoning, and multi-hop query challenges.",
+    "Context": "Addressing limitations of standard RAG for highly complex information retrieval and reasoning tasks that require more than a single-pass lookup.",
+    "Solution": "Iterative process of searching, reading, and reasoning to provide comprehensive answers to complex queries.",
+    "Result": "Comprehensive and accurate answers to complex, multi-hop queries by enabling iterative search, reading, and reasoning, overcoming limitations of single-pass RAG and shallow reasoning.",
+    "Related Patterns": "Basic RAG (Deep Search is an advanced form of RAG), Chain of Thought, Tree of Thoughts (as it involves iterative reasoning).",
+    "Uses": "Not explicitly stated in the provided text, but implied for complex information retrieval and analytical tasks.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution' directly from the table. 'Context' was inferred from the 'Problem' and the limitations of basic RAG. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Uses' was marked as not explicitly stated. 'Related Patterns' were identified as other patterns that enhance reasoning or RAG capabilities."
+  },
+  {
+    "Pattern Name": "Chain of Thought (CoT)",
+    "Problem": "Foundational models often struggle with multi-step reasoning tasks, leading to incorrect or fabricated answers.",
+    "Context": "Using LLMs for complex problems requiring sequential logical steps, where direct generation often fails to capture the full reasoning process.",
+    "Solution": "CoT prompts the model to break down complex problems into intermediate reasoning steps before providing the final answer.",
+    "Result": "Improved accuracy and reliability of LLM responses for multi-step reasoning tasks by guiding the model through explicit intermediate thought processes, making the reasoning more transparent and verifiable.",
+    "Related Patterns": "Tree of Thoughts (ToT) (an extension that explores multiple reasoning paths).",
+    "Uses": "Complex mathematical problems, logical deductions, and sequential reasoning tasks where step-by-step thinking is required.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as Tree of Thoughts is a direct evolution of CoT."
+  },
+  {
+    "Pattern Name": "Tree of Thoughts (ToT)",
+    "Problem": "Many strategic or logical tasks cannot be solved by a single linear reasoning path, requiring exploration of multiple alternatives.",
+    "Context": "Solving complex problems with LLMs that require exploring multiple reasoning paths, evaluating them, and potentially backtracking, rather than a single linear progression.",
+    "Solution": "ToT treats problem-solving as a tree search, generating multiple reasoning paths, evaluating them, and backtracking as needed.",
+    "Result": "Enhanced problem-solving capabilities for strategic and logical tasks by allowing the LLM to explore, evaluate, and backtrack through multiple reasoning paths, leading to more robust and optimal solutions.",
+    "Related Patterns": "Chain of Thought (CoT) (ToT is an advancement that extends linear CoT to a tree structure).",
+    "Uses": "Complex tasks involving strategic thinking, planning, or creative writing that require exploring multiple solution paths.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as Chain of Thought is a direct predecessor."
+  },
+  {
+    "Pattern Name": "Adapter Tuning",
+    "Problem": "Fully fine-tuning large foundational models for specialized tasks is computationally expensive and requires significant data.",
+    "Context": "Adapting large pre-trained LLMs to specific downstream tasks efficiently, with limited computational resources or data, without altering the original model weights.",
+    "Solution": "Adapter Tuning trains small add-on neural network layers, leaving the original model weights frozen, making it efficient for specialized adaptation.",
+    "Result": "Efficient and cost-effective adaptation of large foundational models to specialized tasks with less data and computational overhead, while preserving original model knowledge and reducing storage requirements.",
+    "Related Patterns": "Not explicitly mentioned in the provided text.",
+    "Uses": "Adapting models for specific tasks like classification, summarization, or specialized chatbots with a small (100-10k) dataset of examples.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'."
+  },
+  {
+    "Pattern Name": "Evol-Instruct",
+    "Problem": "Creating high-quality datasets for instruction tuning models on new and complex enterprise tasks is difficult and time-consuming.",
+    "Context": "Generating high-quality instruction-tuning datasets for LLMs, especially for novel or domain-specific enterprise tasks where human-curated data is scarce or expensive.",
+    "Solution": "Evol-Instruct efficiently generates instruction-tuning datasets by evolving instructions through multiple iterations of LLM-generated tasks and answers.",
+    "Result": "Accelerated creation of high-quality, domain-specific instruction-tuning datasets, enabling models to learn new and complex enterprise tasks more effectively and reducing manual data curation effort.",
+    "Related Patterns": "Not explicitly mentioned in the provided text.",
+    "Uses": "Teaching models new, domain-specific tasks that are not covered by their pre-training data, particularly in enterprise settings.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'."
+  },
+  {
+    "Pattern Name": "LLM-as-Judge",
+    "Problem": "Evaluation of GenAI capabilities is hard because the tasks that GenAI performs are open-ended.",
+    "Context": "Evaluating the performance and quality of open-ended Generative AI outputs, where traditional metrics are insufficient and human evaluation is costly or subjective.",
+    "Solution": "Provide detailed, multi-dimensional feedback that can be used to compare models, track improvements, and guide further development.",
+    "Result": "Effective and scalable evaluation of open-ended GenAI outputs, providing actionable, multi-dimensional feedback for model comparison, improvement tracking, and development guidance, reducing reliance on human evaluators.",
+    "Related Patterns": "Content Optimization (uses an evaluator), Reflection (uses feedback for self-correction).",
+    "Uses": "Evaluation is core to many of the other patterns and to building AI applications effectively.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as other patterns that involve evaluation or feedback loops."
+  },
+  {
+    "Pattern Name": "Reflection",
+    "Problem": "How to get the LLM to correct an earlier response in response to feedback or criticism.",
+    "Context": "Improving the reliability and accuracy of LLM responses through iterative self-correction or external feedback, especially in complex tasks where a single pass is insufficient.",
+    "Solution": "The feedback is used to modify the prompt that is sent to the LLM a second time.",
+    "Result": "LLMs can self-correct and refine their responses based on feedback, leading to more reliable and accurate performance in complex tasks where the optimal approach cannot be predetermined.",
+    "Related Patterns": "LLM-as-Judge (can provide the feedback), Chain of Thought (can be part of the reflective process by analyzing intermediate steps).",
+    "Uses": "Reliable performance in most complex tasks where the approach can not be predetermined.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as patterns that involve feedback or iterative reasoning."
+  },
+  {
+    "Pattern Name": "Dependency Injection",
+    "Problem": "Need to independently develop and test each component of an LLM chain.",
+    "Context": "Building complex LLM applications composed of multiple interconnected components (an 'LLM chain'), where isolated development, testing, and maintainability are crucial.",
+    "Solution": "When you build chains of LLM calls, build them such that it is easy to inject a mock implementation to replace any step of the chain.",
+    "Result": "Enables independent development, testing, and easier maintenance of individual components within an LLM chain, improving modularity and reliability.",
+    "Related Patterns": "Not explicitly mentioned in the provided text.",
+    "Uses": "In any situation where you chain LLM calls or use external tools.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. Although 'Dependency Injection' is a general software engineering pattern, its inclusion in a 'Generative AI Design Patterns' book and its specific application to 'LLM chains' for reliability and testing makes it a relevant AI design pattern in this context."
+  },
+  {
+    "Pattern Name": "Prompt Optimization",
+    "Problem": "Need to easily update prompts when dependencies change to maintain level of performance.",
+    "Context": "Managing and maintaining prompts in GenAI pipelines, especially when underlying models, external APIs, or other dependencies evolve, requiring prompt adjustments.",
+    "Solution": "Systematically set the prompts used in a GenAI pipeline by optimizing them on a dataset of examples.",
+    "Result": "Reduced maintenance overhead and consistent performance of GenAI pipelines by systematically optimizing and managing prompts against changing dependencies, ensuring robustness and adaptability.",
+    "Related Patterns": "Content Optimization (involves optimization, but for content style), LLM-as-Judge (could be used for evaluation in the optimization process).",
+    "Uses": "In any situation where you have to reduce the maintenance overhead associated with LLM version changes (and other dependencies).",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as other patterns involving optimization or evaluation."
+  },
+  {
+    "Pattern Name": "Tool Calling",
+    "Problem": "How can you bridge the LLM and a software API so that the LLM is able to invoke the API and get the job done?",
+    "Context": "Enabling LLMs to interact with external systems and perform actions beyond text generation, such as fetching real-time data, performing calculations, or updating databases.",
+    "Solution": "The LLM emits special tokens when it determines that a function needs to be called and also emits the parameters to pass to that function. A client-side postprocessor invokes the function with those parameters, and sends the results back to the LLM. The LLM incorporates the function results in its response.",
+    "Result": "LLMs can execute real-world actions, access up-to-date information, perform calculations, and interact with transactional systems by invoking external APIs, extending their capabilities beyond pure text generation.",
+    "Related Patterns": "Code Execution, Multi-agent Collaboration (agents often use tool calling).",
+    "Uses": "Whenever you want the LLM to not just state the steps needed, but to execute those steps. Also allows you to incorporate up-to-date knowledge from real-time sources, connect to transactional enterprise systems, perform calculations, and use optimization solvers.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as other patterns involving external actions or agents."
+  },
+  {
+    "Pattern Name": "Code Execution",
+    "Problem": "You have a software system that can do the task, but invoking it involves a DSL.",
+    "Context": "Enabling LLMs to interact with systems that require domain-specific languages (DSLs) or programmatic interfaces, where direct API calls might be too complex or unavailable.",
+    "Solution": "LLMs generate code that is then executed by an external system.",
+    "Result": "LLMs can leverage existing software systems and perform complex tasks by generating and executing code in a DSL, bridging the gap between natural language and programmatic control.",
+    "Related Patterns": "Tool Calling (similar goal of external interaction, but via code generation rather than direct function calls).",
+    "Uses": "Creating graphs, annotating images, updating databases.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified due to the similar intent of enabling external actions."
+  },
+  {
+    "Pattern Name": "Multi-agent Collaboration",
+    "Problem": "Handle multi-step tasks that require different tools, maintain content over extended interactions, evaluate situations and take appropriate actions without human intervention, and adapt to user preferences.",
+    "Context": "Solving complex, multi-faceted problems that benefit from specialized capabilities and autonomous decision-making, often requiring coordination between different AI components.",
+    "Solution": "Multi-agent architectures allow you to solve real-world problems using specialized single-purpose agents and organizing them in ways that mimic human organizational structures.",
+    "Result": "Complex real-world problems are solved more effectively by orchestrating specialized agents, enabling autonomous decision-making, extended interaction, and adaptation to user preferences, leading to more robust and versatile AI systems.",
+    "Related Patterns": "Tool Calling, Code Execution (agents often use these capabilities to perform actions).",
+    "Uses": "Complex reasoning, multi-step problem solving, collaborative content creation, adversarial verification, specialized domain integration, self-improving systems.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as patterns that enable agents to perform actions."
+  },
+  {
+    "Pattern Name": "Small Language Model (SLM)",
+    "Problem": "The foundational model you are using is introducing too much latency or cost.",
+    "Context": "Deploying LLM applications under strict latency, cost, or resource constraints, where large foundational models are impractical.",
+    "Solution": "Use a small foundational model to fit within cost and latency constraints without compromising unduly on quality by employing quantization (reduce precision of model parameters), distillation (narrow knowledge scope), or speculative coding (backstop with larger model).",
+    "Result": "Reduced latency and cost for LLM applications, enabling deployment in resource-constrained environments (e.g., edge devices) or high-throughput scenarios, while maintaining acceptable quality.",
+    "Related Patterns": "Inference Optimization (related to efficiency), Prompt Caching (related to cost/latency reduction).",
+    "Uses": "Narrow-scoped knowledge applications, cost reduction, edge device deployment, faster inference requirements, GPU-constrained environments.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as other patterns addressing performance or resource constraints."
+  },
+  {
+    "Pattern Name": "Prompt Caching",
+    "Problem": "User requests follow patterns with repeated queries. Recomputing the same responses wastes resources and increases costs.",
+    "Context": "Optimizing LLM inference for applications with repetitive or semantically similar user queries, where re-generating responses is inefficient.",
+    "Solution": "Reuse previously generated responses (in the case of client-side caching) and/or model internal states (in the case of server-side caching) for the same or similar prompts. The similarity can be based on prompt meaning (semantic cache) or overlap (prefix caching).",
+    "Result": "Reduced computational resources, lower costs, and faster response times for LLM applications by reusing previously computed results for identical or semantically similar prompts.",
+    "Related Patterns": "Inference Optimization (related to efficiency).",
+    "Uses": "Applications with repeated queries, cost optimization, interactive applications requiring fast responses, multi-tenant systems.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as another optimization technique."
+  },
+  {
+    "Pattern Name": "Inference Optimization",
+    "Problem": "Self-hosting LLMs brings with it GPU constraints and hardware utilization challenges. Real-time applications need faster response times.",
+    "Context": "Improving the efficiency and speed of LLM inference, especially in self-hosted or real-time environments where hardware resources are limited or response times are critical.",
+    "Solution": "Improves the efficiency of model inference by employing continuous batching (requests are pulled from a queue and slotted into GPU cores as soon as they become available), speculative decoding (efficiently compute the next set of tokens whenever the smaller model is able to do so, backstopping this with a large model), and/or prompt compression (preprocess prompts to make them shorter).",
+    "Result": "Faster response times, better GPU utilization, and reduced hardware constraints for LLM inference, particularly in self-hosted and real-time applications, leading to more scalable and responsive deployments.",
+    "Related Patterns": "Small Language Model (SLM), Prompt Caching (both contribute to efficiency).",
+    "Uses": "Self-hosted LLM deployments, real-time applications, GPU memory-constrained environments, high-throughput serving scenarios.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as other optimization techniques."
+  },
+  {
+    "Pattern Name": "Degradation Testing",
+    "Problem": "Need metrics to help identify when service quality degrades and the constraint under which the application is bounded.",
+    "Context": "Ensuring the performance and reliability of LLM applications under varying loads and conditions, and proactively identifying potential service quality issues.",
+    "Solution": "A set of core metrics — Time-to-First-Token (TTFT), End-to-End Request Latency (EERL), Tokens per Second (TPS) — and a variety of scalability and resilience metrics can help identify degradation of service quality; targeted interventions can help improve specific metrics.",
+    "Result": "Proactive identification of service quality degradation and performance bottlenecks in LLM applications, enabling targeted interventions, capacity planning, and continuous optimization to maintain desired service levels.",
+    "Related Patterns": "Not explicitly mentioned in the provided text, but related to general MLOps and reliability patterns.",
+    "Uses": "Pre-production testing, performance validation, bottleneck identification, capacity planning, ongoing monitoring and optimization.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'."
+  },
+  {
+    "Pattern Name": "Long-Term Memory",
+    "Problem": "LLM applications need to simulate memory of past interactions by prepending relevant history to each prompt, but this approach can become costly and inefficient with long conversations due to context window limitations.",
+    "Context": "Maintaining context, personalization, and factual recall in LLM applications over extended conversations or interactions, overcoming the inherent context window limitations of LLMs.",
+    "Solution": "LLM applications use various types of memory – working, episodic, procedural, and semantic – to maintain context, recall past interactions, personalize responses, and retain key facts, respectively.",
+    "Result": "LLM applications can maintain context, personalize responses, and recall past interactions efficiently over long conversations, overcoming context window limitations and enabling more coherent and engaging user experiences.",
+    "Related Patterns": "Basic RAG (can be a component of semantic memory for factual recall).",
+    "Uses": "Chatbots, multi-step workflows, personalization, processing large documents.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as RAG can be a mechanism for implementing semantic memory."
+  },
+  {
+    "Pattern Name": "Template Generation",
+    "Problem": "The risk of sending content without human review is very high, but human review will not scale to the volume of communications.",
+    "Context": "Generating high-volume, personalized communications where safety and accuracy are critical, and real-time human review is impractical or impossible due to scale.",
+    "Solution": "Pregenerate templates that are reviewed beforehand. Inference time requires only deterministic string replacement, and is therefore safe to directly send to consumers.",
+    "Result": "Safe and scalable generation of personalized communications by pre-approving templates and using deterministic string replacement, eliminating the need for real-time human review and mitigating risks of inappropriate or inaccurate content.",
+    "Related Patterns": "Assembled Reformat (shares the goal of controlled content generation for safety).",
+    "Uses": "Personalized communications in business to consumer settings.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as another pattern focused on content safety."
+  },
+  {
+    "Pattern Name": "Assembled Reformat",
+    "Problem": "Content needs to be presented in an appealing way, but the risk posed by dynamically generated content is too high.",
+    "Context": "Presenting appealing content while mitigating the risks of inaccuracies or hallucinations from dynamic LLM generation, especially in sensitive applications.",
+    "Solution": "Reduce the risk of inaccurate or hallucinated content by separating out the task of content creation into two low-risk steps — first, assembling data in low-risk ways and second, formatting the content based on that data.",
+    "Result": "Appealing content is generated with reduced risk of inaccuracies or hallucinations by decoupling content assembly (low risk, often rule-based) from content formatting (LLM-driven, but on pre-assembled, verified data).",
+    "Related Patterns": "Template Generation (shares the goal of controlled content generation for safety).",
+    "Uses": "Situations where accurate content needs to be presented in appealing ways, such as in product catalogs.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' was identified as another pattern focused on content safety."
+  },
+  {
+    "Pattern Name": "Self-Check",
+    "Problem": "Identify potential hallucinations cost-effectively.",
+    "Context": "Detecting and mitigating hallucinations in LLM responses, especially in factual domains where accuracy is critical and manual review is costly.",
+    "Solution": "Use token probabilities to detect hallucination in LLM responses.",
+    "Result": "Cost-effective identification of potential hallucinations in LLM responses, improving the factual reliability of generated content and reducing the need for extensive human oversight.",
+    "Related Patterns": "Trustworthy Generation (Self-Check is a component of building trust), Guardrails (can incorporate self-check mechanisms).",
+    "Uses": "In any situation where factual (as opposed to creative) responses are needed.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as broader patterns related to reliability and safety."
+  },
+  {
+    "Pattern Name": "Guardrails",
+    "Problem": "Require safeguards for security, data privacy, content moderation, hallucination, and alignment to ensure that AI applications operate within ethical, legal, and functional parameters.",
+    "Context": "Ensuring LLM applications operate safely, ethically, and compliantly within defined boundaries, protecting against malicious attacks, privacy breaches, and undesirable content.",
+    "Solution": "Wrap the LLM calls with a layer of code that preprocesses the information going into the model and/or post-processes the output of the model. Knowledge retrieval and tool use will also need to be protected.",
+    "Result": "LLM applications operate within ethical, legal, and functional parameters, protected against security risks, privacy breaches, inappropriate content, and hallucinations, enhancing safety and trustworthiness.",
+    "Related Patterns": "Trustworthy Generation (Guardrails is a key component), Self-Check (can be part of guardrails for hallucination detection).",
+    "Uses": "Anytime your application could be subject to attacks by malicious adversaries.",
+    "Thinking": "Extracted 'Pattern Name', 'Problem', 'Solution', and 'Usage Scenarios' directly from the table. 'Context' was inferred from the 'Problem' and 'Usage Scenarios'. 'Result' was derived by describing the outcome of applying the 'Solution' to the 'Problem'. 'Related Patterns' were identified as other patterns contributing to safety and reliability."
+  }
+]

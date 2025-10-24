@@ -1,0 +1,313 @@
+[
+  {
+    "Pattern Name": "Reasoning on Graphs (RoG)",
+    "Problem": "Large Language Models (LLMs) lack up-to-date knowledge and experience hallucinations during reasoning, leading to incorrect processes and diminished trustworthiness. Existing Knowledge Graph (KG)-based LLM reasoning methods often overlook the importance of KG structural information.",
+    "Context": "LLMs are applied to complex reasoning tasks, particularly Knowledge Graph Question Answering (KGQA), where factual accuracy, faithfulness, and interpretability are critical.",
+    "Solution": "A planning-retrieval-reasoning framework that synergizes LLMs with KGs. It first generates relation paths grounded by KGs as faithful plans (Planning Module). These plans are then used to retrieve valid reasoning paths from KGs (Retrieval-Reasoning Module). LLMs then conduct faithful reasoning based on these retrieved paths. The method also distills KG knowledge into LLMs through instruction tuning.",
+    "Result": "Achieves state-of-the-art performance on KG reasoning tasks, generates faithful and interpretable reasoning results, and allows seamless integration with arbitrary LLMs during inference.",
+    "Related Patterns": [
+      "Knowledge Graph Grounded Planning",
+      "Relation Path Guided Retrieval",
+      "Instruction Tuning for KG Knowledge Distillation",
+      "Plan-and-Solve Paradigm",
+      "Retrieval-Augmented Generation"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering (KGQA)",
+      "High-stakes scenarios requiring faithful and interpretable reasoning (e.g., legal judgment, medical diagnosis)"
+    ],
+    "Thinking": "This is the primary contribution and named method of the research paper, described in detail from abstract to conclusion, outlining its overall framework, problem, context, and results."
+  },
+  {
+    "Pattern Name": "Knowledge Graph Grounded Planning",
+    "Problem": "LLMs are prone to hallucinations and generating incorrect reasoning plans due to a lack of specific knowledge about KG relations or real-world facts, making their plans unfaithful.",
+    "Context": "LLM reasoning tasks, especially those requiring external, structured, and up-to-date knowledge like KGQA, where a faithful and verifiable plan is essential.",
+    "Solution": "Prompt LLMs to generate 'relation paths' (sequences of relations) that are explicitly 'grounded by KGs.' These relation paths serve as faithful plans, ensuring that the proposed reasoning steps are valid and based on factual knowledge from the KG. This involves distilling KG knowledge into the LLM through training.",
+    "Result": "Ensures reasoning plans are faithful and based on reliable knowledge, alleviates hallucination issues, and enables LLMs to access the latest knowledge from KGs for reasoning.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "Instruction Tuning for KG Knowledge Distillation",
+      "Plan-and-Solve Paradigm"
+    ],
+    "Uses": [
+      "Generating reliable reasoning plans for LLMs in knowledge-intensive tasks",
+      "Knowledge Graph Question Answering (KGQA)"
+    ],
+    "Thinking": "This pattern describes a core mechanism within RoG's 'Planning Module.' It addresses the specific problem of ungrounded LLM plans by leveraging KGs to ensure faithfulness, making it a distinct design choice."
+  },
+  {
+    "Pattern Name": "Relation Path Guided Retrieval",
+    "Problem": "General knowledge retrieval from KGs for LLM reasoning can be noisy, irrelevant, or overlook the crucial structural information inherent in the KG, leading to suboptimal reasoning.",
+    "Context": "LLMs require specific, structured, and highly relevant factual knowledge from KGs to perform faithful and interpretable reasoning, particularly in multi-hop question answering.",
+    "Solution": "Utilize pre-generated 'relation paths' (sequences of relations) as explicit guides for the retrieval process. A constrained breadth-first search is performed on the KG, starting from question entities and strictly following the specified relation paths to find 'reasoning paths' (instances of relation paths with specific entities).",
+    "Result": "Retrieves valid and relevant reasoning paths that are deeply grounded in the KG structure, significantly reduces noise in retrieved information, and provides structured context for LLM reasoning.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "Knowledge Graph Grounded Planning",
+      "Retrieval-Augmented Generation"
+    ],
+    "Uses": [
+      "Enhancing the accuracy and relevance of knowledge retrieval from KGs for LLM-based question answering and reasoning",
+      "Providing structured context for LLM interpretation"
+    ],
+    "Thinking": "This pattern details the 'retrieval' component of RoG's 'Retrieval-Reasoning Module.' It specifies a unique strategy for *how* knowledge is retrieved using the previously generated plans, making it a distinct pattern for structured knowledge access."
+  },
+  {
+    "Pattern Name": "Instruction Tuning for KG Knowledge Distillation",
+    "Problem": "Large Language Models (LLMs) inherently lack specific knowledge about the relations and structural properties within Knowledge Graphs (KGs), hindering their ability to generate faithful KG-grounded plans or reason correctly on KG paths.",
+    "Context": "Integrating general-purpose LLMs with KGs for tasks like KGQA, where LLMs need to understand, generate, and utilize KG-specific information effectively.",
+    "Solution": "Design and implement specific instruction tuning tasks to distill knowledge from KGs into LLMs. This involves two main optimization phases: 1) Planning Optimization, which trains LLMs to generate faithful relation paths by minimizing KL divergence with valid KG relation paths, and 2) Retrieval-Reasoning Optimization, which trains LLMs to conduct faithful reasoning based on retrieved reasoning paths and generate interpretable results.",
+    "Result": "Enables LLMs to generate faithful relation paths grounded by KGs, correctly interpret and reason over retrieved KG paths, and significantly improves overall reasoning ability and interpretability when interacting with KGs.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG)",
+      "Knowledge Graph Grounded Planning",
+      "Retrieval-Augmented Generation"
+    ],
+    "Uses": [
+      "Adapting general-purpose LLMs to specific knowledge domains (KGs)",
+      "Improving LLM's ability to interact with structured knowledge sources",
+      "Enhancing LLM's planning and reasoning capabilities in knowledge-intensive tasks"
+    ],
+    "Thinking": "This pattern describes the specific training methodology employed by RoG to achieve its objectives. It's about *how* the LLM is taught to leverage KG knowledge, making it a distinct pattern for knowledge transfer and adaptation."
+  },
+  {
+    "Pattern Name": "Plan-and-Solve Paradigm",
+    "Problem": "Large Language Models (LLMs) often struggle with complex reasoning tasks that require multiple sequential steps or decomposition, leading to errors or incomplete solutions.",
+    "Context": "Leveraging LLMs for complex problem-solving, where direct, single-step generation might be insufficient or prone to failure.",
+    "Solution": "Prompt LLMs to first generate a high-level plan for solving the task. Subsequently, the LLM is instructed to execute each reasoning step of the generated plan sequentially, effectively decomposing the complex task into a series of manageable subtasks.",
+    "Result": "Enables LLMs to handle complex tasks by breaking them down into simpler, executable steps, improves the structure and coherence of the reasoning process, and can lead to better overall performance and accuracy.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG) (uses this as a foundational approach)",
+      "Chain-of-Thought Prompting",
+      "Tree of Thoughts",
+      "Graph of Thoughts",
+      "Decomposed Prompting (DecomP)"
+    ],
+    "Uses": [
+      "General complex reasoning tasks for LLMs",
+      "Multi-step problem-solving",
+      "As a foundation for more sophisticated planning mechanisms in AI systems"
+    ],
+    "Thinking": "This paradigm is explicitly mentioned in the 'Introduction' and 'Related Work' sections as a foundational approach that RoG builds upon. It's a well-established and recognized pattern in LLM prompting and reasoning."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG / FiD Framework)",
+    "Problem": "Large Language Models (LLMs) are limited by their training data cutoff, lack of access to external or up-to-date knowledge, and a propensity for generating hallucinations, especially in knowledge-intensive tasks.",
+    "Context": "Open-domain question answering, factual generation, or any task where LLMs need to access and incorporate dynamic, specific, or external knowledge to produce accurate and faithful outputs.",
+    "Solution": "Integrate a retrieval mechanism with a generative LLM. Relevant external knowledge (e.g., documents, passages, facts, or structured reasoning paths) is first retrieved from a knowledge source (like KGs or text corpora). This retrieved information is then provided as context to the LLM, which uses it to generate the final answer. The Fusion-in-Decoder (FiD) framework is a specific implementation that allows reasoning on multiple retrieved passages concurrently.",
+    "Result": "Significantly improves the factual accuracy of LLM outputs, reduces hallucinations, provides access to up-to-date information, and enhances the overall performance in knowledge-intensive tasks.",
+    "Related Patterns": [
+      "Reasoning on Graphs (RoG) (uses FiD for its reasoning module)",
+      "Relation Path Guided Retrieval",
+      "LLM as Agent"
+    ],
+    "Uses": [
+      "Open-domain question answering",
+      "Factual summarization",
+      "Knowledge-intensive dialogue systems",
+      "Enhancing LLM trustworthiness and reducing factual errors"
+    ],
+    "Thinking": "The paper explicitly states, 'For the retrieval-reasoning module, we follow the FiD framework,' indicating its adoption as a recognized architectural pattern for integrating retrieval with generation."
+  },
+  {
+    "Pattern Name": "LLM as Agent",
+    "Problem": "Large Language Models (LLMs) are typically static models that lack the ability to interact with dynamic environments, acquire up-to-date information beyond their training data, or perform complex multi-step tasks requiring external tool use.",
+    "Context": "Tasks requiring dynamic information retrieval, tool invocation, or iterative interaction with external systems (such as knowledge bases, web search engines, or APIs).",
+    "Solution": "Treat the LLM as an autonomous agent capable of perceiving its environment, making decisions, and performing actions. This often involves prompting the LLM to generate actions (e.g., search queries, API calls) and then feeding the results of these actions back to the LLM as observations, enabling iterative reasoning and interaction.",
+    "Result": "Empowers LLMs to access and incorporate the latest knowledge, interact with external tools, and perform more complex, dynamic reasoning tasks that go beyond static text generation.",
+    "Related Patterns": [
+      "ReACT (explicitly mentioned as an example)",
+      "ThinkonGraph (explicitly mentioned as an example)",
+      "KGAgent (explicitly mentioned as an example)"
+    ],
+    "Uses": [
+      "Dynamic knowledge retrieval",
+      "Tool-augmented LLMs",
+      "Complex multi-step problem-solving requiring external interaction",
+      "Autonomous AI systems"
+    ],
+    "Thinking": "This pattern is clearly described in the 'Related Work' section, with specific examples like ReACT, ThinkonGraph, and KGAgent, highlighting its role in enabling LLMs to interact with environments for knowledge acquisition."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "Large Language Models (LLMs) often struggle to perform complex multi-step reasoning tasks, sometimes providing incorrect or non-transparent answers without showing their intermediate thought process.",
+    "Context": "Improving the reasoning abilities, transparency, and reliability of LLMs, especially for tasks requiring logical deduction, sequential steps, or complex problem-solving.",
+    "Solution": "Prompt the LLM to generate a series of intermediate reasoning steps or a 'chain of thought' before providing the final answer. This can be achieved through few-shot examples demonstrating the step-by-step process or by simply adding explicit instructions like 'Let's think step by step' to the prompt.",
+    "Result": "Elicits more robust and accurate reasoning in LLMs, makes the reasoning process more interpretable and transparent, and significantly improves performance on complex tasks by guiding the model through intermediate steps.",
+    "Related Patterns": [
+      "Plan-and-Solve Paradigm",
+      "Tree of Thoughts",
+      "Graph of Thoughts",
+      "Self-Consistency"
+    ],
+    "Uses": [
+      "Complex arithmetic and symbolic reasoning",
+      "Common-sense reasoning",
+      "Multi-step question answering",
+      "Improving interpretability of LLM outputs"
+    ],
+    "Thinking": "This pattern is explicitly mentioned in the 'Related Work' section, with specific examples like ReACT, ThinkonGraph, and KGAgent, highlighting its role in enabling LLMs to interact with environments for knowledge acquisition."
+  },
+  {
+    "Pattern Name": "Decomposed Prompting (DecomP)",
+    "Problem": "Large Language Models (LLMs) struggle with complex reasoning tasks that are monolithic and require multiple, distinct sub-steps, leading to errors or incomplete solutions.",
+    "Context": "Tasks where a complex problem can be naturally broken down into a sequence of simpler, interdependent subtasks.",
+    "Solution": "Prompt LLMs to explicitly decompose the main reasoning task into a series of smaller, more manageable subtasks. Each subtask is then solved step-by-step by the LLM, with the output of one subtask potentially feeding into the next.",
+    "Result": "Improves the LLM's ability to handle complex problems by simplifying the cognitive load, enhances the clarity and structure of the reasoning process, and can lead to more accurate and robust solutions.",
+    "Related Patterns": [
+      "Plan-and-Solve Paradigm",
+      "Chain-of-Thought Prompting"
+    ],
+    "Uses": [
+      "Complex question answering",
+      "Multi-step problem-solving",
+      "Code generation",
+      "Scientific reasoning"
+    ],
+    "Thinking": "Explicitly mentioned as 'DecomP He et al 2021 prompts LLMs to decompose the reasoning task into a series of subtasks and solve them step by step' in both main and detailed related work. This is a specific, named technique for task decomposition."
+  },
+  {
+    "Pattern Name": "Tree of Thoughts",
+    "Problem": "Chain-of-Thought (CoT) reasoning, while effective, is often linear and might miss alternative reasoning paths or get stuck on incorrect intermediate steps, limiting the exploration of diverse solutions.",
+    "Context": "Complex problem-solving tasks where multiple reasoning paths might exist, and exploring these paths systematically could lead to better or more robust solutions.",
+    "Solution": "Instead of a linear chain, the LLM generates a 'tree' of thoughts. At each step, the LLM can generate multiple possible next reasoning steps (branches). These branches can then be explored, evaluated, and potentially pruned, allowing for a more deliberate and exhaustive search for the optimal reasoning path.",
+    "Result": "Enables more comprehensive exploration of reasoning possibilities, improves the quality and robustness of solutions by considering alternatives, and can lead to higher accuracy on challenging tasks compared to linear CoT.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Graph of Thoughts",
+      "Plan-and-Solve Paradigm"
+    ],
+    "Uses": [
+      "Strategic game playing",
+      "Complex mathematical problems",
+      "Multi-step logical deduction",
+      "Creative problem-solving"
+    ],
+    "Thinking": "Explicitly mentioned: 'Tree of thoughts Yao et al 2023 expands the reasoning chain to a tree structure to explore more reasoning paths.' This describes a distinct, non-linear reasoning structure."
+  },
+  {
+    "Pattern Name": "Graph of Thoughts",
+    "Problem": "Linear (CoT) or tree-structured reasoning (Tree of Thoughts) might still be limited in capturing complex interdependencies or allowing for flexible aggregation and synergy of multiple reasoning paths.",
+    "Context": "Highly complex reasoning tasks where intermediate thoughts might be interconnected in non-linear ways, or where aggregating insights from multiple parallel reasoning paths is beneficial.",
+    "Solution": "Models the reasoning process as a 'graph' of thoughts, where nodes represent individual thoughts or reasoning steps, and edges represent their dependencies or relationships. This allows for more flexible structures than trees, including cycles and aggregation operations, to synergize information from various paths.",
+    "Result": "Provides a more expressive and powerful framework for complex reasoning, enabling the LLM to integrate and synthesize information from diverse reasoning trajectories, potentially leading to more robust and comprehensive solutions.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Tree of Thoughts",
+      "Plan-and-Solve Paradigm"
+    ],
+    "Uses": [
+      "Advanced problem-solving",
+      "Knowledge synthesis",
+      "Complex decision-making",
+      "Multi-agent reasoning"
+    ],
+    "Thinking": "Explicitly mentioned: 'Graph of thoughts Besta et al 2023 further models the reasoning chain as a graph with an aggregation operation to synergize the reasoning paths.' This describes an even more complex and flexible reasoning structure than a tree."
+  },
+  {
+    "Pattern Name": "Reasoning Verification (Entailer)",
+    "Problem": "Large Language Models (LLMs) can generate plausible-sounding but factually incorrect or logically inconsistent reasoning steps, leading to unfaithful or hallucinated final answers.",
+    "Context": "Tasks requiring high factual accuracy and faithfulness, where the correctness of each intermediate reasoning step is critical for the trustworthiness of the overall solution.",
+    "Solution": "Introduce a separate 'verifier' component (which can be another LLM or a specialized module) to validate the reasoning steps generated by the primary LLM. This verifier checks for factual consistency, logical soundness, or adherence to specific rules.",
+    "Result": "Significantly improves the faithfulness and truthfulness of LLM reasoning by identifying and correcting erroneous intermediate steps, thereby enhancing the reliability and trustworthiness of the final output.",
+    "Related Patterns": [
+      "Two-LLM Framework for Reasoning",
+      "Self-Consistency"
+    ],
+    "Uses": [
+      "High-stakes question answering",
+      "Factual generation",
+      "Logical deduction",
+      "Scientific claim validation"
+    ],
+    "Thinking": "Explicitly mentioned: 'Entailer Tafjord et al 2022 introduces a verifier to validate the reasoning steps generated by LLMs.' This is a clear pattern for ensuring faithfulness."
+  },
+  {
+    "Pattern Name": "Two-LLM Framework for Reasoning",
+    "Problem": "A single LLM might struggle with both generating diverse reasoning steps and critically evaluating/selecting the best ones, leading to suboptimal or unfaithful reasoning.",
+    "Context": "Complex reasoning tasks where a clear separation of concerns between generating possibilities and evaluating/selecting them can improve performance and faithfulness.",
+    "Solution": "Employ two distinct LLMs (or two roles for the same LLM). One LLM is responsible for generating a set of potential reasoning steps or paths. The second LLM acts as a selector or evaluator, choosing the most appropriate or faithful steps from the generated options to construct the final reasoning chain.",
+    "Result": "Enhances the quality and faithfulness of reasoning by leveraging specialized roles for generation and selection/evaluation, potentially leading to more robust and accurate outcomes.",
+    "Related Patterns": [
+      "Reasoning Verification (Entailer)",
+      "Monte Carlo Planning for Faithful Reasoning (FAME)"
+    ],
+    "Uses": [
+      "Faithful question answering",
+      "Complex problem-solving",
+      "Multi-agent systems where different agents have specialized roles"
+    ],
+    "Thinking": "Explicitly mentioned: 'Creswell  Shanahan 2022 present a framework including two LLMs that are used for selecting and generating reasoning steps respectively.' This describes a specific architectural pattern using multiple LLMs."
+  },
+  {
+    "Pattern Name": "Monte Carlo Planning for Faithful Reasoning (FAME)",
+    "Problem": "Ensuring faithfulness in Large Language Model (LLM) reasoning, especially when exploring multiple potential reasoning paths, can be challenging due to the probabilistic nature of LLM outputs and the risk of hallucinations.",
+    "Context": "Reasoning tasks where exploring and evaluating multiple reasoning trajectories is necessary, and a robust mechanism is needed to identify and prioritize faithful paths.",
+    "Solution": "Integrate Monte Carlo planning techniques (e.g., Monte Carlo Tree Search) into the LLM's reasoning process. This involves simulating multiple reasoning trajectories, evaluating their outcomes, and using these evaluations to guide the selection of the most faithful and promising reasoning steps.",
+    "Result": "Generates more faithful reasoning steps by systematically exploring and evaluating potential paths, reducing the likelihood of hallucinations and improving the overall trustworthiness of the reasoning process.",
+    "Related Patterns": [
+      "Reasoning Verification (Entailer)",
+      "Tree of Thoughts",
+      "Two-LLM Framework for Reasoning"
+    ],
+    "Uses": [
+      "Faithful question answering",
+      "Complex decision-making",
+      "Planning in uncertain environments"
+    ],
+    "Thinking": "Explicitly mentioned: 'FAME Hong et al 2023 introduces the MonteCarlo planning to generate faithful reasoning steps.' This is a specific algorithmic approach to planning for faithfulness."
+  },
+  {
+    "Pattern Name": "Semantic Parsing for KGQA",
+    "Problem": "Natural language questions are ambiguous and cannot be directly executed on structured Knowledge Graphs (KGs) to retrieve precise answers.",
+    "Context": "Knowledge Graph Question Answering (KGQA) tasks where answers must be derived from the structured data within a KG, requiring a precise, executable query.",
+    "Solution": "Use LLMs (or other semantic parsing models) to convert a natural language question into a formal, executable structural query (e.g., SPARQL, logical forms) that can be directly run against a Knowledge Graph. A query engine then executes this parsed query on the KG to obtain the answers.",
+    "Result": "Enables precise and interpretable reasoning on KGs by translating natural language into machine-executable queries, leading to accurate answers grounded in the KG's structure. However, it can be sensitive to query generation quality (non-executable queries).",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation (as an alternative approach)",
+      "Knowledge Graph Grounded Planning (as a way to guide reasoning without full semantic parsing)"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering",
+      "Database querying from natural language",
+      "Structured data retrieval"
+    ],
+    "Thinking": "Explicitly mentioned multiple times: 'semantic parsing methods ... use LLMs to convert questions into logical queries that are executed on KGs' and 'Semantic parsing methodsparse the question into a structural query eg SPARQL which can be executed by a query engine to get answers.' This is a well-defined approach for KGQA."
+  },
+  {
+    "Pattern Name": "Hybrid Semantic Parsing and LLM Reasoning",
+    "Problem": "Semantic parsing methods for KGQA can generate non-executable queries or yield no answers due to syntax/semantic limitations. Retrieval-augmented LLM methods might lack the precision and interpretability of structured queries.",
+    "Context": "Knowledge Graph Question Answering (KGQA) tasks where both the precision of structured queries and the flexibility/generative power of LLMs are desired.",
+    "Solution": "Combine semantic parsing (generating logical forms/queries for KGs) with LLM-based reasoning (generating natural language answers). This involves jointly generating both the structured query and the final answer, allowing the LLM to leverage the structured information from the query execution while also applying its own reasoning and generative capabilities.",
+    "Result": "Aims to achieve salient performance by leveraging the strengths of both approaches, potentially leading to more accurate and robust answers than either method alone, especially when semantic parsing might fail.",
+    "Related Patterns": [
+      "Semantic Parsing for KGQA",
+      "Retrieval-Augmented Generation",
+      "LLM Reasoning"
+    ],
+    "Uses": [
+      "Knowledge Graph Question Answering",
+      "Tasks requiring both structured query generation and natural language response generation"
+    ],
+    "Thinking": "The text explicitly mentions DECAF as combining 'semantic parsing and LLMs reasoning to jointly generate answers.' This describes a distinct *hybrid* approach that leverages two different AI techniques (structured query generation and free-form LLM reasoning) to address the limitations of each when used in isolation for KGQA."
+  },
+  {
+    "Pattern Name": "Self-Consistency",
+    "Problem": "Chain-of-Thought (CoT) reasoning, while improving LLM performance, can still lead to errors if the single generated reasoning path is flawed or suboptimal.",
+    "Context": "Improving the reliability and accuracy of LLM reasoning, especially in complex tasks where multiple valid reasoning paths might exist or where a single path could be erroneous.",
+    "Solution": "Instead of relying on a single CoT, prompt the LLM to generate multiple diverse reasoning paths (chains of thought) for the same problem. Then, aggregate the results from these different paths (e.g., by majority voting on the final answers) to arrive at a more robust and consistent solution.",
+    "Result": "Significantly improves the accuracy and robustness of LLM reasoning by leveraging the diversity of multiple reasoning paths and reducing the impact of individual errors.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "Tree of Thoughts",
+      "Graph of Thoughts"
+    ],
+    "Uses": [
+      "Complex reasoning tasks",
+      "Mathematical problem-solving",
+      "Logical deduction",
+      "Improving the reliability of LLM outputs"
+    ],
+    "Thinking": "The reference 'Self-consistency improves chain of thought reasoning in language models' (Wang et al. 2022) is present in the bibliography. While not detailed in the main text, it's a widely recognized and distinct AI design pattern for enhancing LLM reasoning, building on CoT."
+  }
+]

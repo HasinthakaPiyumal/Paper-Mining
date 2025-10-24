@@ -1,0 +1,62 @@
+[
+  {
+    "Pattern Name": "Tool-Augmented Language Agents",
+    "Problem": "Large Language Models (LLMs) have limited inherent capabilities and access to real-world, dynamic information, restricting their ability to solve complex, real-world tasks.",
+    "Context": "Language agents powered by LLMs need to interact with external environments and diverse data sources to perform tasks that require up-to-date or specialized information.",
+    "Solution": "Equip language agents with external tools (e.g., search APIs, databases like CitySearch, FlightSearch, RestaurantSearch, AccommodationSearch) to expand their potential capabilities. The agent learns to select and use the appropriate tools based on the task requirements and observations.",
+    "Result": "Agents can acquire necessary information from partially observable environments, interact with dynamic systems, and perform tasks beyond their intrinsic knowledge, such as searching for flights, accommodations, or restaurants.",
+    "Related Patterns": "ReAct, HuggingGPT, Gorilla, ToolLLM, OpenAgents.",
+    "Uses": "Information collection, interacting with dynamic environments, expanding agent capabilities, real-world problem-solving, overcoming LLM knowledge cutoffs.",
+    "Thinking": "The text explicitly mentions 'tool use' and the 'tool-augmentation paradigm' as a significant capability of language agents, validated as effective in previous work. It describes how agents use various search tools to gather information for planning."
+  },
+  {
+    "Pattern Name": "Memory Management for Language Agents",
+    "Problem": "LLMs have context window limitations and struggle to retain, process, and recall information over extended interactions or for complex, long-horizon tasks, leading to issues like 'Lost in the Middle' or context overflow.",
+    "Context": "Language agents powered by LLMs, especially when performing multi-step, long-duration, or information-intensive tasks that require maintaining state and recalling past information.",
+    "Solution": "Integrate memory modules, distinguishing between long-term memory (parametric memory inherent in LLMs) and short-term/working memory (in-context learning). Techniques like memory summarization, retrieval, and explicit recording tools (e.g., 'NotebookWrite') are employed to enhance memory capabilities and manage context accumulation.",
+    "Result": "Agents can acquire and process information, record intermediate plans, manage context accumulation to prevent token limit issues, and improve performance on long-horizon tasks by effectively utilizing past information.",
+    "Related Patterns": "Memory Summarization, Retrieval, In-context Learning, RecurrentGPT, MemoryBank.",
+    "Uses": "Retaining context, recording intermediate states, managing long-horizon tasks, preventing context overflow, improving information recall and consistency.",
+    "Thinking": "The text describes 'Memory' as a core module in LLM-powered agents, detailing its two types (long-term and short-term/working memory) and mentioning techniques like 'memory summarization' and 'retrieval'. The 'NotebookWrite' tool is presented as a concrete mechanism for 'working memory management'."
+  },
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "Language agents need a structured way to combine high-level reasoning with concrete actions and adapt to environmental feedback to solve complex, interactive tasks effectively.",
+    "Context": "LLM-powered agents operating in dynamic environments where actions yield observations, and decisions need to be made iteratively, often involving tool use.",
+    "Solution": "An iterative framework where the agent alternates between 'Thought' (reasoning about the current situation and planning the next step) and 'Action' (executing a tool or making a decision). The 'Observation' (feedback from the environment) then informs subsequent 'Thought' steps, creating a continuous loop of reasoning and acting.",
+    "Result": "Enhanced reasoning ability by incorporating environmental feedback, effective iteration with tools, and improved performance in dynamic planning tasks by allowing agents to dynamically adjust their plans.",
+    "Related Patterns": "Tool-Augmented Language Agents, Feedback Loop, Chain-of-Thought, Reflexion.",
+    "Uses": "Information collection, planning in dynamic environments, task execution requiring tool interaction, complex problem-solving, adapting to partially observable environments.",
+    "Thinking": "ReAct is explicitly named as a 'planning strategy' and framework for 'information collection' recognized for its 'effective iteration with tools'. Its core mechanism of alternating Thought, Action, and Observation is detailed in the prompt examples."
+  },
+  {
+    "Pattern Name": "Reflexion (Self-Correction with Verbal Reinforcement)",
+    "Problem": "Language agents often make errors, get trapped in dead loops, or produce suboptimal plans, and struggle to self-correct or learn from past failures without explicit guidance.",
+    "Context": "LLM-powered agents attempting complex tasks where initial attempts might fail or lead to suboptimal outcomes, requiring iterative refinement and learning from mistakes.",
+    "Solution": "Utilizes a 'reflection model' to provide high-level insights and verbal reinforcement based on previous erroneous attempts or outcomes. This reflective guidance aids language agents in identifying and correcting flawed reasoning and adjusting their strategies for subsequent attempts.",
+    "Result": "Improved ability to identify and correct flawed reasoning, reduced incidence of dead loops and persistent errors, and better task completion over multiple attempts by learning from past failures.",
+    "Related Patterns": "Feedback Loop, Adaptive Planning, ReAct.",
+    "Uses": "Error recovery, learning from failures, improving planning strategies over time, enhancing robustness in complex tasks, reducing repetitive invalid actions.",
+    "Thinking": "Reflexion is explicitly named as a 'planning strategy' that 'utilizes a reflection model to provide high-level insights on previous erroneous attempts' and that 'Such reflective guidance aids language agents in identifying and correcting flawed reasoning'."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) / Zero-Shot Chain-of-Thought (ZSCoT)",
+    "Problem": "Large Language Models can struggle with complex reasoning tasks, especially in a zero-shot setting, without explicit step-by-step guidance, leading to direct but often incorrect answers.",
+    "Context": "LLM-powered agents needing to perform multi-step reasoning, task decomposition, or complex problem-solving where intermediate logical steps are crucial.",
+    "Solution": "Enhances the reasoning process by prompting the model to generate intermediate reasoning steps before providing a final answer. For Zero-Shot CoT, this is often achieved by simply adding a phrase like 'Let's think step by step' to the prompt.",
+    "Result": "Improved reasoning capabilities, ability to decompose complex tasks into manageable steps, and better performance on tasks requiring logical deduction and multi-step problem-solving by making the reasoning process explicit.",
+    "Related Patterns": "Task Decomposition, Step-by-step Reasoning, ReAct.",
+    "Uses": "Complex problem-solving, logical deduction, task decomposition, improving accuracy in reasoning tasks, making LLM reasoning more transparent.",
+    "Thinking": "ZSCoT is explicitly named as a 'planning strategy' that 'enhances the reasoning process by requiring intermediate steps' and uses the prompt 'Let's think step by step' to elicit reasoning."
+  },
+  {
+    "Pattern Name": "Tree/Graph Search for Planning",
+    "Problem": "Optimizing solution searches in complex planning tasks can be computationally intensive and require exploring multiple possibilities and their consequences.",
+    "Context": "Language agents needing to find optimal or near-optimal sequences of actions in a planning space, especially when dealing with interdependent decisions.",
+    "Solution": "Employ classical data structures like trees and graphs to represent the search space of possible actions and states. Algorithms traverse these structures to explore alternative plans and optimize solution searches in fewer steps, considering various branches of decisions.",
+    "Result": "Enhanced planning capabilities, more efficient exploration of solution spaces, and improved ability to find optimal or satisfactory plans by systematically evaluating different action sequences.",
+    "Related Patterns": "Planning, Task Decomposition, GoT (Graph of Thoughts), ToT (Tree of Thoughts).",
+    "Uses": "Solution search optimization, exploring alternative plans, complex decision-making, pathfinding in planning scenarios.",
+    "Thinking": "The text states that 'classical data structures like trees and graphs have been employed in prior studies... enhancing the planning capabilities of language agents'. This indicates a recognized and recurring method for improving AI planning."
+  }
+]

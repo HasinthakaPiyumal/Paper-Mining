@@ -1,0 +1,152 @@
+[
+  {
+    "Pattern Name": "Different Workloads in Different Computing Environments",
+    "Problem": "It is necessary to separate and quickly change the ML data workload and stabilize the training workload to maximize efficiency.",
+    "Context": "This is an ML system topology pattern. It is applicable when there are different types of ML workloads (e.g., data processing, training) that have distinct requirements for efficiency and stability. It addresses performance efficiency (E) and maintainability (M).",
+    "Solution": "Physically isolate different workloads to separate machines. Then optimize the machine configurations and the network usage.",
+    "Result": "Maximizes efficiency by allowing independent optimization of machine configurations and network usage for different workloads, leading to a stabilized training workload and quick changes for ML data workloads.",
+    "Related Patterns": "Other ML system topology patterns (e.g., Distinguish Business Logic from ML Models, ML Gateway Routing Architecture, Microservice Architecture for ML, Lambda Architecture for ML, Kappa Architecture for ML).",
+    "Uses": "According to the survey, 7% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "The overall business logic should be isolated as much as possible from the ML models so that they can be changed/overridden as necessary without impacting the rest of the business logic. ML application systems are complex because their ML components must be retrained regularly and have an intrinsic nondeterministic behavior. Similar to other systems, the business requirements for these systems and the ML algorithms change over time.",
+    "Context": "This is an ML system topology pattern. It is applicable to any ML application system with outputs that depend on ML techniques. It addresses maintainability (M).",
+    "Solution": "Separate the business logic and the inference engine, loosely coupling the business logic and ML-specific dataflows. Define clear APIs between the traditional and ML components. Place the business and ML components with different responsibilities into three layers (Data Layer, Logic Layer, Presentation Layer) and divide data flows into three (Business Logic Data Flow, ML Runtime Data Flow, ML Development Data Flow).",
+    "Result": "Decoupling traditional business and ML components allows the ML components to be monitored and adjusted to meet user requirements and changing inputs. It isolates failures between business logic and the ML learning layer, helping developers debug ML application systems easily.",
+    "Related Patterns": "This pattern provides a basis for other patterns such as P7 Data Lake for ML. Other ML system topology patterns (e.g., Different Workloads in Different Computing Environments, ML Gateway Routing Architecture, Microservice Architecture for ML, Lambda Architecture for ML, Kappa Architecture for ML).",
+    "Uses": "According to the survey, 18% of respondents reported having used this ML design pattern. An example usage is in a Slack-based Chatbot system, where the Chatbot service (business logic) is clearly separated from underlying ML components (e.g., Text to Vector Transformer, Language Model).",
+    "Thinking": "Pattern Name, Problem, and Solution were extracted from both Table 1 and the detailed description provided in the text. Context was derived from Table 2 (category and quality attributes) and the 'Applicability' section of the detailed description. Result was taken from the 'Consequences' section. Related Patterns were explicitly mentioned in the text ('provides a basis for other patterns such as P7 Data Lake for ML') and by listing other patterns in the same category from Table 2. Uses was taken from Figure 3 and the 'Usage example' section."
+  },
+  {
+    "Pattern Name": "ML Gateway Routing Architecture",
+    "Problem": "When a client uses multiple services, it can be difficult to set up and manage individual endpoints for each service.",
+    "Context": "This is an ML system topology pattern. It is applicable when a client needs to interact with multiple ML-related services. It addresses compatibility (C) and maintainability (M).",
+    "Solution": "Install a gateway before a set of applications, services, or deployments. Use application layer routing requests to the appropriate instance.",
+    "Result": "Simplifies the setup and management of individual endpoints for multiple services by providing a single entry point and routing mechanism, improving compatibility and maintainability.",
+    "Related Patterns": "Other ML system topology patterns (e.g., Different Workloads in Different Computing Environments, Distinguish Business Logic from ML Models, Microservice Architecture for ML, Lambda Architecture for ML, Kappa Architecture for ML).",
+    "Uses": "According to the survey, 11% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Microservice Architecture for ML",
+    "Problem": "ML applications may be confined to some known ML frameworks, missing opportunities for more appropriate frameworks.",
+    "Context": "This is an ML system topology pattern. It is applicable when there is a need for flexibility in using different ML frameworks within an application. It addresses compatibility (C), maintainability (M), and portability (P).",
+    "Solution": "Define consistent input and output data. Provide well-defined services to use for ML frameworks.",
+    "Result": "Enables ML applications to utilize a wider range of appropriate ML frameworks by providing consistent interfaces and well-defined services, thereby improving compatibility, maintainability, and portability.",
+    "Related Patterns": "Other ML system topology patterns (e.g., Different Workloads in Different Computing Environments, Distinguish Business Logic from ML Models, ML Gateway Routing Architecture, Lambda Architecture for ML, Kappa Architecture for ML).",
+    "Uses": "According to the survey, 21% of respondents reported having used this ML design pattern, making it one of the most frequently used patterns.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Lambda Architecture for ML",
+    "Problem": "Real-time data processing requires scalability, fault tolerance, predictability, and other qualities. It must be extensible.",
+    "Context": "This is an ML system topology pattern. It is applicable for real-time data processing scenarios where high scalability, fault tolerance, predictability, and extensibility are critical. It addresses performance efficiency (E) and reliability (R).",
+    "Solution": "The batch layer keeps producing views at every set batch interval while the speed layer creates the relevant real-time speed views. The serving layer orchestrates the query by querying both the batch and speed layer and then merges them.",
+    "Result": "Achieves scalability, fault tolerance, predictability, and extensibility for real-time data processing by combining batch and speed layers, ensuring both comprehensive and up-to-date data views.",
+    "Related Patterns": "Kappa Architecture for ML (P6) is a related alternative for stream processing. Other ML system topology patterns (e.g., Different Workloads in Different Computing Environments, Distinguish Business Logic from ML Models, ML Gateway Routing Architecture, Microservice Architecture for ML).",
+    "Uses": "According to the survey, 8% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2 and noting the relationship with Kappa Architecture. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Kappa Architecture for ML",
+    "Problem": "It is necessary to deal with huge amount of data with less code resource.",
+    "Context": "This is an ML system topology pattern. It is applicable for processing huge amounts of data efficiently with minimal code resources, supporting both real-time and continuous reprocessing. It addresses performance efficiency (E) and reliability (R).",
+    "Solution": "Support both real-time data processing and continuous reprocessing with a single stream processing engine.",
+    "Result": "Efficiently handles huge amounts of data with less code resource by unifying real-time and reprocessing capabilities into a single stream processing engine, improving performance efficiency and reliability.",
+    "Related Patterns": "Lambda Architecture for ML (P5) is a related alternative for stream processing. Other ML system topology patterns (e.g., Different Workloads in Different Computing Environments, Distinguish Business Logic from ML Models, ML Gateway Routing Architecture, Microservice Architecture for ML).",
+    "Uses": "According to the survey, 7% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2 and noting the relationship with Lambda Architecture. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Data Lake for ML",
+    "Problem": "We cannot foresee the kind of analyses that will be performed on the data and which frameworks will be used to perform such analyses.",
+    "Context": "This is an ML system programming pattern. It is applicable when the future analytical needs and ML frameworks are uncertain. It addresses performance efficiency (E), compatibility (C), and maintainability (M).",
+    "Solution": "Store data which range from structured to unstructured as raw as possible into a data storage.",
+    "Result": "Enables flexibility for unforeseen analyses and the use of various ML frameworks by storing data in its rawest form, improving compatibility, maintainability, and efficiency.",
+    "Related Patterns": "Distinguish Business Logic from ML Models (P2) provides a basis for this pattern. Other ML system programming patterns (e.g., Separation of Concerns and Modularization of ML Components, Encapsulate ML Models within Rulebase Safeguards, Discard PoC Code).",
+    "Uses": "According to the survey, 17% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were explicitly mentioned in the text ('P2 provides a basis for other patterns such as P7 Data Lake for ML') and by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Separation of Concerns and Modularization of ML Components",
+    "Problem": "ML applications must accommodate regular and frequent changes to their ML components.",
+    "Context": "This is an ML system programming pattern. It is applicable when ML components are expected to undergo frequent changes. It addresses maintainability (M).",
+    "Solution": "Decouple at different levels of complexity from the simplest to the most complex.",
+    "Result": "Facilitates accommodating regular and frequent changes to ML components by promoting modularity and decoupling, thereby improving maintainability.",
+    "Related Patterns": "Other ML system programming patterns (e.g., Data Lake for ML, Encapsulate ML Models within Rulebase Safeguards, Discard PoC Code).",
+    "Uses": "According to the survey, 12% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Encapsulate ML Models within Rulebase Safeguards",
+    "Problem": "ML models are known to be unstable and vulnerable to adversarial attacks, noise in data, and data drift over time.",
+    "Context": "This is an ML system programming pattern. It is applicable when ML models exhibit instability or vulnerability to external factors. It addresses reliability (R) and security (S).",
+    "Solution": "Encapsulate functionality provided by ML models and appropriately deal with the inherent uncertainty of their outcomes in the containing system using deterministic and verifiable rules.",
+    "Result": "Mitigates the instability and vulnerability of ML models to adversarial attacks, noise, and data drift by providing a protective layer of deterministic and verifiable rules, enhancing reliability and security.",
+    "Related Patterns": "Other ML system programming patterns (e.g., Data Lake for ML, Separation of Concerns and Modularization of ML Components, Discard PoC Code).",
+    "Uses": "According to the survey, 10% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Discard PoC Code",
+    "Problem": "The code created for PoC often includes code that sacrifices maintainability for efficient implementation of trial and error and code that is ultimately no longer needed.",
+    "Context": "This is an ML system programming pattern. It is applicable after a Proof of Concept (PoC) phase where initial code might not meet production quality standards. It addresses maintainability (M).",
+    "Solution": "Discard the code created for the PoC and rebuild maintainable code based on the findings from the PoC.",
+    "Result": "Ensures higher maintainability for production systems by preventing the accumulation of unmaintainable PoC code, leading to a cleaner and more robust codebase.",
+    "Related Patterns": "Other ML system programming patterns (e.g., Data Lake for ML, Separation of Concerns and Modularization of ML Components, Encapsulate ML Models within Rulebase Safeguards).",
+    "Uses": "According to the survey, 15% of respondents reported having used this ML design pattern, making it one of the most frequently used patterns.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "ParameterServer Abstraction",
+    "Problem": "For distributed learning, widely accepted abstractions are lacking.",
+    "Context": "This is an ML model operation pattern. It is applicable in distributed learning environments where there is a need for standardized ways to manage and share model parameters. It addresses performance efficiency (E) and reliability (R).",
+    "Solution": "Distribute both data and workloads over worker nodes while the server nodes maintain globally shared parameters, which are represented as vectors and matrices.",
+    "Result": "Provides widely accepted abstractions for distributed learning, enabling efficient distribution of data and workloads while ensuring consistent management of globally shared parameters, improving performance efficiency and reliability.",
+    "Related Patterns": "Other ML model operation patterns (e.g., Data Flows Up Model Flows Down, Secure Aggregation, Deployable Canary Model, ML Versioning).",
+    "Uses": "According to the survey, 1% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Data Flows Up Model Flows Down",
+    "Problem": "Standard ML approaches require centralizing the training data on one machine or in a datacenter.",
+    "Context": "This is an ML model operation pattern, specifically referring to Federated Learning. It is applicable when training data cannot or should not be centralized, often due to privacy or data locality concerns. It addresses performance efficiency (E), model robustness (Mr), and prediction accuracy (Pa).",
+    "Solution": "Enable mobile devices to collaboratively learn a shared prediction model in the cloud while keeping all of the training data on the device as federated learning.",
+    "Result": "Enables collaborative learning without centralizing sensitive training data, keeping it on local devices, which can improve performance efficiency, model robustness, and prediction accuracy while preserving privacy.",
+    "Related Patterns": "Secure Aggregation (P13) is a related pattern often used in conjunction with federated learning. Other ML model operation patterns (e.g., ParameterServer Abstraction, Deployable Canary Model, ML Versioning).",
+    "Uses": "According to the survey, 0% of respondents reported having used this ML design pattern, though 28% knew of it.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2 and noting the explicit connection to federated learning and P13. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "The system needs to communicate and aggregate model updates in a secure, efficient, scalable, and fault-tolerant way.",
+    "Context": "This is an ML model operation pattern. It is applicable in collaborative learning scenarios (like federated learning) where model updates from multiple sources need to be combined securely without exposing individual data. It addresses security (S), model robustness (Mr), and prediction accuracy (Pa).",
+    "Solution": "Encrypt data from each mobile device in collaborative learning and calculate totals and averages without individual examination.",
+    "Result": "Ensures secure, efficient, scalable, and fault-tolerant communication and aggregation of model updates in collaborative learning by encrypting individual contributions, thereby enhancing security, model robustness, and prediction accuracy.",
+    "Related Patterns": "Data Flows Up Model Flows Down (P12) is a context where this pattern is frequently applied. Other ML model operation patterns (e.g., ParameterServer Abstraction, Deployable Canary Model, ML Versioning).",
+    "Uses": "According to the survey, 0% of respondents reported having used this ML design pattern, though 25% knew of it.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2 and noting the connection to P12. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "Deployable Canary Model",
+    "Problem": "A surrogate ML that approximates the behavior of the best ML model must be built to provide explainability.",
+    "Context": "This is an ML model operation pattern. It is applicable when explainability is a critical requirement for a primary, potentially complex, ML model. It addresses reliability (R) and model explainability (Me).",
+    "Solution": "Run the explainable inference pipeline in parallel with the primary inference pipeline to monitor prediction differences.",
+    "Result": "Provides explainability for the primary ML model by allowing comparison with a simpler, explainable 'canary' model, which helps monitor prediction differences and improves reliability and model explainability.",
+    "Related Patterns": "Other ML model operation patterns (e.g., ParameterServer Abstraction, Data Flows Up Model Flows Down, Secure Aggregation, ML Versioning).",
+    "Uses": "According to the survey, 1% of respondents reported having used this ML design pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "ML models and their different versions may change the behavior of the overall ML applications.",
+    "Context": "This is an ML model operation pattern. It is applicable in any ML application system where model changes can impact overall system behavior and reproducibility is important. It addresses maintainability (M), model robustness (Mr), and prediction accuracy (Pa).",
+    "Solution": "Record the ML model structure, training data set, training system, and analytical code to ensure a reproducible training process and an inference process.",
+    "Result": "Ensures reproducible training and inference processes by meticulously recording all relevant components (model, data, system, code), which helps manage changes in ML model behavior and improves maintainability, model robustness, and prediction accuracy.",
+    "Related Patterns": "Other ML model operation patterns (e.g., ParameterServer Abstraction, Data Flows Up Model Flows Down, Secure Aggregation, Deployable Canary Model).",
+    "Uses": "According to the survey, 24% of respondents reported having used this ML design pattern, making it the most frequently used pattern.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1. Context was derived from Table 2 (category and quality attributes) and the problem statement. Result was inferred from the problem and solution. Related Patterns were identified by listing other patterns in the same category from Table 2. Uses was taken from Figure 3."
+  }
+]

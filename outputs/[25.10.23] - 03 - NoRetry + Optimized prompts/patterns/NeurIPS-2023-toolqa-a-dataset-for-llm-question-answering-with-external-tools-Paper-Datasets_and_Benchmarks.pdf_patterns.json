@@ -1,0 +1,82 @@
+[
+  {
+    "Pattern Name": "Tool-Augmented LLM",
+    "Problem": "Large Language Models (LLMs) suffer from challenges such as hallucination, weak numerical reasoning, and lack of access to up-to-date or specific external knowledge, limiting their real-world applicability.",
+    "Context": "LLMs demonstrate impressive performance in various NLP tasks but are constrained by their pre-trained knowledge and inherent reasoning limitations when faced with tasks requiring factual accuracy, complex computations, or interaction with dynamic external information.",
+    "Solution": "Augment LLMs with external tools (e.g., retrieval systems, math calculators, code interpreters, database query tools, graph traversal tools). The LLM acts as a controller, selecting, orchestrating, and utilizing these specialized tools to perform specific operations or acquire external information.",
+    "Result": "Mitigates issues like hallucination by providing access to verified knowledge, enhances numerical and logical reasoning capabilities, and expands the LLM's problem-solving abilities beyond its internal knowledge, enabling it to tackle complex, real-world tasks.",
+    "Related Patterns": "Retrieval-Augmented Generation, Code-Based Tool Augmentation, LLM Reasoning/Planning, ReAct (Reasoning and Acting), Tool-Use Finetuning.",
+    "Uses": "Question answering, fact-checking, complex problem-solving, interacting with dynamic or proprietary data sources, scientific tasks, and general information-seeking inquiries.",
+    "Thinking": "This is the central theme of the research text, describing the fundamental approach of enhancing LLMs by integrating external tools to overcome their inherent limitations. The text repeatedly refers to 'tool-augmented LLMs' and details various types of tools and their benefits."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "LLMs are susceptible to hallucinations (generating plausible yet ungrounded information) and may lack access to specific, up-to-date, or domain-specific facts required for accurate responses.",
+    "Context": "When LLMs need to answer questions or generate text that demands factual accuracy, timely information, or knowledge beyond their pre-training data, especially in open-domain or rapidly evolving knowledge environments.",
+    "Solution": "Integrate a retrieval mechanism that fetches relevant knowledge (e.g., text snippets, documents) from an external, up-to-date, or specialized corpus based on the user's query. This retrieved information is then provided to the LLM as additional context to guide its generation, ensuring grounding and factual correctness.",
+    "Result": "Mitigates hallucinations by providing fact-checked and current knowledge, enables LLMs to answer questions requiring specific external information, and improves the overall factual accuracy and reliability of generated content.",
+    "Related Patterns": "Tool-Augmented LLM, LLM Memory Augmentation (as retrieval can serve as a form of external memory).",
+    "Uses": "Open-domain question answering, fact-checking, generating content with external references, accessing timely information.",
+    "Thinking": "The text explicitly mentions 'retrieval augmentation' as a technique to mitigate LLM issues and lists 'Agenda Retriever' and 'SciREX Retriever' as specific text tools, clearly defining this as a distinct pattern within tool augmentation."
+  },
+  {
+    "Pattern Name": "Code-Based Tool Augmentation",
+    "Problem": "LLMs exhibit weaknesses in numerical reasoning and struggle with tasks requiring precise computation, logical execution, or interaction with structured data (e.g., tables, graphs) that cannot be directly processed as natural language.",
+    "Context": "When LLMs need to perform mathematical calculations, interpret and execute programmatic logic, or query/manipulate structured databases and graphs to derive answers or perform complex operations.",
+    "Solution": "Provide LLMs with access to code interpreters (e.g., Python Interpreter, SQL Interpreter) or specialized computational tools (e.g., WolframAlpha Calculator). The LLM is prompted to generate appropriate code or commands for these tools, which are then executed, and the results are fed back to the LLM for further reasoning or final answer generation.",
+    "Result": "Significantly enhances numerical reasoning capabilities, enables accurate and verifiable computations, allows for robust interaction with structured data, and facilitates complex data manipulation and analysis.",
+    "Related Patterns": "Tool-Augmented LLM, LLM Reasoning/Planning (for generating correct code/commands).",
+    "Uses": "Mathematical problem-solving, tabular data querying, graph analysis, complex data manipulation, scientific tasks, and any task requiring precise, verifiable computation.",
+    "Thinking": "The text highlights LLMs' 'weaknesses in numerical reasoning' and mentions 'math tools' and 'code interpreters' as solutions. It then details specific tools like 'WolframAlpha Calculator,' 'SQL Interpreter,' and 'Python Interpreter,' clearly outlining their purpose and integration."
+  },
+  {
+    "Pattern Name": "LLM Reasoning/Planning",
+    "Problem": "LLMs struggle with complex, multi-step tasks that require breaking down problems, orchestrating a sequence of operations, or adapting actions based on intermediate results, often leading to errors or incomplete solutions.",
+    "Context": "When a task cannot be solved with a single tool call or direct generation, and instead requires a sequence of actions, conditional logic, or iterative refinement to reach a solution.",
+    "Solution": "Employ prompting strategies or architectural designs that enable LLMs to autonomously generate intermediate reasoning steps ('thoughts'), break down complex tasks into manageable subtasks, and plan a sequence of tool calls or internal operations. This can involve encouraging self-reflection and adaptation based on environmental feedback.",
+    "Result": "Improves the LLM's ability to tackle complex problems, effectively orchestrate multiple tools, and achieve higher success rates on challenging tasks by guiding it through a structured problem-solving process.",
+    "Related Patterns": "Chain-of-Thought Prompting, ReAct (Reasoning and Acting), Tree-of-Thoughts, Self-Refine.",
+    "Uses": "Multi-tool orchestration, complex question answering, interactive problem-solving, agentic behavior, and any task requiring sequential decision-making.",
+    "Thinking": "The text discusses the need for LLMs to have 'advanced planning and memory capabilities' to 'synergize different functional tools.' It mentions methods that 'enable LLMs to autonomously break down complex tasks into intermediate reasoning steps' and 'encourage LLMs to self-reflect the previous decisions with environmental feedback,' directly describing this pattern."
+  },
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting)",
+    "Problem": "LLMs need to perform complex tasks that require both internal reasoning and dynamic interaction with external tools or environments, where actions depend on observations and errors need to be corrected iteratively.",
+    "Context": "Solving problems that involve iterative steps, where the outcome of one tool use influences the next decision, and where the LLM must adapt its plan based on real-time feedback from the environment or tool execution.",
+    "Solution": "Prompt the LLM to generate interleaved verbal 'Thought' (reasoning) steps and 'Action' (tool call) steps. After each action, an 'Observation' (the output from the tool or environmental feedback) is provided back to the LLM, allowing it to dynamically refine its reasoning and subsequent actions based on this feedback.",
+    "Result": "Significantly enhances problem-solving capabilities by enabling iterative refinement, error correction, and adaptive tool use, leading to higher success rates on complex tasks compared to methods without execution trace feedback.",
+    "Related Patterns": "LLM Reasoning/Planning, Chain-of-Thought Prompting, Tool-Augmented LLM.",
+    "Uses": "Complex question answering, interactive environments (e.g., AlfWorld, WebShop), multi-tool orchestration with dynamic feedback, and tasks requiring robust, adaptive problem-solving.",
+    "Thinking": "ReAct is explicitly described as a baseline method that 'integrates reasoning with tool use by prompting LLMs to generate interleaved verbal reasoning traces and tool calls' and 'can use observations in the execution trace to generate its next action,' detailing its mechanism and benefits."
+  },
+  {
+    "Pattern Name": "AI-Assisted Data Generation for Evaluation",
+    "Problem": "Manually creating high-quality, diverse, and specifically constrained (e.g., tool-dependent, non-overlapping with pre-training data) datasets for evaluating advanced AI models is labor-intensive, time-consuming, and difficult to scale.",
+    "Context": "Developing robust benchmarks for evaluating sophisticated AI capabilities, such as LLM tool-use reasoning, where evaluation questions must meet strict criteria (e.g., unanswerable by internal knowledge alone, requiring specific tool interactions).",
+    "Solution": "Leverage LLMs to generate candidate data (e.g., question templates) and then apply human guidance and validation to refine, filter, and select the generated data to ensure it meets the desired quality and constraints. Automated sampling from reference data can then instantiate concrete data points from the validated templates.",
+    "Result": "Enables scalable and efficient creation of high-quality, targeted evaluation datasets while mitigating issues like unanswerable questions, hallucinated information, or data overlap with model pre-training, ensuring a faithful evaluation.",
+    "Related Patterns": "Programmatic Ground Truth Generation (often used in conjunction).",
+    "Uses": "Benchmark creation for LLMs, synthetic data generation for specific AI scenarios, data augmentation with quality control, generating diverse and challenging evaluation instances.",
+    "Thinking": "The 'Human-Guided Question Generation' phase of ToolQA's curation process directly describes this: 'ask ChatGPT to generate candidate question templates,' followed by 'manual validation to select the templates' and 'sample values from the reference data to automatically fill into the templates'."
+  },
+  {
+    "Pattern Name": "Programmatic Ground Truth Generation",
+    "Problem": "Ensuring the accuracy, consistency, and validity of ground-truth answers for complex, multi-step questions, especially when they involve external tools or intricate logical derivations, is challenging and prone to human error.",
+    "Context": "Creating reliable and verifiable answer keys for evaluation datasets, particularly for tasks where answers are derived through a sequence of operations, external interactions, or complex reasoning paths.",
+    "Solution": "Implement deterministic 'operators' (functions corresponding to the available tools) and define 'tool chains' (predefined schemas or sequences for composing these operators). For each generated question, execute the corresponding tool chain with the true arguments against the reference data to programmatically derive and verify the correct answer.",
+    "Result": "Guarantees the correctness and consistency of ground-truth answers, even for questions requiring multi-step reasoning and tool interaction, significantly reduces manual labeling effort, and provides a robust basis for AI model evaluation.",
+    "Related Patterns": "AI-Assisted Data Generation for Evaluation.",
+    "Uses": "Automated answer key creation for QA benchmarks, validating complex reasoning paths, ensuring data integrity in AI evaluation, generating gold-standard solutions for complex tasks.",
+    "Thinking": "The 'Programmatic Answer Generation' phase of ToolQA's curation process explicitly states: 'implement 1 operators which are functions corresponding to the predefined tools and 2 tool chains which are schemas for composing different operators for different question templates' to 'programmatically extract answers from the reference data'."
+  },
+  {
+    "Pattern Name": "Tool-Use Finetuning",
+    "Problem": "Open-source or less capable LLMs often struggle with complex tool-use instructions, generating correct arguments for tools, and effective planning, even with advanced prompting techniques, leading to frequent errors and suboptimal performance.",
+    "Context": "Improving the proficiency, reliability, and robustness of LLMs in orchestrating and interacting with external tools, especially when direct prompting is insufficient or when adapting models to new toolsets or domains.",
+    "Solution": "Collect high-quality 'tool-use sequences' (demonstrations of successful tool orchestration, including reasoning steps, tool calls, and observations) and use this data to finetune the LLM. This process trains the model to better understand tool descriptions, generate correct arguments, and follow effective tool-use patterns, thereby internalizing tool-use logic.",
+    "Result": "Enhances the LLM's ability to use tools more accurately and robustly, potentially bridging the performance gap between smaller models and larger, proprietary ones, and reducing common tool-use errors like incorrect arguments or data source identification.",
+    "Related Patterns": "Tool-Augmented LLM, ReAct (can be a source for generating finetuning data).",
+    "Uses": "Improving tool-use proficiency of specific LLMs, adapting models to new toolsets or domains, reducing common tool-use errors, enhancing the understanding of complex instructions.",
+    "Thinking": "The conclusion explicitly recommends this: 'These issues could be potentially addressed by finetuning using a collection of tooluse corpora with opensource LLMs.' and 'In the future, we plan to collect high-quality tooluse sequences to finetune opensource LLMs and subsequently evaluating their performance on ToolQA.'"
+  }
+]

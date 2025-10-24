@@ -1,0 +1,18 @@
+Passive goal creator - Analyse users’ articulated prompts through the dialogue interface to preserve interactivity, goal-seeking and efficiency.
+Proactive goal creator	- Anticipate users’ goals by understanding human interactions and capturing the context via relevant tools, to enhance interactivity, goal-seeking and accessibility.
+Prompt/response optimiser - Optimise the prompts/responses according to the desired input or output content and format to provide standardisation, goal alignment, interoperability and adaptability.
+Retrieval augmented generation- Enhance the knowledge updatability of the agents while maintaining data privacy of on-premise foundation model-based agents/systems implementations.
+One-shot model querying - Access the foundation model in a single instance to generate all necessary steps for the plan for cost efficiency and simplicity.
+Incremental model querying - Access the foundation model at each step of the plan generation process to provide supplementary context, improve reasoning certainty and explainability.
+Single-path plan generator- Orchestrate the generation of intermediate steps leading to the achievement of the user’s goal to improve reasoning certainty, coherence and efficiency.
+Multi-path plan generator - Allow multiple choice creation at each intermediate step leading to achieving users’ goals to enhance reasoning certainty, coherence, alignment to human preference and inclusiveness.
+Self-reflection	- Enable the agent to generate feedback on the plan and reasoning process and provide refinement guidance from themselves to improve reasoning certainty, explainability, continuous improvement and efficiency.
+Cross-reflection - Use different agents or foundation models to provide feedback and refine the generated plan and reasoning process for better reasoning certainty, explainability, inclusiveness and scalability.
+Human reflection - Collect feedback from humans to refine the plan and reasoning process, to effectively align with human preference, improving contestability and effectiveness.
+Voting-based cooperation - Enable free opinions expression across agents and reach consensus by submitting their votes to preserve fairness, accountability and collective intelligence.
+Role-based cooperation -Assign assorted roles, and finalise decisions in accordance with the roles of agents for to facilitate division of labour, fault tolerance, scalability and accountability.
+Debate-based cooperation - Provide and receive feedback across multiple agents adjusts the thoughts and behaviours during the debate with other agents until a consensus is reached to improve adaptability, explainability and critical thinking.
+Multimodal guardrails	- Control the inputs and outputs of foundation models to meet specific requirements such as user requirements, ethical standards, and laws to enhance robustness, safety, standard alignment, and adaptability.
+Tool/agent registry - Maintain a unified and convenient source to select diverse agents and tools to improve discoverability, efficiency, tool appropriateness and scalability.
+Agent adapter	- Provide interface to connect the agent and external tools for task completion, ensuring interoperability and adaptability, and reduce development cost.
+Agent evaluator - Perform testing to assess the agent regarding diverse requirements and metrics, ensuring the functional suitability, adaptability with improved flexibility.

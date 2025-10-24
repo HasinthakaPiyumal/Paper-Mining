@@ -1,0 +1,52 @@
+[
+  {
+    "Pattern Name": "ReAct (Reasoning and Acting in Language Models)",
+    "Problem": "Large Language Models (LLMs) typically treat reasoning (e.g., Chain-of-Thought prompting) and acting (e.g., action plan generation) as separate topics. This separation leads to issues like hallucination and error propagation in reasoning due to a lack of grounding in the external world, and limits acting capabilities by not supporting abstract reasoning or maintaining a working memory.",
+    "Context": "LLMs have demonstrated impressive performance across tasks in language understanding and interactive decision-making. However, for complex tasks requiring both dynamic reasoning and interaction with external environments, a more synergistic approach is needed to overcome the limitations of isolated reasoning or acting.",
+    "Solution": "Prompt LLMs to generate both verbal reasoning traces (thoughts) and task-specific actions in an interleaved manner. Thoughts help the model induce, track, and update action plans, handle exceptions, and incorporate additional information from external sources. Actions allow the model to interface with and gather information from external environments (e.g., knowledge bases, APIs).",
+    "Result": "Improved human interpretability and trustworthiness, overcomes prevalent issues of hallucination and error propagation, outperforms state-of-the-art baselines in diverse language and decision-making tasks (e.g., HotpotQA, Fever, ALFWorld, WebShop), demonstrates strong generalization from few-shot examples, and enables human-aligned and controllable behavior.",
+    "Related Patterns": "Chain-of-Thought (CoT) Prompting, Act-only Prompting, Inner Monologue, External Tool/Knowledge Base Interaction for LLMs, Sparse Versatile Reasoning for Interactive Agents, Human-in-the-Loop Behavior Correction for LLM Agents, Hybrid Knowledge Integration for LLMs.",
+    "Uses": "Multihop Question Answering (HotpotQA), Fact Verification (Fever), Text-based Games (ALFWorld), Webpage Navigation (WebShop).",
+    "Thinking": "This is the central AI design pattern introduced and detailed in the paper. It describes a novel, general paradigm for combining two core AI capabilities (reasoning and acting) in LLMs to solve complex tasks, directly addressing a fundamental challenge in AI agent design."
+  },
+  {
+    "Pattern Name": "External Tool/Knowledge Base Interaction for LLMs",
+    "Problem": "Large Language Models (LLMs) often suffer from hallucination and rely on potentially outdated or incomplete internal knowledge, limiting their factual accuracy, ability to reason reactively, or update their knowledge in real-time.",
+    "Context": "Knowledge-intensive reasoning tasks (e.g., question answering, fact verification) where factual correctness and access to up-to-date, external information are crucial for reliable performance, and where LLMs need to go beyond their static training data.",
+    "Solution": "Augment the LLM's action space to include specific actions for interacting with external tools or knowledge bases (e.g., a Wikipedia API with 'search', 'lookup', 'finish' actions). The LLM generates these actions as part of its interleaved reasoning and acting process, and its reasoning traces guide what information to retrieve and how to use it.",
+    "Result": "Enables LLMs to retrieve accurate and up-to-date knowledge, leading to more grounded, fact-driven, and trustworthy problem-solving trajectories, and overcoming hallucination and error propagation issues prevalent in reasoning-only approaches.",
+    "Related Patterns": "ReAct (uses this as a core component), Retrieval-Augmented Generation (RAG), WebGPT.",
+    "Uses": "HotpotQA, Fever (with a Wikipedia API).",
+    "Thinking": "This pattern describes a specific architectural and interaction design for AI systems, where an LLM actively uses external tools to overcome its inherent knowledge limitations. The text explicitly details the problem (hallucination, outdated facts), the context (knowledge-intensive tasks), the solution (LLM generating API calls), and the result (factual accuracy)."
+  },
+  {
+    "Pattern Name": "Sparse Versatile Reasoning for Interactive Agents",
+    "Problem": "In complex interactive decision-making tasks with large action spaces and long horizons, dense, continuous reasoning can be inefficient or unnecessary. Action-only approaches lack high-level planning and working memory, while limited 'inner monologue' approaches may not provide sufficient abstract reasoning.",
+    "Context": "Interactive decision-making tasks (e.g., text-based games, web navigation) that require agents to plan, track subgoals, explore systematically, and leverage commonsense knowledge effectively, often with sparse rewards.",
+    "Solution": "Integrate reasoning traces (thoughts) into the agent's trajectory, but allow the Large Language Model (LLM) to decide the asynchronous and sparse occurrence of these thoughts. Thoughts are generated only when most relevant, serving purposes like decomposing task goals, tracking subgoal completion, determining the next subgoal, or injecting commonsense knowledge.",
+    "Result": "Improves goal decomposition, subgoal tracking, and effective exploration. Leads to consistent advantages over action-only baselines and outperforms imitation/reinforcement learning methods by enabling more informed and adaptive acting.",
+    "Related Patterns": "ReAct (this is a specific application of ReAct's reasoning component), Inner Monologue (contrasted as being less flexible).",
+    "Uses": "Text-based Games (ALFWorld), Webpage Navigation (WebShop).",
+    "Thinking": "This pattern addresses the strategic application of reasoning within an interactive AI agent, optimizing the 'when' and 'how much' of reasoning to improve performance in dynamic environments. It's about efficient and effective cognitive control for AI, distinguishing itself from simpler 'inner monologue' approaches."
+  },
+  {
+    "Pattern Name": "Human-in-the-Loop Behavior Correction for LLM Agents",
+    "Problem": "Large Language Model (LLM) agents can exhibit undesirable behaviors (e.g., hallucination, repetitive actions, getting stuck) that are difficult to correct on-the-fly using traditional methods like changing model parameters or editing numerous actions.",
+    "Context": "Interactive AI systems where human interpretability, trustworthiness, and real-time control over the agent's decision-making process are desired, especially when the agent's internal reasoning is exposed.",
+    "Solution": "Leverage the interpretability of the LLM agent's verbal reasoning traces (thoughts) by allowing a human to inspect and edit these thoughts during execution. By modifying a few key thoughts, the human can drastically alter the agent's subsequent reasoning and actions to align with desired behavior.",
+    "Result": "Enables new forms of human-machine collaboration, simplifies the correction of agent behavior (editing thoughts is significantly easier than changing many actions or model parameters), and allows for dynamic modification of the model's internal beliefs or reasoning styles.",
+    "Related Patterns": "ReAct (enables this), Human-AI Collaboration, Interactive AI.",
+    "Uses": "ALFWorld (demonstrated).",
+    "Thinking": "This is an AI interaction design pattern focused on improving the controllability and alignment of AI agents by making their internal 'thinking' transparent and editable by humans. It's a direct application of ReAct's interpretability feature for human oversight."
+  },
+  {
+    "Pattern Name": "Hybrid Knowledge Integration for LLMs",
+    "Problem": "Relying solely on an LLM's internal knowledge (e.g., Chain-of-Thought) can lead to hallucinated facts and outdated information, while purely external retrieval-based approaches (e.g., Act-only or ReAct without internal reasoning) might lack sophisticated reasoning structure or fail if retrieval is non-informative.",
+    "Context": "Knowledge-intensive reasoning tasks (e.g., question answering, fact verification) that demand both robust, structured reasoning and access to accurate, up-to-date factual information, where neither internal nor external knowledge alone is sufficient for optimal performance.",
+    "Solution": "Combine different LLM prompting methods that leverage both internal knowledge (e.g., Chain-of-Thought with Self-Consistency for reasoning structure) and external knowledge (e.g., ReAct for grounded interaction with external APIs). Implement heuristics to dynamically switch between these methods based on their strengths and weaknesses or when one method fails (e.g., back off to external retrieval if internal knowledge is uncertain, or vice-versa).",
+    "Result": "Achieves superior overall performance by synergistically leveraging the strengths of both internal and external knowledge, significantly and consistently outperforming methods that rely on either source in isolation.",
+    "Related Patterns": "ReAct, Chain-of-Thought (CoT) Prompting, Self-Consistency (CoTSC), External Tool/Knowledge Base Interaction for LLMs, Retrieval-Augmented Generation (RAG).",
+    "Uses": "HotpotQA, Fever.",
+    "Thinking": "This is a meta-pattern for combining different AI reasoning and knowledge acquisition strategies to achieve more robust and accurate performance, addressing the limitations of single-source knowledge. The text explicitly proposes and evaluates this combination strategy."
+  }
+]

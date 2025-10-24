@@ -1,0 +1,204 @@
+[
+  {
+    "Pattern Name": "Agent-Computer Interface (ACI)",
+    "Problem": "Language Model (LM) agents struggle to reliably take actions and interpret feedback in existing human-designed interfaces (e.g., Linux shell), leading to substantial performance deficits in complex tasks like software engineering.",
+    "Context": "LM agents are increasingly used to automate complicated tasks in digital environments. Existing interfaces (APIs, UIs) are designed for software or humans, not specifically for LM agents, who represent a new category of end users with their own needs and abilities (e.g., lack visual understanding, fixed cost for context, sensitivity to distracting information).",
+    "Solution": "Introduce an abstraction layer between the LM agent and the computer, called the Agent-Computer Interface (ACI). This interface is specially built for LM agents, shaping the actions, their documentation, and environment feedback to complement an LM's limitations and abilities. It specifies available commands, feedback format, and manages interaction history.",
+    "Result": "Substantially enhances an agent's ability to interact with computer environments, leading to state-of-the-art performance on complex tasks like SWEbench (e.g., SWEagent with GPT4 Turbo achieves a 12.47% pass@1 rate, far exceeding previous non-interactive systems). It improves LM agent performance without modifying the underlying LM's weights.",
+    "Related Patterns": [
+      "LM-Friendly Commands",
+      "Compact and Efficient Actions",
+      "Informative and Concise Feedback",
+      "Guardrails for Error Recovery",
+      "Context Management (History Processing)"
+    ],
+    "Uses": "The SWEagent system for automated software engineering. Applicable to any domain where LM agents interact with digital environments (e.g., web navigation, computer control, code generation).",
+    "Thinking": "This is the overarching concept explicitly introduced and defined in the paper as a 'new category of end user' and an 'abstraction layer' to 'enhance the LM agent's abilities'. It's the central theme and the primary contribution of the research."
+  },
+  {
+    "Pattern Name": "LM-Friendly Commands",
+    "Problem": "Many existing commands (e.g., bash commands) have complex documentation with dozens of options, making them difficult for LM agents to understand and use reliably, increasing the need for extensive demonstrations or fine-tuning.",
+    "Context": "LM agents interact with digital environments through commands. LMs benefit from clear, unambiguous instructions and struggle with overly complex or verbose options, which can lead to errors or inefficient usage.",
+    "Solution": "Design commands that are simple, easy to understand, and have concise documentation with few options. This principle guides the creation of specialized commands within the ACI.",
+    "Result": "Reduces the cognitive load on the LM agent, making commands easier to use reliably and reducing the chance of mistakes or the need for extensive demonstrations or fine-tuning.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Compact and Efficient Actions"
+    ],
+    "Uses": "SWEagent's custom commands such as `findfile`, `searchfile`, `searchdir`, `open`, `goto`, `scrolldown`, `scrollup`, `edit`, `create`, and `submit`, all designed with simplicity in mind.",
+    "Thinking": "Explicitly listed as 'Design Principle 1' in Section 2: 'Actions should be simple and easy to understand for agents.' The problem and desired outcome are directly stated in relation to bash commands."
+  },
+  {
+    "Pattern Name": "Compact and Efficient Actions",
+    "Problem": "A design with many simple actions that must be composed across multiple turns for a higher-order operation to take effect leads to inefficient agent behavior, exhausting context windows or cost budgets. For example, multi-line edits in a Linux shell are cumbersome and error-prone.",
+    "Context": "LM agents operate in a turn-based interaction model, where each action incurs cost and consumes context. Higher-order operations (e.g., file editing, navigation, complex searches) are common and critical for task completion.",
+    "Solution": "Consolidate important operations (e.g., file navigation, editing) into as few actions as possible, allowing agents to make meaningful progress towards a goal in a single step. This avoids the need for complex multi-turn compositions.",
+    "Result": "Agents can perform complex operations more efficiently, reducing the number of turns, saving context, and preventing budget exhaustion. For example, SWEagent's `edit` command allows multi-line edits in a single step, significantly improving performance compared to restrictive `No edit` settings (18.0% vs 10.3% resolved rate).",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "LM-Friendly Commands",
+      "Consolidated File Editor",
+      "Summarized Search Interface"
+    ],
+    "Uses": "SWEagent's `edit` command for multi-line file replacement, and its search commands (`findfile`, `searchfile`, `searchdir`) which suppress verbose results and suggest more specific queries to avoid exhaustive inspection.",
+    "Thinking": "Explicitly listed as 'Design Principle 2' in Section 2: 'Actions should be compact and efficient.' The text provides clear examples (editing, search) and ablation study results to demonstrate its impact."
+  },
+  {
+    "Pattern Name": "Informative and Concise Feedback",
+    "Problem": "Overly verbose or uninformative environment feedback can flood an LM agent's context window with irrelevant details, harm performance, and make it difficult for the agent to understand the state of the application or the effects of its actions. Conversely, no feedback (silent operations) can cause confusion.",
+    "Context": "LM agents have fixed context window sizes and computational costs associated with processing all content. They need to understand the environment state and the effects of their actions to plan subsequent steps effectively.",
+    "Solution": "Provide high-quality feedback that offers substantive information about the current environment state and the effect of recent actions, *without unnecessary details*. This includes updating the agent about revised content after an edit, or explicitly stating when a command ran successfully but produced no output.",
+    "Result": "Improves agent understanding of the environment, helps in observing the immediate effects of actions, and reduces distracting context, leading to more effective interaction cycles and better performance.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context Management (History Processing)",
+      "Interactive File Viewer"
+    ],
+    "Uses": "SWEagent's file viewer automatically displaying updated content after an `edit` command, the explicit message 'Your command ran successfully and did not produce any output' for silent commands, and summarized search results that avoid verbosity.",
+    "Thinking": "Explicitly listed as 'Design Principle 3' in Section 2: 'Environment feedback should be informative but concise.' The problem (distracting context, fixed cost) and solution (substantive info, no unnecessary details) are clearly articulated."
+  },
+  {
+    "Pattern Name": "Guardrails for Error Recovery",
+    "Problem": "LM agents, like humans, make mistakes (e.g., syntax errors during editing, overly broad search queries) and can struggle to recover from these errors, leading to cascading failures or inefficient behavior that exhausts budget or context.",
+    "Context": "LM agents operate in environments where actions can introduce errors, and LMs may not inherently possess robust error detection and recovery mechanisms, often repeating the same mistake or getting stuck.",
+    "Solution": "Build in guardrails that automatically detect common mistakes and provide specific, actionable feedback to the agent, allowing it to recognize and quickly correct errors. Invalid actions (e.g., syntax-error-inducing edits) can be discarded and reverted.",
+    "Result": "Mitigates error propagation, hastens recovery from mistakes, and significantly improves performance. For example, SWEagent's integrated code linter for the `edit` function prevents syntax errors from being applied, improving performance from 15.0% (without linting) to 18.0% resolved rate.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Informative and Concise Feedback",
+      "Consolidated File Editor",
+      "Summarized Search Interface"
+    ],
+    "Uses": "SWEagent's code linter integrated into the `edit` function, which alerts the agent of syntax errors, shows the proposed and original code, and discards invalid edits. Search commands that suppress verbose results and suggest more specific queries when too many matches are found.",
+    "Thinking": "Explicitly listed as 'Design Principle 4' in Section 2: 'Guardrails mitigate error propagation and hasten recovery.' The problem, solution, and strong empirical evidence from ablation studies are provided."
+  },
+  {
+    "Pattern Name": "Context Management (History Processing)",
+    "Problem": "The cumulative history of interactions (commands and observations) can quickly exceed an LM's fixed context window, leading to 'lost in the middle' phenomena, increased computational cost, and the presence of outdated or irrelevant information.",
+    "Context": "LM agents interact iteratively, generating a long history of turns. LMs have finite context windows and processing costs, and their performance can degrade with excessive or irrelevant context.",
+    "Solution": "Implement mechanisms to manage the history of previous commands and observations, formatting and combining them with high-level instructions into a single input for the LM at each step. This includes collapsing old observations into single-line placeholders, omitting most content from prior observations, and removing malformed generation attempts from history.",
+    "Result": "Keeps agent context concise and informative, maintains essential information about the plan and action history, reduces unnecessary context, allows for more interaction cycles, avoids showing outdated file information, and helps prevent future malformed generations. Ablation studies show 'Last 5 Obs' (18.0%) outperforms 'Full history' (15.0%).",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Informative and Concise Feedback"
+    ],
+    "Uses": "SWEagent's history processors that collapse observations preceding the last 5 into a single line summary, and the removal of malformed generation attempts from history (except the first error message) to 'denoise' the context.",
+    "Thinking": "Described as a 'principal component' of SWEagent in Section 3 and detailed in Appendix A.1. The problem (context window limits, outdated info) and solution (collapsing, denoising) are described, with ablation evidence."
+  },
+  {
+    "Pattern Name": "Consolidated File Editor",
+    "Problem": "Editing files in traditional shell environments (e.g., using `sed` or redirection) is restrictive, error-prone, requires multiple commands for multi-line edits, lacks immediate feedback, and struggles with arithmetic for line numbers, leading to inefficient and confusing workflows for LM agents.",
+    "Context": "LM agents need to create and modify code files as a core part of software engineering tasks. Traditional command-line tools are designed for human users and are not optimized for LM agent capabilities, which benefit from structured input and immediate feedback.",
+    "Solution": "Provide a specialized `edit` command that works in conjunction with an interactive file viewer. This command allows agents to replace a specific range of lines with replacement text in a single step, automatically displays updated content, and integrates guardrails like a code linter.",
+    "Result": "Simplifies the editing process, enables efficient multi-line edits in a single action, provides immediate visual feedback on changes, and mitigates error propagation, significantly improving agent performance (SWEagent's `edit` with linting: 18.0% vs. `No edit`: 10.3%).",
+    "Related Patterns": [
+      "Compact and Efficient Actions",
+      "LM-Friendly Commands",
+      "Informative and Concise Feedback",
+      "Guardrails for Error Recovery",
+      "Interactive File Viewer"
+    ],
+    "Uses": "SWEagent's `edit` command, which takes start line, end line, and replacement text, and its integrated code linter that checks for syntax errors before applying changes.",
+    "Thinking": "Described as a 'principal component' in Section 3 ('File editor') and detailed in Appendix A.1. The problem with 'Shell-only' editing is explicitly stated, and the `edit` command is presented as the solution, with clear results from ablation studies."
+  },
+  {
+    "Pattern Name": "Summarized Search Interface",
+    "Problem": "Traditional search tools (e.g., `grep`, `find`) in a Linux shell can produce an overwhelming number of irrelevant results, flooding the LM agent's context window. Iterative search interfaces (like Vim/VSCode's next/prev) can lead to inefficient exhaustive inspection behavior, exhausting context or budget.",
+    "Context": "LM agents need to efficiently locate relevant files and content within large codebases. LMs struggle with processing excessive information and can fall into repetitive loops, especially when presented with many similar results.",
+    "Solution": "Provide specialized search commands (`findfile`, `searchfile`, `searchdir`) that output a concise summary of search results (e.g., at most 50 results). If a search exceeds this number, the system suggests a more specific query instead of reporting all results.",
+    "Result": "Encourages efficient searches, prevents context window flooding, reduces inefficient exhaustive search behavior, and improves localization capabilities. SWEagent's Summarized Search (18.0%) significantly outperforms Iterative Search (12.0%) and No Search (15.7%).",
+    "Related Patterns": [
+      "Compact and Efficient Actions",
+      "Informative and Concise Feedback",
+      "LM-Friendly Commands",
+      "Guardrails for Error Recovery"
+    ],
+    "Uses": "SWEagent's `findfile`, `searchfile`, and `searchdir` commands with their result capping and suggestion mechanisms, designed to provide 'LM-friendly commands' and 'efficient searches by suppressing verbose results'.",
+    "Thinking": "Described as a 'principal component' in Section 3 ('Search and navigation') and detailed in Appendix A.1. The ablation study in Section 5.1 ('Human user interfaces are not always suitable as agent-computer interfaces') directly compares 'Summarized' vs. 'Iterative' vs. 'No search' and provides strong evidence for this pattern."
+  },
+  {
+    "Pattern Name": "Interactive File Viewer",
+    "Problem": "Standard command-line tools for viewing files (e.g., `cat`, `head`, `tail`) can flood the LM agent's context with irrelevant content, lack intuitive in-file navigation, and are stateless, making it difficult for agents to focus on relevant code snippets or perform precise edits.",
+    "Context": "LM agents need to inspect file content, understand code structure, and navigate within files to identify issues and plan edits. They benefit from a focused view and contextual information.",
+    "Solution": "Provide an interactive file viewer that presents a window of a limited number of lines (e.g., 100 lines) at a time. It displays contextual information (full path, total lines, lines omitted above/below, line numbers) and offers commands to move the window (`scrolldown`, `scrollup`) or access specific lines (`goto`). It also automatically updates after edits.",
+    "Result": "Provides a focused view of files, facilitates fine-grained in-file navigation and code localization, enables precise editing commands, and reduces the need for repetitive or error-prone actions. Performance is sensitive to window size (100 lines: 18.0% vs. 30 lines: 14.3% or Full file: 12.7%).",
+    "Related Patterns": [
+      "Informative and Concise Feedback",
+      "Consolidated File Editor",
+      "LM-Friendly Commands"
+    ],
+    "Uses": "SWEagent's `open`, `scrolldown`, `scrollup`, and `goto` commands, and its display format with prepended line numbers and indicators of omitted lines.",
+    "Thinking": "Described as a 'principal component' in Section 3 ('File viewer') and detailed in Appendix A.1. The problem with 'Shell-only' viewing is explicitly stated, and the interactive viewer is presented as the solution. Ablation study in Table 3 shows the impact of window size."
+  },
+  {
+    "Pattern Name": "Reproduction and Localization First",
+    "Problem": "When faced with a software engineering task (e.g., a bug report), an LM agent needs to efficiently understand the problem and identify the specific code areas requiring modification. Without a structured approach, agents might make speculative edits or get lost in the codebase, leading to inefficient problem-solving.",
+    "Context": "LM agents are given a problem description (e.g., GitHub issue) and access to a codebase. The task requires identifying, understanding, and fixing issues, often starting from a high-level description.",
+    "Solution": "Agents typically begin their problem-solving trajectory by either writing reproduction code to confirm the bug's existence and behavior or by localizing the issue's cause to specific files and lines of code. This often involves creating a new file, adding reproduction code, running it, and then using search and navigation tools to zoom in on problematic areas.",
+    "Result": "Establishes a clear understanding of the bug, narrows down the scope of the problem, and guides subsequent editing and testing efforts. This pattern is observed as the dominant initial steps in successful trajectories, leading to more targeted and effective solutions.",
+    "Related Patterns": [
+      "Edit-Execute Loop",
+      "Summarized Search Interface",
+      "Interactive File Viewer"
+    ],
+    "Uses": "SWEagent's observed behavior where trajectories start with the `create`, `edit`, `python` triplet (reproduction) or sequences like `findfile`, `searchdir`, `open` (localization), as shown in Figure 7 and Table 8.",
+    "Thinking": "Identified from 'Analysis of Agent Behavior' (Section 5.2) and Figure 7. The text explicitly states: 'SWEagent usually begins with either writing reproduction code and/or localizing the issues cause to specific lines of code.' This describes a common, effective *strategy* or *behavioral pattern* of the agent."
+  },
+  {
+    "Pattern Name": "Edit-Execute Loop",
+    "Problem": "After identifying a potential fix or making an initial code change, an LM agent needs to verify if the proposed changes resolve the issue and maintain existing desirable behavior. Without iterative testing, agents might introduce new bugs, fail to fully address the original problem, or struggle to debug their own changes.",
+    "Context": "LM agents are performing software engineering tasks that involve modifying code. Changes need to be validated against tests or reproduction scripts to ensure correctness and prevent regressions.",
+    "Solution": "After initial reproduction and localization, the agent enters a recurring cycle of making edits to the code and then running reproduction scripts or existing tests to evaluate the effects of these changes. This loop continues, often for several turns, until the issue is resolved and tests pass.",
+    "Result": "Facilitates iterative refinement of code changes, provides immediate feedback on the correctness and impact of edits, and leads to more well-formed and successful subsequent edits. This pattern is crucial for debugging and ensuring the quality of the solution.",
+    "Related Patterns": [
+      "Consolidated File Editor",
+      "Guardrails for Error Recovery",
+      "Reproduction and Localization First",
+      "Informative and Concise Feedback"
+    ],
+    "Uses": "SWEagent's observed behavior where, from turn 5 onwards, the most frequent actions for solved instances are `edit` and `python`/`pytest`, often repeating for several turns, as shown in Figure 7 and Table 8.",
+    "Thinking": "Identified from 'Analysis of Agent Behavior' (Section 5.2) and Figure 7. The text explicitly states: 'From the fifth turn onwards the distribution of actions per turn can be generally described as alternating edit and python/pytest actions.' This describes a common, effective *strategy* or *behavioral pattern* of the agent."
+  },
+  {
+    "Pattern Name": "Structured Thought-Action Prompting",
+    "Problem": "LM agents need a clear and consistent mechanism to articulate their reasoning and intended actions, and for the system to reliably parse and act upon these. Unstructured or inconsistent output formats lead to parsing errors, inefficient agent operation, and difficulty in tracking the agent's internal state.",
+    "Context": "LM agents interact with environments in an iterative loop, typically following a Thought-Action-Observation (e.g., ReAct) paradigm. The system needs to interpret the agent's output to execute commands and update the environment.",
+    "Solution": "Design the agent's response format to explicitly separate and structure its 'thought' (reasoning, planning) and 'action' (command to execute). This format is communicated to the LM in the system prompt (e.g., using JSON, XML delimiters, or specific markdown blocks). The system then parses this structured output. Mechanisms are in place to detect and prompt for correction of malformed generations.",
+    "Result": "Ensures consistent, machine-parsable output from the LM agent, enabling reliable execution of commands and clear logging of the agent's decision-making process. It helps the agent maintain a coherent problem-solving flow and recover from formatting errors.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Informative and Concise Feedback",
+      "Context Management (History Processing)"
+    ],
+    "Uses": "SWEagent's requirement for the LM to output `discussion` (thought) and `command` (action) fields in a specific format, as detailed in the System Prompt (Figure 27) and Appendix C.",
+    "Thinking": "The paper mentions 'At each step SWEagent generates a thought and a command... ReAct Yao et al. 62' in Section 3. Appendix C, 'Prompt Workflow' and 'System Template' (Figure 27) explicitly detail the 'RESPONSE FORMAT' requiring `discussion` and `command` fields. This is a specific AI design choice for how the LM *communicates* its internal state and intent to the system, which is crucial for agentic behavior."
+  },
+  {
+    "Pattern Name": "Demonstration-Based Learning",
+    "Problem": "LM agents, especially in complex, multi-step tasks like software engineering, may initially struggle with the correct usage of specialized commands, the expected interaction flow, or effective problem-solving strategies, leading to suboptimal performance or frequent errors.",
+    "Context": "Large Language Models exhibit strong in-context learning capabilities, meaning they can learn desired behaviors and patterns from examples provided within their input prompt, without explicit fine-tuning.",
+    "Solution": "Provide the LM agent with a 'demonstration' – a complete, successful trajectory of an agent solving a similar task instance. This demonstration is included in the initial prompt, typically after the system instructions and before the actual task. It serves as an in-context example of how to correctly use the interface, apply commands, and navigate the problem-solving process.",
+    "Result": "Improves the agent's understanding of the task, command usage, and interaction protocols, leading to a reduction in errant responses and a slight but measurable improvement in overall task resolution rates (e.g., ablation shows 18.0% resolved with demo vs. 16.3% without).",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Context Management (History Processing)"
+    ],
+    "Uses": "SWEagent's optional inclusion of a successful trajectory from the development set in the initial prompt, as described in the 'Demonstration Template' (Figure 28) and supported by ablation studies (Table 3).",
+    "Thinking": "Section C, 'Demonstration Template' (Figure 28) explicitly describes this. Table 3 ablation study includes 'wo demo' (without demonstration) showing a performance drop (16.3% vs 18.0%), indicating its positive impact. This is a specific AI technique (in-context learning) applied to agent design."
+  },
+  {
+    "Pattern Name": "Problem-Solving Tips and Pitfall Avoidance",
+    "Problem": "LM agents, even with well-designed interfaces, can still fall into common, inefficient, or erroneous problem-solving behaviors (e.g., repeatedly trying a failed command, inefficient navigation, making overly broad searches, neglecting bug reproduction). These behaviors waste tokens, time, and can lead to task failure.",
+    "Context": "LMs are capable of processing and internalizing natural language instructions and advice. Explicit, actionable guidance can effectively steer their strategic decision-making during complex tasks.",
+    "Solution": "Integrate a set of 'IMPORTANT TIPS' into the agent's initial instructions (e.g., within the instance template). These tips are derived from observed common failure modes and provide explicit advice on recommended strategies (e.g., 'Always start by trying to replicate the bug') and warnings against common pitfalls (e.g., 'A command that did not work once will not work the second time unless you modify it').",
+    "Result": "Guides the agent towards more effective and efficient problem-solving strategies, reduces the frequency of observed errors and inefficient behaviors, and helps the agent recover from or avoid common mistakes, thereby improving overall task performance and resource utilization.",
+    "Related Patterns": [
+      "Agent-Computer Interface (ACI)",
+      "Informative and Concise Feedback",
+      "LM-Friendly Commands",
+      "Guardrails for Error Recovery"
+    ],
+    "Uses": "SWEagent's 'IMPORTANT TIPS' section in the instance prompt (Figure 29), which provides guidance on bug reproduction, command retry logic, efficient navigation (`goto` vs. `scrolldown`), file input search, and careful editing.",
+    "Thinking": "Section C, 'Instance Template' (Figure 29) explicitly details the 'IMPORTANT TIPS' section. The text states: 'These tips were developed manually and iteratively after running SWEagent... we found that such tips did reduce the frequency of errant problem solving strategies'. This is a direct AI design pattern for guiding agent behavior through explicit natural language instructions."
+  }
+]

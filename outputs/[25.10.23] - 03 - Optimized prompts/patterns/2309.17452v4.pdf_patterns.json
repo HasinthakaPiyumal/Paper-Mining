@@ -1,0 +1,121 @@
+[
+  {
+    "Pattern Name": "Tool-Integrated Reasoning Agent (TORA)",
+    "Problem": "Large Language Models (LLMs) struggle with complex mathematical problems because natural language reasoning lacks computational precision and symbolic manipulation capabilities, while purely program-based methods lack nuanced reasoning, planning, and error handling.",
+    "Context": "Applicable when an LLM needs to solve complex, multi-step problems that require both high-level semantic understanding, planning, and abstract reasoning (natural language) as well as precise computation, symbolic manipulation, and algorithmic processing (external tools/programs). The problem domain often involves mathematics, science, or other areas where external computational or symbolic solvers are beneficial.",
+    "Solution": "An agent that synergistically combines natural language reasoning with program-based tool use. The agent generates natural language rationales for semantic analysis and planning. When a sub-task requires precise computation or symbolic manipulation, it generates a program (e.g., Python code) to be executed by external tools (e.g., computation libraries, symbolic solvers). The output from the tool execution is then fed back to the agent, which uses it to continue its natural language reasoning, make adjustments, solve subsequent sub-tasks, or finalize the answer. This process is iterative.",
+    "Result": "Significantly improved performance on challenging mathematical reasoning tasks, outperforming both purely rationale-based and purely program-based approaches. It bridges the gap between open-source and closed-source models in complex domains, enabling LLMs to effectively tackle quantitative tasks.",
+    "Related Patterns": [
+      "Rationale-based Reasoning (CoT)",
+      "Program-based Reasoning (PAL)",
+      "Tool-Augmented Language Models",
+      "Tool-Integrated Reasoning Format",
+      "Interactive Trajectory Curation",
+      "Imitation Learning for Reasoning",
+      "Output Space Shaping",
+      "Iterative Tool-Use Inference"
+    ],
+    "Uses": [
+      "TORA models (7B, 13B, 34B, 70B) solving 10 diverse mathematical reasoning datasets (e.g., MATH, GSM8k, GSMHard).",
+      "TORA7B outperforming WizardMath70B by 22 absolute on the competition-level MATH dataset.",
+      "TORACode 34B achieving competitive results with GPT4 solving problems with programs on MATH."
+    ],
+    "Thinking": "The abstract and introduction clearly define TORA as the core system, emphasizing its dual nature of natural language reasoning and tool integration. Section 2.1 'Overview' details its operational flow, confirming it as the central pattern."
+  },
+  {
+    "Pattern Name": "Tool-Integrated Reasoning Format",
+    "Problem": "Existing reasoning formats (pure natural language or pure program code) are suboptimal for complex problems requiring both abstract reasoning and precise computation. Natural language struggles with exactness, while pure code lacks flexibility for planning and semantic analysis.",
+    "Context": "When designing the interaction and reasoning flow for an AI agent that needs to leverage both symbolic/computational tools and natural language understanding. This format is crucial for both data annotation and model inference.",
+    "Solution": "A structured reasoning format that interleaves natural language rationales with program-based tool use. The format typically involves: 1. Rationale Generation: The model produces natural language text (r_i) for analysis, planning, or abstract reasoning. 2. Program Generation: When a computational or symbolic task arises, the model generates a program (a_i) based on the rationale. 3. Tool Execution: The generated program (a_i) is executed by an external tool, yielding an output (o_i). 4. Trajectory Update: The execution output (o_i) is fed back into the model's context, allowing it to generate further rationales or programs. This sequence (r_1, a_1, o_1, r_2, a_2, o_2, ..., r_n) forms a complete reasoning trajectory.",
+    "Result": "Enables a synergistic combination of language's analytical prowess and tools' computational efficiency. Leads to significant performance improvements over single-modality reasoning formats (rationale-only or program-only). Improves the model's ability to plan, self-correct, and finalize answers.",
+    "Related Patterns": [
+      "Rationale-based Reasoning (CoT)",
+      "Program-based Reasoning (PAL)",
+      "Tool-Integrated Reasoning Agent",
+      "Interactive Trajectory Curation",
+      "Iterative Tool-Use Inference"
+    ],
+    "Uses": [
+      "The core reasoning format used by TORA agents (depicted in Figure 2c).",
+      "Used for curating the TORACORPUS dataset via GPT4 prompting.",
+      "Demonstrated to consistently surpass Rationale-only and Program-only approaches in ablation studies (Figure 4), achieving substantial improvements (e.g., 29.0% over Rationale-only for LLaMA2 models)."
+    ],
+    "Thinking": "The paper explicitly introduces 'our proposed Tool-integrated Reasoning format' and dedicates Figure 2c to illustrating it. Sections 2.1 and 3.5.1 further elaborate on its structure and benefits, highlighting its effectiveness compared to other formats."
+  },
+  {
+    "Pattern Name": "Interactive Trajectory Curation",
+    "Problem": "Training tool-integrated agents requires high-quality, interactive tool-use trajectories, which are typically absent in existing datasets that are either natural language rationales or pure code. Manually creating such trajectories is labor-intensive and prone to errors.",
+    "Context": "When developing AI agents that interact with external tools and require training data reflecting this interactive behavior. This is particularly relevant for complex, multi-step problem-solving domains where human-like reasoning with tools is desired.",
+    "Solution": "A method for automatically generating interactive tool-use trajectories using a powerful, pre-trained LLM (e.g., GPT4) as a data synthesizer. The process involves: 1. Prompt Curation: Designing instructions and few-shot examples that demonstrate the desired interleaved reasoning format (natural language rationale, program, tool output). 2. Iterative Inference: The LLM is prompted to generate a reasoning trajectory step-by-step. For each step, it generates a rationale, then a program if needed. The program is executed by external tools, and its output is fed back to the LLM to inform subsequent steps. This continues until a stopping condition (e.g., answer found, max rounds reached). 3. Trajectory Sampling & Filtering: Employing sampling strategies (e.g., nucleus sampling) to generate multiple diverse trajectories per problem, especially for cases where greedy decoding fails. Valid trajectories (correct answers, no tool-use errors) are retained to form the training corpus.",
+    "Result": "Creation of high-quality, interactive tool-use datasets (e.g., TORACORPUS) that enable effective training of tool-integrated reasoning agents. Overcomes the data scarcity challenge for this specific type of interactive reasoning, achieving high annotation success rates (e.g., 98.2% for GSM8k and 83.1% for MATH).",
+    "Related Patterns": [
+      "Tool-Integrated Reasoning Format",
+      "Imitation Learning for Reasoning",
+      "Output Space Shaping",
+      "Knowledge Distillation",
+      "Iterative Tool-Use Inference"
+    ],
+    "Uses": [
+      "Creation of the TORACORPUS dataset on GSM8k and MATH training sets using GPT4.",
+      "GPT4 generating trajectories following Algorithm 1, which outlines the iterative process of rationale generation, program generation, and tool execution.",
+      "Employing nucleus sampling with a sample size of 10 to recall up to 4 valid trajectories per question for unsolved problems."
+    ],
+    "Thinking": "Section 2.2 is entirely dedicated to this process, detailing the problem (lack of interactive data), the approach (using GPT4), the steps (prompt curation, inference procedure, trajectory sampling), and the outcome (TORACORPUS)."
+  },
+  {
+    "Pattern Name": "Imitation Learning for Reasoning",
+    "Problem": "Training LLMs to perform complex, multi-step reasoning, especially when involving external tool interactions, is challenging. Traditional supervised fine-tuning on simple input-output pairs or even Chain-of-Thought rationales may not capture the full interactive reasoning process.",
+    "Context": "When a high-quality dataset of desired reasoning trajectories (including intermediate steps, tool calls, and tool outputs) is available, typically generated by a more capable model or human experts. The goal is to transfer this reasoning capability to a smaller or less capable student model.",
+    "Solution": "Fine-tuning a language model on a curated corpus of interactive reasoning trajectories using a negative log-likelihood (NLL) loss. The model learns to predict the next token in the trajectory, conditioned on the problem and the preceding steps (rationales, programs, tool outputs). This effectively teaches the model to 'imitate' the demonstrated reasoning process, including when and how to use tools.",
+    "Result": "Enables student models to acquire complex reasoning behaviors, including interactive tool use, from expert demonstrations. Achieves state-of-the-art performance for the given task, even with relatively small datasets, by leveraging the structured nature of the trajectories.",
+    "Related Patterns": [
+      "Interactive Trajectory Curation",
+      "Output Space Shaping",
+      "Knowledge Distillation",
+      "Tool-Integrated Reasoning Agent"
+    ],
+    "Uses": [
+      "Training TORA models on the TORACORPUS dataset by minimizing negative log-likelihood loss on the trajectory conditioned on the problem (Equation 4).",
+      "Achieving state-of-the-art mathematical reasoning performance for open-source models despite the small scale of TORACORPUS."
+    ],
+    "Thinking": "Section 2.3 explicitly describes 'Imitation Learning' as the first step in TORA's training pipeline, detailing the objective function and its immediate results. Appendix A also categorizes this under 'Knowledge Distillation'."
+  },
+  {
+    "Pattern Name": "Output Space Shaping",
+    "Problem": "Relying solely on imitation learning from a curated dataset, especially one with limited diversity (e.g., often only one valid trajectory per problem), can restrict a model's output space. This makes the model inflexible in exploring plausible alternative reasoning trajectories during testing and can lead to improper tool-use behavior.",
+    "Context": "After an initial imitation learning phase, when the trained model exhibits good performance but lacks robustness, diversity, or flexibility in its reasoning paths, or still makes improper tool-use errors. This is particularly relevant for complex tasks with multiple valid solution paths.",
+    "Solution": "A post-imitation learning refinement strategy that expands and corrects the model's learned output space. It involves: 1. Diverse Trajectory Sampling: Using the initially trained model (M) to sample a large number of diverse trajectories for each training question (e.g., via nucleus sampling). 2. Valid Trajectory Retention: Keeping sampled trajectories that lead to correct answers and have no tool-use errors. 3. Invalid Trajectory Correction: For sampled trajectories with wrong answers or errors, identifying plausible preceding portions and using a more capable 'teacher model' (M') to complete and correct the subsequent steps, generating new valid trajectories. 4. Retraining: Retraining the model (M) on a combined dataset consisting of the original curated corpus, the newly sampled valid trajectories, and the teacher-corrected trajectories. This process 'shapes' the model's output space to be more diverse and robust.",
+    "Result": "Significantly boosts reasoning performance, encourages diversity in plausible reasoning steps, and mitigates improper tool-use behavior. Leads to substantial absolute improvements in accuracy (e.g., 3.4% for GSM8k and 4.0% for MATH on average), especially for smaller models, and enables models to achieve higher performance thresholds (e.g., exceeding 50% on MATH for the first time with open-source models).",
+    "Related Patterns": [
+      "Imitation Learning for Reasoning",
+      "Interactive Trajectory Curation",
+      "Knowledge Distillation",
+      "Tool-Integrated Reasoning Agent"
+    ],
+    "Uses": [
+      "Refining TORA models after initial imitation learning on TORACORPUS.",
+      "CodeLLaMA34B serving as a teacher model to correct invalid trajectories for CodeLLaMA series (7B to 34B) trained with imitation learning.",
+      "Enabling open-source models to attain an accuracy exceeding 50% on the competition-level MATH dataset.",
+      "Ablation studies demonstrating its effectiveness across different model sizes and datasets (Figure 5, Table 3)."
+    ],
+    "Thinking": "Section 2.3 explicitly introduces 'Output Space Shaping' as the second step in TORA's training. It clearly states the problem (restricted output space, inflexibility), the solution (sampling, correction with a teacher model), and the significant results. The ablation study (3.5.2) further quantifies its impact."
+  },
+  {
+    "Pattern Name": "Iterative Tool-Use Inference",
+    "Problem": "How can a language model dynamically and adaptively solve complex, multi-step problems by combining natural language reasoning with external tool execution, especially when the sequence of operations is not predetermined?",
+    "Context": "An LLM has been trained to understand and generate an interleaved format of natural language rationales and program-based tool calls. It needs a robust procedure to apply this learned capability at inference time to solve new problems. The problems often require multiple rounds of reasoning, computation, and potential self-correction.",
+    "Solution": "The inference process operates in an iterative loop for a maximum number of rounds. In each round: 1. Rationale Generation: The LLM generates a natural language rationale (r_i) based on the problem (q) and the accumulated trajectory (τ_{i-1}) from previous rounds. 2. Stopping Criteria Check: The generated rationale (r_i) is checked for a stopping condition (e.g., containing the final answer). If met, the process terminates. 3. Program Generation: If the stopping condition is not met, the LLM generates a program (a_i) for external tool use, guided by the current rationale and trajectory. 4. Tool Execution: The generated program (a_i) is executed by external tools (E), yielding an output (o_i). 5. Trajectory Update: The current rationale (r_i), program (a_i), and tool output (o_i) are concatenated and appended to the overall trajectory (τ_i = τ_{i-1} + r_i + a_i + o_i), which then serves as the context for the next iteration.",
+    "Result": "Enables the LLM to perform dynamic, multi-round reasoning and computation, leveraging external tools as needed. This allows for self-correction, adaptive problem-solving, and the ability to tackle problems that require complex sequences of operations, leading to higher accuracy and robustness in domains like mathematical reasoning.",
+    "Related Patterns": [
+      "Tool-Integrated Reasoning Agent",
+      "Tool-Integrated Reasoning Format",
+      "Interactive Trajectory Curation"
+    ],
+    "Uses": [
+      "Algorithm 1 in the paper, which describes the inference procedure for Tool-Integrated Reasoning.",
+      "TORA models applying this procedure to solve mathematical problems, dynamically interleaving rationales and program execution.",
+      "The process used by GPT4 to synthesize high-quality interactive tool-use trajectories during data curation."
+    ],
+    "Thinking": "This pattern describes the algorithmic or operational flow of the agent at runtime, which is a distinct and crucial aspect of its design. It's not just the format, but *how* the agent uses the format in a dynamic, iterative manner to solve problems. Algorithm 1 is a direct representation of this pattern. It's an AI design pattern because it dictates the interaction strategy between the LLM and external tools for problem-solving."
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) struggle with handling long-tail knowledge, providing up-to-date information, and adapting to specific domains/tasks without modifying their weights.",
+    "Context": "An LLM needs to generate answers or content based on a broad, dynamic, or domain-specific knowledge base that is not fully captured in its pre-training data or requires real-time updates.",
+    "Solution": "A pipeline where a dense embedding-based retriever first retrieves top-k chunked contexts from a collection of documents or an external database for a given question. Subsequently, the LLM reads these top-k contexts to generate the answer.",
+    "Result": "LLMs can handle long-tail knowledge, provide up-to-date information, and adapt to specific domains and tasks without requiring model weight modifications.",
+    "Related Patterns": "Context Reranking (within RAG), Unified Instruction Tuning for RAG (Ranking and Generation)",
+    "Uses": "Customizing LLMs for knowledge-intensive NLP tasks, providing factual and up-to-date answers, domain adaptation.",
+    "Thinking": "This is the foundational AI pattern explicitly described in the text as a 'widely used technique' for customizing LLMs, outlining a specific architectural approach for AI systems."
+  },
+  {
+    "Pattern Name": "Context Reranking (within RAG)",
+    "Problem": "LLMs are not good at effectively utilizing too many chunked contexts (e.g., top-100), even with long context windows, due to efficiency and accuracy degradation. Relying solely on an initial retrieval model may be inadequate for ensuring high recall of relevant content, as retrievers can struggle with effective local alignments. A tradeoff exists: a smaller 'k' compromises recall, while a larger 'k' introduces irrelevant or noisy context, misleading the LLM.",
+    "Context": "A RAG pipeline where an initial retriever provides a list of top-N candidate contexts, but these contexts may contain irrelevant information or be too numerous for optimal LLM processing.",
+    "Solution": "Introduce an intermediate reranking step. After the initial retriever retrieves top-N contexts, a dedicated ranking mechanism (e.g., an instruction-tuned LLM) calculates relevance scores between the question and these N contexts. It then reranks and selects a refined top-k (where k << N) subset of the most relevant contexts for the LLM's final generation step.",
+    "Result": "Improves the quality of information retrieval by filtering out irrelevant or noisy contexts, leading to higher accuracy of generation and better utilization of the LLM's context window.",
+    "Related Patterns": "Retrieval-Augmented Generation (RAG), Unified Instruction Tuning for RAG (Ranking and Generation)",
+    "Uses": "Enhancing the precision of retrieved contexts in RAG, optimizing context window usage for LLMs, improving generation accuracy.",
+    "Thinking": "The paper introduces this as a novel component of RankRAG, directly addressing limitations of LLM context processing and retriever effectiveness, making it an AI-specific pipeline optimization."
+  },
+  {
+    "Pattern Name": "Unified Instruction Tuning for RAG (Ranking and Generation)",
+    "Problem": "Existing instruction-tuned LLMs for RAG are often optimized only for answer generation from *given* contexts and can be ineffective with poor initial retrieval results. Separate ranking models have limited zero-shot generalization compared to versatile LLMs.",
+    "Context": "An LLM is intended to perform both context relevance assessment (ranking) and answer generation within a RAG framework, and these capabilities are hypothesized to be mutually enhancing.",
+    "Solution": "Instruction-tune a *single* LLM for the dual purpose of context ranking and answer generation. This involves designing specialized training tasks focused on identifying relevant contexts (framed as QA with instruction) and incorporating context-rich QA, retrieval-augmented QA, and ranking datasets into the instruction tuning blend. At inference, the same LLM first reranks retrieved contexts and then generates an answer based on the refined top-k.",
+    "Result": "A single, versatile LLM capable of both high-recall context extraction and high-quality content generation, outperforming models exclusively finetuned on larger amounts of ranking data, and demonstrating strong generalization.",
+    "Related Patterns": "Retrieval-Augmented Generation (RAG), Context Reranking (within RAG), Multi-stage Instruction Tuning, Unified QA Format for Instruction Tuning",
+    "Uses": "Developing more robust and efficient RAG systems, leveraging LLMs' inherent capabilities for relevance assessment, reducing the need for separate expert ranking models.",
+    "Thinking": "This is the core innovation of RankRAG, explicitly described as a 'novel instruction finetuning framework' that unifies two distinct AI tasks (ranking and generation) within one model, representing an AI training paradigm."
+  },
+  {
+    "Pattern Name": "Multi-stage Instruction Tuning",
+    "Problem": "To equip an LLM with both general instruction-following capabilities and specialized RAG capabilities (including context ranking and generation from retrieved contexts), a single-stage tuning might not be optimal or efficient.",
+    "Context": "An LLM needs to be adapted for complex, knowledge-intensive tasks that require both broad instruction adherence and specific RAG functionalities.",
+    "Solution": "Employ a two-stage instruction tuning framework: 1) Stage I (Supervised Fine-Tuning - SFT) to establish basic instruction-following capabilities on general datasets. 2) Stage II (Unified Instruction Tuning for Ranking and Generation) to further instruction-tune the LLM on a specialized blend including SFT data and RAG-specific datasets (context-rich QA, retrieval-augmented QA, context ranking, retrieval-augmented ranking) to enhance RAG-specific abilities.",
+    "Result": "An LLM that possesses strong general instruction-following abilities while also being highly optimized for complex RAG tasks, including effective context ranking and answer generation.",
+    "Related Patterns": "Unified Instruction Tuning for RAG (Ranking and Generation)",
+    "Uses": "Training LLMs for complex multi-faceted tasks, balancing general instruction following with specialized domain/task capabilities, improving training efficiency by progressively adding complexity.",
+    "Thinking": "The paper explicitly details a 'Two-stage instruction tuning framework for RankRAG' (Figure 2 and Section 4.1, 4.2), which is a structured approach to training AI models for diverse capabilities."
+  },
+  {
+    "Pattern Name": "Unified QA Format for Instruction Tuning",
+    "Problem": "Instruction tuning an LLM for diverse tasks (e.g., context-rich QA, retrieval-augmented QA, context ranking, retrieval-augmented ranking) typically involves different input/output formats, which can complicate training and hinder knowledge transfer.",
+    "Context": "An LLM is being instruction-tuned on a variety of datasets and tasks within a unified framework (like RAG), where tasks have different objectives but share underlying principles of understanding questions and contexts.",
+    "Solution": "Cast all diverse tasks into a standardized Question-Context-Answer (x-c-y) format. For example, context ranking tasks are framed as 'For the question [question], access whether the passage [passage] is relevant to the question. Return True/False.' This allows the LLM to process different tasks using a consistent input structure.",
+    "Result": "Facilitates effective knowledge transfer across tasks, empowers the LLM with new capabilities (like ranking) by adding a relatively small amount of specialized data, and simplifies the instruction tuning process.",
+    "Related Patterns": "Unified Instruction Tuning for RAG (Ranking and Generation)",
+    "Uses": "Streamlining instruction tuning for multi-task LLMs, improving data efficiency, enhancing generalization across related tasks.",
+    "Thinking": "The paper explicitly states this approach and its advantages ('mutually enhance each other'), describing a method for structuring AI training data to enable multi-task learning and knowledge transfer."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented QA Data Augmentation (with Hard Negatives)",
+    "Problem": "LLMs trained on context-rich QA data might still be ineffective or lack robustness when faced with imperfect initial retrieval results, especially when retrieved contexts contain irrelevant or 'hard negative' information.",
+    "Context": "Instruction tuning an LLM for RAG where the model needs to be robust to noise and irrelevant information in the retrieved contexts during answer generation.",
+    "Solution": "Augment the instruction tuning blend with datasets that include not only gold contexts but also top-retrieved contexts (e.g., using BM25), ensuring a mix of relevant and potentially irrelevant (hard negative) contexts. The LLM is trained to generate the answer from this combined set, implicitly learning to filter out irrelevant information.",
+    "Result": "Improves the LLM's robustness to irrelevant contexts during generation, making it more effective even with suboptimal initial retrieval results.",
+    "Related Patterns": "Unified Instruction Tuning for RAG (Ranking and Generation)",
+    "Uses": "Enhancing LLM resilience to noisy retrieval, improving RAG performance in real-world scenarios where retrievers are not perfect.",
+    "Thinking": "This is a specific data augmentation strategy for training AI models, directly addressing the AI problem of robustness to noisy or adversarial inputs in a RAG context."
+  },
+  {
+    "Pattern Name": "Context Ranking Data Augmentation (for LLM Ranking Capability)",
+    "Problem": "LLMs, while versatile, may not inherently possess strong explicit context ranking capabilities, especially for conversational scenarios or when dealing with large-scale passage ranking datasets.",
+    "Context": "An LLM needs to be explicitly trained to assess the relevance of a single context (passage) to a given question, to enable reranking in a RAG pipeline.",
+    "Solution": "Incorporate dedicated context ranking datasets into the instruction tuning blend. This involves treating gold query-passage pairs as relevant and hard negative passages (e.g., mined via BM25) as irrelevant. The LLM is trained to generate a 'True' or 'False' response indicating relevance for a given query-passage pair. For conversational scenarios, pseudo-relevance pairs can be generated by chunking documents and computing recall scores against ground truth answers.",
+    "Result": "Empowers the LLM with explicit context ranking capabilities, allowing it to effectively filter and prioritize relevant passages, even with a relatively small amount of ranking data.",
+    "Related Patterns": "Unified Instruction Tuning for RAG (Ranking and Generation), Unified QA Format for Instruction Tuning",
+    "Uses": "Developing LLMs that can perform explicit relevance judgments, improving the reranking step in RAG, leveraging LLMs for information retrieval tasks.",
+    "Thinking": "This describes a specific data augmentation technique aimed at teaching an LLM a new, explicit AI capability (ranking), which is crucial for the RankRAG framework."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Ranking Data Augmentation (Multi-Context Relevance)",
+    "Problem": "Training an LLM to determine the relevance of *multiple* contexts simultaneously, given a question, is crucial for mimicking the test-time behavior of RAG systems that operate on top-k contexts.",
+    "Context": "An LLM needs to identify all relevant passages from a *set* of retrieved contexts for a given question, which is a more complex task than judging single-passage relevance.",
+    "Solution": "Augment the instruction tuning blend with datasets where the LLM is presented with a question and a set of multiple contexts (e.g., gold context combined with top-retrieved contexts, ensuring a total of five contexts). The LLM is trained to explicitly identify *all* relevant contexts (e.g., by returning their indices) from this set.",
+    "Result": "Trains the LLM to effectively determine the relevance of multiple contexts simultaneously, aligning its training more closely with the inference behavior of RAG systems and improving its ability to select the best subset of contexts.",
+    "Related Patterns": "Unified Instruction Tuning for RAG (Ranking and Generation), Unified QA Format for Instruction Tuning",
+    "Uses": "Training LLMs for multi-document relevance assessment, optimizing context selection for RAG, improving the precision of the reranking step.",
+    "Thinking": "This is a specialized data augmentation strategy designed to teach an LLM a more advanced AI reasoning capability: assessing relevance across multiple documents, which is distinct from single-document ranking."
+  }
+]

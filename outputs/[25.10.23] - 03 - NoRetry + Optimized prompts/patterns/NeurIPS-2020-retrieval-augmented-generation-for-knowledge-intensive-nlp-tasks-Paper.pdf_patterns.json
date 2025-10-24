@@ -1,0 +1,52 @@
+[
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large pretrained language models (LMs) struggle with knowledge-intensive NLP tasks due to limited ability to access and precisely manipulate factual knowledge, difficulty in providing provenance, challenges in updating world knowledge, and a tendency to hallucinate.",
+    "Context": "Knowledge-intensive NLP tasks requiring language generation (e.g., question answering, fact verification, creative generation) where models need to produce factual, specific, and diverse outputs, and where external, updatable knowledge is crucial.",
+    "Solution": "Combine a pretrained parametric memory (a seq2seq model like BART) with a nonparametric memory (a dense vector index of a knowledge source like Wikipedia accessed by a pretrained neural retriever like DPR). The retriever provides relevant documents (latent variables) conditioned on the input, and the generator then conditions on these retrieved documents along with the input to generate the output. The entire system (retriever and generator) is fine-tuned end-to-end by marginalizing over the latent documents.",
+    "Result": "Achieves state-of-the-art results on open-domain QA tasks, generates more specific, diverse, and factual language compared to parametric-only baselines, and allows for easy updating of world knowledge by replacing the nonparametric memory.",
+    "Related Patterns": "Hybrid Parametric-Nonparametric Memory, RAGSequence Model, RAGToken Model, REALM, ORQA, Memory Networks, Retrieve-and-Edit approaches.",
+    "Uses": "Open-domain Question Answering, Abstractive Question Answering, Jeopardy Question Generation, Fact Verification, and other knowledge-intensive NLP generation tasks.",
+    "Thinking": "This is the central pattern described in the paper. It defines a novel architectural approach for combining two distinct AI components (a generator and a retriever) and a specific training methodology (end-to-end fine-tuning with latent variable marginalization) to solve a core AI problem (knowledge limitations in LMs)."
+  },
+  {
+    "Pattern Name": "RAGSequence Model",
+    "Problem": "How to effectively integrate retrieved documents into a sequence-to-sequence generation process when a consistent context from a single document is desired for the entire output sequence.",
+    "Context": "Within a Retrieval-Augmented Generation (RAG) framework, when generating a target sequence where the entire sequence is likely to be coherent with or derived from a single retrieved passage, or when computational efficiency for decoding is a concern for per-token retrieval.",
+    "Solution": "Treat the retrieved document as a single latent variable that is marginalized to get the seq2seq probability. The model retrieves the top-K documents, and for each document, the generator produces the probability of the complete output sequence. These probabilities are then marginalized (summed) across the top-K documents. The same retrieved document is used to predict each target token in the sequence.",
+    "Result": "Achieves strong performance on various knowledge-intensive tasks, particularly effective when a single, coherent document provides sufficient context for the entire generated output. Generates more diverse outputs than RAGToken in some cases.",
+    "Related Patterns": "Retrieval-Augmented Generation (RAG), RAGToken Model (alternative marginalization strategy).",
+    "Uses": "Open-domain Question Answering, Abstractive Question Answering, Fact Verification.",
+    "Thinking": "This is a specific strategy within the broader RAG pattern, detailing a particular way to handle the latent document variable during generation. It's an AI design choice for how to condition a generative model on retrieved information."
+  },
+  {
+    "Pattern Name": "RAGToken Model",
+    "Problem": "How to effectively integrate retrieved documents into a sequence-to-sequence generation process when different parts of the output sequence might benefit from different retrieved documents, allowing for more dynamic context switching.",
+    "Context": "Within a Retrieval-Augmented Generation (RAG) framework, when generating a target sequence where different tokens or segments of the output might draw information from distinct retrieved passages, requiring a more flexible conditioning mechanism.",
+    "Solution": "Allow the model to draw a different latent document for each target token and marginalize accordingly. The top-K documents are retrieved, and for each output token, the generator produces a distribution for that token given each document. These per-document token probabilities are then marginalized (summed) before selecting the next token, and the process repeats for the subsequent token.",
+    "Result": "Performs well, especially noted for tasks like Jeopardy Question Generation where combining content from several documents is beneficial. Offers flexibility in drawing information from multiple sources during generation.",
+    "Related Patterns": "Retrieval-Augmented Generation (RAG), RAGSequence Model (alternative marginalization strategy).",
+    "Uses": "Open-domain Question Answering, Jeopardy Question Generation, Fact Verification.",
+    "Thinking": "Similar to RAGSequence, this is another specific strategy within RAG, focusing on per-token conditioning on retrieved documents. It's an AI design choice for dynamic context integration in generative models."
+  },
+  {
+    "Pattern Name": "Hybrid Parametric-Nonparametric Memory",
+    "Problem": "Purely parametric language models (LMs) struggle with limitations such as difficulty in expanding or revising their knowledge, inability to provide provenance for predictions, and a tendency to 'hallucinate' (generate factually incorrect information).",
+    "Context": "AI systems, particularly large language models, operating in knowledge-intensive domains where factual accuracy, updatability, and interpretability of knowledge are critical requirements.",
+    "Solution": "Design an AI system that combines a parametric memory (knowledge stored in the model's weights, e.g., a pretrained seq2seq transformer) with an explicit, retrieval-based nonparametric memory (e.g., a dense vector index of a large text corpus like Wikipedia). The parametric component handles general language understanding and generation, while the nonparametric component provides access to specific, verifiable, and updatable factual knowledge.",
+    "Result": "Overcomes limitations of parametric-only models by enabling direct revision and expansion of knowledge, allowing inspection and interpretation of accessed knowledge, reducing hallucinations, and improving factual accuracy and specificity of generated text.",
+    "Related Patterns": "Retrieval-Augmented Generation (RAG), REALM, ORQA, Memory Networks, Stack-augmented networks, Memory layers.",
+    "Uses": "General knowledge-intensive NLP tasks, Open-domain Question Answering, Fact Verification, Language Generation, Dialogue Systems.",
+    "Thinking": "This pattern describes a fundamental architectural principle for AI systems that need to manage and leverage knowledge effectively. RAG is a concrete instantiation of this broader pattern. It addresses a core AI challenge of knowledge representation and utilization."
+  },
+  {
+    "Pattern Name": "Hot-Swappable Nonparametric Memory",
+    "Problem": "Updating the world knowledge of parametric-only AI models is costly and time-consuming, as it typically requires extensive retraining of the entire model when new information becomes available or existing information changes.",
+    "Context": "AI systems that rely on external knowledge sources and need to remain current with rapidly evolving real-world information (e.g., current events, dynamic databases).",
+    "Solution": "Design the AI system such that its nonparametric memory component (e.g., a document index used by a retriever) can be replaced or updated independently at test time without requiring retraining of the parametric components (e.g., the generator or query encoder). This involves separating the explicit knowledge base from the learned model parameters.",
+    "Result": "Enables dynamic and efficient updating of the model's world knowledge, allowing it to adapt to new information quickly and cost-effectively without incurring the high computational expense of full model retraining. Improves accuracy for tasks requiring up-to-date information.",
+    "Related Patterns": "Hybrid Parametric-Nonparametric Memory (this pattern is a key advantage and design implication of using such a hybrid architecture).",
+    "Uses": "Any knowledge-intensive AI application where the underlying factual knowledge changes frequently, such as real-time question answering, news summarization, or systems interacting with dynamic databases.",
+    "Thinking": "This pattern highlights a specific design advantage and capability of certain AI architectures, particularly those employing nonparametric memory. It's an AI system design pattern focused on knowledge lifecycle management and adaptability."
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "correct": [
+    "Different Workloads in Different Computing Environments",
+    "Distinguish BusinessLogic from MLModels",
+    "ML Gateway Routing Architecture",
+    "Microservice Architecture for ML",
+    "Lambda Architecture for ML",
+    "Kappa Architecture for ML",
+    "Data Lake for ML",
+    "Separation of Concerns and Modularization of ML Components",
+    "Encapsulate ML Models within Rule-base Safeguards",
+    "Discard PoC Code",
+    "Parameter-Server Abstraction",
+    "Data Flows Up, Model Flows Down",
+    "Secure Aggregation",
+    "Deployable Canary Model",
+    "ML Versioning"
+  ],
+  "missing": [],
+  "extra": []
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "ML application systems are complex because their ML components must be retrained regularly and have an intrinsic nondeterministic behavior. Business requirements and ML algorithms also change over time. The overall business logic should be isolated as much as possible from the ML models so that they can be changed/overridden as necessary without impacting the rest of the business logic.",
+    "Context": "Any ML application system with outputs that depend on ML techniques, where there is a need to manage the evolution and stability of both business logic and ML components.",
+    "Solution": "Define clear APIs between traditional and ML components. Place the business and ML components with different responsibilities into distinct architectural layers (e.g., Data Layer, Logic Layer, Presentation Layer, with specific ML components like Inference Engine, Data Processing, Data Lake). Divide data flows into business logic data flow, ML runtime data flow, and ML development data flow.",
+    "Result": "Decoupling traditional business and ML components allows the ML components to be monitored and adjusted to meet user requirements and changing inputs. It also helps isolate failures between the business logic and ML learning layer, making debugging easier.",
+    "Related Patterns": [],
+    "Uses": "Chatbot systems, applications integrating ML for specific functionalities.",
+    "Thinking": "This pattern addresses the architectural challenges of integrating ML models into a broader software system, ensuring maintainability, adaptability, and clear separation of concerns between business logic and ML components. It is a fundamental **MLOps** pattern for structuring ML-driven applications and also relates to **AI-Human Interaction** by ensuring the stability and evolvability of user-facing ML features."
+  },
+  {
+    "Pattern Name": "Encapsulate ML Models within Rulebase Safeguards",
+    "Problem": "ML models are known to be unstable and vulnerable to adversarial attacks, noise in data, and data drift over time, leading to inherent uncertainty in their outcomes.",
+    "Context": "Systems where the reliability, robustness, and safety of ML model predictions are critical, and where the inherent uncertainty of ML models needs to be managed.",
+    "Solution": "Encapsulate the functionality provided by ML models. Appropriately deal with the inherent uncertainty of their outcomes in the containing system using deterministic and verifiable rules.",
+    "Result": "Improves the reliability, security, and robustness of ML applications by mitigating risks associated with ML model instability, vulnerabilities, and uncertainty.",
+    "Related Patterns": [],
+    "Uses": "Critical ML applications where safety, trustworthiness, and robustness are paramount, such as autonomous systems or financial applications.",
+    "Thinking": "This pattern directly addresses problems inherent to ML models (instability, adversarial attacks, data drift, uncertainty). The solution involves using deterministic rules to safeguard ML model outputs, which is a specific strategy for making ML systems more robust and trustworthy. This is an AI design pattern related to **Agentic AI** (for safety and reliability), **AI-Human Interaction** (for trust), and **Knowledge & Reasoning** (as rules are a form of knowledge representation)."
+  },
+  {
+    "Pattern Name": "ParameterServer Abstraction",
+    "Problem": "For distributed machine learning, widely accepted abstractions are lacking.",
+    "Context": "Distributed machine learning training scenarios where large models or datasets require computation across multiple worker nodes.",
+    "Solution": "Distribute both data and workloads over worker nodes. Server nodes maintain globally shared parameters, which are typically represented as vectors and matrices, and coordinate updates from the worker nodes.",
+    "Result": "Enables scalable and efficient distributed training of machine learning models by providing a clear abstraction for parameter management.",
+    "Related Patterns": [],
+    "Uses": "Large-scale distributed training of deep learning models, especially in data centers.",
+    "Thinking": "This pattern describes a specific architectural approach for distributed machine learning training, addressing the core challenge of coordinating parameter updates across multiple nodes. It's a fundamental **MLOps** pattern for managing ML workflows and also relevant to **Classical AI** for distributed algorithms."
+  },
+  {
+    "Pattern Name": "Data Flows Up Model Flows Down",
+    "Problem": "Standard ML approaches require centralizing the training data on one machine or in a datacenter, which can raise privacy concerns, be inefficient for distributed data sources, and limit the use of real-world, on-device data.",
+    "Context": "Scenarios where training data is distributed across many client devices (e.g., mobile phones) and cannot or should not be centralized due to privacy, bandwidth, or latency constraints.",
+    "Solution": "Enable mobile devices (or other edge devices) to collaboratively learn a shared prediction model in the cloud while keeping all of the training data on the device. Only model updates (or gradients) are sent to a central server for aggregation.",
+    "Result": "Allows for collaborative model training while preserving data privacy and reducing the need for data centralization. Improves model robustness and prediction accuracy by leveraging diverse, real-world data from edge devices.",
+    "Related Patterns": ["Secure Aggregation"],
+    "Uses": "Mobile keyboard prediction, on-device recommendation systems, healthcare applications with sensitive data, IoT device intelligence.",
+    "Thinking": "This is a core AI design pattern (Federated Learning) that fundamentally changes how ML models are trained, specifically addressing privacy and data distribution challenges inherent to many real-world AI applications. It's a key **MLOps** pattern and also relevant to **Personalization** and **Classical AI**."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "In collaborative learning (like federated learning), the system needs to communicate and aggregate model updates from multiple devices in a secure, efficient, scalable, and fault-tolerant way, without exposing individual device data or model contributions.",
+    "Context": "Distributed collaborative learning environments (e.g., Federated Learning) where the privacy of individual contributions to the aggregated model is paramount.",
+    "Solution": "Encrypt data (specifically, model updates or gradients) from each mobile device in collaborative learning. Calculate totals and averages of these encrypted updates without individual examination, ensuring that the central server or aggregator cannot decrypt individual contributions.",
+    "Result": "Enhances the security and privacy of collaborative learning by preventing the central server from inspecting individual model updates, while still allowing for the creation of a shared, aggregated model. Improves model robustness and prediction accuracy.",
+    "Related Patterns": ["Data Flows Up Model Flows Down"],
+    "Uses": "Federated learning systems, privacy-preserving machine learning, secure multi-party computation in AI.",
+    "Thinking": "This pattern is a crucial component of Federated Learning (P12), directly addressing the security and privacy challenges specific to distributed ML model training. It's an **MLOps** pattern focused on secure ML workflows and data privacy."
+  },
+  {
+    "Pattern Name": "Deployable Canary Model",
+    "Problem": "A surrogate ML model that approximates the behavior of the best ML model must be built to provide explainability, as complex ML models are often difficult to understand or explain.",
+    "Context": "Production ML systems where model explainability, monitoring, and safe deployment of new models are critical.",
+    "Solution": "Run an explainable inference pipeline (using a simpler, more interpretable 'canary' or surrogate model) in parallel with the primary, potentially more complex, inference pipeline. Monitor the prediction differences between the two to understand the primary model's behavior and detect anomalies.",
+    "Result": "Provides insights into the primary model's behavior, enhances explainability, and allows for safer deployment strategies by comparing a new model's behavior against a known baseline or an explainable proxy. Improves reliability and model explainability.",
+    "Related Patterns": [],
+    "Uses": "A/B testing for ML models, model monitoring, explainable AI (XAI) in production, risk assessment for new model deployments.",
+    "Thinking": "This pattern addresses the ML-specific challenge of explainability and safe deployment in production. It's an **MLOps** pattern for managing the lifecycle and trustworthiness of ML models, and also relates to **AI-Human Interaction** for providing transparency."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "ML models and their different versions may change the behavior of the overall ML applications. It is critical to record the entire context of an ML model to ensure reproducibility, traceability, and the ability to debug or rollback.",
+    "Context": "Any ML development and deployment pipeline where models are frequently updated, and reproducibility, traceability, and rollback capabilities are required.",
+    "Solution": "Record comprehensive metadata for each ML model version, including the model structure (architecture), the specific training data set used, the training system (e.g., hyperparameters, code version, environment), and the analytical code. This ensures a reproducible training process and an inference process.",
+    "Result": "Ensures reproducibility of ML model training and inference, facilitates debugging, auditing, and allows for reliable rollback to previous model versions. Improves maintainability, model robustness, and prediction accuracy.",
+    "Related Patterns": [],
+    "Uses": "MLOps pipelines, model governance, regulatory compliance for AI systems, collaborative ML development.",
+    "Thinking": "While versioning is a general software engineering concept, ML versioning is uniquely complex due to the need to track not just code, but also data, models, and the entire training environment to ensure reproducibility of ML outcomes. This is a fundamental **MLOps** pattern."
+  },
+  {
+    "Pattern Name": "Different Workloads in Different Computing Environments",
+    "Problem": "It is necessary to separate and quickly change the ML data workload (inference) and stabilize the training workload to maximize efficiency. Different ML workloads (training, inference, data processing) have distinct resource requirements and operational characteristics, making their co-location inefficient or unstable.",
+    "Context": "ML systems with distinct training and inference phases, where optimizing resource utilization, ensuring stability, and enabling rapid changes for specific workloads are critical.",
+    "Solution": "Physically isolate different ML workloads (e.g., training, inference, data preparation) onto separate machines or computing environments. Optimize the machine configurations (e.g., CPU, GPU, memory) and network usage specifically for each isolated workload type.",
+    "Result": "Maximizes efficiency by allowing independent optimization of resources for different ML workloads. Improves stability of the training process and enables quicker changes/updates to the inference or data processing components without impacting others. Enhances performance efficiency and maintainability.",
+    "Related Patterns": [],
+    "Uses": "Large-scale ML deployments, MLOps infrastructure, cloud-based ML platforms.",
+    "Thinking": "This pattern addresses the operational challenges of deploying and managing diverse ML workloads. While the solution (physical isolation) is a general infrastructure concept, its application to *ML-specific workloads* (training vs. inference) and the goal of optimizing for their unique characteristics makes it an **MLOps** pattern. It's about infrastructure design for ML systems."
+  }
+]

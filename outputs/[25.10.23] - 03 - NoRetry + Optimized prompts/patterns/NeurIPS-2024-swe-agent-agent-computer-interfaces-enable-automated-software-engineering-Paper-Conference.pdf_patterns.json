@@ -1,0 +1,52 @@
+[
+  {
+    "Pattern Name": "Agent-Computer Interface (ACI)",
+    "Problem": "Language Model (LM) agents struggle to reliably interact with complex digital environments (e.g., Linux shell) using interfaces designed for humans. These human-centric interfaces are often too granular, verbose, lack specific feedback, or are visually oriented, which LMs cannot process effectively. This leads to poor performance, inefficiency, and an inability for LMs to autonomously solve complex tasks.",
+    "Context": "Developing LM agents to perform complex tasks in digital environments (e.g., software engineering, web navigation, computer control) where they act as a new category of end-user with distinct needs and abilities compared to humans.",
+    "Solution": "Introduce an abstraction layer, the Agent-Computer Interface (ACI), between the LM agent and the computer. This interface is specifically designed for LMs, offering a tailored set of simple, efficient actions, providing concise and informative feedback, and incorporating guardrails to prevent common mistakes. It shapes actions, their documentation, and environment feedback to complement an LM's limitations and abilities.",
+    "Result": "Substantially enhances the LM agent's ability to interact with computer environments, leading to significantly improved performance, reliability, and efficiency on complex tasks (e.g., state-of-the-art on SWEbench and HumanEvalFix). It unifies tool use, prompting techniques, and code execution within a single framework.",
+    "Related Patterns": "LM-Friendly Commands, Informative & Concise Feedback, Guardrails for Agents, Context Management for Agents.",
+    "Uses": "Automating software engineering tasks, general digital environment interaction for LM agents, any scenario where LMs need to interact with software applications.",
+    "Thinking": "This is the core, overarching AI design pattern explicitly introduced and justified in the text. It defines a new type of interface specifically for AI agents, acknowledging their unique cognitive and processing characteristics (e.g., lack of visual understanding, token-based processing)."
+  },
+  {
+    "Pattern Name": "LM-Friendly Commands",
+    "Problem": "Traditional command-line tools (e.g., Bash commands) often have complex syntax, numerous options, and verbose documentation. This complexity makes them difficult for LM agents to parse, understand, and use reliably, leading to frequent errors, inefficient action composition, and increased cognitive load (in terms of token processing).",
+    "Context": "Designing the action space within an Agent-Computer Interface (ACI) for LM agents that need to perform operations like file manipulation, search, and navigation in a digital environment. The goal is to enable efficient and reliable action-taking.",
+    "Solution": "Design commands to be simple, compact, and efficient. This involves: 1. Simplicity: Commands should have few options and concise documentation, reducing the need for extensive demonstrations or fine-tuning. 2. Efficiency: Important operations (e.g., multi-line file editing, specific file navigation) should be consolidated into as few actions as possible, allowing the agent to make meaningful progress in a single step rather than composing many simple actions.",
+    "Result": "Commands become easier for LM agents to use, reducing errors and the cognitive burden of complex syntax. Agents can achieve higher-order operations more efficiently, making meaningful progress towards goals in fewer turns and conserving context window space.",
+    "Related Patterns": "Agent-Computer Interface (ACI), Informative & Concise Feedback.",
+    "Uses": "Defining the action set for LM agents interacting with file systems, code editors, search tools, or any application requiring command execution.",
+    "Thinking": "This pattern directly addresses the cognitive limitations of LMs (e.g., difficulty with complex instructions, preference for simplicity) and their processing constraints (e.g., token cost of verbose documentation), making it specific to AI design."
+  },
+  {
+    "Pattern Name": "Informative & Concise Feedback",
+    "Problem": "Raw or verbose environment feedback (e.g., full `cat` output, unparsed `grep` results, silent command success) can be overwhelming, uninformative, or contain too much irrelevant detail for LM agents. LMs incur fixed costs for all content in their context window, and distracting or verbose information can harm performance and exhaust the context window prematurely.",
+    "Context": "Providing environment observations back to an LM agent within an Agent-Computer Interface (ACI) after it executes an action. The agent needs to understand the current state and the effects of its actions to plan the next step effectively.",
+    "Solution": "Design feedback mechanisms to be both informative and concise. This includes: 1. Substantive Information: Provide meaningful details about the current environment state and the direct effects of the agent's actions (e.g., updated file content after an edit, line numbers in a file viewer). 2. Conciseness: Omit unnecessary details. For example, search results are capped (e.g., 50 matches), file viewer shows a limited window (e.g., 100 lines) with context indicators, and silent successful commands receive explicit 'success, no output' messages.",
+    "Result": "Enables the LM agent to better understand the application's state and the impact of its actions, facilitating more accurate planning and decision-making. Reduces context window bloat, allowing for more interaction turns and preventing the agent from being 'lost in the middle' or acting on outdated information.",
+    "Related Patterns": "Agent-Computer Interface (ACI), Context Management for Agents.",
+    "Uses": "Any interactive LM agent system where environment observations are critical for iterative decision-making, particularly in tasks involving code inspection, search, and execution.",
+    "Thinking": "This pattern is specifically tailored to the context window limitations and information processing characteristics of LMs, recognizing that they process all tokens and can be distracted by irrelevant information, unlike humans who can filter visually."
+  },
+  {
+    "Pattern Name": "Guardrails for Agents",
+    "Problem": "LM agents, like human users, can introduce errors (e.g., syntax errors, logical inconsistencies) when performing actions, especially in complex domains like code editing. These errors can propagate, lead to cascading failures, and make it difficult for the agent to recognize and recover, significantly hampering performance and wasting computational resources.",
+    "Context": "Designing the action execution and feedback loop within an Agent-Computer Interface (ACI) for LM agents, particularly in tasks where agent actions can modify the environment in ways that introduce errors (e.g., code generation and editing).",
+    "Solution": "Implement automated validation and error mitigation mechanisms (guardrails) that intervene when an agent's action would lead to a detectable error. For example, integrate a code linter into the file editor that checks for syntax errors. If an error is detected: 1. The invalid action is discarded (e.g., the edit is reverted). 2. The agent receives specific, informative feedback about the error (e.g., linter error messages, snippet of proposed change vs. original code). 3. The agent is prompted to correct its action and try again.",
+    "Result": "Prevents the propagation of errors, hastens the agent's recovery from mistakes, and significantly improves overall task performance by ensuring that only valid or non-error-introducing changes are applied to the environment.",
+    "Related Patterns": "Agent-Computer Interface (ACI), Informative & Concise Feedback.",
+    "Uses": "Code editing, configuration updates, or any agent action that modifies a structured environment where automated validation rules can be applied to prevent common errors.",
+    "Thinking": "This pattern addresses a specific failure mode of LMs (introducing errors and struggling to recover) by providing an automated, AI-centric error handling and recovery mechanism within the interface, leveraging computational checks to guide the LM."
+  },
+  {
+    "Pattern Name": "Context Management for Agents",
+    "Problem": "In multi-turn interactions, the full history of commands, observations, and error messages can quickly exceed the fixed context window size of Language Models. This leads to 'lost in the middle' phenomena, where LMs struggle to attend to relevant information, or to outdated information being presented, which degrades performance and limits the number of interaction turns possible.",
+    "Context": "Maintaining and presenting the interaction history to an LM agent within an Agent-Computer Interface (ACI) during long-running, iterative tasks in digital environments.",
+    "Solution": "Implement strategies to keep the agent's context concise and relevant. Key techniques include: 1. History Processors: Collapse older observations (e.g., all but the last 5) into single-line placeholders, preserving the interaction structure but removing verbose content. 2. Error Message Filtering: Omit repeated error messages, showing only the first instance to avoid redundancy. 3. Clarity for Silent Actions: Provide explicit messages for commands that run successfully but produce no output (e.g., 'Your command ran successfully and did not produce any output') to prevent agent confusion. 4. Prompting: Provide initial instructions, documentation, and demonstrations to set up the context effectively.",
+    "Result": "Optimizes the use of the LM's context window, allowing for more interaction cycles and preventing performance degradation due to excessive or irrelevant information. It ensures the agent has access to essential plan and action history without being overwhelmed by outdated or redundant details.",
+    "Related Patterns": "Agent-Computer Interface (ACI), Informative & Concise Feedback.",
+    "Uses": "Any multi-turn LM agent system where the length of interaction history is a critical factor for performance and resource management (e.g., token cost).",
+    "Thinking": "This pattern is fundamentally about managing the computational and cognitive resources of an LM (specifically its context window and attention mechanisms) to ensure effective long-term interaction, making it a core AI design pattern."
+  }
+]

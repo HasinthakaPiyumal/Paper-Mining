@@ -1,0 +1,221 @@
+[
+  {
+    "Pattern Name": "Iterative Tool Learning",
+    "Problem": "Large Language Models (LLMs) struggle with complex tasks that require dynamic adaptation, error handling, and progressive refinement, as a complete upfront plan might fail or be suboptimal in dynamic environments.",
+    "Context": "LLMs are tasked with complex problems that may involve multiple steps, potential errors, or dynamic environments where initial plans might need adjustment based on real-time feedback.",
+    "Solution": "The LLM does not commit to a complete task plan upfront. Instead, it engages in iterative interactions with external tools, adjusting its subtasks and refining its plan progressively based on the feedback and results returned by the tools at each step. This allows for step-by-step problem-solving and continuous plan refinement.",
+    "Result": "Improved problem-solving capabilities, enhanced robustness to errors, and greater adaptability to dynamic environments, leading to more effective and reliable task accomplishment.",
+    "Related Patterns": [
+      "One-Step Tool Learning (contrast)",
+      "ReACT",
+      "RestGPT",
+      "ToolLLaMA",
+      "Confucius"
+    ],
+    "Uses": [
+      "Complex multi-step tasks",
+      "Scenarios requiring error recovery",
+      "Dynamic environments",
+      "Long-horizon planning",
+      "Agent-based systems"
+    ],
+    "Thinking": "This pattern is explicitly identified in Section 4.1 as 'Tool Learning with Iterative Task Solving' and is contrasted with 'One-step Task Solving'. It addresses the limitation of static planning by incorporating feedback loops and dynamic adjustments, which is a core design choice in tool-augmented LLM systems."
+  },
+  {
+    "Pattern Name": "One-Step Tool Learning",
+    "Problem": "Early LLM tool usage paradigms did not account for potential errors during execution or the need to alter a plan based on tool feedback, leading to less robust solutions for complex tasks.",
+    "Context": "Simpler tool-augmented LLM applications where the task can be fully planned upfront, and the expectation is that tools will execute as planned without significant errors or the need for dynamic adjustments.",
+    "Solution": "Upon receiving a user question, the LLM analyzes the request, understands the user's intent, and immediately plans all the subtasks needed to solve the problem. It then directly generates a response based on the results returned by the selected tools, without explicitly considering the possibility of errors during the process or altering the plan based on tool feedback.",
+    "Result": "A straightforward and potentially faster approach for tasks where the execution path is predictable, but it lacks robustness and adaptability to unforeseen issues or dynamic changes.",
+    "Related Patterns": [
+      "Iterative Tool Learning (contrast)",
+      "Toolformer",
+      "HuggingGPT"
+    ],
+    "Uses": [
+      "Simple, well-defined tasks",
+      "Early-stage tool integration",
+      "Scenarios where computational overhead of iterative planning is undesirable"
+    ],
+    "Thinking": "This pattern is explicitly identified in Section 4.1 as 'Tool Learning with Onestep Task Solving' and is presented as an earlier, less adaptive paradigm compared to iterative approaches. It represents a fundamental design choice for certain types of problems."
+  },
+  {
+    "Pattern Name": "Task Decomposition Planning",
+    "Problem": "User queries are often complex, embodying multi-step intent that cannot be directly addressed by a single tool call or a simple response, requiring a structured approach to problem-solving.",
+    "Context": "An LLM receives a complex user query that necessitates multiple actions, reasoning steps, and potentially the sequential or parallel use of several external tools.",
+    "Solution": "The LLM first engages in task planning by conducting a comprehensive analysis of the user's intent. It then decomposes the complex query into a series of simpler, solvable subquestions or subtasks. Additionally, the LLM delineates the dependency relationships and the optimal execution sequence among these decomposed tasks. This can be achieved through tuning-free methods (e.g., Chain-of-Thought (CoT), ReACT, ART, RestGPT's Coarse-to-Fine Online Planning, HuggingGPT's prompt design, ToolChain's decision tree, TPTU, Attention Buckets, ControlLLM's Thoughts-on-Graph, PLUTO's autoregressive planning, ATC, ToolPlanner, SGC, Sum2Act, BTP, DRAFT) or tuning-based methods (e.g., Toolformer, TaskMatrixAI, Toolink, TPTUv2, UMi, COA, DEER, OpenAGI, SOAY, TPLLaMA, APIGen).",
+    "Result": "A structured and manageable plan of action, enabling the LLM to address complex problems step-by-step, improving its logical analysis capabilities and ability to handle multi-step tasks effectively.",
+    "Related Patterns": [
+      "Prompt-Based Task Planning (specific approach)",
+      "Fine-Tuned Task Planning (specific approach)"
+    ],
+    "Uses": [
+      "Any complex user query",
+      "Multi-tool scenarios",
+      "Agent-based systems",
+      "Long-horizon tasks",
+      "Facilitating structured problem-solving"
+    ],
+    "Thinking": "This pattern corresponds to the 'Task Planning' stage (Section 4.2) of the tool learning workflow. It's a foundational step for handling complexity. The text details both tuning-free and tuning-based approaches as ways to implement this pattern, which are integrated into the solution description."
+  },
+  {
+    "Pattern Name": "Retriever-Augmented Tool Selection",
+    "Problem": "Real-world systems often contain a vast number of available tools, making it impractical to present descriptions of all tools to an LLM simultaneously due to context length limitations and latency constraints.",
+    "Context": "An LLM has decomposed a complex task into subquestions and needs to select the most appropriate tools from a very large, diverse tool library (e.g., thousands of APIs).",
+    "Solution": "Before the LLM makes its final selection, an efficient tool retrieval system is employed. This system uses either term-based methods (e.g., TFIDF, BM25) or semantic-based methods (e.g., SentenceBert, ANCE, TASB, Contriever, coCondensor, CRAFT, ProTIP, ToolRerank, COLT) to efficiently filter and identify the top-K most suitable tools for a given subquestion from the vast tool set. These top-K tools are then presented to the LLM for final selection.",
+    "Result": "Reduces the input size for the LLM, manages complexity, and ensures that the subsequent LLM-based selection is both efficient and effective, bridging the gap between broad LLM capabilities and practical input limitations.",
+    "Related Patterns": [
+      "LLM-Driven Tool Selection (often used in conjunction)",
+      "Retrieval-Augmented Generation (RAG)"
+    ],
+    "Uses": [
+      "Systems with large tool libraries",
+      "Scenarios where context window is a constraint",
+      "Improving efficiency of tool selection",
+      "Reducing latency in tool discovery"
+    ],
+    "Thinking": "This pattern is clearly described in Section 4.3.1, 'Retriever-based Tool Selection', as a necessary step when dealing with a large number of tools. It addresses a specific scalability and efficiency problem."
+  },
+  {
+    "Pattern Name": "LLM-Driven Tool Selection",
+    "Problem": "After initial task planning or retrieval, the LLM needs to precisely choose the optimal tool(s) for a specific subquestion and manage potential dependencies for serial tool invocations.",
+    "Context": "An LLM has a subquestion and a limited set of candidate tools (either from a small, predefined library or pre-filtered by a retriever). The LLM needs to understand tool functionalities and parameter requirements from their descriptions.",
+    "Solution": "The LLM is provided with the user query, the subquestion, and the descriptions (including parameter lists) of the candidate tools. The LLM then leverages its reasoning capabilities to select the most appropriate tool(s) from this list. This often involves understanding the order of invocation for serial tool calls, where the output of one tool might serve as input for another. This can be achieved via tuning-free methods (e.g., CoT, ReACT, DFSDT, ChatCoT, ToolNet, AnyTool, GeckOpt) or tuning-based methods (e.g., finetuning on tool usage datasets for Toolbench, TRICE, ToolLLaMA, Confucius, ToolVerifier).",
+    "Result": "Accurate and contextually appropriate tool selection, enabling the LLM to handle dependencies and sequential tool usage effectively, leading to more precise problem-solving.",
+    "Related Patterns": [
+      "Retriever-Augmented Tool Selection (often precedes this)",
+      "Task Decomposition Planning"
+    ],
+    "Uses": [
+      "Final tool selection from a manageable set",
+      "Handling tool dependencies and sequential execution",
+      "Improving accuracy of tool choice based on semantic understanding"
+    ],
+    "Thinking": "This pattern is described in Section 4.3.2, 'LLM-based Tool Selection'. It focuses on the LLM's reasoning and decision-making for tool choice, distinct from the initial retrieval phase. Both tuning-free and tuning-based approaches are detailed as implementations."
+  },
+  {
+    "Pattern Name": "Parameterized Tool Calling",
+    "Problem": "After selecting a tool, the LLM must accurately extract the necessary input parameters from the user query or context, format them correctly according to the tool's API specifications, and then invoke the tool. Errors in this process (e.g., incorrect formatting, out-of-range values, server errors) can lead to tool failure.",
+    "Context": "An LLM has identified a specific external tool to use for a subtask and has access to the tool's documentation, which outlines required parameters, their types, and formats.",
+    "Solution": "The LLM is tasked with parsing the user query and other contextual information to identify and extract the values for the tool's required parameters. It must then ensure these parameters adhere strictly to the specified format and range before constructing and sending the tool invocation request to the external tool server. Error handling mechanisms are often integrated to refine actions based on returned error messages. This can be achieved via tuning-free methods (e.g., few-shot prompting for parameter extraction, rule-based methods, Reverse Chain, EasyTool, documentation compression, multi-agent collaboration like ConAgents) or tuning-based methods (e.g., finetuning with LoRA for GPT4Tools, using special tokens for ToolkenGPT, integrating tool usage and reasoning for Themis, coordinating trial-and-error, imagination, and memory for STE).",
+    "Result": "Successful and accurate invocation of external tools, enabling the LLM to leverage external functionalities and retrieve specific data or execute actions, even in the presence of potential calling errors, thereby enhancing the system's resilience.",
+    "Related Patterns": [
+      "Prompt-Based Tool Calling (specific approach)",
+      "Fine-Tuned Tool Calling (specific approach)",
+      "Tool Call Error Handling"
+    ],
+    "Uses": [
+      "Any scenario requiring interaction with external APIs or functions",
+      "Data retrieval from external sources",
+      "Execution of external actions (e.g., scheduling, calculations)",
+      "Ensuring adherence to API specifications"
+    ],
+    "Thinking": "This pattern corresponds to the 'Tool Calling' stage (Section 4.4). The core problem is the precise and correct execution of tool invocation, including parameter handling and error management. Both tuning-free and tuning-based methods are presented as ways to implement this pattern."
+  },
+  {
+    "Pattern Name": "Information Integration Response Generation",
+    "Problem": "Raw outputs from external tools are often diverse, complex, lengthy, or in formats unsuitable for direct presentation to end-users. Simply inserting them can degrade user experience or exceed LLM context limits, requiring sophisticated synthesis.",
+    "Context": "An LLM has received outputs from one or more external tools, and now needs to formulate a coherent, comprehensive, and user-friendly response to the original user query, combining external data with its internal knowledge.",
+    "Solution": "The LLM processes the tool outputs, synthesizes the information relevant to the user's query, and integrates it with its own internal knowledge. To manage lengthy or complex outputs, various techniques are employed, such as simplifying results using pre-created schemas (RestGPT), truncation (ToolLLaMA), compression (ReCOMP), or schema-free extraction (ConAgents). The LLM then crafts a superior reply that combines external data with its linguistic capabilities, often refining the response based on tool feedback for improved quality.",
+    "Result": "High-quality, comprehensive, and contextually relevant responses that effectively address the user's query, enhancing user experience and leveraging the full potential of both external tools and the LLM's internal knowledge.",
+    "Related Patterns": [
+      "Direct Tool Output Insertion (contrast)",
+      "Safety-Aware Tool Use"
+    ],
+    "Uses": [
+      "Generating final user-facing responses",
+      "Summarizing complex or lengthy tool outputs",
+      "Combining information from multiple external data sources",
+      "Improving response quality, coherence, and factual accuracy"
+    ],
+    "Thinking": "This pattern is described in Section 4.5.2, 'Information Integration Methods', as the more advanced and preferred approach for 'Response Generation' compared to direct insertion. It addresses the challenges of processing and presenting diverse tool outputs effectively."
+  },
+  {
+    "Pattern Name": "Direct Tool Output Insertion",
+    "Problem": "Early or simpler tool-augmented LLM systems need a straightforward way to incorporate tool results into the final response without complex synthesis, especially for simple, direct queries.",
+    "Context": "An LLM has successfully called an external tool, and the tool's output is concise, directly answers the user's query, and is in a format suitable for immediate presentation.",
+    "Solution": "The LLM generates a response template that includes a placeholder for the tool's output. Upon receiving the output from the tool, this placeholder is directly replaced with the tool's result, forming the final response to the user.",
+    "Result": "A simple and efficient method for integrating tool results, suitable for direct answers, but potentially affecting user experience if tool outputs are unpredictable or require further processing.",
+    "Related Patterns": [
+      "Information Integration Response Generation (contrast)"
+    ],
+    "Uses": [
+      "Simple queries with direct tool answers",
+      "Early-stage tool integration",
+      "Scenarios where minimal post-processing is required"
+    ],
+    "Thinking": "Explicitly mentioned in Section 4.5.1 as 'Direct Insertion Methods' and contrasted with 'Information Integration Methods'. It's a distinct design choice for how the LLM handles tool outputs in the final response."
+  },
+  {
+    "Pattern Name": "Tool Call Error Handling",
+    "Problem": "During the tool calling stage, various errors can occur (e.g., incorrect parameter formatting, out-of-range inputs, tool server errors), leading to failed tool invocations and disrupting the task workflow.",
+    "Context": "An LLM attempts to invoke an external tool, but the tool server returns an error message indicating a failure in execution.",
+    "Solution": "The LLM system is designed to capture and interpret error messages returned by the external tools. Based on this feedback, the LLM (or an associated agent) refines its understanding of the error, adjusts the input parameters, re-plans the action, or selects an alternative tool. This ensures a more resilient and adaptive system.",
+    "Result": "Improved robustness and continuity in tool learning, allowing the LLM to recover from operational disruptions and successfully complete tasks even when initial tool calls fail.",
+    "Related Patterns": [
+      "Iterative Tool Learning (enables this)",
+      "Parameterized Tool Calling (integrates with this)"
+    ],
+    "Uses": [
+      "Enhancing robustness of tool-augmented LLMs",
+      "Ensuring task completion in dynamic or error-prone environments",
+      "Refining tool usage strategies"
+    ],
+    "Thinking": "Explicitly mentioned in Section 4.4: 'given the frequent occurrence of calling errors... it is imperative to integrate error handling mechanisms. These mechanisms are designed to refine the action based on the error messages returned upon calling failure.' This is a clear design pattern for handling a common problem in tool interaction."
+  },
+  {
+    "Pattern Name": "Multimodal Tool Integration",
+    "Problem": "LLMs are primarily text-based and struggle to consistently understand diverse user queries that encompass multiple languages and modalities (e.g., speech, images, video), leading to ambiguities in discerning user intent.",
+    "Context": "A user interacts with an LLM system using inputs that are not solely text-based, such as spoken language, images, or video, and the LLM needs to process these inputs to understand the user's intent or generate a multimodal response.",
+    "Solution": "The LLM system integrates specialized multimodal tools (e.g., speech recognition, image analysis, video processing tools, machine translators) to enhance its perceptual capabilities. These tools convert multimodal inputs into a format (e.g., text descriptions, extracted features) that the LLM can process, or they assist the LLM in generating multimodal outputs.",
+    "Result": "Enhanced understanding of a broader spectrum of user inputs, improved accuracy in discerning user intent, and the ability to interact more effectively in real-world scenarios involving diverse modalities.",
+    "Related Patterns": [
+      "Parameterized Tool Calling",
+      "Information Integration Response Generation"
+    ],
+    "Uses": [
+      "Multimodal chatbots",
+      "Visual question answering",
+      "Speech-to-text applications",
+      "Cross-modal information retrieval",
+      "Generating multimodal content"
+    ],
+    "Thinking": "Identified in Section 3.4 'Interaction Enhancement' and Section 6.7 'Tool Learning with MultiModal'. It describes a specific design choice to extend LLM capabilities beyond text, which is a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Safety-Aware Tool Use",
+    "Problem": "Deploying tool learning with LLMs into practical scenarios introduces safety issues and noise, including the risk of generating biased/harmful content, leaking sensitive information, or being vulnerable to adversarial attacks through manipulated tool outputs.",
+    "Context": "An LLM system is interacting with external tools and generating responses, and there's a need to ensure that the tool outputs and the LLM's subsequent generation do not lead to unsafe, biased, or malicious outcomes.",
+    "Solution": "The LLM system incorporates mechanisms to detect and mitigate safety risks associated with tool outputs and the overall tool learning process. This involves rigorous validation of tool outputs, enhancing the LLM's ability to identify harmful information within tool results, and developing effective filtering mechanisms to prevent the generation of unsafe content. It may also involve designing the system to be robust against input perturbations and adversarial attacks.",
+    "Result": "Increased safety, robustness, and trustworthiness of tool-augmented LLM systems, reducing the risk of generating harmful content, protecting sensitive information, and improving resilience against malicious inputs or manipulated tool data.",
+    "Related Patterns": [
+      "Tool Call Error Handling (related to robustness)",
+      "Information Integration Response Generation (where filtering would occur)"
+    ],
+    "Uses": [
+      "High-stakes domains (healthcare, finance)",
+      "Public-facing LLM applications",
+      "Preventing misuse or malicious exploitation of tool-augmented LLMs"
+    ],
+    "Thinking": "Identified as a major challenge and future direction in Section 6.4 'Safe and Robust Tool Learning'. The text explicitly calls for 'profound investigation and the introduction of innovative methodologies to fortify the security and resilience of these systems' and 'enhancing the ability of LLMs to detect harmful information within tool outputs and develop effective filtering mechanisms'. This describes a necessary design consideration for robust AI systems."
+  },
+  {
+    "Pattern Name": "LLM-Driven Tool Creation/Generation",
+    "Problem": "Manually creating a comprehensive and diverse set of tools is time-consuming and resource-intensive, limiting the scope and applicability of tool-augmented LLMs. Existing tool datasets often suffer from quality issues, inaccessibility, or lack of diversity.",
+    "Context": "There is a need for a vast, high-quality, and domain-specific tool set to fully exploit the potential of tool learning, but manual creation is not scalable.",
+    "Solution": "Leverage LLMs themselves to automatically construct new tools or generate diverse, high-quality, and verifiable function-calling datasets. This can involve LLMs acting as 'tool makers,' generating tool descriptions, API specifications, or even code for new tools based on high-level requirements or existing examples. This automates the process of expanding and improving the available tool ecosystem.",
+    "Result": "Significantly accelerates the development and expansion of tool learning by providing a more comprehensive, accessible, and diverse array of functionalities, reducing manual overhead and improving the quality of tool datasets. It also enables the creation of specialized tools on demand.",
+    "Related Patterns": [
+      "Task Decomposition Planning (LLM plans how to create tools)",
+      "Parameterized Tool Calling (LLM calls internal/external functions to generate tools or their components)"
+    ],
+    "Uses": [
+      "Expanding tool libraries",
+      "Creating domain-specific tools",
+      "Generating synthetic datasets for tool learning",
+      "Automating API development",
+      "Enabling self-improving agent systems"
+    ],
+    "Thinking": "This pattern is identified in Section 6.3, which discusses the challenge of 'Comprehensive and Accessible Tools' and explicitly suggests 'employ LLMs for the mass automatic construction of tool set' with references to papers on LLMs as tool makers (198, 199) and automated pipeline for generating function-calling datasets (113). This represents a distinct AI design pattern where the LLM's capability is used to *create* the tools it might later use, rather than just *using* pre-existing ones."
+  }
+]

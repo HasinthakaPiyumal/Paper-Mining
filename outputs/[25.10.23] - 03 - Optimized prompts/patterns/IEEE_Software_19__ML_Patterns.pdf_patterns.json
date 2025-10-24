@@ -1,0 +1,297 @@
+[
+  {
+    "Pattern Name": "Data Lake",
+    "Problem": "We cannot foresee the kind of analyses that will be performed on the data and which frameworks will be used to perform these analyses.",
+    "Context": "In Machine Learning (ML) application systems where data sources are diverse (structured to unstructured) and future analytical requirements, including frameworks, are uncertain.",
+    "Solution": "Store data as raw as possible and the centralized data repository should allow parallel analyses of different kinds and with different frameworks.",
+    "Result": "Enables flexible and parallel analyses using various frameworks, accommodating unforeseen future analytical requirements and data types.",
+    "Related Patterns": [
+      "Used by Gateway Routing Architecture",
+      "Used by Distinguish Business Logic from ML Models"
+    ],
+    "Uses": "Used by 5 participants. Identified as one of the 7 major ML architecture patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing data storage challenges specific to Machine Learning application systems. The problem, solution, and other details are directly extracted or inferred from the corresponding entries in Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "The overall business logic should be isolated as much as possible from the ML models so that they can be changed/overridden when necessary without impacting the rest of the business logic. ML application systems are complex because their ML components must be retrained regularly and have an intrinsic nondeterministic behavior. Business requirements and ML algorithms change over time.",
+    "Context": "ML application systems where business logic and ML models evolve independently, requiring separate management, testing, and deployment, and where ML components are frequently retrained or updated.",
+    "Solution": "Separate the business logic and the inference engine loosely coupling the business logic and ML-specific dataflows. Define clear APIs between the traditional and ML components. Place the business and ML components with different responsibilities into three layers (Data, Logic, Presentation). Divide data flows into three types (Business Logic Data Flow, ML Runtime Data Flow, ML Development Data Flow).",
+    "Result": "Decouples traditional business and ML components, allowing ML components to be monitored and adjusted independently to meet user requirements and changing inputs. This improves operational stability, simplifies debugging, and enhances adaptability to evolving requirements.",
+    "Related Patterns": [
+      "Can be combined with ClosedLoop Intelligence",
+      "Can be combined with DataAlgorithmServing Evaluator",
+      "Similar to Gateway Routing Architecture",
+      "Uses Data Lake"
+    ],
+    "Uses": "Used by 4 participants. Identified as one of the 7 major ML architecture patterns. An example usage in a Slack-based Chatbot system is provided.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper and further detailed as a major ML pattern, addressing the complexity and evolving nature of ML application systems. The problem, solution, and other details are directly extracted or inferred from Table 1 and the dedicated description section for this pattern."
+  },
+  {
+    "Pattern Name": "Microservice Architecture",
+    "Problem": "ML applications may be confined to some known ML frameworks and miss opportunities for more appropriate frameworks.",
+    "Context": "Building ML applications that require flexibility in utilizing various ML frameworks and enabling data scientists to integrate or provide their own frameworks.",
+    "Solution": "Data scientists working with or providing ML frameworks can make these frameworks available through microservices.",
+    "Result": "Enables the use of diverse and appropriate ML frameworks, promoting flexibility, avoiding vendor/framework lock-in, and facilitating integration of new ML capabilities.",
+    "Related Patterns": [
+      "Used by Daisy Architecture",
+      "Used by Event-driven ML Microservices"
+    ],
+    "Uses": "Used by 4 participants. Identified as one of the 7 major ML architecture patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing the flexibility and integration challenges of ML frameworks within applications. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "DataAlgorithmServing Evaluator",
+    "Problem": "Prediction systems should connect different pieces in the data processing pipeline into one coherent system and prototyping predictive model.",
+    "Context": "Designing predictive model systems that require clear separation and coherent connection of various components within the data processing pipeline, from data sources to evaluation.",
+    "Solution": "Separate the following like MVC for ML: data, data source and data preparator, algorithms, serving and evaluator.",
+    "Result": "Creates a coherent, modular system for predictive models, facilitating prototyping, management, and independent evolution of different pipeline pieces.",
+    "Related Patterns": [
+      "Can be combined with ClosedLoop Intelligence",
+      "Can be combined with Distinguish Business Logic from ML Models"
+    ],
+    "Uses": "Used by 2 participants. Identified as one of the 7 major ML architecture patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, focusing on structuring prediction systems and their data processing pipelines. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Event-driven ML Microservices",
+    "Problem": "Due to frequent prototyping of ML models and constant changes, development teams must be agile to build, deploy, and maintain complex data pipelines.",
+    "Context": "ML development environments that demand high agility, frequent prototyping of ML models, and the ability to manage complex, constantly changing data pipelines.",
+    "Solution": "Construct pipelines by chaining together multiple microservices, each of which listens for the arrival of some data and performs its designated task.",
+    "Result": "Achieves agility in building, deploying, and maintaining complex data pipelines, especially crucial for environments with frequent ML model prototyping and changes.",
+    "Related Patterns": [
+      "Uses Microservice Architecture"
+    ],
+    "Uses": "Used by 2 participants. Identified as one of the 7 major ML architecture patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing the agility and maintenance challenges of ML data pipelines. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Lambda Architecture",
+    "Problem": "Realtime data processing requires scalability, fault tolerance, predictability and other qualities. It must be extensible.",
+    "Context": "Systems that need to process large volumes of data with both real-time and batch requirements, demanding high scalability, fault tolerance, predictability, and extensibility.",
+    "Solution": "The batch layer keeps producing views at every set batch interval while the speed layer creates the relevant real-time speed views. The serving layer orchestrates the query by querying both the batch and speed layer merges it.",
+    "Result": "Provides a robust, scalable, fault-tolerant, predictable, and extensible architecture for real-time data processing by effectively combining batch and speed processing capabilities.",
+    "Related Patterns": [
+      "Related to Kappa Architecture"
+    ],
+    "Uses": "Used by 2 participants. Identified as one of the 7 major ML architecture patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing the requirements for real-time and batch data processing in ML systems. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "ParameterServer Abstraction",
+    "Problem": "For distributed learning, widely accepted abstractions are lacking.",
+    "Context": "Distributed machine learning environments where global parameters need to be efficiently managed, shared, and updated across multiple worker nodes.",
+    "Solution": "Distribute both data and workloads over worker nodes while the server nodes maintain globally shared parameters which are represented as vectors and matrices.",
+    "Result": "Provides a clear and accepted abstraction for managing and sharing global parameters in distributed learning, enabling scalable and coordinated training processes.",
+    "Related Patterns": [],
+    "Uses": "Used by 2 participants. Identified as one of the 7 major ML architecture patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing a fundamental challenge in distributed machine learning. The problem, solution, and other details are directly extracted or inferred from Table 1."
+  },
+  {
+    "Pattern Name": "Daisy Architecture",
+    "Problem": "The ability to scale content production processes must be acquired via the use of ML. Then the coverage of that tooling must be extended over as much of their remaining content.",
+    "Context": "Scaling content production processes using ML, requiring automated, on-demand, and iterative approaches to extend tooling coverage.",
+    "Solution": "Utilize Kanban scaling and microservice to realize pull-based automated on-demand and iterative processes.",
+    "Result": "Enables scalable, automated, on-demand, and iterative content production processes by leveraging ML, Kanban, and microservices.",
+    "Related Patterns": [
+      "Uses Microservice Architecture"
+    ],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, focusing on scaling ML-driven content production. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Gateway Routing Architecture",
+    "Problem": "When a client uses multiple services it can be difficult to set up and manage individual endpoints for each service.",
+    "Context": "Clients interacting with multiple services within an ML application system, where managing individual endpoints for each service becomes complex.",
+    "Solution": "Install a gateway before a set of applications services or deployments and use application layer routing requests to the appropriate instance.",
+    "Result": "Simplifies client interaction with multiple services by providing a single entry point and centralizing the management and routing of requests.",
+    "Related Patterns": [
+      "Similar to Distinguish Business Logic from ML Models",
+      "Uses Data Lake"
+    ],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing service interaction and management within ML application systems. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Kappa Architecture",
+    "Problem": "It is necessary to deal with huge amount of data with less code resource.",
+    "Context": "Processing large volumes of data efficiently with minimal code, supporting both real-time data processing and continuous reprocessing.",
+    "Solution": "Support both real-time data processing and continuous reprocessing with a single stream processing engine.",
+    "Result": "Efficiently handles huge amounts of data with less code by unifying real-time and reprocessing capabilities within a single stream processing engine.",
+    "Related Patterns": [
+      "Related to Lambda Architecture"
+    ],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, focusing on efficient data processing for large ML datasets. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "ClosedLoop Intelligence",
+    "Problem": "It is necessary to address big open-ended time-changing or intrinsically hard problems.",
+    "Context": "ML systems dealing with complex, evolving, and inherently difficult problems that require continuous interaction and feedback with users to adapt and improve.",
+    "Solution": "Connect machine learning to the user and close the loop. Design clear interactions along with implicit and direct outputs.",
+    "Result": "Enables ML systems to effectively address complex, evolving problems by incorporating continuous user feedback and designing clear, interactive outputs.",
+    "Related Patterns": [
+      "Mitigates Undeclared Consumers (antipattern)",
+      "Can be combined with Distinguish Business Logic from ML Models",
+      "Can be combined with DataAlgorithmServing Evaluator"
+    ],
+    "Uses": "Used by 0 participants.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, focusing on user interaction and continuous improvement for complex ML problems. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Federated Learning",
+    "Problem": "Standard machine learning approaches require centralizing the training data on one machine or in a datacenter.",
+    "Context": "Scenarios where training data cannot or should not be centralized due to privacy concerns, security policies, or bandwidth limitations, typically involving distributed devices like mobile phones.",
+    "Solution": "Employ Federated Learning which enables mobile phones to collaboratively learn a shared prediction model while keeping all the training data on the device.",
+    "Result": "Allows collaborative learning of a shared ML model without centralizing sensitive training data, thereby preserving privacy, reducing data transfer, and enabling on-device learning.",
+    "Related Patterns": [
+      "Uses Secure Aggregation"
+    ],
+    "Uses": "Used by 0 participants.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Architecture Pattern' in Table 1 of the paper, addressing privacy-preserving and distributed training challenges in Machine Learning. The problem, solution, and other details are directly extracted or inferred from Table 1 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "ML models and their several versions may change the behaviour of the overall ML applications.",
+    "Context": "Managing the evolution of ML models and ensuring reproducibility, traceability, and understanding of how different versions impact the overall ML application's behavior.",
+    "Solution": "Record the ML model structure training data and training system to ensure a reproducible training process.",
+    "Result": "Ensures reproducibility of ML model training and behavior, facilitating debugging, auditing, and understanding changes across different model versions.",
+    "Related Patterns": [],
+    "Uses": "Used by 4 participants. Identified as one of the 5 major ML design patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the critical need for reproducibility and traceability in ML model development. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Wrap BlackBox Packages into Common APIs",
+    "Problem": "Using generic independent ML frameworks often results in different glue code for each framework for which a massive amount of supporting code is written to get data into and out of the framework from and to the rest of the application.",
+    "Context": "Integrating multiple, potentially black-box ML frameworks into an application, leading to excessive, framework-specific 'glue code' and high maintenance costs.",
+    "Solution": "Wrap blackbox packages into common APIs to make supporting infrastructure more reusable and to reduce the cost of changing packages.",
+    "Result": "Reduces the amount of 'glue code' and the cost associated with changing or updating ML packages/frameworks by providing a reusable, standardized interface.",
+    "Related Patterns": [
+      "Mitigates Glue Code (antipattern)"
+    ],
+    "Uses": "Used by 4 participants. Identified as one of the 5 major ML design patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the integration and maintainability challenges of diverse ML frameworks. The problem, solution, and other details are directly extracted or inferred from Table 2 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Test Infrastructure Independently from ML",
+    "Problem": "It is difficult to identify errors when infrastructure and machine learning are mixed.",
+    "Context": "Testing ML systems where infrastructure components and ML learning parts are tightly coupled, making error identification and isolation challenging.",
+    "Solution": "Ensure that the infrastructure is testable and the learning parts of the system are encapsulated so that everything around it can be tested.",
+    "Result": "Simplifies error identification and improves overall system testability by clearly separating and encapsulating ML components from the underlying infrastructure.",
+    "Related Patterns": [],
+    "Uses": "Used by 3 participants. Identified as one of the 5 major ML design patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, focusing on improving the testability of ML application systems. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Handshake",
+    "Problem": "A ML system depends on inputs delivered outside of the normal release process.",
+    "Context": "ML systems that rely on external inputs or data sources that are not part of the standard software release cycle, requiring robust validation and change detection.",
+    "Solution": "Create a handshake normalization process regularly check for significant changes and send ALERTS.",
+    "Result": "Ensures the stability and reliability of ML systems by proactively detecting and alerting on significant changes in external inputs, preventing unexpected behavior.",
+    "Related Patterns": [],
+    "Uses": "Used by 2 participants. Identified as one of the 5 major ML design patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the challenge of managing external data dependencies in ML systems. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Isolate and Validate Output of Model",
+    "Problem": "Machine learning models are known to be unstable and vulnerable to adversarial attacks and to noise in data and data drift overtime.",
+    "Context": "Deploying ML models that are inherently unstable, susceptible to adversarial attacks, noise, and data drift, requiring robust safeguards and validation mechanisms.",
+    "Solution": "Encapsulate ML models within rule-base safeguards and use redundant and diverse architecture that mitigates and absorbs the low robustness of ML models.",
+    "Result": "Enhances the robustness and reliability of ML models by protecting them with rule-based safeguards and redundant architectures against instability, adversarial attacks, and data drift.",
+    "Related Patterns": [],
+    "Uses": "Used by 2 participants. Identified as one of the 5 major ML design patterns.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the critical issues of model instability, vulnerability, and data drift in ML systems. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Canary Model",
+    "Problem": "A surrogate ML that approximates the behavior of the best ML model must be built to provide explainability.",
+    "Context": "Needing to monitor, validate, and explain the behavior of a primary, potentially complex or black-box, ML model in production.",
+    "Solution": "Run the canary inference pipeline in parallel with the primary inference pipeline to monitor prediction differences.",
+    "Result": "Provides explainability, monitoring, and validation for primary ML models by comparing their predictions with a simpler, surrogate 'canary' model, helping detect anomalies or regressions.",
+    "Related Patterns": [],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, focusing on model monitoring and explainability in ML deployments. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Decouple Training Pipeline from Production Pipeline",
+    "Problem": "It is necessary to separate and quickly change the ML data workload and stabilize the training workload to maximize efficiency.",
+    "Context": "Managing ML systems where training and production workloads have distinct requirements (e.g., rapid changes in training, stability in production) and need independent optimization and resource allocation.",
+    "Solution": "Physically isolate different workloads to different machines. Then optimize the machine configurations and the network usage.",
+    "Result": "Maximizes efficiency and allows for independent optimization and rapid changes by physically isolating training and production workloads, preventing interference and ensuring stability.",
+    "Related Patterns": [],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the operational efficiency and stability of ML training and production environments. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Descriptive Data Type for Rich Information",
+    "Problem": "The rich information used and produced by ML systems is often encoded with plain data types like raw floats and integers.",
+    "Context": "ML systems where important semantic information about model parameters and predictions is lost or obscured due to the use of generic, plain data types.",
+    "Solution": "Design a robust system where the model parameter knows if it is a logodds multiplier or a decision threshold and a prediction knows information about the model.",
+    "Result": "Preserves and utilizes rich semantic information within ML systems by using descriptive data types, leading to more robust, understandable, and debuggable models.",
+    "Related Patterns": [
+      "Mitigates PlainOldData Type Smell (antipattern)"
+    ],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the issue of semantic information loss in ML data representation. The problem, solution, and other details are directly extracted or inferred from Table 2 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Design Holistically about Data Collection and Feature Extraction",
+    "Problem": "The system to prepare data in an ML-friendly format may become a pipeline jungle. Managing these pipelines is difficult and costly.",
+    "Context": "ML systems where data preparation and feature extraction processes become overly complex, fragmented, and difficult to manage, leading to 'pipeline jungles'.",
+    "Solution": "Avoid pipeline jungles by thinking holistically about data collection and feature extraction that can dramatically reduce ongoing costs.",
+    "Result": "Reduces complexity and ongoing costs by preventing 'pipeline jungles' through a holistic design approach to data collection and feature extraction, improving maintainability.",
+    "Related Patterns": [
+      "Mitigates Pipeline Jungles (antipattern)"
+    ],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the complexity and cost of data pipelines in ML systems. The problem, solution, and other details are directly extracted or inferred from Table 2 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Reexamine Experimental Branches Periodically",
+    "Problem": "The codepaths accumulated by individual changes can create a growing debt due to the increasing difficulties of maintaining backward compatibility.",
+    "Context": "ML development environments with numerous experimental branches, leading to accumulated 'code debt' and challenges in maintaining backward compatibility.",
+    "Solution": "Reexamine each experimental branch periodically to see what can be removed to eliminate glue code and pipeline jungles.",
+    "Result": "Reduces 'code debt' and improves maintainability by periodically cleaning up experimental branches, eliminating unnecessary code, glue code, and pipeline jungles.",
+    "Related Patterns": [
+      "Mitigates Dead Experimental Codepaths (antipattern)",
+      "Mitigates Glue Code (antipattern)",
+      "Mitigates Pipeline Jungles (antipattern)"
+    ],
+    "Uses": "Used by 1 participant.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the accumulation of technical debt in ML development due to experimental branches. The problem, solution, and other details are directly extracted or inferred from Table 2 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Reuse Code between Training Pipeline and Serving Pipeline",
+    "Problem": "Training/serving skew can be caused by a discrepancy between how data in the training and serving pipelines are handled.",
+    "Context": "ML systems experiencing 'training/serving skew' due to inconsistencies in data handling and processing logic between the training and serving environments.",
+    "Solution": "Reuse code between training pipeline and serving pipeline by preparing objects that store results in an understandable way for humans.",
+    "Result": "Mitigates 'training/serving skew' by ensuring consistent data handling and processing logic across both training and serving pipelines, leading to more reliable model performance.",
+    "Related Patterns": [],
+    "Uses": "Used by 0 participants.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing a common problem of 'training/serving skew' in ML deployments. The problem, solution, and other details are directly extracted or inferred from Table 2."
+  },
+  {
+    "Pattern Name": "Separation of Concerns and Modularization of ML Components",
+    "Problem": "ML applications must accommodate regular and frequent changes to their ML components.",
+    "Context": "ML applications requiring high adaptability and maintainability due to regular and frequent changes in their ML components.",
+    "Solution": "Decouple at different levels of complexity from simplest to most complex.",
+    "Result": "Enhances adaptability, maintainability, and testability of ML applications by allowing frequent changes to ML components without impacting the entire system.",
+    "Related Patterns": [
+      "Identified as a fundamental pattern"
+    ],
+    "Uses": "Used by 0 participants.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper and highlighted as a 'fundamental pattern', addressing the need for adaptability and maintainability in evolving ML applications. The problem, solution, and other details are directly extracted or inferred from Table 2 and the 'Pattern Map' section."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "The system needs to communicate and aggregate model updates in a secure, efficient, scalable, and fault-tolerant way.",
+    "Context": "Distributed learning systems (e.g., Federated Learning) where model updates from multiple sources must be aggregated securely, efficiently, scalably, and fault-tolerantly without revealing individual contributions.",
+    "Solution": "Encrypt data from each mobile device in Federated learning and calculate totals and averages without individual examination.",
+    "Result": "Enables secure, efficient, scalable, and fault-tolerant aggregation of model updates, particularly in privacy-sensitive distributed learning scenarios like Federated Learning.",
+    "Related Patterns": [
+      "Used in Federated Learning"
+    ],
+    "Uses": "Used by 0 participants.",
+    "Thinking": "This is identified as an AI design pattern because it is explicitly listed as an 'ML Design Pattern' in Table 2 of the paper, addressing the critical security and privacy requirements for aggregating model updates in distributed ML systems. The problem, solution, and other details are directly extracted or inferred from Table 2 and the 'Pattern Map' section."
+  }
+]

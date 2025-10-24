@@ -1,0 +1,192 @@
+[
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "The overall business logic should be isolated as much as possible from the ML models so that they can be changed/overridden when necessary without impacting the rest of the business logic",
+    "Context": "ML application systems are complex because their ML components must be retrained regularly and have an intrinsic nondeterministic behavior. Business requirements and ML algorithms change over time.",
+    "Solution": "Separate the business logic and the inference engine loosely coupling the business logic and ML-specific dataflows. Define clear APIs between traditional and ML components, placing them in three layers (Data, Logic, Presentation) and dividing data flows.",
+    "Result": "Decoupling traditional business and ML components allows the ML components to be monitored and adjusted to meet users requirements and changing inputs.",
+    "Related Patterns": "ClosedLoop Intelligence (can be combined with), Data/Algorithm Serving/Evaluator (can be combined with), Gateway Routing Architecture (similar to, but different objectives).",
+    "Uses": "4",
+    "Thinking": "This pattern explicitly addresses the unique challenges of integrating and isolating ML models (with their non-deterministic, frequently changing nature) from traditional business logic within an application."
+  },
+  {
+    "Pattern Name": "Data/Algorithm Serving/Evaluator",
+    "Problem": "Prediction systems should connect different pieces in the data processing pipeline into one coherent system and prototyping predictive model",
+    "Context": "Building prediction systems that require a coherent structure for data processing and ML model prototyping.",
+    "Solution": "Separate the following like MVC for ML: data, data source and data preparator, algorithms, serving and evaluator",
+    "Result": "Creates a coherent system for prediction and prototyping by clearly separating ML-specific components like data preparation, algorithms, serving, and evaluation.",
+    "Related Patterns": "ClosedLoop Intelligence (can be combined with), Distinguish Business Logic from ML Models (can be combined with).",
+    "Uses": "2",
+    "Thinking": "This pattern structures components specifically for 'prediction systems' and 'predictive models,' using an 'MVC for ML' analogy to separate ML-specific concerns like data, algorithms, serving, and evaluation."
+  },
+  {
+    "Pattern Name": "Event-driven ML Microservices",
+    "Problem": "Due to frequent prototyping of ML models and constant changes, development teams must be agile to build, deploy, and maintain complex data pipelines",
+    "Context": "Development environments requiring agility for ML model prototyping and managing complex, changing data pipelines.",
+    "Solution": "Construct pipelines by chaining together multiple microservices, each of which listens for the arrival of some data and performs its designated task",
+    "Result": "Enables agile development, deployment, and maintenance of complex data pipelines for ML models by leveraging event-driven microservices.",
+    "Related Patterns": "Microservice Architecture (general pattern, implied).",
+    "Uses": "2",
+    "Thinking": "Applies event-driven microservices specifically to address the challenges of 'frequent prototyping of ML models' and 'complex data pipelines' inherent in ML development and operations."
+  },
+  {
+    "Pattern Name": "Parameter Server Abstraction",
+    "Problem": "For distributed learning, widely accepted abstractions are lacking",
+    "Context": "Implementing distributed learning systems where model parameters need to be shared and managed across multiple worker nodes.",
+    "Solution": "Distribute both data and workloads over worker nodes while the server nodes maintain globally shared parameters which are represented as vectors and matrices",
+    "Result": "Provides a widely accepted abstraction for distributed learning, enabling efficient management of shared model parameters (vectors and matrices) across worker nodes.",
+    "Related Patterns": "N/A",
+    "Uses": "2",
+    "Thinking": "This pattern is explicitly for 'distributed learning' and deals with 'globally shared parameters represented as vectors and matrices,' which are fundamental concepts in ML model training."
+  },
+  {
+    "Pattern Name": "Closed-Loop Intelligence",
+    "Problem": "It is necessary to address big, open-ended, time-changing, or intrinsically hard problems",
+    "Context": "Systems dealing with complex, evolving problems where continuous adaptation and user interaction are required for ML models.",
+    "Solution": "Connect machine learning to the user and close the loop. Design clear interactions along with implicit and direct outputs",
+    "Result": "Enables ML systems to adapt and improve over time by incorporating user feedback and handling dynamic, 'time-changing' problems.",
+    "Related Patterns": "Undeclared Consumers (mitigates), Distinguish Business Logic from ML Models (can be combined with), Data/Algorithm Serving/Evaluator (can be combined with).",
+    "Uses": "0",
+    "Thinking": "This pattern focuses on the interaction between ML systems and users, and the feedback loop for 'time-changing' problems, which is crucial for adaptive and evolving ML applications."
+  },
+  {
+    "Pattern Name": "Federated Learning",
+    "Problem": "Standard machine learning approaches require centralizing the training data on one machine or in a datacenter",
+    "Context": "Scenarios where training data cannot or should not be centralized, such as on mobile devices, due to privacy or logistical concerns.",
+    "Solution": "Employ Federated Learning, which enables mobile phones to collaboratively learn a shared prediction model while keeping all the training data on the device",
+    "Result": "Enables collaborative learning of a shared prediction model while preserving data privacy and avoiding centralization of training data.",
+    "Related Patterns": "Secure Aggregation (uses).",
+    "Uses": "0",
+    "Thinking": "This describes a specific ML paradigm for distributed, privacy-preserving model training, directly addressing the challenge of data centralization in ML."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "ML models and their several versions may change the behaviour of the overall ML applications",
+    "Context": "Managing the lifecycle of ML models and ensuring reproducibility of training processes.",
+    "Solution": "Record the ML model structure, training data, and training system to ensure a reproducible training process",
+    "Result": "Ensures reproducibility of ML model training and helps manage changes in ML application behavior by tracking model structure, training data, and system.",
+    "Related Patterns": "N/A",
+    "Uses": "4",
+    "Thinking": "This pattern directly addresses the unique need to version and reproduce ML models, their training data, and the training environment, which is critical for ML lifecycle management."
+  },
+  {
+    "Pattern Name": "Wrap Black-Box Packages into Common APIs",
+    "Problem": "Using generic, independent ML frameworks often results in different glue code for each framework for which a massive amount of supporting code is written to get data into and out of the framework from and to the rest of the application",
+    "Context": "Integrating diverse and often proprietary ML frameworks or 'black-box' models into a larger application.",
+    "Solution": "Wrap black-box packages into common APIs to make supporting infrastructure more reusable and to reduce the cost of changing packages",
+    "Result": "Reduces 'glue code,' improves reusability of infrastructure, and lowers the cost of changing ML packages by providing a unified API layer.",
+    "Related Patterns": "Glue Code (mitigates).",
+    "Uses": "4",
+    "Thinking": "Addresses the practical challenge of integrating various 'black-box' ML frameworks and models, which often require specific 'glue code,' into a unified system."
+  },
+  {
+    "Pattern Name": "Test Infrastructure Independently from ML",
+    "Problem": "It is difficult to identify errors when infrastructure and machine learning are mixed",
+    "Context": "Testing ML application systems where ML components are intertwined with general infrastructure.",
+    "Solution": "Ensure that the infrastructure is testable and the learning parts of the system are encapsulated so that everything around it can be tested",
+    "Result": "Facilitates easier identification of errors by separating the testing of stable infrastructure from the often-changing and non-deterministic 'learning parts' of the ML system.",
+    "Related Patterns": "N/A",
+    "Uses": "3",
+    "Thinking": "Recognizes the unique testing challenges of ML systems by advocating for the encapsulation and independent testing of the 'learning parts' (ML models) from the surrounding infrastructure."
+  },
+  {
+    "Pattern Name": "Handshake / Hand Buzzer",
+    "Problem": "A ML system depends on inputs delivered outside of the normal release process",
+    "Context": "ML systems that rely on external data inputs that are not managed through traditional software release cycles.",
+    "Solution": "Create a handshake normalization process, regularly check for significant changes, and send ALERTS",
+    "Result": "Ensures awareness and management of changes in external data inputs, preventing unexpected behavior or degradation in ML systems.",
+    "Related Patterns": "N/A",
+    "Uses": "2",
+    "Thinking": "Addresses the specific dependency of ML systems on dynamic, external data inputs that are outside typical software release processes, requiring a dedicated monitoring and alert mechanism."
+  },
+  {
+    "Pattern Name": "Isolate and Validate Output of Model",
+    "Problem": "Machine learning models are known to be unstable and vulnerable to adversarial attacks and to noise in data and data drift over time",
+    "Context": "Deploying ML models in production where robustness, stability, and resistance to data drift or adversarial attacks are critical.",
+    "Solution": "Encapsulate ML models within rule-base safeguards and use redundant and diverse architecture that mitigates and absorbs the low robustness of ML models",
+    "Result": "Mitigates the inherent instability, vulnerability, and data drift issues of ML models, improving their robustness and reliability in production.",
+    "Related Patterns": "N/A",
+    "Uses": "2",
+    "Thinking": "Directly tackles the inherent vulnerabilities and instability of ML models (e.g., adversarial attacks, data drift) by proposing specific architectural and safeguarding solutions."
+  },
+  {
+    "Pattern Name": "Canary Model",
+    "Problem": "A surrogate ML that approximates the behavior of the best ML model must be built to provide explainability",
+    "Context": "Production environments where monitoring, comparison, and explainability of ML model predictions are desired.",
+    "Solution": "Run the canary inference pipeline in parallel with the primary inference pipeline to monitor prediction differences",
+    "Result": "Provides a mechanism for monitoring prediction differences and potentially improving the explainability of the primary ML model in production.",
+    "Related Patterns": "N/A",
+    "Uses": "1",
+    "Thinking": "Describes a specific ML deployment and monitoring strategy using a 'canary' model to compare and understand prediction behavior, which is unique to ML operations."
+  },
+  {
+    "Pattern Name": "Decouple Training Pipeline from Production Pipeline",
+    "Problem": "It is necessary to separate and quickly change the ML data workload and stabilize the training workload to maximize efficiency",
+    "Context": "Managing distinct requirements for ML model training (iterative, resource-intensive) and production inference (stable, low-latency).",
+    "Solution": "Physically isolate different workloads to different machines. Then optimize the machine configurations and the network usage",
+    "Result": "Maximizes efficiency by allowing independent optimization and management of ML training and production workloads.",
+    "Related Patterns": "N/A",
+    "Uses": "1",
+    "Thinking": "Addresses the fundamental distinction and often conflicting requirements between ML model training and production serving, advocating for their physical separation."
+  },
+  {
+    "Pattern Name": "Descriptive Data Type for Rich Information",
+    "Problem": "The rich information used and produced by ML systems is often encoded with plain data types like raw floats and integers",
+    "Context": "Designing robust ML systems where the semantic meaning of model parameters and predictions is important for understanding and debugging.",
+    "Solution": "Design a robust system where the model parameter knows if it is a logodds multiplier or a decision threshold and a prediction knows information about the model",
+    "Result": "Improves the robustness and interpretability of ML systems by embedding semantic information into data types, aiding in understanding model behavior.",
+    "Related Patterns": "PlainOldData Type Smell (mitigates).",
+    "Uses": "1",
+    "Thinking": "Focuses on enhancing the interpretability and robustness of ML systems by giving semantic meaning to ML-specific data (model parameters, predictions) beyond generic data types."
+  },
+  {
+    "Pattern Name": "Design Holistically about Data Collection and Feature Extraction",
+    "Problem": "The system to prepare data in an ML-friendly format may become a pipeline jungle. Managing these pipelines is difficult and costly",
+    "Context": "Developing ML systems where data preparation, especially feature extraction, can lead to complex and unmanageable data pipelines.",
+    "Solution": "Avoid pipeline jungles by thinking holistically about data collection and feature extraction that can dramatically reduce ongoing costs",
+    "Result": "Reduces complexity and ongoing costs by preventing 'pipeline jungles' through a holistic approach to ML-specific data preparation and feature extraction.",
+    "Related Patterns": "Pipeline Jungles (mitigates).",
+    "Uses": "1",
+    "Thinking": "Addresses the specific complexity of 'ML-friendly format' data preparation and 'feature extraction' pipelines, which are central to ML system development."
+  },
+  {
+    "Pattern Name": "Reexamine Experimental Branches Periodically",
+    "Problem": "The codepaths accumulated by individual changes can create a growing debt due to the increasing difficulties of maintaining backward compatibility",
+    "Context": "Iterative ML development involving frequent experimentation and accumulation of experimental code branches.",
+    "Solution": "Reexamine each experimental branch periodically to see what can be removed to eliminate glue code and pipeline jungles",
+    "Result": "Reduces technical debt and improves maintainability by cleaning up experimental code, especially 'glue code and pipeline jungles' common in ML development.",
+    "Related Patterns": "Dead Experimental Codepaths (mitigates).",
+    "Uses": "1",
+    "Thinking": "Addresses the specific challenge of managing 'experimental branches' and accumulated 'codepaths' in the iterative and exploratory nature of ML development, aiming to eliminate ML-specific 'glue code and pipeline jungles'."
+  },
+  {
+    "Pattern Name": "Reuse Code between Training Pipeline and Serving Pipeline",
+    "Problem": "Training-serving skew can be caused by a discrepancy between how data in the training and serving pipelines are handled",
+    "Context": "ML systems where data processing logic differs between the training and serving environments, leading to performance degradation.",
+    "Solution": "Reuse code between training pipeline and serving pipeline by preparing objects that store results in an understandable way for humans",
+    "Result": "Mitigates 'training-serving skew' by ensuring consistent data handling logic across ML training and serving environments.",
+    "Related Patterns": "N/A",
+    "Uses": "0",
+    "Thinking": "Directly addresses 'training-serving skew,' a critical and unique problem in ML systems, by promoting consistent code for data handling between training and serving."
+  },
+  {
+    "Pattern Name": "Separation of Concerns and Modularization of ML Components",
+    "Problem": "ML applications must accommodate regular and frequent changes to their ML components",
+    "Context": "Designing ML applications that need to be adaptable to frequent changes in their ML components.",
+    "Solution": "Decouple at different levels of complexity from simplest to most complex",
+    "Result": "Improves maintainability and adaptability of ML applications by allowing independent changes to ML components.",
+    "Related Patterns": "Big Ass Script Architecture (mitigates).",
+    "Uses": "0",
+    "Thinking": "Applies the general principle of separation of concerns specifically to 'ML Components' to handle their 'regular and frequent changes,' which is characteristic of ML development."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "The system needs to communicate and aggregate model updates in a secure, efficient, scalable, and fault-tolerant way",
+    "Context": "Distributed learning environments, particularly Federated Learning, where model updates need to be aggregated securely and efficiently.",
+    "Solution": "Encrypt data from each mobile device in Federated learning and calculate totals and averages without individual examination",
+    "Result": "Enables secure, efficient, scalable, and fault-tolerant aggregation of model updates, especially in Federated Learning scenarios.",
+    "Related Patterns": "Federated Learning (used by).",
+    "Uses": "0",
+    "Thinking": "Provides a specific security and aggregation mechanism directly tied to 'Federated learning' and 'model updates,' making it an ML-specific design pattern."
+  }
+]

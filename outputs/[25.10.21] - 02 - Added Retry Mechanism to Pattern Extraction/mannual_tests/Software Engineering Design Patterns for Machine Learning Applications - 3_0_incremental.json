@@ -1,0 +1,103 @@
+[
+  {
+    "Pattern Name": "Encapsulate ML Models within Rule-base Safeguards",
+    "Problem": "ML models are unstable, vulnerable to attacks, noise, and data drift, leading to unpredictable or unreliable behavior.",
+    "Context": "Deploying ML models in critical systems where stability, robustness, trustworthiness, and verifiable behavior are paramount.",
+    "Solution": "Encapsulate the ML model's functionality and augment it with deterministic, verifiable rule-based systems. These rules act as safeguards, handling inherent uncertainty, mitigating vulnerabilities, and ensuring predictable behavior in critical scenarios.",
+    "Result": "Improves the robustness, reliability, and trustworthiness of ML systems by providing a safety net of deterministic rules. Helps in handling edge cases, adversarial attacks, and data drift more predictably, increasing confidence in model deployment.",
+    "Related Patterns": [
+      "Deployable Canary Model"
+    ],
+    "Uses": "Critical ML applications (e.g., finance, healthcare, autonomous systems) where errors or vulnerabilities are unacceptable; hybrid AI systems combining symbolic reasoning with machine learning."
+  },
+  {
+    "Pattern Name": "Parameter-Server Abstraction",
+    "Problem": "Lack of widely accepted abstractions for distributed learning, making it difficult to scale ML model training efficiently for large models or datasets.",
+    "Context": "Training large ML models or on massive datasets that exceed the memory or computational capacity of a single machine, requiring distributed computation.",
+    "Solution": "Implement an architecture where data and computational workloads are distributed across multiple worker nodes. Central server nodes are responsible for maintaining and synchronizing globally shared model parameters (e.g., weight vectors and matrices), which workers fetch, update, and send back to the servers.",
+    "Result": "Enables scalable and efficient distributed training of machine learning models, overcoming memory and computational limitations of single machines and accelerating the training process.",
+    "Related Patterns": [
+      "Data Flows Up, Model Flows Down (Federated Learning)",
+      "Secure Aggregation"
+    ],
+    "Uses": "Large-scale deep learning, distributed optimization, training models on massive datasets in data centers."
+  },
+  {
+    "Pattern Name": "Data Flows Up, Model Flows Down (Federated Learning)",
+    "Problem": "Standard ML approaches centralize training data, leading to privacy concerns, high data transfer costs, and inability to leverage data residing on numerous distributed edge devices.",
+    "Context": "Training ML models using sensitive user data located on numerous distributed devices (e.g., mobile phones, IoT devices) where data privacy, locality, and bandwidth efficiency are critical.",
+    "Solution": "Instead of centralizing raw training data, the global model (or its parameters) is sent 'down' to individual devices. Each device trains the model locally on its own data. Only the model updates (e.g., gradients or parameter deltas) are sent 'up' to a central server, where they are aggregated to improve the global model.",
+    "Result": "Enables collaborative learning while preserving data privacy, reducing bandwidth usage, and leveraging diverse, real-world data from edge devices without centralizing sensitive raw information.",
+    "Related Patterns": [
+      "Parameter-Server Abstraction",
+      "Secure Aggregation"
+    ],
+    "Uses": "Mobile keyboard prediction, on-device recommendation systems, healthcare applications with sensitive patient data, IoT analytics."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "In collaborative learning environments, there's a need to aggregate model updates from multiple devices securely, efficiently, scalably, and fault-tolerantly, without exposing individual device contributions.",
+    "Context": "Federated learning or other distributed ML scenarios where privacy of individual model updates is crucial during the aggregation process, and the central aggregator should not learn about individual contributions.",
+    "Solution": "Employ cryptographic techniques (e.g., homomorphic encryption, secure multi-party computation) to encrypt model updates from individual mobile devices. The central server can then compute the aggregate (e.g., sum or average) of these encrypted updates without decrypting or inspecting individual contributions.",
+    "Result": "Enhances privacy and security in distributed ML by ensuring that individual model updates remain confidential even during the aggregation process, while still allowing the global model to be improved.",
+    "Related Patterns": [
+      "Data Flows Up, Model Flows Down (Federated Learning)",
+      "Parameter-Server Abstraction"
+    ],
+    "Uses": "Federated learning, privacy-preserving machine learning, collaborative AI training on sensitive data, secure multi-party computation in ML."
+  },
+  {
+    "Pattern Name": "Deployable Canary Model",
+    "Problem": "Complex, 'black-box' ML models often lack explainability, making it difficult to understand their decisions, debug issues, or build trust in production.",
+    "Context": "Deploying critical ML models where understanding model behavior, ensuring fairness, detecting drift, or providing explanations is important, but the primary model is too complex to be directly interpretable.",
+    "Solution": "Deploy a simpler, more explainable 'canary' ML model (a surrogate) in parallel with the primary, high-performance model. This canary model is designed to approximate the behavior of the primary model. An explainable inference pipeline runs alongside the primary one, monitoring and comparing prediction differences between the two models.",
+    "Result": "Provides insights into the primary model's behavior, helps detect anomalies, biases, or drift by observing discrepancies with the explainable canary, and improves trust and debuggability without sacrificing primary model performance.",
+    "Related Patterns": [
+      "Encapsulate ML Models within Rule-base Safeguards"
+    ],
+    "Uses": "XAI (Explainable AI), model monitoring, bias detection, debugging complex ML systems in production, regulatory compliance for ML models."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "The behavior of an ML-powered application can change significantly with different versions of ML models, and reproducing past results or understanding current behavior is challenging due to dependencies on data, code, and environment.",
+    "Context": "Developing and deploying ML systems where reproducibility, auditability, and the ability to roll back or compare model versions are crucial for debugging, governance, and continuous improvement.",
+    "Solution": "Implement a comprehensive versioning strategy that records not only the ML model's structure (architecture, hyperparameters) and analytical code but also the specific training data used, the training system configuration (libraries, hardware), and the inference environment. This ensures that any model can be reproduced and its behavior understood.",
+    "Result": "Guarantees reproducibility of ML experiments and deployments, facilitates debugging, enables effective model governance, and allows for reliable A/B testing and rollbacks of ML models.",
+    "Related Patterns": [],
+    "Uses": "MLOps, model governance, scientific reproducibility in ML research, debugging production ML systems, regulatory compliance."
+  },
+  {
+    "Pattern Name": "Text Embedding Generation",
+    "Problem": "Raw textual data cannot be directly processed by machine learning models and requires conversion into a numerical, semantically rich representation.",
+    "Context": "A chatbot system where user input (text) needs to be transformed into a format suitable for a language model or other ML components.",
+    "Solution": "A dedicated \"Data Processing (Text to Vector Transformer)\" component, which includes \"NN Model Pre- and Post-Processing\" and utilizes ML frameworks like \"TensorFlow,\" converts input text into \"Word Vectors\" or \"ML Input.\"",
+    "Result": "Textual data is transformed into high-dimensional numerical vectors (embeddings) that capture semantic meaning, enabling machine learning models to understand and process the text effectively.",
+    "Related Patterns": [
+      "Inference Service",
+      "Vector Store"
+    ],
+    "Uses": "Natural Language Processing (NLP), semantic search, recommendation systems, chatbots, information retrieval"
+  },
+  {
+    "Pattern Name": "Inference Service",
+    "Problem": "A trained machine learning model needs to be deployed and made accessible for real-time predictions or responses within an application, often requiring specific ML runtime environments.",
+    "Context": "A chatbot system where a \"Language Model\" needs to generate responses based on processed user input, integrating AI intelligence into the application's business logic.",
+    "Solution": "An \"Inference Engine (Language Model)\" component, which encapsulates the \"NN Model\" and leverages ML frameworks like \"TensorFlow,\" receives \"ML Input\" (e.g., text embeddings) and produces \"ML Output\" (e.g., generated text or classifications) that is then consumed by the \"Business Logic.\"",
+    "Result": "The machine learning model's predictive or generative capabilities are exposed as a robust and scalable service, allowing the application to integrate AI-driven intelligence for real-time decision-making or content generation.",
+    "Related Patterns": [
+      "Text Embedding Generation"
+    ],
+    "Uses": "Real-time prediction, chatbots, recommendation engines, fraud detection, image recognition"
+  },
+  {
+    "Pattern Name": "Vector Store",
+    "Problem": "Efficiently storing, managing, and retrieving high-dimensional numerical vectors (embeddings) that represent data, often for similarity search or other machine learning tasks.",
+    "Context": "A system that generates \"Word Vectors\" from text and needs to persist them as a \"Vectorized Corpus\" for potential future use, such as for retrieval, semantic search, or model training.",
+    "Solution": "A \"Data Lake (Vectorized Corpus)\" component is used to receive and store \"Word Vector\" outputs from \"Data Processing.\" This component is explicitly noted to contain \"Word Vector\" and \"TensorFlow (Text),\" indicating its specialized nature for handling text embeddings.",
+    "Result": "A persistent and queryable repository of numerical representations of data, enabling efficient similarity comparisons, contextual retrieval, and other vector-based operations crucial for advanced AI applications.",
+    "Related Patterns": [
+      "Text Embedding Generation"
+    ],
+    "Uses": "Semantic search, Retrieval-Augmented Generation (RAG), recommendation systems, anomaly detection, knowledge graphs"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "Pattern Name": "Interactive AI Agent",
+    "Problem": "How to enable an AI model to perform complex, multi-step tasks that require external tool use and dynamic decision-making in an environment.",
+    "Context": "Tasks like web browsing, long-form question answering, or other sequential decision-making processes where information needs to be actively sought, processed, and actions taken based on real-time feedback.",
+    "Solution": "Design a text-based (or other modality) environment with a defined action space (commands like 'Search', 'Click', 'Scroll', 'Quote') and an observation space (current state, page text, question). The AI model is trained to iteratively issue commands in response to observations, acting as an agent within this environment.",
+    "Result": "The AI model gains the ability to perform tasks requiring active tool use (e.g., search engine, navigation) and adapt its strategy based on dynamic feedback from the environment, leading to more capable and flexible systems.",
+    "Related Patterns": "Tool-Use AI, Embodied AI (in a broader sense), Multi-Stage Generation.",
+    "Uses": "WebGPT uses this pattern to allow a fine-tuned language model to interact with a text-based web browser for long-form question answering.",
+    "Thinking": "The text explicitly describes creating a 'textbased webbrowsing environment that a netuned language model can interact with' and lists the specific commands the model can take (Table 1), indicating a core architectural choice for how the AI operates."
+  },
+  {
+    "Pattern Name": "Behavior Cloning (Imitation Learning)",
+    "Problem": "How to teach an AI model to perform a complex, sequential task for which direct reward signals are sparse or difficult to define, but human examples of desired behavior exist.",
+    "Context": "Initial training phase for tasks requiring sequential decision-making or complex interaction, where human experts can provide demonstrations of the desired actions in a given environment.",
+    "Solution": "Collect human demonstrations, which consist of sequences of observations and corresponding actions taken by a human expert in the environment. Train the AI model using supervised learning to predict the human's next action given the current observation, effectively imitating the human's behavior.",
+    "Result": "A baseline policy that can perform the task by mimicking expert behavior, often serving as a robust starting point for further optimization or refinement.",
+    "Related Patterns": "Supervised Fine-tuning, Human Demonstration Collection.",
+    "Uses": "WebGPT uses behavior cloning to fine-tune GPT-3 on human demonstrations of using the web browsing environment to answer questions.",
+    "Thinking": "The text clearly states: 'We netuned on the demonstrations using supervised learning with the commands issued by the human demonstrators as labels.' This directly describes Behavior Cloning as a training method."
+  },
+  {
+    "Pattern Name": "Reward Modeling (Preference-based Learning)",
+    "Problem": "Directly optimizing complex, subjective qualities (like 'answer quality,' 'factual accuracy,' 'coherence,' or 'overall usefulness') is challenging with traditional, easily quantifiable loss functions.",
+    "Context": "After an initial policy is trained (e.g., via Behavior Cloning), there is a need to refine its outputs based on nuanced human judgment and preferences.",
+    "Solution": "Collect human comparisons between pairs of AI-generated outputs (e.g., 'which answer is better?'). Train a separate 'reward model' (often a neural network) to take an AI output (e.g., an answer with references) and assign a scalar score that predicts human preference. This model is trained using a loss function (e.g., cross-entropy) based on the human comparison labels.",
+    "Result": "A quantifiable proxy for human preference that can be used to evaluate AI outputs, select the best among multiple candidates, or serve as a reward signal for further reinforcement learning.",
+    "Related Patterns": "Human Preference Learning, Alignment Tax.",
+    "Uses": "WebGPT trains a reward model using human comparisons of model-generated answers to predict human preferences for factual accuracy, coherence, and usefulness.",
+    "Thinking": "The text describes 'reward modeling using the comparisons' and details how a model is 'trained to take in a question and an answer with references and output a scalar reward... trained using a crossentropy loss with the comparisons as labels.' This is a distinct AI pattern for learning subjective quality."
+  },
+  {
+    "Pattern Name": "Reinforcement Learning from Human Feedback (RLHF)",
+    "Problem": "How to optimize an AI model's behavior to maximize a complex, subjective objective (like human preference) that is difficult to specify directly as a traditional reward function.",
+    "Context": "After a reward model has been trained to capture human preferences, this learned preference signal can be used to iteratively improve the generative policy beyond what imitation learning alone can achieve.",
+    "Solution": "Use the trained reward model as the reward function in a reinforcement learning setup (e.g., Proximal Policy Optimization - PPO). The generative policy is updated to produce outputs that maximize this reward, often incorporating a KL divergence penalty to prevent the policy from deviating too far from the initial (e.g., behavior-cloned) policy, which helps mitigate overoptimization of the reward model.",
+    "Result": "A policy that generates outputs highly aligned with human preferences, often surpassing the performance of the initial behavior-cloned policy and leading to human-competitive or superhuman performance on subjective tasks.",
+    "Related Patterns": "Policy Optimization with Human Feedback, Reward Modeling.",
+    "Uses": "WebGPT fine-tunes the behavior-cloned model on its environment using PPO, with the reward model score as the environment reward, combined with a KL penalty.",
+    "Thinking": "The text explicitly mentions 'reinforcement learning against the reward model' and details the use of PPO with the reward model score and a KL penalty from the BC model. This is a specific and widely recognized AI pattern."
+  },
+  {
+    "Pattern Name": "Rejection Sampling (Best-of-N Sampling)",
+    "Problem": "How to improve the quality of AI-generated outputs at inference time by leveraging a pre-trained reward model, without requiring further training of the generative model.",
+    "Context": "When a reward model is available to score outputs, and there is a computational budget to generate multiple candidate outputs at inference time.",
+    "Solution": "Sample 'n' candidate outputs from the generative model (e.g., a behavior-cloned or RL-tuned policy). Use the reward model to score each candidate output. Select and present the candidate with the highest reward model score as the final output.",
+    "Result": "Significantly improved output quality compared to single-sample generation, effectively 'amplifying' the reward model's ability to discern good outputs by trading inference-time compute for quality.",
+    "Related Patterns": "Candidate Generation and Selection, Reward Modeling.",
+    "Uses": "WebGPT samples a fixed number of answers (e.g., 4, 16, or 64) from the BC or RL model and selects the one ranked highest by the reward model.",
+    "Thinking": "The text describes 'rejection sampling bestofn' as a distinct training method, detailing how multiple answers are sampled and the best one is chosen by the reward model. This is a specific inference-time optimization pattern."
+  },
+  {
+    "Pattern Name": "Reference-Aided Generation and Evaluation",
+    "Problem": "Evaluating the factual accuracy and trustworthiness of AI-generated long-form answers is difficult, subjective, and time-consuming for human labelers, and models may hallucinate.",
+    "Context": "Long-form question answering, summarization, or content generation tasks where factual grounding, verifiability, and transparency are critical.",
+    "Solution": "Design the AI system to explicitly extract and cite supporting passages (references) from its information sources while generating an answer. Human evaluators are then instructed to assess the answer's factual accuracy and support *based on these provided references*, rather than performing independent research.",
+    "Result": "More accurate, less noisy, and transparent human feedback, which leads to better-trained models that are less prone to hallucination and more factually grounded. It also increases user trust by providing verifiable sources.",
+    "Related Patterns": "Retrieval-Augmented Generation (RAG) (as a component), Explainable AI (XAI), Multi-Stage Generation.",
+    "Uses": "WebGPT models collect references while browsing, which are then used to compose answers. This is 'crucial for allowing labelers to judge the factual accuracy of answers without engaging in a difcult and subjective process of independent research.'",
+    "Thinking": "The text highlights this as a key contribution: 'We generate answers with references passages extracted by the model from web pages while browsing. This is crucial for allowing labelers to judge the factual accuracy of answers...' and later discusses its benefits for feedback accuracy, noise reduction, and transparency."
+  },
+  {
+    "Pattern Name": "External Tool Integration (Search Engine Augmentation)",
+    "Problem": "Large Language Models (LLMs) have inherent knowledge cutoffs, may hallucinate, or lack access to real-time, up-to-date, or broad information beyond their training data.",
+    "Context": "Tasks requiring current, factual, or extensive information that is best sourced from external, dynamic knowledge bases like the internet.",
+    "Solution": "Provide the AI model with an interface to interact with external tools, specifically a modern search engine (e.g., Bing API). The model learns to formulate queries, interpret search results, and navigate web pages to retrieve relevant information, which it then uses to inform its responses.",
+    "Result": "Enhanced factual accuracy, access to real-time and comprehensive information, reduced hallucinations, and the ability to tackle questions requiring knowledge beyond the model's static training data.",
+    "Related Patterns": "Interactive AI Agent, Retrieval-Augmented Generation (RAG) (if retrieval is external and non-differentiable).",
+    "Uses": "WebGPT outsources document retrieval to the Microsoft Bing Web Search API, allowing the model to search and navigate the web.",
+    "Thinking": "The text explicitly states 'we outsource document retrieval to the Microsoft Bing Web Search API' and describes the model's ability to issue 'Search' commands. This is a clear pattern for extending LLM capabilities beyond their internal knowledge."
+  },
+  {
+    "Pattern Name": "Multi-Stage Generation (Browse-then-Answer)",
+    "Problem": "Generating a high-quality, well-supported long-form answer directly in a single step can be overly complex for a model, leading to poor information retrieval, synthesis, or coherence.",
+    "Context": "Complex generative tasks, such as long-form question answering, that naturally involve distinct phases of information gathering/exploration and subsequent synthesis/composition.",
+    "Solution": "Decompose the generative process into sequential, distinct stages. For example, an initial 'browsing' or 'retrieval' stage where the AI agent actively searches for and collects relevant information and references from an environment, followed by a separate 'answering' or 'synthesis' stage where it composes the final output based on the information gathered in the previous stage.",
+    "Result": "Improved modularity in the AI system's design, better control over the information gathering process, and potentially higher quality, more grounded, and coherent answers by separating the concerns of retrieval and synthesis.",
+    "Related Patterns": "Interactive AI Agent, Agentic Workflow, Chain of Thought (if internal reasoning steps).",
+    "Uses": "WebGPT's process involves a browsing phase where the model interacts with the web environment to collect quotes, followed by an answering phase where it composes the final answer using the collected references.",
+    "Thinking": "The text describes the model's interaction: 'Browsing then continues until... the model is prompted with the question and the references and must compose its nal answer.' This clearly delineates two distinct stages of operation for the AI."
+  }
+]

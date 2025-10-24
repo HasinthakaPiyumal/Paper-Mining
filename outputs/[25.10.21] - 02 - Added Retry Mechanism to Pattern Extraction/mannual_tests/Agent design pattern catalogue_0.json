@@ -1,0 +1,334 @@
+[
+  {
+    "Pattern Name": "Passive Goal Creator",
+    "Problem": "Users may lack expertise in interacting with agents, leading to ambiguous or underspecified information for goal achievement.",
+    "Context": "Users provide related context and explain their goals in prompts through a dialogue interface when querying agents.",
+    "Solution": "A foundation model-based agent provides a dialogue interface where users directly specify context and problems. The Passive Goal Creator analyzes these prompts, retrieves related information from memory (artifacts, tools, conversation histories, examples), and appends it to the user's prompt for goal determination. The agent passively receives input and refines user goals.",
+    "Result": "Improves interactivity, facilitates goalseeking by analyzing user context and memory, and offers efficiency through a direct dialogue interface.",
+    "Related Patterns": [
+      "Proactive Goal Creator",
+      "Promptresponse Optimiser"
+    ],
+    "Uses": [
+      "An agent designed to communicate with users and refine research questions via a dialogue interface (Liu et al. 2023a).",
+      "An agent for users to decompose and allocate tasks to robots through a dialogue interface (Kannan et al. 2023).",
+      "HuggingGPT, which interprets complex user requests as intended goals via a chatbot."
+    ],
+    "Thinking": "This pattern is specific to how an AI agent interprets and formalizes user intentions from natural language input, making it an AI-Human Interaction and Agentic AI pattern. It's not a general software engineering concept."
+  },
+  {
+    "Pattern Name": "Proactive Goal Creator",
+    "Problem": "Context information collected solely via a dialogue interface may be limited, resulting in inaccurate responses to user goals.",
+    "Context": "Users explain the goals the agent is expected to achieve in the prompt.",
+    "Solution": "In addition to prompts and memory retrieval, the Proactive Goal Creator anticipates user goals by sending requirements to detectors. These detectors capture multimodal context information from the user's surroundings (e.g., gestures via cameras, UI layout via screenshots) for deeper analysis and comprehension. This captured environmental information can be stored in the agent's memory to build world models and continuously improve its understanding.",
+    "Result": "Enhances interactivity by proactively anticipating user decisions, improves goalseeking accuracy and completeness with multimodal input, and increases accessibility for users with disabilities.",
+    "Related Patterns": [
+      "Passive Goal Creator",
+      "Promptresponse Optimiser",
+      "Multimodal Guardrails"
+    ],
+    "Uses": [
+      "GestureGPT, which deciphers hand gesture descriptions to comprehend user intents (Zeng et al. 2023).",
+      "A programming screencast analysis tool that extracts coding steps and snippets (Zhao et al. 2023b).",
+      "ProAgent, which observes teammate agents' behaviors to deduce intentions and adjust planning (Zhang et al. 2023b)."
+    ],
+    "Thinking": "This pattern extends goal creation beyond explicit prompts by incorporating multimodal sensing and proactive anticipation, making it an AI-Human Interaction and Agentic AI pattern. It addresses challenges unique to AI agents interacting with complex environments."
+  },
+  {
+    "Pattern Name": "Promptresponse Optimiser",
+    "Problem": "Users may struggle with writing effective prompts, and agents' outputs can be difficult to understand, leading to inconsistent behaviors or misalignment with goals.",
+    "Context": "Users interact with agents by providing prompts, and agents generate responses.",
+    "Solution": "The Promptresponse Optimiser refines prompts and responses according to desired content and format, adhering to predefined constraints and specifications. It often utilizes prompt or response templates to standardize queries and outputs, improving accuracy and facilitating interoperability with external tools or agents.",
+    "Result": "Achieves standardisation of prompts and responses, ensures goal alignment, facilitates interoperability between agents and external tools, and provides adaptability to different requirements.",
+    "Related Patterns": [
+      "Passive Goal Creator",
+      "Proactive Goal Creator",
+      "Selfreflection",
+      "Crossreflection",
+      "Human Reflection",
+      "Agent Adapter"
+    ],
+    "Uses": [
+      "LangChain, which provides prompt templates for developing custom foundation model-based agents.",
+      "Amazon Bedrock, where users configure prompt templates to define agent evaluation and prompt usage.",
+      "Dialogflow, which allows users to create generators to specify agent behaviors and responses at runtime."
+    ],
+    "Thinking": "This pattern is fundamental to Prompt Design and LLM-specific interactions, focusing on optimizing the communication with foundation models. It's a core AI design pattern, not a general software pattern."
+  },
+  {
+    "Pattern Name": "Retrieval Augmented Generation (RAG)",
+    "Problem": "Large foundation model-based agents often lack domain-specific knowledge, especially confidential or private local data, making their reasoning unreliable for such tasks.",
+    "Context": "Agents need to conduct reasoning with data and knowledge that are not part of the foundation model's training data.",
+    "Solution": "RAG enhances agents' knowledge by retrieving facts from external sources (internal or online data) to fill knowledge gaps. This involves determining data sources, defining data structures for indexing raw data into embeddings or knowledge graphs, encoding user queries to search the knowledge base for relevant information, and processing the obtained data (reranking, filtering) to produce informed responses. This process requires no pretraining or finetuning of the model, preserving data privacy and reducing costs.",
+    "Result": "Enables knowledge retrieval for reliable reasoning, provides updatability of knowledge, ensures data privacy and security, and offers cost-efficiency by avoiding full model retraining.",
+    "Related Patterns": [],
+    "Uses": [
+      "LinkedIn, which applies RAG to construct pipelines for foundation model-based agents to search appropriate case studies.",
+      "Yan et al. 2024b, who devise a retrieval evaluator to assess retrieved data quality, improving RAG robustness.",
+      "Levonian et al. 2023, who apply RAG with GPT-3.5 to retrieve math textbook content for student question-answering."
+    ],
+    "Thinking": "RAG is a widely recognized Generative AI and LLM-specific pattern that addresses the knowledge limitations and data privacy concerns of large language models by integrating external knowledge bases. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Oneshot Model Querying",
+    "Problem": "How can an agent efficiently generate all necessary steps for a plan, especially for pressing tasks or when cost is a concern?",
+    "Context": "When users interact with the agent for specific goals, the incorporated foundation model is queried for plan generation.",
+    "Solution": "The agent queries the underlying foundation model only once to generate a complete plan based on user-specified goals and constraints. This single query devises a multi-step plan and provides a holistic explanation without delving into detailed reasoning steps, suitable for tasks that do not require complex action plans.",
+    "Result": "Increases efficiency by generating a plan with a single model query, reduces cost-efficiency for commercial models, and offers simplicity for less complex tasks.",
+    "Related Patterns": [
+      "Incremental Model Querying",
+      "Singlepath Plan Generator",
+      "Multimodal Guardrails"
+    ],
+    "Uses": [
+      "Chain-of-Thought (CoT) and ZeroshotCoT, which exemplify this pattern by generating a complete reasoning chain in one go (Wang et al. 2024b, 2023d)."
+    ],
+    "Thinking": "This pattern describes a specific strategy for interacting with a foundation model for planning, focusing on single-instance invocation. It's an LLM-specific pattern related to model interaction strategy, making it an AI design pattern."
+  },
+  {
+    "Pattern Name": "Incremental Model Querying",
+    "Problem": "Foundation models may struggle to generate correct responses on the first attempt, and the agent needs to conduct an accurate reasoning process, especially with limited context windows or for explainability.",
+    "Context": "When users interact with the agent for specific goals, the incorporated foundation model is queried for plan generation.",
+    "Solution": "The agent engages in a step-by-step reasoning process, developing a plan for goal achievement through multiple, iterative queries to the foundation model. Human feedback can be provided at any stage to adjust the reasoning process and generated plan. This approach allows for supplementary context injection and iterative refinement.",
+    "Result": "Provides supplementary context by splitting information across multiple prompts, improves reasoning certainty through iterative refinement, and enhances explainability by detailing reasoning steps.",
+    "Related Patterns": [
+      "Oneshot Model Querying",
+      "Multipath Plan Generator",
+      "Selfreflection",
+      "Human Reflection",
+      "Multimodal Guardrails"
+    ],
+    "Uses": [
+      "HuggingGPT, where the underlying foundation model is queried multiple times to decompose requests and determine task dependencies (Shen et al. 2023).",
+      "EcoAssistant, which applies a code executor interacting with the foundation model to iteratively refine code (Zhang et al. 2023a).",
+      "ReWOO, which queries the foundation model to generate interdependent plans and combine observations (Xu et al. 2023)."
+    ],
+    "Thinking": "This pattern describes an iterative strategy for interacting with a foundation model for planning, allowing for refinement and handling of complex tasks. It's an LLM-specific pattern related to model interaction strategy, making it an AI design pattern."
+  },
+  {
+    "Pattern Name": "Singlepath Plan Generator",
+    "Problem": "Users often perceive agents as black boxes and desire transparency in how goals are achieved, requiring the agent to efficiently formulate coherent strategies from high-level abstractions.",
+    "Context": "An agent is considered a black box to users, who care about the process of how an agent achieves its goals.",
+    "Solution": "After comprehending user goals, the Singlepath Plan Generator coordinates the creation of a linear, direct plan for other agents or tools, prioritizing tasks to progressively lead towards goal accomplishment. Each step is designed to have only a single subsequent step, forming a clear path (e.g., Chain-of-Thought). Self-consistency mechanisms are employed to confirm decisions.",
+    "Result": "Enhances reasoning certainty by reflecting the reasoning process, provides coherence for interacting users, agents, and tools, and increases efficiency by pruning unnecessary steps.",
+    "Related Patterns": [
+      "Oneshot Model Querying",
+      "Multipath Plan Generator",
+      "Selfreflection"
+    ],
+    "Uses": [
+      "LlamaIndex, which finetunes a ReAct Agent for better performance using Chain-of-Thought (CoT).",
+      "ThinkGPT, which provides a toolkit to facilitate the implementation of this pattern.",
+      "Zhang et al. 2023c, who elucidate the basic mechanisms and paradigm shift of CoT."
+    ],
+    "Thinking": "This pattern describes a specific approach to AI planning, focusing on generating a sequential, linear set of actions. It's a Planning and Agentic AI pattern, distinct from general workflow management."
+  },
+  {
+    "Pattern Name": "Multipath Plan Generator",
+    "Problem": "When presented with complex tasks, agents need to generate high-quality, coherent, and efficient solutions that also consider inclusiveness and diversity, aligning with human preferences.",
+    "Context": "An agent is considered a black box to users, who care about the process of how an agent achieves its goals.",
+    "Solution": "Building upon the Singlepath Plan Generator, the Multipath Plan Generator creates multiple choices at each intermediate step towards goal achievement. This requires the underlying foundation model to identify eligible and actionable activities for each choice. User preferences can influence subsequent steps, leading to different eventual plans. Tree-of-Thoughts (ToT) exemplifies this design pattern.",
+    "Result": "Improves reasoning certainty by offering multiple choices, maintains coherence, aligns with human preference by allowing user confirmation at each step, and provides inclusiveness for complex tasks.",
+    "Related Patterns": [
+      "Incremental Model Querying",
+      "Singlepath Plan Generator",
+      "Human Reflection"
+    ],
+    "Uses": [
+      "AutoGPT, which makes informed decisions by incorporating Tree-of-Thoughts.",
+      "Gemini, which generates multiple choices for users to decide at each step.",
+      "OpenAI's GPT-4, leveraged to implement a multipath plan generator based on Tree-of-Thoughts."
+    ],
+    "Thinking": "This pattern describes a more complex, branching approach to AI planning, allowing for exploration of multiple options and integration of preferences. It's a Planning and Agentic AI pattern, distinct from general workflow management."
+  },
+  {
+    "Pattern Name": "Selfreflection",
+    "Problem": "A generated plan may be affected by foundation model hallucinations, and there's a need to efficiently review and refine the plan and reasoning steps while improving explainability.",
+    "Context": "Given user goals and requirements, the agent generates a plan to decompose goals into tasks.",
+    "Solution": "Selfreflection is an iterative optimization process where the agent reviews and refines its own reasoning process and generated content. The agent backtracks its inference to verify intermediate results, identifies errors, and adjusts its reasoning to create a refined plan. These reflection processes and results can be saved in the agent's memory for continuous learning. Self-consistency is a key mechanism.",
+    "Result": "Enhances reasoning certainty by allowing agents to self-evaluate and refine responses, improves explainability of the agent's decision-making, fosters continuous improvement through learning, and increases efficiency by reducing external communication overhead.",
+    "Related Patterns": [
+      "Promptresponse Optimiser",
+      "Incremental Model Querying",
+      "Singlepath Plan Generator"
+    ],
+    "Uses": [
+      "Reflexion, which employs a self-reflection model to generate nuanced feedback based on success status, trajectory, and memory (Shinn et al. 2023).",
+      "A bidder agent with a replanning module that uses selfreflection to create new textual plans based on the auctions status (Chen et al. 2023b).",
+      "Generative agents, which perform reflection multiple times a day to determine objectives and store reflections in memory (Park et al. 2023)."
+    ],
+    "Thinking": "This pattern is a core Agentic AI concept, enabling an AI agent to introspect, evaluate, and improve its own performance and reasoning. It's not a general software pattern."
+  },
+  {
+    "Pattern Name": "Crossreflection",
+    "Problem": "When an agent has limited capability to perform self-reflection effectively, how can its output and reasoning steps be evaluated to ensure accuracy and explainability?",
+    "Context": "The agent generates a plan to achieve user goals, and the quality of this plan needs to be assessed.",
+    "Solution": "If an agent cannot generate accurate results through self-reflection, it can query another agent (or multiple agents) specialized in reflection. This reflective agent reviews and evaluates the logged outputs and reasoning steps of the original agent, providing refinement suggestions. This process can be iterative, and multiple agents can be queried for comprehensive feedback.",
+    "Result": "Ensures reasoning certainty and response accuracy through external assessment, improves explainability by involving multiple agents, offers inclusiveness with diverse reasoning outputs, and supports scalability in agent-based systems.",
+    "Related Patterns": [
+      "Promptresponse Optimiser",
+      "Votingbased Cooperation",
+      "Rolebased Cooperation",
+      "Debatebased Cooperation",
+      "Toolagent Registry"
+    ],
+    "Uses": [
+      "XAgent, where a tool agent sends feedback and reflection to a plan agent (XAgent18).",
+      "Yao et al. 2023, exploring agents learning through communication, with a thinker agent providing suggestions to an actor agent.",
+      "Qian et al. 2023, where tester agents detect bugs and report to programmer agents in a virtual software development company.",
+      "Talebirad and Nadiri 2023, analyzing inter-agent feedback involving mutual criticism."
+    ],
+    "Thinking": "This pattern is an Agentic AI concept focused on multi-agent collaboration for evaluation and improvement, addressing the limitations of a single agent. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Human Reflection",
+    "Problem": "How to ensure human preferences are fully and correctly captured and integrated into the agent's reasoning process and generated plans, and to allow users to contest agent outputs?",
+    "Context": "Agents create plans and strategies that decompose user goals into tasks, which will be completed by other tools and agents.",
+    "Solution": "When an agent generates a plan, it presents the plan and its reasoning process logs to the user or other human experts for review. The human provides comments or suggestions for updating or replacing steps. The plan is iteratively assessed and improved until approved by the human, directly incorporating human preferences.",
+    "Result": "Achieves alignment to human preference, provides contestability for agent outputs, and improves effectiveness by tailoring responses to user-specific needs and understanding.",
+    "Related Patterns": [
+      "Promptresponse Optimiser",
+      "Multipath Plan Generator",
+      "Incremental Model Querying"
+    ],
+    "Uses": [
+      "Inner Monologue, implemented in a robotic system that leverages human feedback for object recognition (Huang et al. 2022b).",
+      "Ma et al. 2024, exploring deliberation between users and agents for decision-making, with both providing evidence.",
+      "Wang et al. 2023a, incorporating human feedback for agents to capture dynamic user interests for recommendations."
+    ],
+    "Thinking": "This pattern is an AI-Human Interaction and Agentic AI concept, specifically integrating human oversight and feedback into the agent's planning and decision-making loop. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Votingbased Cooperation",
+    "Problem": "In multi-agent systems, how to properly finalize decisions and ensure fairness among agents with diverse opinions on plan construction or task completion?",
+    "Context": "Multiple agents within a compound AI system need to collaborate on the same task while having their own perspectives.",
+    "Solution": "An agent generates a candidate response and then holds a vote where other agents submit their votes to select the most appropriate feedback or decision. The original agent acts as a coordinator, formalizing the voting result. Identity management of participating agents is crucial for traceability and verifiability.",
+    "Result": "Preserves fairness among agents, ensures accountability by recording procedures and results, and leverages collective intelligence for more accurate and reliable decisions.",
+    "Related Patterns": [
+      "Crossreflection",
+      "Rolebased Cooperation",
+      "Debatebased Cooperation",
+      "Toolagent Registry"
+    ],
+    "Uses": [
+      "Hamilton 2023, utilizing nine agents to simulate a court where agents vote on cases.",
+      "ChatEval, where agents reach consensus on user prompts via voting (Chan et al. 2024).",
+      "Yang et al. 2024b, exploring alignment of agent voters based on GPT-4 and LLaMA2.",
+      "Li et al. 2024, leveraging multiple agents to select a final response via majority voting."
+    ],
+    "Thinking": "This pattern is an Agentic AI concept for multi-agent decision-making and consensus-building, specifically using a voting mechanism. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Rolebased Cooperation",
+    "Problem": "How can agents cooperate on specific tasks effectively, considering their specialized capabilities and ensuring proper division of labor and fault tolerance?",
+    "Context": "Multiple agents within a compound AI system need to collaborate on the same task while having their own perspectives.",
+    "Solution": "Agents are assigned specific roles (e.g., planner, assigner, worker, creator) to establish a hierarchical workflow. This involves persona specification, task definition, tool employment, and process orchestration. Tasks are delegated based on domain-specific capabilities, and new agents can be created with specific roles if needed.",
+    "Result": "Enables division of labour among agents, provides fault tolerance by allowing replacement of inactive agents, supports scalability by adding new roles, and facilitates accountability through clear responsibility attribution.",
+    "Related Patterns": [
+      "Crossreflection",
+      "Votingbased Cooperation",
+      "Debatebased Cooperation",
+      "Toolagent Registry"
+    ],
+    "Uses": [
+      "XAgent, consisting of planner, dispatcher, and tool agents (XAgent18).",
+      "MetaGPT, which utilizes various agents acting as architect, project manager, and engineer (Hong et al. 2023).",
+      "MedAgents, where agents are assigned roles as domain experts (e.g., cardiology, surgery) for collaborative healthcare analysis (Tang et al. 2023).",
+      "Wang et al. 2024c, proposing Mixture-of-Agents with proposer and aggregator agents."
+    ],
+    "Thinking": "This pattern is an Agentic AI concept for structured multi-agent collaboration based on specialized roles and division of labor. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Debatebased Cooperation",
+    "Problem": "How to leverage multiple agents to create refined responses and facilitate their evolution, especially when agents have diverse opinions or exhibit limited adaptability?",
+    "Context": "A compound AI system integrates multiple agents that need to collaborate on the same task while having their own perspectives.",
+    "Solution": "A user's query is shared among multiple agents. Each agent generates an initial response, and then a debate round begins. Agents propagate their responses to each other for verification, providing instructions and directions to construct a more comprehensive response. This iterative debate process, potentially using shared memory, continues until a consensus is reached or a predefined number of rounds are completed.",
+    "Result": "Enhances adaptability as agents learn from each other, improves explainability by structuring arguments and evidence, and fosters critical thinking for future reasoning processes.",
+    "Related Patterns": [
+      "Crossreflection",
+      "Votingbased Cooperation",
+      "Rolebased Cooperation",
+      "Toolagent Registry"
+    ],
+    "Uses": [
+      "crewAI, a multi-agent orchestration framework for discussion on a given topic.",
+      "Liang et al. 2023, leveraging multi-agent debate to address 'Degeneration-of-Thought'.",
+      "Du et al. 2023, employing multiple agents to discuss user input and converge on a consensus.",
+      "Chen et al. 2023a, exploring negotiation in multi-agent systems where agents adjust strategies.",
+      "Li et al. 2023, proposing a framework with peer rank and discussion to mitigate evaluation biases."
+    ],
+    "Thinking": "This pattern is an Agentic AI concept for dynamic, argumentative multi-agent collaboration leading to refinement and consensus. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Multimodal Guardrails",
+    "Problem": "How to prevent foundation models from being influenced by adversarial inputs or generating harmful, undesirable, or non-compliant outputs to users and other components?",
+    "Context": "An agent consists of a foundation model and other components, with the underlying foundation model queried for goal achievement.",
+    "Solution": "Guardrails are implemented as an intermediate layer between the foundation model and other components. They verify whether incoming information (inputs) and outgoing responses (outputs) meet predefined requirements, ethical standards, and legal regulations. Risky or sensitive data is filtered or processed before being transferred. Guardrails can evaluate multimodal data (text, audio, video) and can be rule-based or AI-based.",
+    "Result": "Preserves the robustness of foundation models by filtering inappropriate context, ensures safety by validating model outcomes, aligns with standards and policies, and offers adaptability across various models and agents.",
+    "Related Patterns": [
+      "Proactive Goal Creator",
+      "Oneshot Model Querying",
+      "Incremental Model Querying"
+    ],
+    "Uses": [
+      "NeMo Guardrails, designed to ensure dialogue coherency and prevent misinformation (Rebedea et al. 2023).",
+      "Llama Guard, a foundation model-based safeguard finetuned via a safety risk taxonomy (Inan et al. 2023).",
+      "Guardrails AI, providing a hub of validators for different risks in foundation model inputs and outputs."
+    ],
+    "Thinking": "This pattern is a critical MLOps and Responsible AI pattern, specifically addressing safety, robustness, and compliance challenges unique to AI systems, especially those using foundation models. It's not a general security or validation pattern."
+  },
+  {
+    "Pattern Name": "Toolagent Registry",
+    "Problem": "Given the diversity of available agents and tools, how can an agent efficiently discover and select the most appropriate external agents and tools for task completion?",
+    "Context": "Within an agent, the task executor may cooperate with other agents or leverage external tools for expanded capabilities.",
+    "Solution": "The agent queries a Toolagent Registry, which serves as a unified catalogue for collecting and categorizing various tools and agents based on metrics like domain-specific capability, price, or context window. This registry allows the agent to efficiently discover, employ, and assign tasks to the most suitable external resources. It can be implemented as a coordinator agent, a blockchain-based smart contract, or a marketplace.",
+    "Result": "Enhances discoverability of available tools and agents, improves efficiency in selection, ensures tool appropriateness for specific task requirements, and supports scalability due to its lightweight data structure.",
+    "Related Patterns": [
+      "Crossreflection",
+      "Votingbased Cooperation",
+      "Rolebased Cooperation",
+      "Debatebased Cooperation",
+      "Agent Adapter"
+    ],
+    "Uses": [
+      "GPTStore, providing a catalogue for searching ChatGPT-based agents.",
+      "TPTU, which incorporates a toolset to broaden AI Agents' capabilities (Ruan et al. 2023).",
+      "VOYAGER, which stores action programs to incrementally establish a skill library for reusability (Wang et al. 2023c).",
+      "OpenAgents, where an agent manages API invocation of plugins (Xie et al. 2023)."
+    ],
+    "Thinking": "This pattern is a Tools Integration and Agentic AI concept, specifically for managing and discovering external capabilities for an AI agent. It addresses challenges unique to integrating diverse AI and non-AI tools within an agentic system."
+  },
+  {
+    "Pattern Name": "Agent Adapter",
+    "Problem": "Agents need to interact with diverse external tools, but these tools often have incompatible or inefficient interfaces, making task assignment and result processing challenging.",
+    "Context": "An agent may leverage external tools to complete certain tasks for expanded capabilities.",
+    "Solution": "The Agent Adapter provides an interface to connect the agent and external tools. It converts agent messages into the required format or content for tools and vice versa. The adapter can retrieve tool manuals or tutorials to learn available interfaces and usage, then transforms agent outputs and invokes the service. It also receives execution results from tools and sends them to the underlying foundation model for further analysis.",
+    "Result": "Facilitates interoperability between agents and external tools, provides adaptability for employing new tools, and reduces development cost by automating interface conversion.",
+    "Related Patterns": [
+      "Promptresponse Optimiser",
+      "Toolagent Registry"
+    ],
+    "Uses": [
+      "AutoGen, where users register tools with usage descriptions for agents to leverage (AutoGen22).",
+      "Apple Intelligence, which supports integration across different products and applications (Apple Intelligence23).",
+      "Semantic Kernel, which orchestrates agents and plugins by requiring semantic descriptions for agents to understand (Semantic Kernel24).",
+      "SWEagent, which provides agent-computer interfaces for foundation model-based agents to process code commands (Yang et al. 2024a)."
+    ],
+    "Thinking": "This pattern is a Tools Integration and Agentic AI concept, specifically for handling the technical integration and interface compatibility between an AI agent and external tools. It's a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Agent Evaluator",
+    "Problem": "How to assess the performance of agents to ensure they behave as intended, meet functional requirements, and can adapt to specific scenarios?",
+    "Context": "Within an agent, the underlying foundation model and a series of components coordinate to conduct reasoning and generate responses given user prompts.",
+    "Solution": "Developers deploy an Agent Evaluator to assess the agent's responses and reasoning process at both design-time and run-time. This involves building an evaluation pipeline by defining scenario-based requirements, metrics, and expected outputs. The evaluator prepares context-specific test cases (either by searching external resources or generating them) and performs evaluations on agent components. The results provide feedback for finetuning the agent, applying risk mitigation, and upgrading the evaluator itself.",
+    "Result": "Ensures functional suitability by comparing actual and expected responses, improves adaptability by analyzing usage in specific scenarios, and offers flexibility through customized metrics and expected outputs.",
+    "Related Patterns": [],
+    "Uses": [
+      "Inspect, an evaluation framework for large language models with built-in components for prompt engineering and tool usage (Inspect25).",
+      "DeepEval, which incorporates 14 evaluation metrics and supports agent development frameworks (DeepEval26).",
+      "Promptfoo, providing efficient evaluation services with automated scoring based on user-defined metrics (Promptfoo27).",
+      "Ragas, which facilitates evaluation on RAG pipelines via test dataset generation and LLM-assisted metrics (Ragas28)."
+    ],
+    "Thinking": "This pattern is an MLOps pattern, specifically for evaluating the performance and behavior of AI agents. It addresses challenges unique to assessing complex AI systems, making it an AI design pattern."
+  }
+]

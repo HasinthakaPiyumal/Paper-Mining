@@ -1,0 +1,277 @@
+[
+  {
+    "Pattern Name": "Tool-Augmented LLM",
+    "Problem": "Large Language Models (LLMs) suffer from limitations such as hallucination, weak numerical reasoning, and lack of access to up-to-date, domain-specific, or private external knowledge, which hinders their ability to provide accurate and comprehensive answers to complex questions.",
+    "Context": "Applicable when LLMs need to perform tasks that require factual accuracy, precise numerical computations, access to dynamic or specialized information, or interaction with external systems beyond their pre-trained knowledge. This is particularly relevant for information-seeking question answering, fact-checking, and complex reasoning tasks.",
+    "Solution": "Augment LLMs with a diverse set of external tools (e.g., retrieval systems, mathematical calculators, code interpreters, database query tools, graph traversal tools, text processing tools). The LLM acts as an intelligent controller, responsible for understanding the user's query, selecting the appropriate tool(s) from a predefined pool, formulating the correct arguments for tool invocation, and integrating the tool's output to generate a final answer.",
+    "Result": "Significantly enhances LLMs' question-answering abilities, mitigates hallucinations by providing access to verified external knowledge, improves numerical reasoning capabilities, and enables interaction with dynamic and specialized data sources. This leads to more reliable, accurate, and comprehensive responses.",
+    "Related Patterns": [
+      "External Knowledge Augmentation",
+      "Retrieval-Augmented Generation",
+      "Iterative Reasoning and Acting (ReAct)",
+      "Context-Guided Tool Orchestration (Chameleon)",
+      "LLM Planning"
+    ],
+    "Uses": [
+      "General question answering",
+      "Scientific information extraction",
+      "Financial analysis",
+      "Personal assistant applications",
+      "Code generation and interpretation",
+      "Database querying",
+      "Graph-based reasoning"
+    ],
+    "Thinking": "This is the overarching pattern described throughout the paper, where LLMs are enhanced by external tools to overcome their inherent limitations. It's a fundamental architectural approach for improving LLM capabilities."
+  },
+  {
+    "Pattern Name": "External Knowledge Augmentation",
+    "Problem": "LLMs, despite vast pre-training, may possess outdated, generalized, or incomplete knowledge, leading to factual inaccuracies, hallucinations, or inability to answer questions requiring current, domain-specific, or private information.",
+    "Context": "When LLMs are required to answer questions that depend on recent events, specialized domain knowledge (e.g., scientific papers, DBLP), private user data (e.g., personal agenda), or structured data (e.g., flight schedules, business listings) that is unlikely to be fully captured or kept current in their internal parameters.",
+    "Solution": "Integrate LLMs with external knowledge sources that are distinct from their pre-training data. These sources can include structured databases (tabular, graph), pure text corpora, or specialized APIs. Tools are then designed to retrieve, filter, or process information from these specific external knowledge bases.",
+    "Result": "LLMs gain access to up-to-date, fact-checked, and context-specific information, which helps in mitigating hallucinations, improving factual accuracy, and enabling answers to questions that are out of the temporal or domain scope of their pre-training.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "Retrieval-Augmented Generation",
+      "LLM Long-Term Memory"
+    ],
+    "Uses": [
+      "Answering questions about current flight statuses",
+      "Daily coffee prices",
+      "Business listings (Yelp)",
+      "Airbnb data",
+      "Scientific literature (SciREX)",
+      "Personal schedules (Agenda)",
+      "Citation networks (DBLP)"
+    ],
+    "Thinking": "This pattern focuses on the *type* of information used to augment the LLM and the criteria for selecting it (non-overlap with pre-training, context-sensitive). It's a specific strategy within the broader Tool-Augmented LLM pattern, explicitly mentioned as 'Knowledge-Augmented LLMs' in the related work."
+  },
+  {
+    "Pattern Name": "Tool-Level Demonstration Prompting",
+    "Problem": "Large Language Models (LLMs) often struggle to correctly invoke and compose external tools, especially when faced with a diverse set of tools, complex invocation formats, or when task-level few-shot examples are insufficient to cover all tool-specific nuances. This can lead to argument errors or infeasible actions.",
+    "Context": "When prompting LLMs to use a pool of multiple, distinct external tools, each with specific API signatures, input requirements, and expected outputs. The goal is to teach the LLM how to use each tool effectively within the constraints of in-context learning.",
+    "Solution": "Instead of or in addition to providing task-level few-shot exemplars, provide demonstrations that focus on the usage of individual tools or basic, atomic tool compositions. These 'tool-level' demonstrations explicitly illustrate the correct syntax, arguments, and expected observations for each tool. Ensure that every tool in the available pool is covered at least once within these demonstrations, keeping the total context length within the LLM's limits.",
+    "Result": "Improves the LLM's understanding of individual tool functionalities and invocation patterns, reduces argument errors, and enhances its ability to correctly select and apply tools for problem-solving, leading to higher success rates in tool-augmented tasks.",
+    "Related Patterns": [
+      "Few-Shot Learning",
+      "In-Context Learning",
+      "Prompt Engineering",
+      "Tool-Augmented LLM",
+      "Context Window Management"
+    ],
+    "Uses": [
+      "Training LLMs to use new APIs",
+      "Improving the reliability of tool calls in ReAct or Chameleon-like systems",
+      "Reducing common errors like incorrect arguments"
+    ],
+    "Thinking": "The text explicitly states: 'Different from the existing works that mainly provide task-level fewshot exemplars, we provide tool-level demonstrations.' This highlights a specific and effective prompting strategy for teaching LLMs tool use, making it a distinct pattern."
+  },
+  {
+    "Pattern Name": "Iterative Reasoning and Acting (ReAct)",
+    "Problem": "LLMs, when interacting with external tools, may generate suboptimal plans, make errors in tool invocation (e.g., wrong arguments, infeasible actions), or fail to adapt their strategy based on the outcomes of previous actions, especially in complex, multi-step reasoning tasks.",
+    "Context": "When LLMs need to solve complex problems that require dynamic planning, sequential tool use, and the ability to self-correct or refine their approach based on real-time feedback from the environment or tool execution.",
+    "Solution": "The LLM generates an interleaved sequence of 'Thought' (verbal reasoning trace) and 'Action' (tool call). After each Action, an 'Observation' (feedback from the tool's execution) is received. The LLM then uses this Observation, along with its previous Thoughts and Actions, to inform its next Thought and subsequent Action. This iterative loop allows the LLM to dynamically refine its tool-use chain, correct errors, and adapt its strategy until the task is completed.",
+    "Result": "Significantly enhances LLMs' problem-solving capabilities by enabling robust planning, self-correction, and adaptation to environmental feedback. This leads to higher success rates on challenging tasks requiring complex reasoning and tool composition, outperforming methods that lack this iterative feedback loop.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "LLM Self-Correction",
+      "LLM Planning",
+      "Tool-Augmented LLM",
+      "Context-Guided Tool Orchestration (Chameleon)",
+      "LLM Innovation / Novel Solution Generation"
+    ],
+    "Uses": [
+      "Complex question answering",
+      "Multi-step reasoning",
+      "Interactive problem-solving",
+      "Tasks requiring dynamic adaptation to tool outputs or environmental changes"
+    ],
+    "Thinking": "ReAct is described as a specific, effective method for tool-augmented LLMs, characterized by its interleaved Thought-Action-Observation loop and iterative refinement based on execution traces. This is a well-known and distinct pattern for dynamic tool orchestration."
+  },
+  {
+    "Pattern Name": "Context-Guided Tool Orchestration (Chameleon)",
+    "Problem": "LLMs need to effectively select and compose multiple external tools to solve complex tasks, but their ability to plan and execute tool sequences can be limited by the complexity of the task and the need for explicit guidance on tool usage and composition.",
+    "Context": "When LLMs are used as a controller to solve multi-step problems by combining different functional tools, and the primary mechanism for guiding tool selection and sequencing is through comprehensive tool descriptions and human-induced orderings or examples embedded within the LLM's prompt context. This pattern is applied when direct, real-time execution feedback for iterative refinement is not a primary mechanism or is not available.",
+    "Solution": "The LLM is provided with detailed descriptions of available tools, including their functionalities, input/output formats, and typical use cases. The prompt also integrates human-induced orderings or few-shot examples that demonstrate how these tools can be composed for various subtasks. The LLM then generates a sequence of tool calls (a plan) based on this rich contextual information, aiming to solve the given problem.",
+    "Result": "Enables LLMs to comprehend and compose different tools for question answering and other complex tasks, achieving better performance than vanilla LLMs by leveraging the structured guidance in the prompt. However, without direct execution trace feedback, it may be susceptible to generating infeasible actions or plans with omitted arguments.",
+    "Related Patterns": [
+      "Tool-Augmented LLM",
+      "Prompt Engineering",
+      "LLM Planning",
+      "Iterative Reasoning and Acting (ReAct)",
+      "Context Window Management"
+    ],
+    "Uses": [
+      "Multi-tool question answering",
+      "Tasks where a pre-defined sequence or a single-pass plan generation based on comprehensive context is sufficient",
+      "Scenarios where real-time feedback loops are not implemented or feasible"
+    ],
+    "Thinking": "Chameleon is presented as a distinct approach to tool orchestration, emphasizing context-based guidance through tool descriptions and human-induced orderings within the prompt, contrasting with ReAct's iterative feedback. This makes it a specific pattern for how LLMs can be guided to use tools."
+  },
+  {
+    "Pattern Name": "Retrieval-Augmented Generation (RAG)",
+    "Problem": "Large Language Models (LLMs) are prone to factual inaccuracies (hallucinations) and lack access to up-to-date, domain-specific, or private information, as their knowledge is limited to their pre-training data, leading to unreliable outputs.",
+    "Context": "When LLMs need to generate responses that are factually accurate, grounded in specific external documents, or require knowledge beyond their parametric memory, especially for open-domain question answering, fact-checking, or generating content based on a specific corpus.",
+    "Solution": "Augment the LLM's generation process with a retrieval mechanism. Before generating a response, relevant information (e.g., documents, passages, facts) is retrieved from an external, up-to-date, or specialized corpus based on the input query. This retrieved information is then provided to the LLM as additional context, guiding its generation to be more accurate, grounded, and relevant to the external knowledge.",
+    "Result": "Reduces hallucinations, improves factual consistency, enables access to dynamic and specialized knowledge, and enhances the overall quality and trustworthiness of generated text by grounding it in verifiable external sources.",
+    "Related Patterns": [
+      "External Knowledge Augmentation",
+      "Tool-Augmented LLM",
+      "LLM Long-Term Memory"
+    ],
+    "Uses": [
+      "Open-domain question answering",
+      "Fact-checking",
+      "Generating summaries from specific documents",
+      "Scientific information retrieval",
+      "Timely information benchmarks"
+    ],
+    "Thinking": "The text explicitly mentions 'retrieval-augmented language models' and 'retrieval augmentation' as a key line of research to enhance LLMs. This is a specific and widely recognized pattern for knowledge augmentation, distinct from the broader 'External Knowledge Augmentation' which could encompass many forms of external data use. The paper also describes 'Text Tools' like Agenda Retriever and SciREX Retriever, which are implementations of retrieval."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "Large Language Models (LLMs) often struggle with complex reasoning tasks, providing direct answers without showing intermediate steps, which can lead to errors, lack of transparency, and difficulty in debugging their reasoning process.",
+    "Context": "When LLMs are required to solve problems that involve multiple logical steps, arithmetic operations, or require a structured thought process to arrive at a correct answer, especially in tasks like mathematical reasoning, symbolic induction, or multi-step question answering.",
+    "Solution": "Augment the prompt with instructions or examples that encourage the LLM to generate a series of intermediate reasoning steps before producing the final answer. This 'chain of thought' can be elicited through simple phrases like 'Let's think step by step' (zero-shot CoT) or by providing few-shot examples that demonstrate the step-by-step reasoning process.",
+    "Result": "Significantly improves the LLM's performance on complex reasoning tasks by making its internal thought process explicit, allowing for better problem decomposition, error detection, and more accurate final answers. It enhances the LLM's ability to perform multi-step reasoning.",
+    "Related Patterns": [
+      "Prompt Engineering",
+      "Task Decomposition (for LLMs)",
+      "LLM Self-Correction",
+      "Iterative Reasoning and Acting (ReAct)",
+      "LLM Planning"
+    ],
+    "Uses": [
+      "Mathematical word problems",
+      "Logical puzzles",
+      "Multi-hop question answering",
+      "Complex decision-making",
+      "General reasoning tasks"
+    ],
+    "Thinking": "CoT is mentioned as a baseline method ('CoT 65 26 We use chainofthoughts prompting for ChatGPT adding the prompt Lets think step by step after the question to leverage LLMs reasoning ability for question answering'). It's a fundamental and distinct AI pattern for improving LLM reasoning, not just a related concept."
+  },
+  {
+    "Pattern Name": "Task Decomposition (for LLMs)",
+    "Problem": "Large Language Models (LLMs) may struggle to solve complex, multi-faceted problems directly, especially when the problem requires a long sequence of operations, involves multiple sub-goals, or exceeds the LLM's immediate reasoning capacity.",
+    "Context": "When a complex task is presented to an LLM that cannot be solved in a single step or requires breaking down into smaller, more manageable sub-problems. This is particularly relevant for tasks involving multiple tools, intricate logic, or extensive information processing.",
+    "Solution": "Guide the LLM (either through prompting or an external orchestrator) to break down the overarching complex task into a series of simpler, intermediate reasoning steps or sub-tasks. Each sub-task can then be addressed individually, potentially using different tools or internal reasoning, and their results are combined to solve the original problem. This can be achieved by explicitly asking the LLM to 'break down the problem' or by providing examples of decomposed solutions.",
+    "Result": "Improves the LLM's ability to tackle complex problems by reducing cognitive load, enabling more structured and manageable problem-solving, and facilitating the sequential application of tools or reasoning steps. This can lead to higher success rates on challenging tasks.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "LLM Planning",
+      "Iterative Reasoning and Acting (ReAct)"
+    ],
+    "Uses": [
+      "Multi-step question answering",
+      "Complex code generation",
+      "Scientific problem-solving",
+      "Planning for agents",
+      "Any task requiring a sequence of operations"
+    ],
+    "Thinking": "The text explicitly mentions 'enable LLMs to autonomously break down complex tasks into intermediate reasoning steps' (45, 24, 47, 50, 65, 75, 31, 76) as a key aspect of planning capabilities for synergizing tools. This is a distinct strategy for managing complexity in LLM problem-solving."
+  },
+  {
+    "Pattern Name": "LLM Self-Correction",
+    "Problem": "Large Language Models (LLMs) can make errors during reasoning or tool invocation, and without a mechanism to identify and rectify these mistakes, their performance on complex tasks remains limited. Errors can include incorrect arguments, infeasible actions, or logical flaws.",
+    "Context": "When LLMs are engaged in multi-step reasoning or tool-use tasks where intermediate outputs or tool execution observations can provide feedback on the correctness or feasibility of previous steps. This is crucial for improving robustness and accuracy.",
+    "Solution": "Design the LLM's interaction loop to include a self-reflection or self-correction mechanism. After an action or a reasoning step, the LLM evaluates the outcome (e.g., an observation from a tool, an intermediate result) against its goal or expected behavior. If an error or discrepancy is detected, the LLM is prompted to identify the mistake and generate a revised plan or action. This can involve re-evaluating previous thoughts, modifying tool arguments, or choosing a different tool.",
+    "Result": "Enhances the LLM's ability to recover from errors, improves the reliability of tool interactions, and leads to more accurate and robust problem-solving, especially in dynamic environments or when initial plans are imperfect.",
+    "Related Patterns": [
+      "Iterative Reasoning and Acting (ReAct)",
+      "Chain-of-Thought Prompting",
+      "LLM Planning",
+      "LLM Innovation / Novel Solution Generation"
+    ],
+    "Uses": [
+      "Debugging code generated by LLMs",
+      "Refining tool calls with incorrect arguments",
+      "Correcting factual errors in generated text",
+      "Adapting to unexpected tool outputs or environmental changes",
+      "Improving overall task success rates in interactive AI systems"
+    ],
+    "Thinking": "The text mentions 'encourage LLMs to self-reflect the previous decisions with environmental feedback' (39, 76, 35, 8) and cites 'Teaching large language models to self-debug' (8). This is a general capability and pattern that ReAct leverages, but it's a broader concept applicable beyond just ReAct for improving LLM robustness."
+  },
+  {
+    "Pattern Name": "LLM Long-Term Memory",
+    "Problem": "Large Language Models (LLMs) have limited context windows, which makes it difficult to retain and leverage information from past interactions or experiences beyond the current prompt, hindering their ability to learn and adapt over extended periods or complex dialogues.",
+    "Context": "When LLMs need to learn from past successes or failures, adapt their behavior based on previous interactions, or maintain a consistent understanding across a series of related tasks or conversations that exceed the immediate context window. This is crucial for agents operating over long durations or requiring personalized, evolving knowledge.",
+    "Solution": "Implement mechanisms that allow LLMs to store and retrieve information from past experiences or interactions, effectively extending their memory beyond the current prompt. This could involve external databases, vector stores, or specialized memory modules that summarize or store key information (e.g., successful tool-use sequences, learned facts, user preferences) for later retrieval and re-introduction into the LLM's context when relevant.",
+    "Result": "Enables LLMs to learn and adapt based on a broader history of experiences, leading to more consistent, informed, and personalized interactions, and improving performance on tasks requiring long-term coherence or adaptation. It mitigates the context window limitation for persistent knowledge.",
+    "Related Patterns": [
+      "Retrieval-Augmented Generation",
+      "Tool-Augmented LLM",
+      "LLM Self-Correction",
+      "Context Window Management"
+    ],
+    "Uses": [
+      "Conversational AI with persistent memory",
+      "Personalized assistants",
+      "Agents operating in dynamic environments over extended periods",
+      "Continuous learning systems",
+      "Maintaining context across multiple turns in a dialogue"
+    ],
+    "Thinking": "The text explicitly mentions 'Memory capabilities on the other hand provide LLMs with opportunities to learn and adapt based on past experiences whether successes or failures [62]' and cites 'Augmenting language models with longterm memory' (62). This is a distinct AI capability and a design challenge for LLMs."
+  },
+  {
+    "Pattern Name": "LLM Planning",
+    "Problem": "Large Language Models (LLMs), when faced with complex, multi-step goals, may struggle to autonomously determine an optimal sequence of actions or tool invocations to achieve the desired outcome, leading to inefficient or incorrect problem-solving.",
+    "Context": "When an LLM needs to act as an agent or controller, orchestrating multiple tools or internal reasoning steps to achieve a high-level objective, especially in environments where the path to the solution is not immediately obvious or requires strategic foresight. This is critical for tasks requiring complex tool composition and sequential decision-making.",
+    "Solution": "Empower LLMs with mechanisms to generate and refine plans, which are sequences of intermediate reasoning steps or tool calls. This can involve prompting techniques (e.g., Chain-of-Thought, Tree-of-Thoughts), explicit planning modules, or iterative refinement loops (e.g., ReAct) that allow the LLM to simulate or evaluate potential action sequences before execution, or to adapt plans based on feedback. The LLM's role is to define the 'what' and 'how' of achieving a goal through a series of steps.",
+    "Result": "Improves the LLM's ability to solve complex problems by providing a structured approach to task execution, enabling more effective tool orchestration, and increasing the likelihood of achieving multi-step goals. It allows for more deliberate and strategic problem-solving.",
+    "Related Patterns": [
+      "Task Decomposition (for LLMs)",
+      "Chain-of-Thought Prompting",
+      "Iterative Reasoning and Acting (ReAct)",
+      "Context-Guided Tool Orchestration (Chameleon)",
+      "LLM Self-Correction"
+    ],
+    "Uses": [
+      "Autonomous agents",
+      "Complex question answering",
+      "Robotic control",
+      "Code generation for multi-step processes",
+      "Scientific discovery workflows"
+    ],
+    "Thinking": "The text states: 'To synergize different functional tools together for problemsolving LLMs must have advanced planning and memory capabilities. In terms of planning current methods either enable LLMs to autonomously break down complex tasks into intermediate reasoning steps... or encourage LLMs to self-reflect the previous decisions with environmental feedback.' This clearly identifies 'Planning' as a distinct AI capability and a design area, broader than just task decomposition."
+  },
+  {
+    "Pattern Name": "LLM Innovation / Novel Solution Generation",
+    "Problem": "In-context tool-augmented LLMs often rely heavily on provided few-shot exemplars, which may not cover all possible compositional tool uses or novel logical relationships required for challenging tasks. This limits their ability to solve problems that require going beyond direct imitation of seen examples.",
+    "Context": "When LLMs encounter complex problems (e.g., 'hard questions' in ToolQA) that demand creative or non-obvious combinations of tools, or require inferring logical relationships between tools that were not explicitly demonstrated in the training or prompting context. This is particularly relevant when existing examples are insufficient for a solution.",
+    "Solution": "Design prompting strategies or architectural components that encourage the LLM to explore novel tool compositions or reasoning paths beyond direct imitation of exemplars. This might involve encouraging meta-reasoning, exploring alternative tool choices when initial attempts fail (e.g., GPT3.5 innovatively using SQL interpreter when database operations fail), or leveraging the LLM's inherent generative capacity to 'innovate' solutions. However, this must be balanced with mechanisms to detect and mitigate hallucinations that can arise from such innovation.",
+    "Result": "Enables LLMs to solve more challenging tasks by discovering new ways to combine tools or apply reasoning, extending their problem-solving scope beyond rote memorization of examples. This can lead to higher success rates on complex, unseen problems. However, it introduces a risk of hallucination, requiring careful monitoring and validation.",
+    "Related Patterns": [
+      "Iterative Reasoning and Acting (ReAct)",
+      "LLM Self-Correction",
+      "Prompt Engineering",
+      "LLM Planning"
+    ],
+    "Uses": [
+      "Solving 'hard' questions requiring complex tool composition",
+      "Adapting to novel problem variations",
+      "Discovering new workflows or tool-use strategies",
+      "Overcoming limitations of few-shot examples"
+    ],
+    "Thinking": "The text explicitly discusses 'innovation' as a behavior: 'it is vital for LLMs to uncover logical relationships among different tools which have never been encompassed in the human-provided exemplars to solve challenging tasks – a process we refer to as innovation.' It also notes it's a 'double-edged sword' due to hallucination, providing a concrete example with ReAct GPT3.5."
+  },
+  {
+    "Pattern Name": "Context Window Management",
+    "Problem": "Large Language Models (LLMs) have finite context windows, which limits the amount of information (e.g., tool descriptions, interaction history, few-shot examples) that can be provided in a single prompt. Exceeding this limit leads to 'Too Long Context' errors and hinders performance, especially for complex, multi-step tasks.",
+    "Context": "When designing prompts for tool-augmented LLMs that involve a large number of tools, extensive tool descriptions, detailed few-shot exemplars, or a long history of interaction (thoughts, actions, observations) in an iterative process. This is particularly critical for models with smaller context windows or for very complex tasks that generate lengthy interaction traces.",
+    "Solution": "Implement strategies to manage and optimize the information presented within the LLM's context window. This can include: 1. Summarization: Condensing past interaction history or observations. 2. Prioritization: Selecting the most relevant few-shot examples or tool descriptions. 3. Dynamic Context Adjustment: Adapting the context based on the current stage of the task. 4. External Memory: Offloading less critical information to an external memory system and retrieving it only when needed (related to LLM Long-Term Memory). 5. Concise Tool Descriptions: Crafting brief yet informative tool descriptions. 6. Truncation: Carefully truncating older parts of the conversation or less relevant information.",
+    "Result": "Prevents 'Too Long Context' errors, allows LLMs to handle more complex and longer-running tasks, and ensures that the most critical information is always available within the active context, improving overall performance and reliability. It enables more efficient use of the limited context window.",
+    "Related Patterns": [
+      "LLM Long-Term Memory",
+      "Prompt Engineering",
+      "Tool-Level Demonstration Prompting",
+      "Iterative Reasoning and Acting (ReAct)"
+    ],
+    "Uses": [
+      "Long-running conversational agents",
+      "Complex multi-tool orchestration",
+      "Agents with extensive interaction histories",
+      "Optimizing prompts for models with limited context windows",
+      "Reducing runtime errors due to context overflow"
+    ],
+    "Thinking": "The text identifies 'Too Long Context' as a frequent error type (10.88% for easy, 16.63% for hard questions) and states: 'The encoding of interaction history observations and tooluse plans exceed the length limitation of GPT family models resulting in runtime errors.' This is a fundamental design challenge when working with LLMs and their context windows, making it a valid AI design pattern for managing LLM interaction."
+  }
+]

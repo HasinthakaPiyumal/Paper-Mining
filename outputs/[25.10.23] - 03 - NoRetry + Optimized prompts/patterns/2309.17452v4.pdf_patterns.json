@@ -1,0 +1,32 @@
+[
+  {
+    "Pattern Name": "Tool-integrated Reasoning",
+    "Problem": "Large Language Models (LLMs) struggle with complex mathematics, precise computation, symbolic manipulation, and algorithmic processing, despite their strengths in semantic analysis, planning, and abstract reasoning.",
+    "Context": "Solving challenging mathematical problems that require both natural language understanding and rigorous computational or symbolic operations.",
+    "Solution": "An LLM reasons by interleaving natural language rationales with program-based tool use. It generates a rationale (r1), then a program (a1) for an external tool (e.g., computation library, symbolic solver), executes the program to get output (o1), and then uses this output to generate further rationales (r2) or finalize the answer. This process repeats until the problem is solved.",
+    "Result": "Significantly improved performance on diverse mathematical reasoning datasets, outperforming previous state-of-the-art open-source models and achieving competitive results with advanced closed-source models like GPT-4 on complex tasks. It enables LLMs to effectively tackle complex quantitative tasks.",
+    "Related Patterns": "Rationale-based methods (e.g., Chain-of-Thought prompting), Program-based methods (e.g., Program-Aided Language models - PAL), Toolformer, ReAct.",
+    "Uses": "Mathematical problem solving, scientific reasoning, any complex task requiring a synergy between abstract natural language reasoning and precise, external computational capabilities.",
+    "Thinking": "This is the core architectural and behavioral pattern of the TORA agent, explicitly designed to enhance AI (LLM) capabilities by integrating external tools in a structured, interactive manner. It defines how the AI agent *reasons* and *acts* to solve problems."
+  },
+  {
+    "Pattern Name": "Imitation Learning for Tool-integrated Reasoning",
+    "Problem": "Training LLMs to perform complex, multi-step, tool-integrated reasoning when direct human-annotated interactive tool-use trajectories are scarce or non-existent.",
+    "Context": "Having access to a teacher model (e.g., GPT-4) capable of generating high-quality interactive tool-use trajectories for a given set of problems, or a pre-curated dataset of such trajectories (e.g., TORACORPUS).",
+    "Solution": "Collect interactive tool-use trajectories (interleaved rationales, programs, and tool outputs) from a capable teacher model or by human annotation. Then, apply imitation learning by finetuning a smaller LLM on this corpus, minimizing the negative log-likelihood loss on the generated trajectories conditioned on the problem.",
+    "Result": "Enables smaller, open-source LLMs to learn complex tool-use behaviors and achieve state-of-the-art mathematical reasoning performance, despite the potentially small scale of the curated corpus.",
+    "Related Patterns": "Supervised Fine-Tuning (SFT), Knowledge Distillation, Prompting (for data generation).",
+    "Uses": "Training AI agents to mimic complex, multi-modal (natural language and code) reasoning and action sequences, especially for tasks where expert demonstrations are available or can be generated.",
+    "Thinking": "This describes a specific AI training methodology to instill a complex reasoning and action pattern (Tool-integrated Reasoning) into an LLM. It's about *how* the AI learns the pattern, using AI-specific learning techniques."
+  },
+  {
+    "Pattern Name": "Output Space Shaping",
+    "Problem": "After initial imitation learning, an LLM's reasoning behavior might be restricted to the specific trajectories seen in the training data, leading to inflexibility in exploring plausible alternative reasoning paths and improper tool-use behavior during inference.",
+    "Context": "Refining the reasoning and tool-use capabilities of an LLM that has undergone initial imitation learning on a dataset of interactive tool-use trajectories.",
+    "Solution": "1. **Trajectory Sampling:** Use the initially trained model with nucleus sampling to generate diverse tool-use trajectories for training problems. Retain valid trajectories (correct answers, no tool-use errors). 2. **Teacher Correction:** For invalid trajectories (wrong answers, errors), identify the point of failure and leverage a more capable teacher model to correct the subsequent steps, generating valid continuations. 3. **Retraining:** Retrain the model on an augmented dataset comprising the original corpus, the newly sampled valid trajectories, and the teacher-corrected trajectories.",
+    "Result": "Significantly boosts reasoning performance, encourages diversity of plausible reasoning steps, mitigates improper tool-use behavior, and yields considerable accuracy improvements, particularly for smaller models and more difficult problems.",
+    "Related Patterns": "Rejection Sampling Fine-Tuning (RFT), Self-Correction, Data Augmentation (for reasoning paths), Teacher-Student Learning.",
+    "Uses": "Enhancing the robustness, flexibility, and generalization of LLM reasoning, especially in complex, multi-step tasks where diverse valid paths exist and error handling is crucial.",
+    "Thinking": "This is a sophisticated AI training technique that goes beyond simple imitation. It actively *shapes* the model's potential output space by generating and correcting diverse reasoning paths, directly addressing limitations in AI reasoning and generalization. It's a meta-learning or refinement pattern for AI models."
+  }
+]

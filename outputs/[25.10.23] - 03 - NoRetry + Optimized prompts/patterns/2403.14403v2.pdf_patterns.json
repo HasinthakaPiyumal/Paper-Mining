@@ -1,0 +1,52 @@
+[
+  {
+    "Pattern Name": "Non-Retrieval for QA",
+    "Problem": "Large Language Models (LLMs) have vast internal knowledge but may not be sufficient for all queries, yet for some straightforward queries, external retrieval introduces unnecessary computational overhead.",
+    "Context": "Answering straightforward questions where the LLM's internal parametric memory is likely sufficient, and efficiency is a priority.",
+    "Solution": "Directly use the LLM to generate an answer based solely on its internal knowledge, without accessing any external knowledge bases.",
+    "Result": "Highly efficient for easy queries, as it avoids the computational overhead and latency associated with external retrieval.",
+    "Related Patterns": "Single-step Approach for QA, Multi-step Approach for QA, Adaptive Retrieval-Augmented Generation",
+    "Uses": "Answering simple, straightforward questions in Question Answering (QA) systems, especially when latency and computational cost are critical.",
+    "Thinking": "This pattern describes a fundamental operational mode for an AI system (LLM) in QA, addressing the trade-off between relying on internal parametric knowledge and the cost of external data access. It's a specific strategy for an AI model's behavior."
+  },
+  {
+    "Pattern Name": "Single-step Approach for QA",
+    "Problem": "Large Language Models (LLMs) may struggle with queries that require precise, current, or specific external knowledge not stored in their parametric memory, leading to factual inaccuracies or an inability to answer.",
+    "Context": "Queries that require external knowledge but can be answered by retrieving information from a single relevant document or a set of documents in one go, without needing iterative reasoning or multi-hop information synthesis.",
+    "Solution": "A retrieval model first accesses an external knowledge base to find documents relevant to the given query. These retrieved documents are then incorporated into the LLM's input, augmenting its internal knowledge, to generate the final answer. This process occurs in a single retrieval-and-generation cycle.",
+    "Result": "Significantly improves accuracy and currency for queries requiring external knowledge compared to non-retrieval methods, while being more efficient than multi-step approaches for moderate queries.",
+    "Related Patterns": "Non-Retrieval for QA, Multi-step Approach for QA, Adaptive Retrieval-Augmented Generation",
+    "Uses": "Open-domain Question Answering for queries of moderate complexity, where answers are typically found within a single document or can be synthesized from a few documents in one step.",
+    "Thinking": "This is a well-defined, common strategy within Retrieval-Augmented Generation (RAG) systems. It addresses a specific AI problem (LLM knowledge limitations) with a structured, AI-specific solution involving external data integration and augmentation."
+  },
+  {
+    "Pattern Name": "Multi-step Approach for QA",
+    "Problem": "Single-step retrieval-augmented LLMs are insufficient for complex queries that necessitate synthesizing information from multiple source documents and performing iterative reasoning over them.",
+    "Context": "Complex, multi-hop questions where the answer depends on interconnected pieces of information that cannot be found in a single document or derived in a single retrieval-and-response cycle.",
+    "Solution": "The LLM interacts with a retrieval module in several iterative rounds. In each round, new documents are retrieved based on the current query and potentially previous intermediate answers or context. The LLM then processes this augmented input to refine its understanding and generate intermediate answers, progressively building towards the final solution. This often involves techniques like Chain-of-Thought reasoning.",
+    "Result": "Enables LLMs to construct a more comprehensive and extensive foundation to solve complex, multi-hop queries effectively, improving accuracy for challenging questions.",
+    "Related Patterns": "Single-step Approach for QA, Adaptive Retrieval-Augmented Generation, Chain-of-Thought Reasoning",
+    "Uses": "Open-domain Question Answering for complex, multi-hop queries, and tasks requiring sequential reasoning or information aggregation from disparate sources.",
+    "Thinking": "This pattern describes an iterative, reasoning-intensive approach for AI systems (LLMs + retrievers) to tackle complex problems. It's a distinct AI design strategy focused on handling intricate information flows and progressive problem-solving within an AI pipeline."
+  },
+  {
+    "Pattern Name": "Query Complexity Classifier",
+    "Problem": "In an adaptive AI system, how to dynamically determine the appropriate operational strategy (e.g., retrieval method, reasoning depth) for an incoming user query when query complexity varies significantly.",
+    "Context": "Designing an adaptive Retrieval-Augmented Generation (RAG) system that needs to select from multiple available strategies (e.g., no retrieval, single-step, multi-step) to optimize for both accuracy and efficiency based on the query's inherent complexity.",
+    "Solution": "A smaller, dedicated Language Model (Classifier) is trained to predict the complexity level of incoming queries. This classifier outputs a class label (e.g., 'straightforward,' 'moderate,' 'complex'). The training dataset for this classifier is automatically constructed by leveraging the predicted outcomes of different RAG models on various queries (e.g., which model correctly answers which query) and by capitalizing on the inductive biases present in existing benchmark datasets (e.g., single-hop datasets imply moderate complexity, multi-hop imply complex).",
+    "Result": "Enables the adaptive system to predetermine query complexity, which is instrumental in selecting the most fitting strategy, leading to enhanced overall efficiency and accuracy.",
+    "Related Patterns": "Adaptive Retrieval-Augmented Generation",
+    "Uses": "As a decision-making component in adaptive AI systems, particularly for dynamically adjusting RAG strategies, resource allocation, or reasoning depth based on input characteristics.",
+    "Thinking": "This is a meta-AI pattern: using one AI model (the classifier) to intelligently control the operational flow and resource allocation of another AI system (the RAG pipeline). It directly addresses an AI system design challenge of adaptability and optimization based on input characteristics."
+  },
+  {
+    "Pattern Name": "Adaptive Retrieval-Augmented Generation (AdaptiveRAG)",
+    "Problem": "Existing one-size-fits-all Retrieval-Augmented Language Model (RAG) approaches are suboptimal: simple queries incur unnecessary computational overhead with complex strategies, while complex queries are inadequately addressed by simple or no-retrieval strategies, leading to inefficiencies or inaccuracies across diverse real-world queries.",
+    "Context": "Building a Question Answering (QA) system that must handle a wide range of query complexities (from straightforward to highly complex, multi-hop questions) efficiently and accurately, balancing computational cost with performance.",
+    "Solution": "Implement a framework that dynamically selects the most suitable RAG strategy for each incoming query. This selection is driven by a Query Complexity Classifier (a smaller Language Model) that predicts the query's complexity level (e.g., 'no retrieval,' 'single-step,' 'multi-step'). Based on this classification, the system dispatches the query to the appropriate RAG strategy, seamlessly adapting between non-retrieval, single-step retrieval, and multi-step iterative retrieval methods.",
+    "Result": "Significantly enhances the overall efficiency and accuracy of QA systems by allocating resources proportionally to query complexity. It provides a robust middle ground, avoiding unnecessary overhead for simple queries and ensuring adequate processing for complex ones.",
+    "Related Patterns": "Non-Retrieval for QA, Single-step Approach for QA, Multi-step Approach for QA, Query Complexity Classifier",
+    "Uses": "Open-domain Question Answering systems, conversational AI, and any LLM-based application where input complexity varies, and there's a need to optimize for both performance and computational cost.",
+    "Thinking": "This is the central, overarching AI design pattern described in the paper. It defines an adaptive architectural style for an AI system, combining multiple AI sub-patterns (different RAG strategies and a classifier) into a cohesive, intelligent system that dynamically adjusts its behavior based on input characteristics. It directly addresses a core AI system design challenge: how to make an LLM-based system robust and efficient across varying input demands."
+  }
+]

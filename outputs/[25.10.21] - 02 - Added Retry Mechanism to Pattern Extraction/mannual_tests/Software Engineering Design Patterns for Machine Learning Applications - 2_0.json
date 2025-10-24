@@ -1,0 +1,82 @@
+[
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "ML application systems are complex due to regular retraining, intrinsic nondeterministic behavior of ML components, and evolving business requirements and ML algorithms, leading to tight coupling between business logic and ML models, making changes difficult without broader impact.",
+    "Context": "Any ML application system where outputs depend on ML techniques and there's a need to manage evolving business requirements and ML components.",
+    "Solution": "Define clear APIs between traditional and ML components, placing them into distinct layers (e.g., Presentation, Logic, Data) and dividing data flows into business logic, ML runtime, and ML development types. This separates business logic and the ML inference engine, loosely coupling them with ML-specific dataflows.",
+    "Result": "Isolates failures between business logic and the ML learning layer, facilitates easier debugging, allows for better monitoring and adjustment of ML components to meet user requirements and adapt to changing inputs.",
+    "Related Patterns": [],
+    "Uses": "Chatbot systems, any ML application requiring clear separation of concerns between core business logic and ML inference.",
+    "Thinking": "This pattern addresses a specific challenge in ML system design: the inherent complexity and evolving nature of ML models, which can lead to tight coupling with business logic. The solution of separating these concerns with clear APIs and distinct data flows is a specific application of modularization to ML systems, making it an AI design pattern. It's explicitly highlighted as a major pattern in the paper (Page 6)."
+  },
+  {
+    "Pattern Name": "Encapsulate ML Models within Rule-base Safeguards",
+    "Problem": "ML models are inherently unstable, vulnerable to adversarial attacks, noise, and data drift, leading to unpredictable or erroneous behavior in critical applications.",
+    "Context": "ML systems where reliability, safety, and trustworthiness are paramount, and the ML model's outputs need to be constrained or validated.",
+    "Solution": "Encapsulate the ML model's functionality behind a layer of deterministic, verifiable rule-based safeguards. These rules act as a protective wrapper, handling edge cases, validating inputs/outputs, or overriding ML predictions when certain conditions are met, thereby managing the inherent uncertainty of the ML model.",
+    "Result": "Improves the robustness, reliability, and trustworthiness of ML systems by mitigating risks from model instability, vulnerabilities, and data drift.",
+    "Related Patterns": [],
+    "Uses": "Critical AI systems, safety-critical applications, systems requiring explainability or compliance, autonomous driving, medical diagnosis.",
+    "Thinking": "This pattern directly addresses the unique challenges of ML models: their inherent uncertainty and vulnerability. The solution combines ML with traditional rule-based systems to enhance safety and reliability, which is a specific AI/ML design concern, not a general software engineering pattern."
+  },
+  {
+    "Pattern Name": "Parameter-Server Abstraction",
+    "Problem": "There is a lack of widely accepted and efficient abstractions for performing distributed machine learning training, making it challenging to scale model training across multiple computational nodes.",
+    "Context": "Large-scale machine learning training scenarios where models or datasets are too large for a single machine, requiring distributed computation.",
+    "Solution": "Implement an architecture where worker nodes perform local computations on subsets of data and communicate updates to server nodes. Server nodes maintain and update globally shared model parameters (e.g., weight vectors, matrices) and distribute the latest parameters back to worker nodes.",
+    "Result": "Enables scalable and efficient distributed training of machine learning models, overcoming memory and computational limitations of single machines.",
+    "Related Patterns": [],
+    "Uses": "Distributed deep learning, large-scale model training for models like neural networks, recommendation systems.",
+    "Thinking": "This is a specific architectural pattern for distributed machine learning training, addressing the unique computational and data management challenges of scaling ML. It's not a general distributed computing pattern but tailored to the parameter update dynamics of ML models."
+  },
+  {
+    "Pattern Name": "Data Flows Up, Model Flows Down (Federated Learning)",
+    "Problem": "Standard machine learning approaches centralize training data, which can lead to privacy concerns, high communication costs, and an inability to leverage diverse data residing on edge devices.",
+    "Context": "Scenarios where data is sensitive, distributed across many client devices (e.g., mobile phones), and cannot be easily centralized for training.",
+    "Solution": "Instead of bringing data to a central server, the global model is sent to client devices. Each device trains the model locally on its private data, and only model updates (e.g., gradients or weights) are sent back to a central server. The server then aggregates these updates to improve the global model, which is then redistributed.",
+    "Result": "Enables collaborative learning of a shared prediction model while keeping sensitive training data on the device, enhancing privacy, reducing communication bandwidth, and leveraging diverse real-world data.",
+    "Related Patterns": ["Secure Aggregation"],
+    "Uses": "Mobile keyboard prediction, on-device recommendation systems, healthcare applications with sensitive patient data, IoT analytics.",
+    "Thinking": "This describes Federated Learning, a paradigm specifically designed to address privacy and data locality challenges unique to ML. It's a fundamental AI design pattern for privacy-preserving and distributed intelligence."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "In collaborative learning settings (like federated learning), the system needs to communicate and aggregate model updates from multiple client devices securely, efficiently, scalably, and fault-tolerantly, without revealing individual client contributions.",
+    "Context": "Distributed machine learning environments, particularly federated learning, where privacy of individual model updates is critical during the aggregation phase.",
+    "Solution": "Employ cryptographic techniques (e.g., homomorphic encryption, secure multi-party computation) to encrypt model updates from client devices. The central server can then compute aggregated results (e.g., sums or averages of model parameters) directly on the encrypted data without decrypting individual contributions, thus preserving privacy.",
+    "Result": "Ensures the privacy and confidentiality of individual client model updates during the aggregation process in collaborative learning, while still allowing for the computation of a global model.",
+    "Related Patterns": ["Data Flows Up, Model Flows Down (Federated Learning)"],
+    "Uses": "Federated learning, privacy-preserving AI, secure multi-party computation in ML.",
+    "Thinking": "This pattern is a specific technique for privacy-preserving computation within distributed ML, particularly federated learning. It addresses the unique challenge of aggregating sensitive ML model updates without compromising individual data, making it an AI-specific design pattern."
+  },
+  {
+    "Pattern Name": "Deployable Canary Model",
+    "Problem": "Complex or black-box ML models often lack inherent explainability, making it difficult to understand their decision-making process, diagnose issues, or build trust. There's a need for a surrogate ML model to approximate the best model's behavior for explainability without compromising primary performance.",
+    "Context": "Production ML systems where explainability is required alongside high-performance, complex models.",
+    "Solution": "Deploy a simpler, more explainable 'canary' ML model (or an explainable inference pipeline) in parallel with the primary, high-performance model. The canary model approximates the behavior of the primary model, and its predictions or explanations are monitored alongside the primary model's outputs to understand differences and provide insights into the primary model's behavior.",
+    "Result": "Provides insights into the behavior of complex ML models, enhances explainability, and aids in monitoring and debugging, without directly impacting the performance of the primary model.",
+    "Related Patterns": [],
+    "Uses": "Explainable AI (XAI), model monitoring, debugging black-box models, regulatory compliance for AI systems.",
+    "Thinking": "This pattern directly addresses the unique and critical challenge of explainability in ML systems. The solution involves a specific deployment strategy (running a parallel, simpler model) to gain insights into a complex ML model's behavior, which is highly specific to AI design and MLOps."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "Unlike traditional software, ML models are artifacts of data and code, meaning different versions of training data, model architecture, training code, or even the training environment can lead to different model behaviors. This makes reproducibility, debugging, and tracking changes in overall application behavior challenging.",
+    "Context": "Any ML development and deployment pipeline where reproducibility, traceability, and managing model evolution are critical.",
+    "Solution": "Implement a comprehensive versioning strategy that records not only the ML model's structure (e.g., weights, architecture) but also the specific version of the training data used, the training system/environment (e.g., libraries, hyperparameters), and the analytical code that produced the model. This ensures that any model can be reproduced and its lineage traced.",
+    "Result": "Guarantees reproducibility of ML model training and inference, enables effective debugging of model behavior changes, and provides clear traceability for auditing and compliance.",
+    "Related Patterns": [],
+    "Uses": "MLOps pipelines, model governance, auditing, debugging model drift, regulatory compliance.",
+    "Thinking": "While versioning is a general concept, 'ML Versioning' is distinct because it encompasses not just code, but also data, models, and environments, which are unique artifacts in ML. This comprehensive approach is essential for reproducibility and traceability in ML workflows, making it an MLOps-specific AI design pattern."
+  },
+  {
+    "Pattern Name": "Different Workloads in Different Computing Environments",
+    "Problem": "Difficulty in separating and quickly changing ML data and training workloads to maximize efficiency.",
+    "Context": "ML systems that involve distinct data processing and model training phases, where these workloads have different computational requirements or need to be optimized independently for efficiency. This is particularly relevant in MLOps scenarios where resource allocation and cost optimization are important.",
+    "Solution": "Physically isolate ML data and training workloads onto separate machines or computing environments. This allows for independent optimization of configurations (e.g., hardware, software, network) for each workload type, maximizing efficiency and enabling quick changes without affecting other parts of the system.",
+    "Result": "Maximizes efficiency for ML data processing and training, allows for quick and independent changes to workload configurations, and improves resource utilization.",
+    "Related Patterns": [],
+    "Uses": "MLOps, distributed ML training, resource management for ML pipelines, cloud-based ML deployments.",
+    "Thinking": "This pattern is specific to ML because it focuses on 'ML data and training workloads.' While resource isolation is a general concept, applying it to the distinct phases of ML (data prep vs. training) for efficiency and rapid iteration is an MLOps-specific concern. It falls under the MLOps category."
+  }
+]

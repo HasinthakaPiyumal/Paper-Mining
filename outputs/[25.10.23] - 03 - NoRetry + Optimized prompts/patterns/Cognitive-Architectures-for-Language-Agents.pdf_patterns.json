@@ -1,0 +1,102 @@
+[
+  {
+    "Pattern Name": "Cognitive Architecture for Language Agents (CoALA)",
+    "Problem": "Lack of a unified framework to organize existing language agents and plan future developments, leading to custom terminology and difficulty in comparison and building new agents with clean abstractions.",
+    "Context": "Designing and developing language agents that augment Large Language Models (LLMs) with external resources or internal control flows for tasks requiring grounding or reasoning.",
+    "Solution": "Propose a conceptual framework that organizes language agents along three key dimensions: 1) their information storage (divided into working and long-term memories), 2) their action space (divided into internal and external actions), and 3) their decision-making procedure (structured as an interactive loop with planning and execution).",
+    "Result": "Provides a blueprint to structure language agents, allowing for retrospective survey and organization of existing work, and prospective identification of underexplored directions towards more capable agents. It contextualizes modern language agents within the broader history of AI.",
+    "Related Patterns": "Structured Memory Modules, Structured Action Space, Deliberative Decision-Making Cycle, LLM as Probabilistic Production System.",
+    "Uses": "Characterizing and designing general-purpose language agents, organizing diverse empirical work, identifying future research directions in language agent development.",
+    "Thinking": "The text explicitly introduces CoALA as 'a conceptual framework to characterize and design general purpose language agents' and details its core components (memory, action, decision-making) as a blueprint. This is a meta-pattern for AI system design."
+  },
+  {
+    "Pattern Name": "LLM as Probabilistic Production System",
+    "Problem": "Understanding how Large Language Models (LLMs) fit into traditional AI agent paradigms, especially those based on symbolic manipulation and rule application, and leveraging their inherent capabilities.",
+    "Context": "Integrating LLMs, which operate over arbitrary text and learn distributions over completions, into agent designs that historically used discrete, human-legible production rules.",
+    "Solution": "View an LLM as a probabilistic production system where the input string (prompt) acts as a precondition, and the LLM defines a probability distribution over possible completions (actions or modifications to the string). Each completion is a 'production' selected probabilistically.",
+    "Result": "Provides a conceptual bridge between modern LLMs and historical AI concepts, allowing designers to leverage the LLM's massive pretraining and learned prior over string completions for a wide range of tasks, while acknowledging its probabilistic and opaque nature.",
+    "Related Patterns": "Prompt Engineering as Control Flow.",
+    "Uses": "Conceptualizing LLM behavior in an agent context, understanding the underlying mechanism of LLM-based action generation, and drawing parallels with symbolic AI.",
+    "Thinking": "Section 3.1 is titled 'Language models as probabilistic production systems' and elaborates on this analogy, defining how LLMs can be seen as selecting productions. This is a fundamental conceptual pattern for using LLMs in agents."
+  },
+  {
+    "Pattern Name": "Prompt Engineering as Control Flow",
+    "Problem": "Controlling the behavior and output of Large Language Models (LLMs) to achieve specific task-oriented outcomes, beyond simple text completion, and to elicit targeted reasoning.",
+    "Context": "Using LLMs in agent designs where their output needs to be biased towards high-quality, task-specific 'productions' or actions, and where intermediate reasoning steps are required to solve complex problems.",
+    "Solution": "Manipulate the input string (prompt) to the LLM by concatenating additional text, selecting relevant few-shot examples, or eliciting targeted reasoning. These preprocessing manipulations, which can involve other models or the LLM itself, define a sequence of 'productions' that guide the LLM's behavior.",
+    "Result": "Enables LLMs to be biased towards desired outputs, perform complex algorithms by chaining multiple calls, and generate intermediate reasoning steps, effectively implementing control logic and guiding the LLM's internal 'thought' process.",
+    "Related Patterns": "LLM as Probabilistic Production System, Chain of Thought, Self-Critique, Retrieval Augmented Generation.",
+    "Uses": "Guiding LLM behavior, implementing task-specific logic, enabling multi-step reasoning, dynamic context-sensitive prompting, and eliciting specific reasoning patterns.",
+    "Thinking": "Section 3.2 is explicitly titled 'Prompt engineering as control flow' and details how various prompting methods (zero-shot, few-shot, RAG, Socratic, Self-Critique) manipulate the input string to define a 'sequence of productions,' which is a clear pattern for controlling LLM-based agents."
+  },
+  {
+    "Pattern Name": "Structured Memory Modules",
+    "Problem": "Large Language Models (LLMs) are stateless and do not persist information across calls, making it challenging for language agents to maintain context, learn from experience, and store knowledge for multi-step interactions.",
+    "Context": "Designing language agents that need to store and maintain diverse forms of information internally for robust, long-term interaction with the world and to support complex decision-making.",
+    "Solution": "Explicitly organize information into multiple memory modules, mainly textual, each containing a different form of information: Working Memory (active, current state), Episodic Memory (past experiences/events), Semantic Memory (world knowledge, facts), and Procedural Memory (implicit LLM knowledge and explicit agent code/procedures).",
+    "Result": "Enables language agents to overcome the statelessness of LLMs, maintain context, learn from past experiences, accumulate world knowledge, and execute complex behaviors through defined procedures, significantly enhancing their capabilities for multi-step and long-term tasks.",
+    "Related Patterns": "Cognitive Architecture for Language Agents (CoALA), Retrieval Actions, Learning Actions, Reasoning Actions.",
+    "Uses": "Storing context, learning from experience, knowledge management, defining agent capabilities, supporting reasoning and planning in language agents.",
+    "Thinking": "Section 4.1 is dedicated to 'Memory' and details four distinct types of memory (Working, Episodic, Semantic, Procedural) as core components of CoALA, each with a specific purpose and interaction. This structured categorization and management of information is a clear architectural pattern for AI agents."
+  },
+  {
+    "Pattern Name": "Structured Action Space",
+    "Problem": "Defining a comprehensive and organized set of capabilities for a language agent to interact effectively with its internal state and external environments, beyond simple text generation.",
+    "Context": "Designing language agents that need to perform a variety of operations, from interacting with the physical world to managing their own knowledge and reasoning processes, and where a clear distinction between internal and external operations is beneficial.",
+    "Solution": "Structure the agent's action space into distinct categories: External Actions (Grounding) for interacting with the environment (physical, dialogue, digital) and Internal Actions for interacting with internal memories. Internal actions are further decomposed into Retrieval (read from long-term memory), Reasoning (process working memory), and Learning (write to long-term memory).",
+    "Result": "Provides a clear and task-suitable definition of an agent's capabilities, systematizing agent design and enabling complex behaviors by combining different action types. It allows for flexible interaction with diverse environments and sophisticated internal state management.",
+    "Related Patterns": "Cognitive Architecture for Language Agents (CoALA), Grounding Actions, Retrieval Actions, Reasoning Actions, Learning Actions, Deliberative Decision-Making Cycle.",
+    "Uses": "Defining agent capabilities, designing interactions with environments, managing internal state, enabling learning and reasoning processes within an agent.",
+    "Thinking": "Section 4 explicitly introduces 'action space divided into internal and external actions' and then dedicates subsections 4.2-4.5 to detailing 'Grounding actions,' 'Retrieval actions,' 'Reasoning actions,' and 'Learning actions.' This structured categorization of actions is a design pattern for AI agents."
+  },
+  {
+    "Pattern Name": "Deliberative Decision-Making Cycle",
+    "Problem": "How should a language agent choose which action to apply from its diverse action space, especially when complex planning, evaluation of alternatives, and adaptation based on feedback are involved?",
+    "Context": "Designing language agents that require more sophisticated control flow than simple, single-step action generation, involving iterative planning, evaluating potential outcomes, and adapting behavior based on environmental or internal feedback.",
+    "Solution": "Structure the agent's top-level program into recurring decision cycles. Each cycle involves a Planning Stage (using reasoning and retrieval to propose, evaluate, and select candidate actions) and an Execution Stage (applying the selected action and making an observation). The cycle then repeats.",
+    "Result": "Enables agents to engage in complex, multi-step planning, evaluate potential outcomes, adapt to environmental feedback, and integrate learning into their operational loop, moving beyond myopic, single-step action generation towards more human-like deliberation.",
+    "Related Patterns": "Cognitive Architecture for Language Agents (CoALA), Reasoning Actions, Retrieval Actions, Learning Actions, Reason-Act Loop (ReAct), Tree of Thoughts (ToT).",
+    "Uses": "Orchestrating agent behavior, planning, self-correction, integrating learning, complex task solving, and enabling foresight in agent actions.",
+    "Thinking": "Section 4.6 is titled 'Decision making' and explicitly describes 'CoALA structures this toplevel program into decision cycles' with detailed substages like Planning (Proposal, Evaluation, Selection) and Execution. This iterative, deliberative process is a core AI design pattern."
+  },
+  {
+    "Pattern Name": "Reason-Act Loop (ReAct)",
+    "Problem": "How to enable language agents to perform intermediate reasoning before selecting an action and adapt to environmental feedback in a dynamic, interactive way, rather than just generating a single action.",
+    "Context": "Designing language agents that need to interact with dynamic digital environments (e.g., Wikipedia API, text games, websites) and require both internal thought processes and external actions to solve problems.",
+    "Solution": "Implement a fixed decision cycle that uses a reasoning action ('Thought') to analyze the current situation, generate or refine action plans, and then generates a grounding action ('Act') to interact with the environment. The agent alternates between these two types of actions in a continuous feedback loop.",
+    "Result": "Demonstrates synergistic effects where reasoning guides acting, and acting provides environmental feedback to support further reasoning, leading to more sophisticated and adaptive behavior than direct action generation. It allows for dynamic planning and self-correction.",
+    "Related Patterns": "Deliberative Decision-Making Cycle (a simplified instance), Prompt Engineering as Control Flow, Structured Action Space (Reasoning, Grounding).",
+    "Uses": "Interactive problem-solving in digital environments, tool use, sequential decision-making with LLMs, and enabling agents to adapt to changing environmental states.",
+    "Thinking": "ReAct is explicitly described in Section 5 as a language agent whose 'decision cycle is fixed to use a single reasoning action to analyze the situation and remake action plans then generates a grounding action.' This specific, recurring loop of 'Reason' then 'Act' is a distinct and widely recognized AI design pattern."
+  },
+  {
+    "Pattern Name": "Tree of Thoughts (ToT)",
+    "Problem": "Overcoming the limitations of sequential, single-path reasoning in LLMs, which can lead to myopia, errors, and suboptimal solutions for complex reasoning problems requiring exploration of multiple possibilities.",
+    "Context": "Solving reasoning problems (e.g., game of 24, creative writing, crosswords puzzle) where exploring multiple reasoning paths, evaluating intermediate 'thoughts,' and backtracking are crucial for finding optimal or high-quality solutions.",
+    "Solution": "Implement a deliberative decision-making process that iteratively proposes, evaluates, and selects 'thoughts' (reasoning actions) based on LLM reasoning. These thoughts are maintained via a tree search algorithm (e.g., BFS, DFS, MCTS) to enable global exploration, local backtrack, and foresight, allowing the agent to consider multiple future paths.",
+    "Result": "Allows LLM agents to perform more deliberate problem-solving, explore a wider range of possibilities, and achieve better performance on tasks requiring complex reasoning and planning compared to linear prompting methods like Chain of Thought.",
+    "Related Patterns": "Deliberative Decision-Making Cycle (a specific, advanced implementation), Reasoning Actions, Prompt Engineering as Control Flow.",
+    "Uses": "Complex reasoning tasks, puzzle solving, creative generation, planning with foresight, and any problem where exploring alternative reasoning paths is beneficial.",
+    "Thinking": "Section 5 describes ToT as a 'special kind of language agent' with 'deliberate decisionmaking' that 'iteratively proposes evaluates and selects thoughts reasoning actions based on LLM reasoning and maintains them via a tree search algorithm.' This is a distinct, advanced planning and reasoning pattern."
+  },
+  {
+    "Pattern Name": "Procedural Learning (Skill Acquisition)",
+    "Problem": "Enabling language agents to autonomously acquire and store new executable capabilities (skills, code-based procedures) to interact with complex environments, rather than relying solely on pre-defined actions or LLM parameter updates.",
+    "Context": "Agents operating in dynamic and complex environments (e.g., Minecraft, robotics) where new, reusable code-based skills are essential for mastering the environment, adapting to novel situations, and generalizing to unseen tasks.",
+    "Solution": "Implement a learning action that allows the agent to write new code-based grounding procedures (skills) into its procedural memory (a skill library). This process often involves reasoning over environmental feedback to determine task completion, and if successful, adding the procedure to memory. If unsuccessful, reasoning is used to refine the code.",
+    "Result": "Agents can incrementally build up a library of reusable skills, leading to better exploration, mastery of complex tech trees, and zero-shot generalization to novel tasks, significantly enhancing their long-term adaptability and capability in open-ended environments.",
+    "Related Patterns": "Structured Memory Modules (Procedural Memory), Learning Actions, Deliberative Decision-Making Cycle, Structured Action Space (Grounding, Learning).",
+    "Uses": "Robotics, complex game environments, autonomous code generation, lifelong learning of new capabilities, and adapting to new tools or APIs.",
+    "Thinking": "Voyager is highlighted in Section 5 for its 'longterm procedural memory that stores a library of codebased grounding procedures aka skills' and its action space includes 'learning by adding new grounding procedures.' Section 4.5 also discusses 'Updating agent code procedural memory' as a form of learning. This is a specific AI learning pattern."
+  },
+  {
+    "Pattern Name": "Reflective Semantic Learning",
+    "Problem": "How can language agents distill insights from their raw, transient experiences and store them as generalizable, high-level knowledge in a structured way, rather than just episodic records, to improve future reasoning and decision-making?",
+    "Context": "Agents that accumulate a large amount of episodic memory (e.g., event flows, trajectories) and need to leverage this experience to form higher-level understanding, generate new heuristics, and improve their internal world model.",
+    "Solution": "Use reasoning actions (often powered by an LLM) to reflect on past experiences stored in episodic memory. The resulting inferences, summaries, or distilled insights (e.g., 'there is no dishwasher in kitchen') are then written to long-term semantic memory as new, generalized knowledge.",
+    "Result": "Agents can incrementally build up world knowledge from experience, allowing them to generate more informed plans, make better decisions, and adapt their future behaviors based on distilled insights from their past, leading to more robust and intelligent behavior.",
+    "Related Patterns": "Structured Memory Modules (Episodic Memory, Semantic Memory), Reasoning Actions, Learning Actions, Deliberative Decision-Making Cycle.",
+    "Uses": "Self-improvement, knowledge acquisition, forming generalized heuristics, adapting to new situations, and enhancing the agent's internal model of the world.",
+    "Thinking": "Generative Agents and Reflexion (Shinn et al. 2023) are described in Section 5 and 4.5 as using LLMs to 'reason about raw experiences and store the resulting inferences in semantic memory.' This process of reflecting on episodes to generate and store semantic knowledge is a distinct learning pattern for AI agents."
+  }
+]

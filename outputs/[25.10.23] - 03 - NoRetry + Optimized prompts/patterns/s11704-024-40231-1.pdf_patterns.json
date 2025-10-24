@@ -1,0 +1,102 @@
+[
+  {
+    "Pattern Name": "Agent Profiling",
+    "Problem": "How to define the role and characteristics of an autonomous agent to influence its behavior.",
+    "Context": "Designing LLM-based autonomous agents that need to perform tasks by assuming specific roles (e.g., coders, teachers, domain experts) or exhibit certain personalities and social information.",
+    "Solution": "Agent profiles are created using three main strategies: 1) Handcrafting: Manually specifying basic (age, gender, career) and psychological/social information in prompts. 2) LLM-generation: Automatically generating profiles based on LLMs, guided by rules or seed examples. 3) Dataset Alignment: Obtaining profiles from real-world datasets to accurately reflect attributes of a real population. These strategies can also be combined.",
+    "Result": "The agent's behavior, memorization, planning, and action procedures are significantly influenced and aligned with its assigned role, leading to more human-like or task-specific performance.",
+    "Related Patterns": "N/A",
+    "Uses": "Generative Agent, MetaGPT, ChatDev, Self-collaboration, PTLLM, RecAgent, studies on toxicity.",
+    "Thinking": "This pattern directly addresses how to imbue an AI agent with a specific persona or role, which is fundamental to its intelligent behavior and interaction, rather than a general software concern."
+  },
+  {
+    "Pattern Name": "Hybrid Memory",
+    "Problem": "LLM-based agents need to accumulate experiences, self-evolve, and behave consistently over time, but LLMs have limited context windows for comprehensive memory storage.",
+    "Context": "Autonomous agents operate in continuous and dynamic environments, requiring both immediate contextual awareness and the ability to recall important past information for long-range reasoning.",
+    "Solution": "Explicitly model human short-term and long-term memories. Short-term memory temporarily buffers recent perceptions (analogous to the LLM's context window), while long-term memory consolidates important information over extended periods, often using external vector storage for rapid querying and retrieval. Memory information can be stored in natural language, embeddings, databases, or structured lists.",
+    "Result": "Enhances the agent's ability for long-range reasoning, accumulation of valuable experiences, and consistent, reasonable, and effective behavior in complex environments, mitigating the context window limitation.",
+    "Related Patterns": "Memory Reflection, Experience Accumulation (Agent Learning)",
+    "Uses": "Generative Agent, AgentSims, GITM, Reflexion, SCM, SimplyRetrieve, MemorySandbox.",
+    "Thinking": "This is an AI-specific architectural pattern for managing an agent's state and knowledge, directly addressing the inherent limitations of LLMs (context window) and mimicking human cognitive processes for intelligent recall."
+  },
+  {
+    "Pattern Name": "Memory Reflection",
+    "Problem": "Agents need to move beyond simply recalling raw past experiences to derive more abstract, complex, and high-level insights for improved decision-making.",
+    "Context": "Autonomous agents accumulate vast amounts of low-level memories (behaviors, observations) over time, and need a mechanism to synthesize this information into actionable knowledge.",
+    "Solution": "Emulate human ability to witness and evaluate cognitive processes. The agent independently summarizes its past experiences stored in memory into broader, more abstract insights. This often involves generating key questions based on recent memories, querying memory for relevant information, and then generating high-level insights, potentially hierarchically.",
+    "Result": "Agents gain the capability to infer abstract patterns and high-level ideas from their experiences, leading to more informed planning and consistent behavior.",
+    "Related Patterns": "Hybrid Memory, Experience Accumulation (Agent Learning)",
+    "Uses": "Generative Agent, GITM, ExpeL.",
+    "Thinking": "This is a distinct AI cognitive pattern, enabling an agent to perform meta-learning or self-analysis on its own experiences, which is crucial for advanced autonomy and intelligent adaptation."
+  },
+  {
+    "Pattern Name": "Planning with Feedback",
+    "Problem": "Generating flawless long-horizon plans for complex tasks in dynamic, unpredictable environments is extremely difficult, and initial plans often fail or become non-executable.",
+    "Context": "LLM-based agents need to solve complex, multi-step tasks where preconditions are intricate, execution may be hindered by unpredictable dynamics, and iterative refinement is necessary, similar to human problem-solving.",
+    "Solution": "Agents iteratively make and revise their plans based on external or internal feedback received after taking actions. Feedback sources include: 1) Environmental feedback: From the objective world or virtual environment (e.g., task completion signals, observations, execution errors). 2) Human feedback: Direct interaction with humans to align with values and preferences, and mitigate hallucination. 3) Model feedback: Internal feedback generated by pre-trained models (e.g., self-refine mechanisms, evaluation modules).",
+    "Result": "Plans become more adaptive, robust, and aligned with real-world conditions or human intent, enabling the agent to effectively address complex tasks involving long-range reasoning.",
+    "Related Patterns": "Trial-and-Error Learning (Agent Adaptation), Self-driven Evolution (Agent Autonomy)",
+    "Uses": "ReAct, Voyager, Ghost, SayPlan, DEPS, LLMPlanner, Inner Monologue, Self-refine, SelfCheck, InterAct, ChatCoT, Reflexion.",
+    "Thinking": "This is a core AI planning pattern that emphasizes adaptive, iterative planning, which is essential for agents operating in uncertain or complex environments, distinguishing it from static, predefined plans."
+  },
+  {
+    "Pattern Name": "Multi-path Reasoning",
+    "Problem": "Complex problems often have multiple valid approaches or intermediate steps, and a single, linear reasoning path may be insufficient or lead to suboptimal solutions.",
+    "Context": "LLM-based agents need to solve intricate problems that benefit from exploring diverse perspectives or alternative strategies at each reasoning step, mimicking human divergent thinking.",
+    "Solution": "Organize reasoning steps into a tree-like or graph structure, where each intermediate step ('thought') can have multiple subsequent steps. The agent explores these paths, often evaluating them (e.g., using LLMs) to select the most promising one, or aggregating results from multiple paths. Search strategies like Breadth-First Search (BFS) or Depth-First Search (DFS) can be employed.",
+    "Result": "Enables more robust and comprehensive problem-solving by considering multiple possibilities, leading to more accurate and reliable final plans or answers.",
+    "Related Patterns": "Chain of Thought (single-path variant), Planning with Feedback (can incorporate multi-path reasoning).",
+    "Uses": "Self-consistent CoT (CoTSC), Tree of Thoughts (ToT), RecMind, Graph of Thoughts (GoT), Algorithm of Thoughts (AoT), RAP.",
+    "Thinking": "This is an AI-specific reasoning pattern that enhances the problem-solving capabilities of LLMs by explicitly modeling and exploring alternative thought processes, going beyond simple sequential reasoning."
+  },
+  {
+    "Pattern Name": "External Tool Use",
+    "Problem": "LLMs have limitations in specific domains requiring expert knowledge, may suffer from hallucination, or lack the ability to interact with the real world or perform complex computations.",
+    "Context": "Autonomous agents need to perform tasks that go beyond the internal knowledge and capabilities of a standalone LLM, requiring access to specialized functionalities or real-world information.",
+    "Solution": "Empower agents with the capability to call and integrate external tools for executing actions. These tools can include: 1) APIs: Leverage external APIs (e.g., HuggingFace models, Python interpreters, specialized API calls) for domain-specific tasks or computations. 2) Databases/Knowledge Bases: Integrate external structured data sources (e.g., SQL databases, expert systems) to obtain specific domain information. 3) External Models: Utilize other pre-trained AI models (e.g., for text retrieval, code generation, multimodal processing) to handle more complex or specialized tasks.",
+    "Result": "Expands the agent's action space, overcomes LLM limitations, reduces hallucination, and enables the agent to perform tasks requiring expert knowledge or real-world interaction.",
+    "Related Patterns": "Action Module (this is a key part of it).",
+    "Uses": "HuggingGPT, TPTU, Gorilla, ToolFormer, APIBank, ToolBench, RestGPT, TaskMatrixAI, ChatDB, MRKL, OpenAGI, MemoryBank, ViperGPT, ChemCrow, MMREACT.",
+    "Thinking": "This is a crucial AI design pattern for building practical and capable agents, allowing them to augment their inherent language capabilities with specialized, external functionalities, which is a common challenge in AI system design."
+  },
+  {
+    "Pattern Name": "Prompt Engineering for Capability Acquisition",
+    "Problem": "How to enhance an agent's capabilities or unleash existing LLM capabilities for specific tasks without finetuning the underlying LLM, especially for closed-source models or when finetuning is impractical.",
+    "Context": "LLMs possess strong language comprehension and reasoning abilities that can be guided by natural language instructions. Agents need to acquire new behaviors or improve existing ones through flexible, non-parameter-modifying means.",
+    "Solution": "Describe the desired capability or provide valuable information using natural language, and then use this as prompts to influence the LLM's actions. This can involve: 1) Few-shot examples: Presenting intermediate reasoning steps as examples to inspire complex task reasoning. 2) Trigger sentences: Using specific phrases (e.g., 'think step by step') to elicit reasoning processes. 3) Contextual information: Incorporating agent beliefs, target mental states, or retrospective reflections into the prompt to guide future actions and enhance self-awareness or adaptation.",
+    "Result": "Agents gain enhanced capabilities, improved reasoning, better social awareness, and adaptive behaviors without the need for costly or complex model finetuning.",
+    "Related Patterns": "Chain of Thought, Multi-path Reasoning (often implemented via prompt engineering).",
+    "Uses": "CoT, CoTSC, ToT, SocialAGI, Retroformer.",
+    "Thinking": "This is a unique and powerful AI design pattern specific to the LLM era, leveraging the model's inherent language understanding to modify its behavior and capabilities through input rather than weight changes."
+  },
+  {
+    "Pattern Name": "Experience Accumulation (Agent Learning)",
+    "Problem": "Agents need to learn and improve their performance over time by leveraging past successful interactions and acquired skills, rather than starting from scratch for every new task.",
+    "Context": "Autonomous agents operate in environments where tasks may recur or similar sub-problems arise. Efficient learning requires retaining and reusing successful strategies.",
+    "Solution": "Design mechanisms for the agent to store successful actions, skills, or task completion trajectories into its memory or a dedicated skill library. When encountering similar future tasks, the agent retrieves and invokes these previously successful experiences or executable codes. This process often involves iterative refinement of skills based on feedback.",
+    "Result": "The agent's capability is enhanced through accumulated knowledge, leading to more efficient task completion, reduced exploration, and improved performance on recurring or similar tasks.",
+    "Related Patterns": "Hybrid Memory, Memory Reflection",
+    "Uses": "GITM, Voyager, AppAgent, MemPrompt.",
+    "Thinking": "This is a fundamental AI learning pattern, enabling agents to build a knowledge base of 'how-to' information from their own successful interactions, which is distinct from general data storage or generic machine learning model training."
+  },
+  {
+    "Pattern Name": "Self-driven Evolution (Agent Autonomy)",
+    "Problem": "How to enable agents to autonomously improve their capabilities and adapt to new situations without constant external guidance or predefined learning objectives.",
+    "Context": "For achieving higher levels of artificial general intelligence (AGI) or operating in open-ended environments, agents need the capacity for self-directed learning and goal setting.",
+    "Solution": "The agent autonomously sets goals for itself and gradually improves its capabilities by exploring the environment and receiving feedback (e.g., from a reward function). This can involve dynamic adjustment of agent roles, tasks, and relationships, or even a teacher-student model where a stronger LLM guides a weaker one.",
+    "Result": "Agents acquire knowledge and develop capabilities according to their own preferences or emergent needs, showcasing advanced communication and adaptation in complex multi-agent systems.",
+    "Related Patterns": "Planning with Feedback, Trial-and-Error Learning (Agent Adaptation), Multi-Agent Systems.",
+    "Uses": "LMA3, SALLMMS, CLMTWA, NLSOM.",
+    "Thinking": "This is an advanced AI pattern focusing on agent autonomy and self-improvement, where the agent itself drives its learning and development, a key aspect of sophisticated AI systems and AGI."
+  },
+  {
+    "Pattern Name": "Trial-and-Error Learning (Agent Adaptation)",
+    "Problem": "Agents need to learn from their mistakes and adapt their behavior when initial actions or plans prove unsatisfactory or fail in dynamic environments.",
+    "Context": "In real-world or simulated environments, agents often face uncertainty and unexpected outcomes. A mechanism for self-correction based on immediate feedback is crucial for robust performance.",
+    "Solution": "The agent first performs an action or proposes a plan. A predefined critic (which can be another LLM, environmental check, or comparison with human feedback) judges the action/plan. If deemed unsatisfactory or a failure occurs, the critic generates specific feedback (e.g., failure information, reasons for failure). This feedback is then incorporated by the agent to revise its plan or generate the next action. This process iterates until success or a desired condition is met.",
+    "Result": "Agents become more robust and adaptive, capable of correcting planning errors, refining actions, and improving performance in uncertain or challenging scenarios.",
+    "Related Patterns": "Planning with Feedback, Self-driven Evolution (Agent Autonomy)",
+    "Uses": "RAH, DEPS, RoCo, PREFER.",
+    "Thinking": "This is a fundamental AI learning and adaptation pattern, directly addressing how an agent learns from its failures and adjusts its behavior, which is a cornerstone of intelligent systems operating in dynamic environments."
+  }
+]

@@ -1,0 +1,332 @@
+[
+  {
+    "Pattern Name": "ReAct (Synergizing Reasoning and Acting)",
+    "Problem": "Large Language Models (LLMs) typically study reasoning (e.g., Chain-of-Thought) and acting (e.g., action plan generation) as separate topics. This separation leads to issues such as:\n- Reasoning-only models (like CoT) suffering from fact hallucination and error propagation due to lack of grounding in the external world.\n- Acting-only models lacking abstract reasoning, high-level goal maintenance, or working memory, leading to 'hallucinating actions' or inability to recover from errors.\n- Difficulty in learning new tasks quickly and performing robust decision-making under unseen circumstances or information uncertainties, unlike human intelligence which seamlessly combines both.",
+    "Context": "Large Language Models (LLMs) are applied to diverse tasks requiring both language understanding and interactive decision-making, including knowledge-intensive reasoning (e.g., question answering, fact verification) and interactive decision-making (e.g., text-based games, web navigation). The agent interacts with an environment, receiving observations and taking actions.",
+    "Solution": "Augment the LLM's action space to include both domain-specific actions (affecting the external environment) and language-based 'thoughts' or 'reasoning traces' (which do not affect the environment but compose useful information, reason over context, and update the context to support future reasoning or acting). The LLM is prompted (few-shot) or finetuned to generate these thoughts and actions in an interleaved manner. Thoughts can serve various purposes: decomposing task goals, creating action plans, injecting commonsense knowledge, extracting important parts from observations, tracking progress, handling exceptions, and adjusting plans.",
+    "Result": "- **Improved Performance:** Outperforms state-of-the-art baselines (Act-only, CoT, imitation/reinforcement learning) on diverse benchmarks (HotpotQA, FEVER, ALFWorld, WebShop).\n- **Enhanced Grounding & Trustworthiness:** Overcomes hallucination and error propagation prevalent in Chain-of-Thought reasoning by interacting with external sources (e.g., Wikipedia API), making problem-solving trajectories more factual and grounded.\n- **Interpretability & Diagnosability:** Generates human-like task-solving trajectories that are more interpretable, allowing humans to distinguish internal knowledge from external information and inspect reasoning traces.\n- **Robustness & Flexibility:** Shows strong generalization to new task instances with few-shot examples and works for diverse tasks with distinct action spaces and reasoning needs due to its flexible thought space and thought-action occurrence format.\n- **Controllability:** Enables human-in-the-loop behavior correction by editing reasoning traces.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting",
+      "Act-only Prompting",
+      "Inner Monologue (IM)",
+      "CoT-Self-Consistency (CoTSC)",
+      "WebGPT",
+      "SayCan"
+    ],
+    "Uses": [
+      "Knowledge-intensive Reasoning: Multi-hop Question Answering (HotpotQA), Fact Verification (FEVER) using a Wikipedia API.",
+      "Interactive Decision Making: Text-based Games (ALFWorld), Web Navigation (WebShop).",
+      "Human-in-the-loop systems for behavior correction."
+    ],
+    "Thinking": "This is the central contribution of the paper, explicitly named 'ReAct'. The abstract and introduction clearly define its purpose (synergizing reasoning and acting), the problems it addresses (limitations of separate reasoning/acting), its mechanism (interleaved thoughts and actions), and its benefits (performance, interpretability, grounding). Section 2 is dedicated to 'REACT SYNERGIZING REASONING & ACTING'. All aspects of the pattern are directly stated or easily inferred from these sections."
+  },
+  {
+    "Pattern Name": "Chain-of-Thought (CoT) Prompting",
+    "Problem": "Large Language Models (LLMs) struggle with complex reasoning tasks that require multiple steps, often producing incorrect or uninterpretable direct answers.",
+    "Context": "LLMs are used for various reasoning tasks such as arithmetic, commonsense reasoning, and symbolic reasoning. The model needs to derive an answer through a sequence of logical steps.",
+    "Solution": "Prompt the LLM to generate a series of intermediate reasoning steps or 'thoughts' before providing the final answer. These thoughts are internal representations and are not grounded in the external world. This is typically achieved through few-shot prompting with examples that include these reasoning steps.",
+    "Result": "- **Elicits Reasoning:** Demonstrates emergent capabilities in LLMs to carry out several steps of reasoning traces.\n- **Improved Performance:** Can improve performance on complex reasoning tasks compared to standard prompting.\n- **Interpretability (Limited):** Provides some insight into the model's 'thinking' process, but this process is a static black box.\n- **Limitations:** Can suffer from fact hallucination and error propagation because the reasoning is not grounded in the external world and cannot be reactively updated.",
+    "Related Patterns": [
+      "ReAct",
+      "CoT-Self-Consistency (CoTSC)",
+      "Standard Prompting",
+      "Least-to-Most Prompting",
+      "Zero-shot CoT",
+      "Rationale-augmented Ensembles",
+      "Selection-Inference",
+      "STaR",
+      "Faithful Reasoning",
+      "Scratchpad"
+    ],
+    "Uses": [
+      "Arithmetic",
+      "Commonsense reasoning",
+      "Symbolic reasoning",
+      "Multi-hop question answering (HotpotQA)",
+      "Fact verification (FEVER)"
+    ],
+    "Thinking": "CoT is explicitly mentioned as a baseline and a 'reasoning-only' method. Its core mechanism (generating reasoning traces), problem (complex tasks), context (LLMs), and limitations (hallucination, error propagation, not grounded) are clearly described in the introduction and Section 3. Its relationship to ReAct is also detailed."
+  },
+  {
+    "Pattern Name": "Act-only Prompting",
+    "Problem": "Large Language Models (LLMs) need to perform domain-specific actions in interactive environments, but without explicit reasoning, they may:\n- Fail to comprehend context or observations (e.g., hallucinating actions).\n- Lack abstract reasoning about high-level goals.\n- Fail to maintain a working memory to support acting.\n- Struggle to recover from errors or adjust plans.",
+    "Context": "LLMs are used as agents in interactive environments (e.g., text-based games, web navigation) where they receive observations (often converted to text) and need to generate a sequence of actions to achieve a goal.",
+    "Solution": "Prompt the LLM to directly generate domain-specific actions based on the current context (observations and previous actions). This approach typically focuses on predicting actions via language priors without explicitly generating intermediate reasoning steps or 'thoughts.'",
+    "Result": "- **Action Generation:** Can generate domain-specific actions and plans.\n- **Limitations:** Often performs worse than methods incorporating reasoning (like ReAct). Prone to 'hallucinating actions' (e.g., trying to take an item from a location where it's not present) and getting stuck in repetitive loops. Lacks the ability to reason abstractly about goals or maintain working memory effectively.",
+    "Related Patterns": [
+      "ReAct",
+      "WebGPT",
+      "SayCan"
+    ],
+    "Uses": [
+      "Interactive decision-making tasks (ALFWorld, WebShop)",
+      "Question answering (HotpotQA)",
+      "Fact verification (FEVER) with external APIs"
+    ],
+    "Thinking": "Act-only is presented as a direct baseline to ReAct, representing the 'acting-only' paradigm. Its description in the introduction and Section 3.2 (Baselines) clearly outlines its mechanism (removes thoughts from ReAct trajectories) and its observed failures (e.g., Figure 1.2a, Table 1, Table 3, Table 4, Appendix D22)."
+  },
+  {
+    "Pattern Name": "CoT-Self-Consistency (CoTSC)",
+    "Problem": "Chain-of-Thought (CoT) reasoning, while effective, can be brittle and prone to generating incorrect reasoning paths or hallucinated facts, leading to suboptimal final answers.",
+    "Context": "Large Language Models (LLMs) are performing complex reasoning tasks using Chain-of-Thought prompting.",
+    "Solution": "Instead of relying on a single CoT trajectory, generate multiple diverse CoT trajectories by sampling the LLM with a decoding temperature greater than zero (e.g., 0.7). Then, aggregate the final answers from these multiple trajectories, typically by adopting the majority answer. This leverages the idea that a correct answer is more likely to be consistently derived across different reasoning paths.",
+    "Result": "- **Improved Robustness:** Consistently boosts performance over vanilla CoT prompting.\n- **Enhanced Accuracy:** Leads to more accurate answers by mitigating errors from individual reasoning paths.\n- **Synergy with ReAct:** When combined with ReAct (e.g., as a fallback mechanism), it forms a powerful approach that leverages both internal knowledge (CoTSC) and externally grounded reasoning (ReAct), achieving the best overall prompting performance in some knowledge-intensive tasks.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting",
+      "ReAct"
+    ],
+    "Uses": [
+      "Knowledge-intensive reasoning tasks such as multi-hop question answering (HotpotQA) and fact verification (FEVER)."
+    ],
+    "Thinking": "CoTSC is introduced in Section 3.2 as a baseline and a method to combine with ReAct. Its mechanism (sampling multiple CoT trajectories, majority answer) and its benefit (consistently boost performance over CoT) are clearly stated. Its role in the 'Combining Internal and External Knowledge' strategy is also detailed."
+  },
+  {
+    "Pattern Name": "Human-in-the-Loop Behavior Correction (with ReAct)",
+    "Problem": "LLM-based agents, especially in interactive environments, can exhibit undesirable behaviors such as hallucinating thoughts, getting stuck in repetitive loops, or making incorrect decisions. Correcting these behaviors on-the-go is challenging with traditional methods (e.g., changing model parameters or a few actions).",
+    "Context": "A ReAct agent is operating in an interactive environment, generating interleaved thoughts and actions. Humans need to guide or correct the agent's behavior in real-time.",
+    "Solution": "Leverage ReAct's explicit and interpretable reasoning traces (thoughts) as an interface for human intervention. A human can inspect the agent's generated thoughts and directly edit them (e.g., remove a hallucinating sentence, add hints, modify internal beliefs or reasoning styles). The LLM then continues its generation, aligning its subsequent actions and thoughts with these human-edited traces.",
+    "Result": "- **Enhanced Controllability:** Allows humans to drastically change the agent's behavior to align with desired outcomes.\n- **Improved Task-Solving Efficiency:** Significantly simplifies the human effort required for correction, shifting from typing many actions to editing a few thoughts.\n- **New Collaboration Forms:** Enables novel forms of human-machine collaboration and alignment.\n- **Diagnosability:** The explicit thoughts make it easier for humans to diagnose why an agent is behaving in a certain way.",
+    "Related Patterns": [
+      "ReAct",
+      "Inner Monologue (IM)"
+    ],
+    "Uses": [
+      "Interactive decision-making tasks (e.g., ALFWorld) where real-time guidance and correction are beneficial."
+    ],
+    "Thinking": "This pattern is described in Section 4, under 'Human aligned and controllable' and further elaborated in Appendix A3 with an example (Figure 5). The problem (agent failure, difficulty of correction), solution (editing thoughts), and result (behavior change, easier human interaction) are clearly stated."
+  },
+  {
+    "Pattern Name": "Internal-External Knowledge Combination (ReAct + CoTSC)",
+    "Problem": "For knowledge-intensive reasoning tasks, relying solely on an LLM's internal knowledge (e.g., CoT/CoTSC) can lead to hallucinated facts or outdated information. Conversely, relying solely on external interaction (e.g., ReAct) might introduce reasoning errors due to non-informative searches or structural constraints. A robust solution needs to balance both.",
+    "Context": "Knowledge-intensive reasoning tasks (e.g., multi-hop question answering, fact verification) where both the LLM's pre-trained internal knowledge and access to external, up-to-date information (e.g., via an API) are valuable.",
+    "Solution": "Combine ReAct (for grounded, external knowledge retrieval and reasoning) with CoT-Self-Consistency (CoTSC) (for robust internal knowledge-based reasoning) using specific heuristics:\n- **ReAct -> CoTSC:** If ReAct fails to return an answer within a predefined number of steps (indicating difficulty with external interaction or search), back off to CoTSC.\n- **CoTSC -> ReAct:** If the majority answer among multiple CoTSC samples is not sufficiently confident (e.g., occurs less than n/2 times), indicating internal knowledge might not confidently support the task, back off to ReAct to seek external information.",
+    "Result": "- **Best Overall Performance:** Achieves the best prompting performance on HotpotQA and FEVER, outperforming individual ReAct or CoTSC methods.\n- **Synergistic Advantage:** Effectively leverages the strengths of both internal (reasoning structure, robustness) and external (factuality, grounding, up-to-date information) knowledge.\n- **Efficiency:** Can reach CoTSC performance with significantly fewer samples when combined, indicating improved efficiency.",
+    "Related Patterns": [
+      "ReAct",
+      "CoT-Self-Consistency (CoTSC)"
+    ],
+    "Uses": [
+      "Knowledge-intensive reasoning tasks like multi-hop question answering (HotpotQA) and fact verification (FEVER)."
+    ],
+    "Thinking": "This pattern is explicitly discussed in Section 3.2 ('Combining Internal and External Knowledge') and Section 3.3 ('ReAct + CoTSC perform best for prompting LLMs'). The problem (limitations of each method alone), context (knowledge-intensive tasks), solution (specific heuristics for switching), and results (best performance, synergy) are clearly outlined."
+  },
+  {
+    "Pattern Name": "Sparse Versatile Reasoning (within ReAct for Decision Making)",
+    "Problem": "In complex interactive decision-making tasks, agents need to plan over long horizons with sparse rewards. Existing approaches (e.g., Act-only, or limited 'inner monologue' systems) often lack the ability to:\n- Decompose high-level goals effectively.\n- Track subgoal completion.\n- Determine the next appropriate subgoal.\n- Apply commonsense knowledge for exploration or action selection.\nThis leads to inefficient exploration, getting stuck, or failing to complete tasks.",
+    "Context": "Large Language Models (LLMs) are used as agents in interactive decision-making environments (e.g., text-based games like ALFWorld, web navigation like WebShop) that feature complex environments and require long-horizon planning.",
+    "Solution": "Within the ReAct paradigm, allow the LLM to generate 'thoughts' (reasoning traces) asynchronously and sparsely, only when most relevant, rather than densely at every step. These thoughts are flexible and versatile, serving various reasoning types:\n- Decomposing the main task goal into subgoals.\n- Tracking the completion status of subgoals.\n- Determining the next subgoal to pursue.\n- Applying commonsense knowledge (e.g., where an object is likely to be found, what action to take with it).\n- Reasoning to explore effectively.",
+    "Result": "- **Improved Decision Making:** Leads to consistent advantages over action-only baselines and even more limited 'inner monologue' approaches (like ReActIM).\n- **Effective Planning:** Enables better goal decomposition, subgoal tracking, and systematic exploration.\n- **Leverages Commonsense:** Allows LLMs to exploit their pretrained commonsense knowledge for task solving.\n- **Robustness:** Contributes to more robust decision-making in complex environments.",
+    "Related Patterns": [
+      "ReAct",
+      "Inner Monologue (IM)",
+      "Act-only Prompting"
+    ],
+    "Uses": [
+      "Interactive decision-making tasks, particularly text-based games (ALFWorld) and web navigation (WebShop)."
+    ],
+    "Thinking": "This pattern is described in Section 2 (last paragraph, 'for decision making tasks... thoughts only need to appear sparsely...') and Section 4 (ALFWorld and WebShop descriptions, and the comparison with Inner Monologue). The problem (challenges in complex decision-making), context (interactive environments), solution (sparse, flexible thoughts for various reasoning types), and results (advantages over baselines, better planning) are clearly articulated."
+  },
+  {
+    "Pattern Name": "Inner Monologue (IM)",
+    "Problem": "Embodied agents need to motivate actions and perform reasoning, but their internal verbal reasoning might be too limited, only focusing on direct observations and immediate goal completion, lacking broader reasoning or commonsense. This can lead to agents making mistakes in identifying subgoal completion, determining next subgoals, or applying commonsense knowledge.",
+    "Context": "Large Language Models (LLMs) are used for robotic action planning and decision-making in interactive and embodied environments. The agent needs to generate actions based on its understanding of the environment and its goals.",
+    "Solution": "Actions from an embodied agent are motivated by an 'inner monologue.' This monologue is implemented as injected feedback from the environment, limited to observations of the environment state and what needs to be completed by the agent for the goal to be satisfied. It provides a form of verbal reasoning but is constrained in its scope.",
+    "Result": "Provides a mechanism for agents to generate verbal reasoning to motivate actions. However, it is less flexible and versatile compared to approaches like ReAct, often leading to errors in complex planning (e.g., identifying subgoal completion, determining next subgoals, or applying commonsense knowledge).",
+    "Related Patterns": [
+      "ReAct",
+      "SayCan"
+    ],
+    "Uses": [
+      "Robotic action planning",
+      "Embodied reasoning",
+      "Decision-making in interactive environments."
+    ],
+    "Thinking": "The paper explicitly discusses Inner Monologue (IM) in Section 4 and Section 5 (Related Work), contrasting it with ReAct. It describes IM's mechanism ('IMs inner monologue is limited to observations of the environment state and what needs to be completed by the agent for the goal to be satised') and its shortcomings ('often made mistakes in identifying when subgoals were nished or what the next subgoal should be due to a lack of high level goal decomposition Additionally many ReActIM trajectories struggled to determine where an item would likely be within the ALFWorld environment due to a lack of commonsense reasoning'). This provides a clear problem, context, solution, and result for a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Selection-Inference",
+    "Problem": "Complex reasoning tasks often involve multiple steps, where identifying the most relevant information or sub-problems (selection) is crucial before performing the actual reasoning (inference). Traditional single-step reasoning or undifferentiated multi-step reasoning might struggle with this complexity.",
+    "Context": "Large Language Models (LLMs) are used for sophisticated reasoning tasks.",
+    "Solution": "The reasoning process is explicitly divided into two distinct steps:\n1.  **Selection**: Identifying and extracting the most relevant information or sub-problems from the input.\n2.  **Inference**: Performing the actual logical reasoning based on the selected information.\nEach of these steps might be performed by a dedicated LLM or a specific prompting strategy.",
+    "Result": "Improves performance on complex reasoning tasks by structuring the reasoning process, allowing the model to focus on relevant information before inferring.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT)",
+      "Faithful Reasoning"
+    ],
+    "Uses": [
+      "Multistep logical reasoning",
+      "Complex problem-solving with LLMs."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'SelectionInference Creswell et al 2022 divides the reasoning process into two steps of selection and inference'. This clearly defines a structured approach to reasoning, making it a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Faithful Reasoning",
+    "Problem": "Multistep reasoning in LLMs can be opaque or prone to errors, making it difficult to ensure the reasoning process is 'faithful' or logically sound.",
+    "Context": "Large Language Models (LLMs) are performing multistep reasoning tasks where transparency and logical soundness of each step are desired.",
+    "Solution": "Decompose the multistep reasoning process into three distinct steps, with each step performed by a dedicated Large Language Model (LM). This modular approach aims to ensure greater faithfulness and control over the reasoning.",
+    "Result": "Enhances the faithfulness and potentially the accuracy of multistep reasoning by breaking it down into manageable, specialized stages.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT)",
+      "Selection-Inference"
+    ],
+    "Uses": [
+      "Multistep reasoning tasks requiring high transparency and logical integrity."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'Faithful reasoning Creswell Shanahan 2022 decomposes multistep reasoning into three steps each performed by a dedicated LM respectively'. This describes a clear architectural/procedural pattern for LLM reasoning."
+  },
+  {
+    "Pattern Name": "SayCan",
+    "Problem": "Grounding abstract language commands into concrete, executable actions for robots in real-world visual environments is challenging. LLMs can generate diverse action plans, but these plans need to be physically feasible and relevant to the current environment.",
+    "Context": "Large Language Models (LLMs) are used for robotic action planning and decision-making, where a robot needs to execute actions based on language commands in a visual environment.",
+    "Solution": "LLMs are prompted to directly predict possible actions a robot can take based on a language command. These predicted actions are then reranked by an 'affordance model' that is grounded on the visual environment. The affordance model assesses the physical feasibility and relevance of each action in the current visual context, leading to a final, grounded action prediction.",
+    "Result": "Enables LLMs to generate robot action plans that are both semantically relevant to the language command and physically grounded in the visual environment, improving the robot's ability to execute tasks.",
+    "Related Patterns": [
+      "Inner Monologue (IM)",
+      "ReAct"
+    ],
+    "Uses": [
+      "Robotic action planning",
+      "Grounding language in embodied agents",
+      "Decision-making in physical environments."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'In SayCan LLMs were prompted to directly predict possible actions a robot can take which is then reranked by an affordance model grounded on the visual environments for nal prediction'. This describes a clear pattern for combining LLM capabilities with environmental grounding for robotic control."
+  },
+  {
+    "Pattern Name": "Standard Prompting",
+    "Problem": "LLMs need to answer questions or perform tasks directly without explicit intermediate steps or external interaction.",
+    "Context": "LLMs are given a task (e.g., a question or a claim) and are expected to produce a direct, concise answer based solely on their internal knowledge.",
+    "Solution": "The LLM is prompted with only the task input (e.g., 'Question: [question text]', 'Claim: [claim text]') without any additional instructions for reasoning, actions, or in-context examples demonstrating intermediate steps. It relies entirely on the model's pre-trained knowledge and ability to generate a direct final answer.",
+    "Result": "Can provide quick, direct answers for simple tasks. However, it often performs poorly on complex reasoning tasks, is prone to hallucination, and lacks interpretability compared to more structured prompting methods. It serves as a basic baseline for evaluating more advanced prompting techniques.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting",
+      "Act-only Prompting",
+      "ReAct"
+    ],
+    "Uses": [
+      "Simple question answering",
+      "Direct task completion where complexity is low and internal knowledge is sufficient."
+    ],
+    "Thinking": "This is explicitly mentioned as a baseline in Section 3.2, 'aStandard promptingStandard which removes all thoughts actions observations inReAct trajectories'. It represents the most basic way to interact with an LLM for a task, making it a foundational AI design pattern for comparison."
+  },
+  {
+    "Pattern Name": "Bootstrapped Finetuning with Generated Trajectories",
+    "Problem": "Manually annotating high-quality reasoning traces and actions at scale for complex tasks is challenging and expensive. Few-shot prompting might not be sufficient for optimal performance or generalizability, especially for smaller models.",
+    "Context": "ReAct (or other prompting methods) can generate task-solving trajectories (interleaved thoughts, actions, observations) which, when correct, represent valuable structured data. There's a need to scale up the learning and performance of LLMs beyond few-shot prompting, particularly for smaller models.",
+    "Solution": "A bootstrapping approach is used where a larger, capable LLM (e.g., PaLM540B with ReAct prompting) generates a large number of task-solving trajectories. These generated trajectories, especially those leading to correct answers, are then collected and used as training data. Smaller language models (e.g., PaLM8B, PaLM62B) are subsequently finetuned on this dataset to learn to decode the full trajectories (thoughts, actions, observations) conditioned on input questions/claims.",
+    "Result": "Significantly improves performance, especially for smaller LLMs, making them competitive or superior to larger models used with prompting alone. It teaches models a more generalizable skill (how to reason and act to access information) rather than memorizing potentially hallucinated facts. This approach demonstrates the potential of ReAct to improve with additional training data and scale up.",
+    "Related Patterns": [
+      "ReAct",
+      "STaR (Self-Taught Reasoner)",
+      "Scratchpad"
+    ],
+    "Uses": [
+      "Scaling up ReAct performance",
+      "Improving generalizability",
+      "Training smaller LLMs for complex interactive tasks",
+      "Reducing reliance on manual annotation for structured reasoning/acting data."
+    ],
+    "Thinking": "This is described in Section 3.2 ('Finetuning') and Section 3.3 ('ReAct performs best for netuning'). It's a specific strategy for training LLMs using self-generated structured data (ReAct trajectories), which is a distinct AI design pattern for scaling and improving model capabilities."
+  },
+  {
+    "Pattern Name": "Least-to-Most Prompting",
+    "Problem": "Large Language Models (LLMs) struggle with complex tasks that require breaking down a problem into simpler, sequential sub-problems, especially when the solution to each sub-problem is a prerequisite for solving the next.",
+    "Context": "LLMs are used for complicated reasoning tasks that involve multiple interdependent steps.",
+    "Solution": "The LLM is first prompted to decompose the overall complex task into a series of simpler, intermediate sub-problems (the 'least' complex parts). Then, the LLM is prompted to solve these sub-problems one by one, using the solution of each sub-problem as input or context for solving the subsequent one, until the overall complex task is fully addressed (the 'most' complex part).",
+    "Result": "Enables LLMs to solve more complicated reasoning tasks by systematically structuring the problem-solving process. It improves performance on tasks that benefit from explicit step-by-step decomposition and sequential problem-solving.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting",
+      "ReAct"
+    ],
+    "Uses": [
+      "Solving complicated reasoning tasks",
+      "Multi-step problem-solving",
+      "Tasks requiring structured decomposition."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'leasttomost prompting for solving complicated tasks Zhou et al 2022'. This describes a distinct prompting strategy for structuring complex problem-solving, making it an AI design pattern."
+  },
+  {
+    "Pattern Name": "Zero-shot Chain-of-Thought (Zero-shot CoT)",
+    "Problem": "Chain-of-Thought (CoT) prompting typically requires providing a few-shot example with explicit reasoning traces, which can be costly to create or unavailable for certain tasks.",
+    "Context": "Large Language Models (LLMs) are used for reasoning tasks, and there's a desire to elicit CoT-like reasoning capabilities without the need for in-context examples.",
+    "Solution": "Instead of providing few-shot examples, a simple, generic phrase (e.g., 'Let's think step by step') is appended to the prompt. This phrase alone acts as a trigger, encouraging the LLM to generate intermediate reasoning steps before providing the final answer, effectively eliciting a chain-of-thought in a zero-shot setting.",
+    "Result": "Elicits reasoning capabilities in LLMs without the need for any in-context examples, making CoT more accessible and applicable in scenarios where example creation is impractical or impossible. It allows for immediate application of CoT benefits.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting"
+    ],
+    "Uses": [
+      "Reasoning tasks where few-shot examples are impractical or unavailable",
+      "Quick deployment of reasoning capabilities."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'zeroshot CoT Kojima et al 2022'. This is a specific, well-known prompting technique that modifies CoT for a zero-shot setting, making it a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "STaR (Self-Taught Reasoner)",
+    "Problem": "Training Large Language Models (LLMs) to generate high-quality and correct reasoning rationales for complex tasks is challenging, and manually annotating such rationales at scale is expensive and time-consuming.",
+    "Context": "LLMs are used for reasoning tasks, and there's a need to improve their ability to generate correct and useful rationales efficiently, reducing reliance on extensive human annotation.",
+    "Solution": "A bootstrapping approach where the LLM first generates multiple rationales for a given problem. These self-generated rationales are then evaluated (e.g., by checking if they lead to the correct final answer). The model is subsequently finetuned on the *correct* rationales it generated itself. This iterative process allows the model to improve its rationale generation capabilities and overall reasoning performance by leveraging self-generated, validated data.",
+    "Result": "Improves the model's ability to generate correct rationales and solve reasoning tasks by leveraging self-generated, validated data. It reduces the need for human-annotated rationales, making the training process more scalable and efficient.",
+    "Related Patterns": [
+      "Bootstrapped Finetuning with Generated Trajectories",
+      "Chain-of-Thought (CoT) Prompting"
+    ],
+    "Uses": [
+      "Improving reasoning capabilities",
+      "Generating high-quality rationales",
+      "Reducing reliance on human-annotated rationales",
+      "Scaling up reasoning model training."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'STaR Zelikman et al 2022 bootstraps the reasoning process by netuning the model on correct rationales generated by the model itself'. This describes a specific training paradigm for reasoning, explicitly mentioned and described. It's a clear AI design pattern."
+  },
+  {
+    "Pattern Name": "Scratchpad",
+    "Problem": "Large Language Models (LLMs) struggle with multistep computation problems, often making errors in intermediate steps or failing to track complex calculations, leading to incorrect final answers.",
+    "Context": "LLMs are used for tasks requiring intermediate computations or complex multi-step operations (e.g., arithmetic, symbolic manipulation).",
+    "Solution": "The LLM is either finetuned on examples that explicitly show intermediate computation steps (like a human using a scratchpad to work out a problem) or prompted to output these intermediate steps. This teaches the model to generate and utilize these steps internally, making the computation process transparent and verifiable.",
+    "Result": "Demonstrates significant improvement on multistep computation problems by making the intermediate steps explicit and trainable/generatable. It enhances accuracy and allows for easier debugging of computational errors.",
+    "Related Patterns": [
+      "Chain-of-Thought (CoT) Prompting"
+    ],
+    "Uses": [
+      "Multistep computation problems",
+      "Complex arithmetic",
+      "Symbolic manipulation",
+      "Tasks requiring explicit intermediate calculations."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'Scratchpad Nye et al 2021 which netunes a LM on intermediate computation steps also demonstrate improvement on multistep computation problems'. This is a specific technique for handling multi-step computations, explicitly mentioned and described. It's an AI design pattern."
+  },
+  {
+    "Pattern Name": "WebGPT (Browser-assisted Question Answering)",
+    "Problem": "Large Language Models (LLMs) need to answer complicated open-domain questions that require up-to-date or specific information not contained in their static training data. This necessitates interacting with external tools like web browsers.",
+    "Context": "LLMs are used for open-domain question answering, where access to real-world, dynamic, and potentially vast amounts of information from the web is crucial.",
+    "Solution": "An LLM is trained (e.g., via imitation learning and reinforcement learning with human feedback) to act as an agent that interacts with web browsers. It learns to navigate through web pages, perform searches, click links, and extract relevant content to synthesize answers to complicated questions. Unlike ReAct, WebGPT does not explicitly model an interleaved thinking and reasoning procedure but relies on the learned policy to generate actions for web interaction.",
+    "Result": "Enables LLMs to answer complex questions by leveraging real-time, external information from the web, overcoming the limitations of static training data and reducing hallucination.",
+    "Related Patterns": [
+      "Act-only Prompting",
+      "ReAct (ReAct explicitly models reasoning, WebGPT relies on learned policy and human feedback for RL)"
+    ],
+    "Uses": [
+      "Open-domain question answering",
+      "Information retrieval from the web",
+      "Web navigation",
+      "Fact-checking."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'WebGPT Nakano et al 2021 uses an LM to interact with web browsers navigate through web pages and infer answers to complicated questions from ELI5 Fan et al 2019'. This describes a distinct and influential pattern for grounding LLMs in web environments, explicitly described in the related work."
+  },
+  {
+    "Pattern Name": "API Call Decision Making (without explicit reasoning)",
+    "Problem": "Language Models need to interact with external tools or services (APIs) to fulfill user requests in conversational or task-oriented settings, but without a clear, interpretable, or explicitly generated reasoning process for *why* a particular API call is made.",
+    "Context": "LLMs are deployed in conversational agents (chatbots) or task-oriented dialogue systems where they need to perform actions by calling external APIs (e.g., search, retrieve information, perform transactions) based on user input and dialogue context.",
+    "Solution": "Language Models are trained (often with expensive datasets and human feedback collections for policy learning) to directly predict and make API calls. The decision-making process for these API calls is implicitly learned within the model's parameters through extensive training data, rather than explicitly generated as a human-interpretable reasoning trace.",
+    "Result": "Enables conversational agents to interact with external services and perform tasks, extending their capabilities beyond pure language generation. However, the lack of explicit reasoning can make the decision process less interpretable, harder to diagnose, and potentially less robust to novel situations compared to methods like ReAct.",
+    "Related Patterns": [
+      "Act-only Prompting",
+      "ReAct (ReAct adds explicit, interleaved reasoning)"
+    ],
+    "Uses": [
+      "Chatbots (e.g., BlenderBot, Sparrow)",
+      "Task-oriented dialogue systems (e.g., SimpleTOD)",
+      "Conversational AI requiring tool use."
+    ],
+    "Thinking": "Mentioned in Section 5 (Related Work): 'In conversation modeling chatbots like BlenderBot... and taskoriented dialogue systems like SimpleTOD... also train LMs to make decision about API calls UnlikeReAct they do not explicitly consider the reasoning procedure either and also relies on expensive datasets and human feedback collections for policy learning'. This describes a common approach in dialogue systems for tool use, explicitly contrasted with ReAct's reasoning. It's a pattern for how LMs interact with external systems."
+  }
+]

@@ -1,0 +1,208 @@
+[
+  {
+    "Pattern Name": "LLM-Powered Agent Architecture",
+    "Problem": "How to build capable AI agents that can perform complex, real-world tasks in dynamic environments, overcoming the limitations of earlier AI agents that lacked cognitive substrates for human-level planning.",
+    "Context": "The advent of powerful Large Language Models (LLMs) with strong language understanding and generation capabilities, but inherent limitations in real-time interaction, external knowledge, and persistent memory.",
+    "Solution": "Design an agent architecture that integrates a Large Language Model (LLM) as its core reasoning engine with specialized external modules for Memory, Tool Use, and Planning. The LLM uses language as a vehicle for thought and communication, while the modules extend its capabilities.",
+    "Result": "Substantial improvement in the general abilities of AI agents, enabling them to decompose complex tasks, acquire and process information, interact with external systems, and engage in multi-step reasoning to arrive at solutions.",
+    "Related Patterns": [
+      "Memory Management for LLM Agents",
+      "Tool-Augmented Reasoning",
+      "Step-by-Step Planning",
+      "Feedback-Driven Refinement"
+    ],
+    "Uses": [
+      "AutoGPT",
+      "BabyAGI",
+      "HuggingGPT",
+      "General framework for language agents discussed in the paper"
+    ],
+    "Thinking": "The text explicitly states: 'Current LLM-powered language agents equipped with Memory, Tooluse and Planning modules have seen a substantial improvement in their general abilities.' This describes a composite architectural pattern for building such agents."
+  },
+  {
+    "Pattern Name": "Tool-Augmented Reasoning",
+    "Problem": "Large Language Models (LLMs) have limited knowledge beyond their training data, cannot perform real-time actions, or access dynamic external information, restricting their ability to operate in complex, real-world scenarios.",
+    "Context": "LLMs demonstrate strong reasoning and language generation but need to interact with external environments, access up-to-date information, or perform specific computations/actions that are outside their inherent capabilities.",
+    "Solution": "Equip the LLM with a 'Toolbox' of external functions (e.g., APIs, databases, search engines) and a mechanism (often through prompting or a dedicated module) to decide when, which, and how to use these tools. The agent generates tool calls based on its reasoning and processes the observations returned by the tools.",
+    "Result": "Expands the LLM's potential capabilities significantly, allowing it to gather real-time information, perform calculations, interact with external systems, and ground its reasoning in factual data, thereby overcoming its inherent limitations.",
+    "Related Patterns": [
+      "LLM-Powered Agent Architecture",
+      "Feedback-Driven Refinement",
+      "Notebook-Based Working Memory"
+    ],
+    "Uses": [
+      "FlightSearch",
+      "DistanceMatrix",
+      "RestaurantSearch",
+      "CitySearch",
+      "AccommodationSearch",
+      "AttractionSearch"
+    ],
+    "Thinking": "The text highlights 'tool use' as a key capability of language agents and the TravelPlanner benchmark is designed around agents employing 'various search tools to gather information.' This is a fundamental interaction pattern."
+  },
+  {
+    "Pattern Name": "Notebook-Based Working Memory",
+    "Problem": "Large Language Models (LLMs) have finite context windows, leading to 'Lost in the Middle' phenomena where they struggle to retain and utilize information from earlier parts of a long interaction or task, and context accumulation can hit token limits.",
+    "Context": "Long-horizon planning tasks or complex interactions that require iteratively collecting and processing large amounts of information over time, where intermediate results need to be persistently stored and easily retrievable.",
+    "Solution": "Introduce an explicit 'NotebookWrite' tool or similar mechanism that allows the agent to record necessary information (e.g., search results, intermediate plans, key facts) into an external, persistent memory store. This external memory acts as a working memory, preventing context window overflow and ensuring critical information is available for subsequent planning steps.",
+    "Result": "Improves the agent's ability to manage working memory, prevents maximum token limits, and ensures that collected information is consistently available for deliberation, reducing hallucinations and information confusion.",
+    "Related Patterns": [
+      "Memory Management for LLM Agents",
+      "LLM-Powered Agent Architecture"
+    ],
+    "Uses": [
+      "TravelPlanner benchmark for recording search results"
+    ],
+    "Thinking": "The text explicitly describes the 'NotebookWrite tool to record necessary information for planning. This tool is integrated to evaluate agents working memory management and prevents maximum token limit caused by context accumulation.' This is a specific solution to a common LLM problem."
+  },
+  {
+    "Pattern Name": "Step-by-Step Planning",
+    "Problem": "Large Language Models (LLMs) can struggle with complex tasks that require multi-step reasoning, task decomposition, and sequential decision-making, often producing superficial or incorrect direct answers.",
+    "Context": "Tasks that are not trivial and require breaking down into smaller, manageable sub-problems, where each step builds upon the previous one.",
+    "Solution": "Prompt the LLM to explicitly decompose the overall task into a sequence of intermediate 'Thought' steps, followed by 'Action' steps. This encourages the model to articulate its reasoning process and plan its actions sequentially, rather than attempting a single-shot solution.",
+    "Result": "Leads to significant improvements in reasoning capabilities, better task decomposition, and more structured problem-solving, making complex tasks more tractable for LLMs.",
+    "Related Patterns": [
+      "Chain-of-Thought Prompting",
+      "ReAct",
+      "Reflexion",
+      "Structured Search Space Exploration"
+    ],
+    "Uses": [
+      "ZSCoT (Zero-Shot Chain-of-Thought)",
+      "ReAct (interleaving Thought, Action, Observation)",
+      "Reflexion (incorporating reflection into steps)"
+    ],
+    "Thinking": "The text states: 'Previous research has demonstrated that language agents can effectively decompose tasks and engage in step-by-step reasoning leading to significant improvements.' This is a widely recognized strategy for LLMs."
+  },
+  {
+    "Pattern Name": "Feedback-Driven Refinement",
+    "Problem": "Initial plans or actions generated by Large Language Models (LLMs) may be incorrect, suboptimal, or lead to dead ends, and agents often fail to dynamically adjust their plans based on environmental feedback or past errors.",
+    "Context": "Dynamic environments where actions have observable outcomes, or where iterative improvement and self-correction are necessary to achieve a goal or satisfy constraints.",
+    "Solution": "Design the agent to receive and process various forms of feedback, such as observations from tool executions, cost evaluations of sub-plans, or high-level reflections on previous erroneous attempts. This feedback is then used to inform subsequent 'Thought' steps, allowing the agent to adjust its reasoning, correct mistakes, and refine its plan iteratively.",
+    "Result": "Enhances the agent's adaptability, enables self-correction, improves the quality and feasibility of plans over iterations, and helps agents escape dead loops or persistent errors.",
+    "Related Patterns": [
+      "ReAct",
+      "Reflexion",
+      "Step-by-Step Planning"
+    ],
+    "Uses": [
+      "ReAct (using observations from tools)",
+      "Reflexion (using a reflection model to provide insights on errors)",
+      "CostEnquiry tool in planning to evaluate sub-plan costs"
+    ],
+    "Thinking": "The text mentions 'methods involving feedback from the environment (Yao et al. 2022, Shinn et al. 2023) have also been shown to be beneficial.' ReAct and Reflexion are explicitly evaluated as planning strategies that embody this principle."
+  },
+  {
+    "Pattern Name": "Multi-Constraint Planning",
+    "Problem": "Real-world planning tasks are rarely single-objective; they involve numerous, often interdependent and sometimes conflicting, explicit and implicit constraints that Large Language Models (LLMs) struggle to consider and satisfy holistically.",
+    "Context": "Complex, realistic scenarios (e.g., travel planning) where a successful plan must adhere to diverse user needs (budget, preferences), commonsense rules (e.g., diverse activities, reasonable routes), and environmental limitations (e.g., availability).",
+    "Solution": "Design planning systems and evaluation methodologies that explicitly define, track, and assess adherence to multiple types of constraints. Agents need to develop strategies to simultaneously manage and satisfy these constraints throughout the planning process, potentially requiring global planning capabilities beyond autoregressive local decisions.",
+    "Result": "Enables the creation of more realistic, robust, and user-satisfying plans, but current LLM-based agents show significant struggles in achieving high success rates when faced with multiple constraints simultaneously.",
+    "Related Patterns": [
+      "LLM-Powered Agent Architecture",
+      "Feedback-Driven Refinement",
+      "Global Planning / Holistic Constraint Satisfaction"
+    ],
+    "Uses": [
+      "TravelPlanner benchmark, which defines Environment, Commonsense, and Hard Constraints for evaluation"
+    ],
+    "Thinking": "The entire paper introduces TravelPlanner as a benchmark for 'multiconstraint planning' and details three types of constraints (Environment, Commonsense, Hard) that agents must satisfy. The analysis section also highlights agents' struggles with 'multiconstraint tasks'."
+  },
+  {
+    "Pattern Name": "Sandbox Environment for Evaluation",
+    "Problem": "Evaluating AI agents, especially for complex, real-world tasks, in live, dynamic environments leads to inconsistencies, biases, and difficulties in reproducibility, making fair comparisons and progress tracking challenging.",
+    "Context": "The need for robust and reliable benchmarking of AI agents' capabilities in complex scenarios, where real-world variability would obscure true performance differences.",
+    "Solution": "Create a static, closed, and controlled 'sandbox' environment with meticulously curated data (e.g., millions of data entries) and predefined, stable tools. This environment simulates a real-world scenario but eliminates external variability and potential biases.",
+    "Result": "Ensures consistent and unbiased evaluations, enables fair comparison of different agents and strategies, and provides a reproducible testbed for tracking progress and identifying specific failure modes.",
+    "Related Patterns": [
+      "Decoupled Information Collection and Planning"
+    ],
+    "Uses": [
+      "TravelPlanner benchmark",
+      "Other benchmarks like Mind2Web, WebArena"
+    ],
+    "Thinking": "The text explicitly states: 'In TravelPlanner, we create a static and closed sandbox environment for consistent and unbiased evaluations. This setup ensures that all agents access the same unchanging information from our static databases, avoiding the variability and potential biases introduced by dynamic data.' This describes a pattern for creating evaluation environments specific to AI research."
+  },
+  {
+    "Pattern Name": "Structured Search Space Exploration",
+    "Problem": "Large Language Models (LLMs), due to their autoregressive nature, often struggle with combinatorial search problems, exploring multiple future branches, or finding optimal solutions in complex planning tasks where the solution space is vast.",
+    "Context": "Planning problems that involve a large number of interdependent decisions and require systematic exploration of alternative paths to find a feasible or optimal solution.",
+    "Solution": "Augment LLMs with classical data structures and algorithms, such as trees or graphs, to represent and systematically explore the search space of possible actions and states. The LLM can then guide this exploration or generate candidates for the search algorithm.",
+    "Result": "Enhances the planning capabilities of language agents by enabling more deliberate problem-solving, optimizing solution searches, and potentially finding more robust or optimal plans.",
+    "Related Patterns": [
+      "Tree of Thoughts",
+      "Graph of Thoughts",
+      "Step-by-Step Planning"
+    ],
+    "Uses": [
+      "Tree of Thoughts (ToT)",
+      "Graph of Thoughts (GoT)"
+    ],
+    "Thinking": "The text mentions: 'Furthermore, to optimize solution searches in fewer steps, classical data structures like trees and graphs have been employed in prior studies (Yao et al. 2023, Besta et al. 2023), enhancing the planning capabilities of language agents.' This describes a pattern for improving planning through structured search."
+  },
+  {
+    "Pattern Name": "Deliberative Planning with World Models",
+    "Problem": "AI agents, especially early ones, lacked the cognitive substrates for human-level planning, particularly the ability to explore alternative plans and anticipate consequences without real-world interaction.",
+    "Context": "Complex planning tasks where direct trial-and-error in the real environment is costly or impossible, and agents need to evaluate potential future states and outcomes internally.",
+    "Solution": "Equip the agent with an internal 'world model' that can simulate the environment's dynamics and the effects of potential actions. The agent uses this model to 'run simulations' and explore alternative plans, evaluating their outcomes before committing to real-world actions.",
+    "Result": "Enables agents to perform more sophisticated planning, including exploring counterfactuals, anticipating long-term consequences, and making more robust decisions without direct interaction with the real environment.",
+    "Related Patterns": [
+      "LLM-Powered Agent Architecture",
+      "Structured Search Space Exploration"
+    ],
+    "Uses": [
+      "Mentioned as a cognitive substrate for human-level planning that AI agents aim to mimic (citing Mattar & Lengyel 2022, Ho et al. 2022)"
+    ],
+    "Thinking": "The text explicitly states: 'exploring alternative plans by running simulations which in turn depends on a world model'. This describes a specific, advanced AI planning concept that is a 'cognitive substrate' for human-level planning."
+  },
+  {
+    "Pattern Name": "Global Planning / Holistic Constraint Satisfaction",
+    "Problem": "Large Language Models (LLMs), due to their autoregressive nature, struggle to consider multiple constraints holistically and anticipate future implications across an entire long-horizon plan, often satisfying local constraints while violating global ones (e.g., budget, minimum stay).",
+    "Context": "Complex, multi-constraint planning tasks (like travel planning) where decisions made early in the plan have cascading effects on later stages and must collectively satisfy overarching global constraints.",
+    "Solution": "Develop strategies that enable agents to maintain a global view of the plan and its constraints. This might involve: Backtracking (revisiting and adjusting earlier decisions when later steps reveal constraint violations), Heuristic Methods for Forward-Looking Planning (employing heuristics to estimate future costs or impacts of current decisions), or Iterative Refinement with Global Cost Evaluation (periodically evaluating the entire plan against all constraints and using this global feedback to guide adjustments).",
+    "Result": "Improves the agent's ability to produce feasible plans that satisfy all, especially global, constraints, moving beyond local optimization to holistic problem-solving.",
+    "Related Patterns": [
+      "Multi-Constraint Planning",
+      "Feedback-Driven Refinement",
+      "Structured Search Space Exploration"
+    ],
+    "Uses": [
+      "The paper identifies this as a critical missing capability for current LLM agents in TravelPlanner, suggesting 'new strategies such as backtracking for adjusting or employing heuristic methods for forward-looking planning.' The 'CostEnquiry' tool in ReAct/Reflexion also partially addresses this by providing global cost feedback."
+    ],
+    "Thinking": "The text explicitly identifies the problem: 'Agents struggle with global planning scenarios. Global constraints Minimum Nights Stay and Budget demand a holistic approach to planning necessitating that agents not only assess their current decisions but also anticipate future implications.' It then suggests solutions like 'backtracking' and 'heuristic methods for forward-looking planning,' clearly outlining a design pattern for addressing this limitation."
+  },
+  {
+    "Pattern Name": "Memory Management for LLM Agents",
+    "Problem": "Large Language Models (LLMs) have inherent limitations in retaining and utilizing information over long interactions or across different tasks, leading to context window issues, forgetting, and the 'Lost in the Middle' phenomenon.",
+    "Context": "LLM-powered agents need to operate over extended periods, learn from past interactions, maintain a coherent state, and access relevant knowledge to perform complex, long-horizon tasks.",
+    "Solution": "Implement a multi-tiered memory system for the agent. This typically includes: Long-term Memory (the parametric memory inherent in the LLM), Short-term/Working Memory (in-context learning and external, transient storage like a 'Notebook'), and potentially an External Knowledge Base. Memory enhancement techniques such as summarization to condense past interactions and retrieval mechanisms (e.g., RAG) to fetch relevant information are employed.",
+    "Result": "Enables agents to acquire, process, retain, and recall information effectively, supporting long-horizon tasks, learning, consistent behavior, and reducing hallucinations or information confusion.",
+    "Related Patterns": [
+      "LLM-Powered Agent Architecture",
+      "Notebook-Based Working Memory",
+      "Retrieval-Augmented Generation"
+    ],
+    "Uses": [
+      "Memory summarization (Chen et al. 2023, Zhou et al. 2023, Liang et al. 2023)",
+      "Retrieval (Andreas 2022, Park et al. 2023, Zhong et al. 2023)",
+      "NotebookWrite tool"
+    ],
+    "Thinking": "The text explicitly defines two types of memory ('longterm memory' and 'shortterm memory/working memory') and lists techniques ('memory summarization' and 'retrieval') widely employed to enhance them, indicating a broader design pattern for handling memory in LLM agents beyond just a 'Notebook'."
+  },
+  {
+    "Pattern Name": "Decoupled Information Collection and Planning",
+    "Problem": "When an AI agent's overall performance depends on multiple interdependent sub-capabilities (e.g., tool use, reasoning, planning), failures in one area (like tool use) can mask or confound the evaluation of other areas (like planning). This makes it difficult to pinpoint specific weaknesses.",
+    "Context": "The need to isolate and accurately evaluate the core planning capabilities of an LLM agent, separate from its proficiency in interacting with external tools or collecting information from a dynamic environment.",
+    "Solution": "Introduce a specialized operational or evaluation mode where the information collection phase is bypassed. All necessary and detailed information (e.g., search results, pre-determined facts, environmental observations) is directly provided to the agent. The agent then focuses solely on the planning task, using the pre-supplied information to formulate a plan that satisfies all specified constraints.",
+    "Result": "Allows for a clearer, unbiased assessment of the agent's pure planning skills, disentangling them from tool-use proficiency. This helps researchers understand if planning failures stem from reasoning deficiencies or from an inability to gather the right information, facilitating targeted improvements.",
+    "Related Patterns": [
+      "LLM-Powered Agent Architecture",
+      "Multi-Constraint Planning",
+      "Sandbox Environment for Evaluation"
+    ],
+    "Uses": [
+      "TravelPlanner's 'soleplanning mode' for evaluating planning skills without tool calling."
+    ],
+    "Thinking": "The paper explicitly describes 'soleplanning mode' as a distinct setup where information is pre-provided to agents, eliminating the need for tool calling, specifically to evaluate 'agents planning skills' in isolation. This is a specific design pattern for structuring agent interaction or evaluation."
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "Pattern Name": "LACE (Local Agnostic attribute Contribution Explanation)",
+    "Problem": "High-performing machine learning models lack interpretability, especially for individual instance predictions of black-box models, making it difficult to understand the reasons behind specific decisions.",
+    "Context": "Critical applications (e.g., health care, criminal justice, finance) where understanding individual model predictions is fundamental. The models are black-box classifiers for structured data.",
+    "Solution": "A rule-based explanation method that explains the prediction of any classifier on a specific instance by analyzing the joint effect of feature subsets on the classifier prediction. It relies on a local rule-based model (associative classifier) trained on the K-nearest neighbors of the instance to identify relevant patterns (conjunctions of attribute-value pairs). It quantifies understanding through 'prediction difference' (a removal-based technique to compute the influence of feature values and subsets). It also includes an automatic locality definition.",
+    "Result": "Provides both qualitative (local rules/patterns) and quantitative (prediction difference) understanding of the reasons behind individual predictions, overcoming exponential time complexity by focusing on relevant subsets. This enhances trust and enables debugging.",
+    "Related Patterns": "LIME, SHAP, Anchor (LACE is compared to these, indicating it's in the same problem space but offers a distinct solution).",
+    "Uses": "Explaining individual predictions of black-box models, understanding feature importance and interactions, model debugging, building trust in AI systems.",
+    "Thinking": "This is explicitly described as a 'novel method to explain classifier predictions on single instances,' addressing a specific AI problem (black-box interpretability at the local level) with a structured solution."
+  },
+  {
+    "Pattern Name": "XPLAIN (Interactive Framework for Human-in-the-Loop Explanation)",
+    "Problem": "The black-box nature of high-performance models hinders interactive exploration and understanding of model behavior, making it difficult for human experts to test hypotheses, detect wrong behaviors, and debug/improve models.",
+    "Context": "Machine learning models are increasingly adopted to assist human experts in decision-making, especially in critical tasks where understanding model predictions is essential for trust and validation.",
+    "Solution": "An interactive tool (web app) that leverages LACE as its underlying explanation method. It supports local inspection of individual predictions, allowing users to compare explanations across multiple target classes and classifiers. It enables 'what-if' analysis by tweaking attribute values and provides 'explanation metadata' (aggregated local explanations) for global insights.",
+    "Result": "Facilitates human-in-the-loop inspection, enabling users to understand, debug, and improve classifiers, assess trustworthiness, and compare model behaviors interactively. It supports GDPR-compliant ex-post explanations.",
+    "Related Patterns": "LACE (underlying explanation method).",
+    "Uses": "Model validation, debugging, trust assessment, comparative analysis of different ML models, 'what-if' scenario testing, knowledge discovery from aggregated explanations.",
+    "Thinking": "Described as an 'interactive framework' that 'directly addresses relevant desiderata of explainable AI research as interactivity.' It's a pattern for how to present and interact with AI explanations effectively."
+  },
+  {
+    "Pattern Name": "DivExplorer (Understanding Subgroup Divergence via Patterns)",
+    "Problem": "Machine learning models may exhibit peculiar or anomalous behavior on specific data subgroups, differing from their overall behavior. Identifying and characterizing these critical subgroups is crucial for model validation, testing, error analysis, and fairness evaluation, but often requires human expertise or incomplete enumeration.",
+    "Context": "Deployment of ML models in applications where disparate behavior across data subgroups (e.g., based on sensitive attributes) can have significant consequences (e.g., societal bias).",
+    "Solution": "A novel model-agnostic approach that introduces the 'divergence' notion to estimate the difference in classification behavior (e.g., false positive/negative rates) on data subgroups compared to the entire dataset. Subgroups are characterized by 'patterns' (conjunctions of attribute-value pairs). It leverages frequent pattern mining techniques for automatic, complete exploration of all sufficiently represented subgroups. It also uses Shapley values to quantify item contributions to subgroup divergence.",
+    "Result": "Automatically identifies and characterizes all frequent divergent subgroups, revealing peculiar model behaviors, potential biases, and the specific attribute values contributing to these divergences, even for previously unknown subgroups. This enables comprehensive model auditing.",
+    "Related Patterns": "Slice Finder (DivExplorer is compared to it, highlighting differences in exhaustive search and metrics). Item Contribution to Divergence, Global Item Divergence, Corrective Items (these are sub-patterns or techniques used within DivExplorer).",
+    "Uses": "Model validation, testing, error analysis, fairness evaluation, bias detection, understanding model behavior at a granular level, auditing classifier behavior at the group level.",
+    "Thinking": "Explicitly presented as a 'novel approach to identify and characterize subgroups of data in which a classification model behaves differently,' addressing a core AI problem of understanding model behavior beyond individual predictions or global averages."
+  },
+  {
+    "Pattern Name": "Item Contribution to Divergence (using Shapley Value)",
+    "Problem": "Once a divergent data subgroup (pattern) is identified, it's unclear which specific attribute values (items) within that pattern are most responsible for the observed divergence.",
+    "Context": "Analyzing the behavior of a classification model on a specific data subgroup identified as having a peculiar (divergent) behavior, to understand the underlying factors.",
+    "Solution": "Apply the Shapley value concept from cooperative game theory. Each item in the pattern is treated as a player, and the divergence of the pattern is the collective outcome. The Shapley value quantifies the contribution of each item to the pattern's divergence.",
+    "Result": "Provides a quantitative measure of the local contribution of each individual item to the divergence of a specific itemset, enabling a deeper understanding of *why* a subgroup is divergent and which factors are most influential.",
+    "Related Patterns": "DivExplorer (this is a technique *within* DivExplorer). Global Item Divergence (a generalization).",
+    "Uses": "Explaining the drivers of divergence within a specific subgroup, fine-grained analysis of subgroup behavior, identifying discriminatory factors.",
+    "Thinking": "This describes a specific, reusable technique for attributing responsibility within a composite AI-related phenomenon (subgroup divergence). It's a pattern for *explaining* the divergence."
+  },
+  {
+    "Pattern Name": "Global Item Divergence (Generalized Shapley Value)",
+    "Problem": "Understanding the overall impact of an individual attribute value (item) on divergence across *all* possible contexts (itemsets), rather than just its isolated divergence or its contribution to a single specific itemset. Individual item divergence might mask effects that only appear in association with other items.",
+    "Context": "Comprehensive analysis of attribute value influence on model divergence across an entire dataset, especially when items might cause divergence primarily through association with others.",
+    "Solution": "Generalize the Shapley value notion to measure the contribution to divergence of each item in the context of all other items. This involves summing contributions across all frequent itemsets where the item appears, with appropriate normalization.",
+    "Result": "Provides a global measurement of how much an item tends to increase divergence when added to patterns, effectively capturing divergence that results from associations of multiple items, which individual item divergence might miss. This helps identify systemic influences.",
+    "Related Patterns": "DivExplorer (this is a technique *within* DivExplorer). Item Contribution to Divergence (a more local application of Shapley values).",
+    "Uses": "Identifying globally influential attributes for divergence, understanding systemic biases, guiding feature engineering or model retraining efforts, assessing the overall impact of sensitive attributes.",
+    "Thinking": "This is a generalization of a specific AI explanation technique (Shapley values) to a broader scope (global influence on divergence), addressing a distinct problem of understanding systemic influence in AI model behavior."
+  },
+  {
+    "Pattern Name": "Corrective Items",
+    "Problem": "Identifying specific attribute values that, when added to a divergent pattern, *reduce* its divergence, indicating a renormalization effect. This phenomenon might be missed by approaches that only look for increasing divergence.",
+    "Context": "Exploring the nuances of model behavior in data subgroups, where some attributes might mitigate or 'correct' an otherwise divergent behavior, which is crucial for understanding complex interactions and potential interventions.",
+    "Solution": "Through exhaustive exploration of all frequent itemsets (as enabled by DivExplorer), identify items where the divergence of an itemset 'I' is *less* than the divergence of its subset 'I \\ {item}'. The 'corrective factor' quantifies this reduction.",
+    "Result": "Reveals specific attribute values that act as mitigating factors for divergence, offering deeper insights into complex model behaviors and potential avenues for intervention or understanding, especially in bias mitigation.",
+    "Related Patterns": "DivExplorer (this is a concept identified by DivExplorer).",
+    "Uses": "Nuanced understanding of model behavior, identifying mitigating factors for bias, guiding targeted interventions, exploring complex attribute interactions.",
+    "Thinking": "This describes a specific *type of behavior* identified by an AI analysis tool, which is a recurring phenomenon in AI model analysis. It's a pattern of *observation* and *identification* within AI model behavior."
+  },
+  {
+    "Pattern Name": "Targeting Interpretability by Design",
+    "Problem": "Traditional high-performance ML models are often black-boxes, leading to a perceived trade-off between accuracy and interpretability. This hinders trust and understanding, especially in high-risk applications where transparency is critical.",
+    "Context": "Developing machine learning models for high-risk applications (e.g., health care, finance, criminal justice) where understanding model behavior is a prerequisite, and overcoming the perceived accuracy-interpretability trade-off is desired.",
+    "Solution": "Design highly accurate and inherently interpretable models by considering interpretability criteria directly within the model's optimization problem during definition and training. This involves minimizing a loss function while also minimizing an 'Interpretability Penalty' or satisfying 'Interpretability Constraints' (e.g., number of nodes in decision trees, number of rules, number of non-zero terms in linear models).",
+    "Result": "Produces models that are both highly accurate and intrinsically interpretable, overcoming some drawbacks of post-hoc explanations and fostering greater trust and understanding from the outset. Examples include CORELS, Interpretable Decision Sets, LIBRE, and Explainable Boosting Machine (EBM).",
+    "Related Patterns": "Interpretable models like Decision Trees, Rule-based models, Linear Models (Logistic Regression, GAMs) are examples of models built using this pattern.",
+    "Uses": "Building trustworthy and transparent AI systems from scratch, especially for critical applications, where post-hoc explanations might not suffice or be fully faithful. Ensuring ethical AI development.",
+    "Thinking": "This describes a fundamental *approach to AI model development* that prioritizes interpretability from the ground up, rather than as an afterthought. It's a meta-pattern for AI model architecture and training strategy."
+  }
+]

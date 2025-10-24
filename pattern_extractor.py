@@ -1,10 +1,8 @@
-import os
+import os,time,json
 import getpass
 from langchain.chat_models import init_chat_model
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import PromptTemplate
-from langchain_core.runnables import RunnableSequence
-
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 if not os.environ.get("GOOGLE_API_KEY"):
     os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter API key for Google Gemini: ")
 
@@ -70,11 +68,32 @@ Paper text:
 {text}
 """
 
+optimized_prompt = """
+You are an AI design pattern mining expert.
+
+Extract all **true AI design patterns** mentioned in the following research text. Ignore general software engineering, DevOps, or data engineering patterns.
+
+For each pattern, include:
+- Pattern Name :str
+- Problem :str
+- Context :str
+- Solution :str
+- Result :str
+- Related Patterns :str
+- Uses: str
+- Thinking: Explain briefly how you identified this as an AI design pattern from the text.
+
+Return only a JSON array. Do not include markdown, extra text, or commentary.
+
+Text:
+{text}
+"""
+
 retry_prompt = """\
 following is a list of patterns and thinking on how it was extracted in JSON format and paper text from which those patterns were extracted. 
 Look for any patterns that are not identified from the paper. If there are any missing design patterns from the paper text, extract them as well and add to the below json array.
 if there is any issue with bellow json format, correct it and return only the json array.
-""" + pattern_extraction_prompt + """
+""" + optimized_prompt + """
 
 Extracted patterns so far:
 {extracted_patterns}
@@ -100,6 +119,11 @@ Patterns to combine:
 {patterns_text}
 """
 
+def debug_save_intermediate(text, file_path):
+    file_path= "_logs/"+time.strftime("%Y%m%d-%H%M%S") + "_" + file_path
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, "w") as file:
+        file.write(text)
 def load_text_file(file_path):
     with open(file_path, "r") as file:
         return file.read()
@@ -118,7 +142,7 @@ def remove_json_annotations(text):
 def extract_patterns_from_text(text):
 
     prompt = PromptTemplate(
-        template=pattern_extraction_prompt,
+        template=optimized_prompt,
         input_variables=["text"]
     )
 
@@ -128,9 +152,12 @@ def extract_patterns_from_text(text):
     )
 
     iter_1 = llm.invoke(prompt.format(text=text))
-    iter_2 = llm.invoke(prompt_2.format(text=text, extracted_patterns=iter_1.content))
-    iter_3 = llm.invoke(prompt_2.format(text=text, extracted_patterns=iter_2.content))
-    return remove_json_header_footer(iter_3.content)
+    debug_save_intermediate(iter_1.content, "debug_initial_output.txt")
+    # iter_2 = llm.invoke(prompt_2.format(text=text, extracted_patterns=iter_1.content))
+    # debug_save_intermediate(iter_2.content, "debug_retry_output.txt")
+    # iter_3 = llm.invoke(prompt_2.format(text=text, extracted_patterns=iter_2.content))
+    # debug_save_intermediate(iter_3.content, "debug_final_output.txt")
+    return remove_json_header_footer(iter_1.content)
 
 def extract_patterns(file_path):
     text = load_text_file(file_path)
@@ -153,13 +180,101 @@ def summarize_patterns(patterns):
     summary = chain.invoke({"patterns_text": patterns})
     return remove_json_annotations(summary.content)
 
+
+
+####################################################
+##  Extracting using image and optimized prompts  ##
+####################################################
+
+# optimized_prompt = """
+# You are an AI design pattern mining expert.
+# Extract all **AI design patterns** mentioned in the following research text.
+
+# Each pattern must include:
+# - Pattern Name
+# - Problem
+# - Context
+# - Solution
+# - Result
+# - Related Patterns
+# - Uses
+# - Thinking (reasoning steps for identification)
+
+# Return only a JSON array. No markdown.
+
+# Text:
+# {text}
+# """
+
+merge_prompt = """
+Combine all the following JSON arrays of AI patterns into one deduplicated, coherent JSON array.
+If multiple patterns describe similar problems or solutions, merge them carefully.
+Return only the final JSON array.
+
+All extracted pattern lists:
+{partial_jsons}
+"""
+
+def load_text(path):
+    with open(path, "r") as f:
+        return f.read()
+
+def chunk_text(text, chunk_size=10000, overlap=2000):
+    splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=overlap)
+    return splitter.split_text(text)
+
+def invoke_llm(prompt, **vars):
+    result = llm.invoke(PromptTemplate(template=prompt, input_variables=list(vars.keys())).format(**vars))
+    return result.content.strip()
+
+def parse_json_safe(text):
+    start, end = text.find('['), text.rfind(']') + 1
+    if start != -1 and end != -1:
+        try:
+            return json.loads(text[start:end])
+        except:
+            return []
+    return []
+
+def extract_patterns_incremental(file_path):
+    text = load_text(file_path)
+    chunks = chunk_text(text)
+    print(f"Total chunks: {len(chunks)}")
+
+    all_patterns = []
+
+    for i, chunk in enumerate(chunks, 1):
+        print(f"→ Extracting from chunk {i}/{len(chunks)}")
+        response = invoke_llm(pattern_extraction_prompt, text=chunk)
+        patterns = parse_json_safe(response)
+        all_patterns.extend(patterns)
+        time.sleep(1)
+
+    # --- Merge all partial results ---
+    print("\nMerging all extracted chunks...")
+    merge_resp = invoke_llm(merge_prompt, partial_jsons=json.dumps(all_patterns))
+    merged = parse_json_safe(merge_resp)
+
+    return merged
+
+def save_json(data, path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+
+####################################################
+
+
 if __name__ == "__main__":
-    file_path = "cleaned_papers/cleaned_978-3-030-21290-2_39.pdf.txt"
+    # file_path = "cleaned_papers/cleaned_Agent design pattern catalogue_ A collection of architectural patterns for foundation model based agents.pdf.txt"
+    file_path = "cleaned_papers/cleaned_Software-Engineering_Design_Patterns_for_Machine_Learning_Applications.pdf.txt"
     print('Extracting patterns from:', file_path)
-    output_dir = f"outputs/[25.10.21] - 02 - Added Retry Mechanism to Pattern Extraction/interation_test"
-    f_name = "prompt_refinement_with_thinking"
+    output_dir = f"outputs/[25.10.21] - 02 - Added Retry Mechanism to Pattern Extraction/mannual_tests"
+    # f_name = "With_optimized_Agent Design Patterns for Foundation Models - 1"
+    f_name = "With_optimized_Software Engineering Design Patterns for Machine Learning Applications - 1"
     for i in range(1):
         patterns = extract_patterns(file_path)
         print('Extracted')
         os.makedirs(output_dir, exist_ok=True)
         save_patterns_to_file(patterns, f"{output_dir}/{f_name}_{i}.json")
+        # save_json(extract_patterns_incremental(file_path), f"{output_dir}/{f_name}_{i}_incremental.json")

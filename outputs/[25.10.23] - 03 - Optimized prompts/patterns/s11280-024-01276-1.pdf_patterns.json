@@ -1,0 +1,152 @@
+[
+  {
+    "Pattern Name": "LLMs as Knowledge Base",
+    "Problem": "Existing knowledge graphs (KGs) in recommender systems are limited, sparse, and have low usability due to expensive supervision for construction. This leads to missing entities/relations and ignored user preferences, hindering recommendation performance and explainability.",
+    "Context": "Recommender systems require rich, semantic information about users and items to enhance their effectiveness and provide better explanations. Large Language Models (LLMs) are trained on vast amounts of open-domain data, endowing them with extensive factual and commonsense knowledge.",
+    "Solution": "Leverage LLMs' inherent ability to store and retrieve factual knowledge and common sense. This involves using LLMs for knowledge graph completion (filling missing facts), knowledge graph construction (entity discovery, relation extraction, end-to-end KG building), and directly transferring their stored knowledge to KGs. LLMs can also provide cross-domain information to facilitate cross-domain recommendations.",
+    "Result": "The integration of LLMs leads to more comprehensive and up-to-date knowledge bases for recommender systems. This enhances recommendation accuracy, relevance, and personalization by better understanding entity relationships and user preferences, and enables cross-domain recommendations.",
+    "Related Patterns": [
+      "LLMs as Content Interpreter",
+      "LLMs as Common System Reasoner (Automated Selection)"
+    ],
+    "Uses": [
+      "Knowledge graph completion (e.g., MTLKGC, MEMKGC, StAR, GenKGC, TagReal, AutoKG)",
+      "Knowledge graph construction (e.g., entity discovery, coreference resolution, relation extraction, end-to-end construction)",
+      "Cross-domain recommendation",
+      "Enhancing CTR prediction models (e.g., KAR, LLMRec, LLMKRec)"
+    ],
+    "Thinking": "Section 4, 'LLMs as knowledge base,' explicitly describes this pattern. It identifies the problem of sparse and costly traditional KGs, positions LLMs as a solution due to their stored factual knowledge, and details how they can be used for KG completion, construction, and cross-domain recommendations. Specific examples of approaches and their benefits are provided."
+  },
+  {
+    "Pattern Name": "LLMs as Content Interpreter",
+    "Problem": "Content-based recommenders often suffer from sparse content features and struggle to fully exploit textual attributes. Traditional methods (statistical, neural networks, basic NLP) may provide limited feature representations, fail to capture complex semantic information, or lack generalization ability, especially in cold-start scenarios.",
+    "Context": "Accurate and personalized recommendations depend on a deep understanding and interpretation of item content (e.g., descriptions, reviews, news articles). LLMs, particularly pretrained models like BERT and GPT, have demonstrated exceptional performance in various natural language processing tasks, capturing deep semantic representations and world knowledge.",
+    "Solution": "Employ powerful pretrained LLMs as content interpreters to process textual features. This involves fine-tuning LLMs for recommendation-specific objectives (e.g., masked opinion token prediction, opinion rating prediction), designing task-specific pretraining tasks, and leveraging their emergent abilities in reasoning and generalization. LLMs can also be used to generate reasoning as additional features based on user behavior history.",
+    "Result": "LLMs enhance the effectiveness of recommender systems by providing a more profound understanding and interpretation of textual content. This leads to improved recommendation accuracy, better handling of cold-start problems, and facilitation of cross-domain recommendations. Instruction-tuned LLMs demonstrate superior performance in few-shot learning and cross-domain generalization.",
+    "Related Patterns": [
+      "LLMs as Knowledge Base",
+      "LLMs as Common System Reasoner (Direct Recommendations)",
+      "LLMs as Personalized Content Creator"
+    ],
+    "Uses": [
+      "News recommendation (e.g., UBERT, UNBERT, enhancing news encoders)",
+      "Tag recommendation, tweet representations, code example recommendation",
+      "Zero-shot and few-shot recommendation (e.g., TALLRe, LLMsRec, PALR, InstructRec)",
+      "Alleviating cold-start problems and enabling cross-domain recommendations using only textual features (e.g., ZESREC, Unisrec, VQRec)"
+    ],
+    "Thinking": "Section 5, 'LLMs as content interpreter,' directly addresses this pattern. It contrasts conventional content interpretation methods with LLM-based approaches, highlighting the challenges of traditional methods and how LLMs provide a solution by capturing deep semantic representations and world knowledge. It details specific techniques like fine-tuning and instruction tuning, and lists various applications."
+  },
+  {
+    "Pattern Name": "LLMs as Explainer",
+    "Problem": "Most recommender systems are 'black boxes,' lacking transparency and comprehensible justifications for their suggestions, which diminishes user trust and makes error identification difficult. Traditional explanation methods are often formulaic, inflexible, and tightly coupled with specific recommendation models, limiting generalizability and diversity.",
+    "Context": "Users desire understandable, personalized, and adaptable explanations for recommendations to improve trust, persuasiveness, and reliability of AI systems. Explanations should be natural language-based and applicable across various recommendation models and complex system integrations.",
+    "Solution": "Leverage LLMs' remarkable generative ability in language tasks and unique in-context learning capabilities (zero-shot, few-shot, chain-of-thought prompting). LLMs can craft customized, precise, natural, and adaptable explanations, gather real-time user feedback for interpretations, and even interpret the internal workings of complex deep learning models in a model-agnostic way.",
+    "Result": "LLMs significantly improve the transparency, persuasiveness, and reliability of recommender systems. They provide natural, personalized, and adaptable explanations, fostering bidirectional human-machine alignment. This approach paves the way for a versatile and scalable interpretational framework with broader applicability, independent of the underlying recommendation algorithm.",
+    "Related Patterns": [
+      "LLMs as Common System Reasoner (Direct Recommendations)",
+      "LLMs as Conversational Agent"
+    ],
+    "Uses": [
+      "Generating natural language explanations for recommended items",
+      "Interpreting the function of neurons in deep learning models (e.g., GPT4 interpreting GPT2 neurons)",
+      "Explainable visualization recommendation (e.g., LLM4Vis, RecExplainer)",
+      "Providing justifications for various types of recommendations (e.g., drug, product)"
+    ],
+    "Thinking": "Section 6, 'LLMs as explainer,' clearly defines this pattern. It outlines the problem of black-box recommenders and the limitations of traditional explanation methods. It then details how LLMs' generative and in-context learning abilities offer a solution, leading to more natural, personalized, and model-agnostic explanations, thereby enhancing trust and understanding."
+  },
+  {
+    "Pattern Name": "LLMs as Common System Reasoner (Direct Recommendations)",
+    "Problem": "Traditional recommendation models typically require explicit training or fine-tuning for each specific task and domain, making them slow to adapt to new cases and unable to leverage broad commonsense knowledge effectively.",
+    "Context": "LLMs exhibit emergent reasoning abilities and in-context learning, allowing them to make predictions on new cases without explicit training or tuning, given natural language instructions and task demonstrations. They possess extensive open-domain commonsense knowledge.",
+    "Solution": "Utilize LLMs' in-context learning (zero-shot/few-shot learning) and chain-of-thought prompting strategies. This enables LLMs to directly generate recommendations (e.g., rating prediction, ranking prediction) based on natural language instructions and a few examples. Multi-step reasoning strategies can be employed to capture user preferences, extract representative items, and re-rank them.",
+    "Result": "LLMs can provide recommendations on new cases without extensive training or tuning, leveraging their broad commonsense knowledge, especially in open domains. Multi-step reasoning significantly improves recommendation performance, and the approach reduces dependency on large amounts of task-specific training data.",
+    "Related Patterns": [
+      "LLMs as Content Interpreter",
+      "LLMs as Explainer",
+      "LLM-based Tool Learning"
+    ],
+    "Uses": [
+      "Zero-shot/few-shot rating prediction and ranking prediction (e.g., studies in Table 3)",
+      "Sequential recommendation",
+      "Direct recommendation and explanation generation",
+      "Review summarization",
+      "Reranking items after initial filtering (e.g., NIR strategy)"
+    ],
+    "Thinking": "Section 7.1, 'Making direct recommendations,' describes this pattern. It highlights in-context learning and chain-of-thought as key emergent abilities of LLMs for direct recommendation. It explains the process of using prompts and demonstrations, and discusses the observed performance and challenges, particularly regarding domain specificity and the need for additional modules for ranking tasks."
+  },
+  {
+    "Pattern Name": "LLMs as Common System Reasoner (Automated Selection)",
+    "Problem": "Automated Machine Learning (AutoML) in recommender systems is complex, time-consuming, and often requires costly manual setup. The search space (embedding size, features, interactions, model architecture) is vast, and there's a lack of strong foundational knowledge regarding optimal components, especially for high-order feature interactions.",
+    "Context": "LLMs possess excellent memorization and reasoning capabilities, which can be applied to automate decision-making processes in AutoML, such as searching for optimal model architectures, feature selections, or interaction designs, by analyzing prior results and generating new candidates.",
+    "Solution": "Employ LLMs as black-box agents or integrated components within AutoML search strategies. LLMs can generate potential better-performing architectures (e.g., GPTNAS, GENIUS) based on previous trials and evaluation performance. They can also act as mutation and crossover operators within genetic algorithms for Neural Architecture Search (NAS) (e.g., LLMatic, EvoPrompting), guiding the search process and generating candidate crossovers.",
+    "Result": "LLMs reduce manual effort and time in AutoML for recommender systems by automating the generation and selection of architectures and components. This leads to the production of reasonable network architectures, narrowing down the search space, and potentially achieving better performance than direct reasoning over the entire space by integrating LLMs into guided search algorithms.",
+    "Related Patterns": [
+      "LLM-based Tool Learning",
+      "LLMs as Knowledge Base"
+    ],
+    "Uses": [
+      "Neural Architecture Search (NAS) for recommender systems (e.g., GPTNAS, GENIUS, LLMatic, EvoPrompting)",
+      "Automated feature selection and interaction search",
+      "Optimizing embedding sizes"
+    ],
+    "Thinking": "Section 7.2, 'Reasoning for automated selection,' clearly defines this pattern. It explains how LLMs' memorization and reasoning capabilities can be applied to AutoML in recommender systems. It details specific approaches like GPTNAS, GENIUS, LLMatic, and EvoPrompting, highlighting their role in generating architectures and guiding search processes."
+  },
+  {
+    "Pattern Name": "LLMs as Conversational Agent",
+    "Problem": "Traditional conversational recommender systems (CRSs) face challenges such as scalability issues, lack of synergy between dialogue components, and a high dependency on large amounts of supervised domain-specific data. They also struggle with long conversation memory and lack awareness of private domain data, limiting their effectiveness and user experience.",
+    "Context": "LLMs have demonstrated significant advancements in intelligence, knowledge capacity, and natural language understanding/generation. Their inherent conversational capabilities make them ideal for facilitating effective user-system interactions and understanding user preferences in a dialogue-driven manner.",
+    "Solution": "Leverage LLMs' intelligence and conversational abilities to serve as the core dialogue module for CRSs. This involves using LLMs for real-time understanding of user intents and adaptive recommendation strategies. Challenges like private domain data awareness are addressed through fine-tuning with synthetic data (generated by user simulators) or tool learning (treating traditional recommendation models as tools). Memory issues in long conversations are tackled by incorporating memory modules (MemPrompt) or extracting/storing user profiles (RecLLM). Advanced prompting techniques (Chain of Thought, ToT, Plan-and-Solve, ReAct) guide LLMs in deeper thinking and tool planning.",
+    "Result": "LLMs enable the creation of more intelligent, natural, and adaptive conversational recommender systems. They provide real-time understanding of user intents, reduce dependency on extensive supervised domain-specific data, and improve handling of long conversation contexts and private domain knowledge. This leads to an enhanced user experience through fluent natural language communication and personalized recommendations.",
+    "Related Patterns": [
+      "LLM-based Tool Learning",
+      "LLMs as Explainer",
+      "LLMs as Knowledge Base"
+    ],
+    "Uses": [
+      "Building enterprise-level conversational recommender systems",
+      "Open-domain conversational recommendation (e.g., movies, music, news, games)",
+      "User intent exploration and preference elicitation through dialogue",
+      "Generating conversational data using user simulators (e.g., RecLLM, iEvaLM)"
+    ],
+    "Thinking": "Section 8, 'LLMs as conversational agent,' directly describes this pattern. It outlines the problems with traditional CRSs and how LLMs provide a solution due to their intelligence and conversational capabilities. It details specific techniques like fine-tuning, tool learning, memory modules, and advanced prompting to overcome challenges related to private domain data and long conversations."
+  },
+  {
+    "Pattern Name": "LLM-based Tool Learning",
+    "Problem": "LLMs, despite their vast knowledge, have limitations in memorizing specific, private, or specialized domain knowledge (e.g., item corpus, user profiles) and struggle with temporal generalization as external knowledge evolves. They can also generate inaccurate or incorrect responses (hallucinations) and are difficult to control within specific domains.",
+    "Context": "LLMs possess powerful natural language processing capabilities and can break down complex tasks into subtasks. Specialized tools (e.g., search engines, recommendation engines, databases, calculators, APIs) exist that can provide domain-specific knowledge, real-time information, or perform specific computations beyond LLMs' inherent capabilities.",
+    "Solution": "Integrate LLMs with specialized external tools to augment their capabilities. LLMs act as controllers, comprehending problem statements, deciding which tools to execute, and aggregating results (e.g., HuggingGPT, Visual ChatGPT, TaskMatrix.AI, AutoGPT). LLMs can also learn to use tools by emulating human interaction (WebGPT), generating reasoning paths and task-specific actions (ReAct), or combining diverse tools (Toolformer). For personalization, LLMs are equipped with search engines, recommendation engines (retrieve and rerank stages), and databases (vector databases for new items, user profile modules) to ground recommendations and provide personalized information.",
+    "Result": "LLMs' task-solving capabilities are significantly enhanced, extending beyond their internal knowledge. This integration reduces LLMs' memory burden, alleviates hallucinations, and improves accuracy and control within specific domains. It enables LLMs to handle evolving external knowledge and cold-start problems, leading to more factual, grounded, and personalized responses and recommendations.",
+    "Related Patterns": [
+      "LLMs as Conversational Agent",
+      "LLMs as Common System Reasoner (Automated Selection)",
+      "LLMs as Knowledge Base"
+    ],
+    "Uses": [
+      "General AI task solving (e.g., image classification, captioning, object detection, visual tasks, question answering, mathematical reasoning)",
+      "Personalized content recommendation by leveraging external search engines (e.g., BlenderBot 3, LaMDA, RETALLM)",
+      "Recommendation engines (e.g., ChatREC, RecLLM for retrieve and reranking)",
+      "Databases for new items and user profiles (e.g., vector databases, user profile modules in ChatREC, RecLLM)"
+    ],
+    "Thinking": "Section 9, 'Tool learning and its applications in recommendation,' is the primary source for this pattern. It defines tool learning, explains how LLMs are applied as controllers or learners, and then details specific applications in personalization scenarios using various tools like search engines, recommendation engines, and databases. It clearly outlines the problem of LLM limitations and how tools provide the solution."
+  },
+  {
+    "Pattern Name": "LLMs as Personalized Content Creator",
+    "Problem": "Traditional recommender systems primarily focus on suggesting existing items, and personalized content creation often relies on predefined templates or data-driven methods that may not fully capture nuanced user interests or suffer from extremely sparse feedback, leading to less appealing or generic content.",
+    "Context": "With the advancements in AI Generated Content (AIGC) and LLMs' powerful generative abilities, there is a significant opportunity to create more appealing, customized, and realistic content (text, images, multimodal) that precisely matches individual user interests and preferences.",
+    "Solution": "Integrate LLMs and AIGC techniques to generate personalized content. LLMs leverage their reasoning abilities to better understand user personalized intent and interest, enhancing tailored content generation. Reinforcement Learning from Human Feedback (RLHF) strategies can be applied to fine-tune models, capturing user intent more effectively and alleviating sparse feedback issues. LLMs' powerful generative capabilities and cross-modal knowledge bases enable realistic creation of diverse content types. Multi-round conversations and explicit feedback mechanisms can guide the content generation process.",
+    "Result": "The integration of LLMs and AIGC leads to the generation of more appealing, customized, and realistic content tailored to individual user interests. This enhances the ability to understand explicit user preferences, even with sparse feedback, and revolutionizes content creation processes in online advertising, e-commerce, and customer service, ultimately improving user engagement and driving business growth.",
+    "Related Patterns": [
+      "LLMs as Content Interpreter",
+      "LLMs as Conversational Agent",
+      "LLM-based Tool Learning"
+    ],
+    "Uses": [
+      "Personalized text ad generation (titles, descriptions, copywritings)",
+      "Creation of visual and semantic content (ad banners, thumbnails, videos)",
+      "Chatbots for personalized product recommendations with generated content",
+      "Automated responses and FAQs in customer service with personalized assistance",
+      "Recommendation paradigms based on ChatGPT for content generation (e.g., Wang et al. 2023)"
+    ],
+    "Thinking": "Section 10, 'LLMs as personalized content creator,' directly describes this pattern. It outlines the shift from suggesting existing items to generating new, personalized content. It explains how LLMs and AIGC enable this by leveraging LLMs' reasoning, generative abilities, and RLHF, and details the benefits for various business scenarios like e-commerce and customer service."
+  }
+]

@@ -1,0 +1,44 @@
+Different Workloads in Different Computing Environments
+Problem: It is necessary to separate and quickly changet he ML data workload and stabilize the training workload to maximize efficiency
+Solution: Physically isolate different workloads to separate machines.Then optimize the machine configurations and thenetwork usage.
+Distinguish BusinessLogic from MLModels7,11
+Problem: The overall business logic should be isolated as much as possible from the ML models so that they can be changed/overridden as necessary without impacting the rest of the business logic.
+Solution: Separate the business logic and the inference engine, loosely coupling the business logic and ML-specific dataflows.
+ML Gateway Routing Architecture
+When a client uses multiple services, it can be difficult to set up and manage individual endpoints for each service.
+Install a gateway before a set of applications, services, ordeployments. Use application layer routing requests to theappropriate instance.
+Microservice Architecture for ML
+ML applications may be confined to some “known” ML frameworks, missing opportunities for more appropriate frameworks.
+Define consistent input and output data. Provide well-defined services to use for ML frameworks.
+Lambda Architecturefor ML
+Real-time data processing requires scalability, fault tolerance, predictability, and other qualities.It must be extensible.
+The batch layer keeps producing views at every set batch interval, while the speed layer creates the relevant real-time/speed views. The serving layer orchestrates the query by querying both the batch and speed layer, and then merging them.
+Kappa Architecture for ML
+It is necessary to deal with a huge amount of data with less code resources. 
+Support both real-time data processing and continuous processing with a single stream processing engine.
+Data Lake for ML
+We cannot foresee the kind of analyses that will be performed on the data and which frameworks will be used to perform such analyses.
+Store data, which range from structured to unstructured, as“raw” as possible into a data storage.
+Separation of Concerns and Modularization of ML Components
+ML applications must accommodate regular andfrequent changes to their ML components.Decouple at different levels of complexity from the simplest tothe most complex.
+Encapsulate ML Models within Rule-base Safeguards
+Problem: ML models are known to be unstable and vulnerable to adversarial attacks, noise in data, and data drift overtime.
+Solution: Encapsulate functionality provided by ML models and appropriately deal with the inherent uncertainty of their outcomes in the containing system using deterministic and verifiable rules.
+Discard PoC Code
+Problem: The code created for PoC often includes code that sacrifices maintainability for efficient implementation of trial and error, and code that is ultimately no longer needed.
+Solution: Discard the code created for the PoC and rebuild maintainable code based on the findings from the PoC.
+Parameter-Server Abstraction
+Problem: For distributed learning, widely accepted abstractions are lacking.
+Solution: Distribute both data and workloads over worker nodes, while the server nodes maintain globally shared parameters, which are represented as vectors and matrices.
+Data Flows Up, Model Flows Down
+Problem: Standard ML approaches require centralizing the training data on one machine or in a datacenter.
+Solution: Enable mobile devices to collaboratively learn a shared prediction model in the cloud while keeping all of the training data on the device as federated learning.
+Secure Aggregation
+Problem: The system needs to communicate and aggregate model updates in a secure, efficient, scalable, and fault-tolerant way.
+Solution: Encrypt data from each mobile device in collaborative learning and calculate totals and averages without individual examination.
+Deployable Canary Model
+Problem: A surrogate ML that approximates the behavior of the best ML model must be built to provide explainability.
+Solution: Run the explainable inference pipeline in parallel with the primary inference pipeline to monitor prediction differences.
+ML Versioning
+Problem: ML models and their different versions may change the behavior of the overall ML applications.
+Solution: Record the ML model structure, training data set, training system and analytical code to ensure a reproducible training process and an inference process.

@@ -37,3 +37,5 @@ Pipfile.lock
 
 # Ignore extracted patterns JSON
 # extracted_patterns.json
+
+/_logs/

@@ -13,12 +13,14 @@ def pattern_combiner(patterns):
     combined_patterns = []
 
     for pattern in patterns:
-        pattern_text = f"Pattern Name: {pattern.get('Pattern Name', 'Unnamed Pattern')}\n"
-        pattern_text += f"Problem: {pattern.get('Problem', '')}\n"
-        pattern_text += f"Context: {pattern.get('Context', '')}\n"
-        pattern_text += f"Solution: {pattern.get('Solution', '')}\n"
-        pattern_text += f"Result: {pattern.get('Result', '')}\n"
-        pattern_text += f"Uses: {', '.join(pattern.get('Uses', []))}\n"
+        pattern_text = f"<PatternName>{pattern.get('Pattern Name', 'Unnamed Pattern')}</PatternName>\n"
+        pattern_text += f"<Problem>{pattern.get('Problem', '')}</Problem>\n"
+        pattern_text += f"<Context>{pattern.get('Context', '')}</Context>\n"
+        pattern_text += f"<Solution>{pattern.get('Solution', '')}</Solution>\n"
+        pattern_text += f"<Result>{str(pattern.get('Result', ''))}</Result>\n"
+        pattern_text += f"<Uses>\n"
+        pattern_text += f"{str(pattern.get('Uses', []))}\n"
+        pattern_text += f"</Uses>\n"
         combined_patterns.append(pattern_text)
     return combined_patterns
 
@@ -61,5 +63,5 @@ def main(base_output):
     print(f'Added embeddings for all patterns.')
 
 if __name__ == "__main__":
-    base_output = "outputs/[25.09.12] - 02 - Prompt, Temperature, Embedding Model, Clustering changes/"
+    base_output = "outputs/[25.10.23] - 03 - Optimized prompts/"
     main(base_output)

@@ -1,0 +1,52 @@
+[
+  {
+    "Pattern Name": "RAGCache (Multilevel Dynamic Caching for Retrieval-Augmented Generation)",
+    "Problem": "Retrieval-Augmented Generation (RAG) introduces long sequence generation for Large Language Models (LLMs) due to knowledge injection, leading to high computation and memory costs. Current LLM inference optimizations don't fully consider RAG characteristics, especially the recurrence of identical documents and skewed retrieval patterns.",
+    "Context": "RAG systems that integrate LLMs with external knowledge databases. The system needs to efficiently process augmented requests where retrieved documents significantly extend the input sequence length. There's a hierarchy of memory (fast GPU, slower host) with different capacities.",
+    "Solution": "A novel multilevel dynamic caching system tailored for RAG. It caches the intermediate states (Key-Value tensors) of retrieved documents in a knowledge tree structure across multiple requests. Documents with more frequent accesses are cached in fast GPU memory, while less frequent ones are in slower host memory. It incorporates a prefix-aware replacement policy and dynamically overlaps retrieval and inference.",
+    "Result": "Reduces the time to first token (TTFT) by up to 4x and improves throughput by up to 21% compared to state-of-the-art LLM inference systems integrated with vector databases. It outperforms other KV cache reuse systems by up to 35% lower TTFT and 18% higher throughput.",
+    "Related Patterns": "Knowledge Tree, Prefix-aware GreedyDualSizeFrequency (PGDSF) Replacement Policy, Cache-aware Reordering, Dynamic Speculative Pipelining. It builds upon and improves concepts from vLLM (PagedAttention), SGLang (KV cache reuse), Prompt Cache, CacheGen, and ChunkAttention.",
+    "Uses": "Efficiently serving RAG requests, reducing latency and increasing throughput in LLM-based applications that rely on external knowledge retrieval.",
+    "Thinking": "This is the overarching system design pattern. It directly addresses the performance bottlenecks of RAG, which is an AI paradigm, by caching AI-specific intermediate states (KV tensors) and optimizing their management across a memory hierarchy, considering AI-specific access patterns."
+  },
+  {
+    "Pattern Name": "Knowledge Tree (for RAG KV Cache Management)",
+    "Problem": "In RAG systems, the intermediate states (Key-Value tensors) of retrieved documents are sensitive to their referred order within the augmented prompt. The KV tensor for a token depends on preceding tokens, meaning `[Doc1, Doc2]` produces different KV tensors for `Doc2` than `[Doc2, Doc1]`. This makes simple caching of individual document KV tensors inefficient or incorrect when order matters.",
+    "Context": "Caching intermediate states (KV tensors) of retrieved documents in a RAG system where LLM attention mechanisms are position-sensitive. Multiple requests might share common document prefixes or sequences.",
+    "Solution": "Organize the intermediate states of retrieved documents in a tree structure, specifically a prefix tree based on document IDs. Each path from the root to a node represents a specific sequence of documents referenced by a request. Each node holds the KV tensor of a referred document. Different paths can share common nodes (documents).",
+    "Result": "Facilitates fast retrieval of order-sensitive KV tensors by prefix matching. Enables efficient sharing of KV tensors for common document prefixes across different requests, reducing redundant computation and memory usage.",
+    "Related Patterns": "RAGCache, Prefix-aware GreedyDualSizeFrequency (PGDSF) Replacement Policy.",
+    "Uses": "Managing and sharing cached Key-Value tensors for retrieved documents in RAG systems, ensuring correctness despite LLM's position sensitivity and maximizing cache hit rates for shared document sequences.",
+    "Thinking": "This pattern is specific to how AI models (LLMs) process sequences and the need to cache their intermediate states while respecting positional dependencies. The tree structure is a direct response to the 'prefix-sensitive' nature of LLM KV caches."
+  },
+  {
+    "Pattern Name": "Prefix-aware GreedyDualSizeFrequency (PGDSF) Replacement Policy",
+    "Problem": "Optimizing the placement and eviction of cached Key-Value (KV) tensors for retrieved documents in a hierarchical memory system (GPU and host memory) within RAG. Traditional caching policies (LRU, LFU, standard GDSF) do not adequately account for the variable sizes, access patterns, and complex, prefix-dependent recomputation costs specific to LLM intermediate states.",
+    "Context": "RAGCache's knowledge tree structure, where nodes (representing document KV tensors) need to be managed across GPU and host memory. The cost of recomputing KV tensors for a document depends on its size, frequency of access, recency, and crucially, the preceding documents (prefix) in the LLM's attention mechanism.",
+    "Solution": "An enhanced cache replacement policy that calculates a priority for each node (document KV tensor) based on its access frequency, size, last access time, and a 'prefix-aware recomputation cost.' This cost is estimated by profiling LLM prefill times with varying cached and non-cached token lengths offline and using bilinear interpolation. The policy also employs a 'swap-out-only-once' strategy to minimize PCIe data transfer.",
+    "Result": "Achieves the highest cache hit rate (10-21% improvement over GDSF, 10-17.5% over LRU/LFU) and significantly lower average TTFT (10.5-12.9% lower) by retaining the most valuable and frequently accessed document prefixes in faster memory.",
+    "Related Patterns": "RAGCache, Knowledge Tree, GDSF, LRU, LFU (as baselines).",
+    "Uses": "Deciding which Key-Value tensors to keep in fast memory (GPU) versus slower memory (host) or evict entirely, specifically for order-sensitive intermediate states in RAG systems.",
+    "Thinking": "This is an AI-specific adaptation of a general caching algorithm. The 'prefix-aware' aspect and the 'recomputation cost' estimation, which involves LLM prefill dynamics and token lengths, are directly tied to the characteristics of AI model inference."
+  },
+  {
+    "Pattern Name": "Cache-aware Reordering (for RAG Request Scheduling)",
+    "Problem": "Unpredictable arrival patterns of user requests in RAG systems can lead to suboptimal utilization of the Key-Value (KV) cache, causing frequent cache thrashing and redundant recomputation. Requests referring to the same documents might not be processed consecutively, reducing potential cache hits.",
+    "Context": "RAG serving systems with a shared KV cache for retrieved documents, where multiple user requests are queued for processing by LLMs. The order in which these requests are processed can significantly impact cache efficiency.",
+    "Solution": "Implement a request scheduling algorithm that uses a priority queue to manage incoming RAG requests. Requests are prioritized based on an `OrderPriority` metric calculated as `Cached Length / Computation Length`. This metric favors requests that have a larger portion of their required documents already in the cache relative to the amount of new computation needed. A reordering window is used to ensure fairness and prevent starvation.",
+    "Result": "Improves the overall cache hit rate and decreases the total computation time. Under high request rates, it reduces the average Time-To-First-Token (TTFT) by 12-21%.",
+    "Related Patterns": "RAGCache. It relates to general LLM serving scheduling (e.g., MLFQ in FastServe) but is specifically 'cache-aware' for RAG's document KV cache.",
+    "Uses": "Optimizing the processing order of RAG requests in a multi-user or high-throughput environment to maximize the reuse of cached Key-Value tensors and improve system efficiency.",
+    "Thinking": "This pattern is about optimizing the *scheduling* of AI workloads (RAG requests) based on the *state of an AI-specific cache* (KV cache for documents). The priority metric `Cached Length / Computation Length` is directly derived from the characteristics of LLM inference and its interaction with the RAG cache."
+  },
+  {
+    "Pattern Name": "Dynamic Speculative Pipelining (for RAG)",
+    "Problem": "The retrieval step (often CPU-bound, e.g., vector search) and the LLM generation step (GPU-bound) in RAG systems are typically executed sequentially. This leads to idle GPU resources during retrieval and long end-to-end latency, especially when retrieval itself is time-consuming (e.g., for large or highly accurate vector databases).",
+    "Context": "RAG workflow where external knowledge retrieval and LLM inference are distinct, often hardware-separated, stages. Vector search algorithms can often produce 'candidate' or 'top-k' documents progressively before the final, most accurate set is determined.",
+    "Solution": "Overlap the retrieval and generation steps by splitting the retrieval process into several stages. In each stage, as candidate documents become available from the vector search, they are immediately sent to the LLM engine for 'speculative generation.' If subsequent stages yield different candidate documents, the previous speculative generation is terminated, and a new one begins. If the final retrieved documents match the latest speculative generation, its results are returned directly; otherwise, regeneration occurs. This pipelining is dynamically enabled based on system load (e.g., if retrieved documents change and pending LLM requests are below a maximum batch size).",
+    "Result": "Reduces end-to-end latency by overlapping CPU-bound retrieval with GPU-bound LLM inference. Achieves up to 16% TTFT reduction and decreases non-overlapping vector search time by 15-43%.",
+    "Related Patterns": "RAG workflow, vector search, LLM inference.",
+    "Uses": "Minimizing latency in RAG systems by intelligently overlapping the knowledge retrieval phase with the LLM's generation phase, leveraging early availability of retrieval results for speculative computation.",
+    "Thinking": "This pattern is highly specific to the RAG AI workflow. It leverages the *progressive nature of vector search results* and the *ability of LLMs to perform speculative generation* based on potentially incomplete or preliminary AI inputs. The dynamic control based on system load further refines its AI-specific application."
+  }
+]

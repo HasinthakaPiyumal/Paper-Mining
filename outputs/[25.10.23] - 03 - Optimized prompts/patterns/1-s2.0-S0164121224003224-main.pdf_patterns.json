@@ -1,0 +1,527 @@
+[
+  {
+    "Pattern Name": "Passive Goal Creator",
+    "Problem": "Users may lack expertise of interacting with agents and the provided information can be ambiguous for goal achievement.",
+    "Context": "When querying agents to address certain issues, users provide related context and explain the goals in prompts.",
+    "Solution": "A foundation model-based agent provides a dialogue interface where users can directly specify the context and problems, which are transferred to passive goal creator for goal determination. Meanwhile, the passive goal creator can also retrieve related information from memory including the repository of artefacts being worked on, relevant tools used in recent tasks, conversation histories, and the positive and negative examples which are appended to the users prompt for goalseeking. The generated goals are sent to other components for further task decomposition and completion. In this case, the agent passively receives input from users and generates the strategies to refine and clarify users goals as it only receives the context information directly provided by users. Please note that in multiagent systems an agent can send prompts by invoking the API of another agent to assign specific task while the latter agent analyses the received information and determine the goal.",
+    "Result": {
+      "Benefits": [
+        "Interactivity: Users or other agents can interact with an agent via a dialogue interface or related APIs.",
+        "Goalseeking: The agent can analyse user-provided context and retrieve related information from memory to identify and determine the objectives and create corresponding strategies.",
+        "Efficiency: Users can directly send prompts to the agent through the dialogue interface which is intuitive and easy to use."
+      ],
+      "Drawbacks": [
+        "Reasoning uncertainty: Users may have assorted backgrounds and experiences. Unclear or ambiguous context information may intensify the reasoning uncertainties, especially considering there are no standard prompt requirements."
+      ]
+    },
+    "Related Patterns": [
+      "Proactive Goal Creator",
+      "Prompt-Response Optimiser"
+    ],
+    "Uses": [
+      "Liu et al. (2023a) designed an agent that can communicate with users and help refine research questions via a dialogue interface.",
+      "Kannan et al. (2023) proposed an agent for users to decompose and allocate tasks to robots through a dialogue interface.",
+      "HuggingGPT can generate responses to address user requests via a chatbot. Users requests including complex intents can be interpreted as their intended goals."
+    ],
+    "Thinking": "Identified from section 4.1. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Proactive Goal Creator",
+    "Problem": "The context information collected via solely a dialogue interface may be limited and result in inaccurate responses to users goals.",
+    "Context": "Users explain the goals that the agent is expected to achieve in the prompt.",
+    "Solution": "In addition to the prompts received from dialogue interface and relevant context retrieved from memory, the proactive goal creator can anticipate users goals by sending requirements to detectors which will then capture and return the users surroundings with multimodal context information for further analysis and comprehension to generate the goals (for instance, identifying the users gestures through cameras, recognising application UI layout via screenshots, etc.). Please note the proactive goal creator should notify users about context capturing and other relevant issues with a low false positive rate to avoid unnecessary interruptions. In addition, the captured environment information can be stored in the agents memory or knowledge base to establish world models (Ha and Schmidhuber, 2018; LeCun, 2022) to continuously improve its ability to comprehend the real world.",
+    "Result": {
+      "Benefits": [
+        "Interactivity: An agent can interact with users or other agents by anticipating their decisions proactively with captured multimodal context information.",
+        "Goalseeking: The multimodal input can provide more detailed information for the agent to understand users goals and increase the accuracy and completeness of goal achievement.",
+        "Accessibility: Additional tools can help capture the sentiments and other context information from disabled users, ensuring accessibility and broadening the human values of foundation model-based agents."
+      ],
+      "Drawbacks": [
+        "Overhead: i) Proactive goal creator is enabled by the multimodal context information captured by relevant tools which may increase the cost of the agent. ii) Limited context information may increase the communication overhead between users and agents."
+      ]
+    },
+    "Related Patterns": [
+      "Passive Goal Creator",
+      "Prompt-Response Optimiser",
+      "Multimodal Guardrails"
+    ],
+    "Uses": [
+      "GestureGPT (Zeng et al., 2023) can decipher users hand gesture descriptions and hence comprehend users intents.",
+      "Zhao et al. (2023b) proposed a programming screencast analysis tool that can extract the coding steps and code snippets.",
+      "ProAgent (Zhang et al., 2023b) can observe the behaviours of other teammate agents, deduce their intentions and adjust the planning accordingly."
+    ],
+    "Thinking": "Identified from section 4.2. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Prompt-Response Optimiser",
+    "Problem": "How to generate effective prompts and standardised responses that are aligned with users goals or objectives?",
+    "Context": "Users may struggle with writing effective prompts, especially considering the injection of comprehensive context. Similarly, it may be difficult for users to understand the agents outputs in certain cases.",
+    "Solution": "A user may input initial prompts to the agent, however such prompts may be ineffective due to the lack of relevant context, unintentional injection attacks, redundancy, etc. In this regard, prompt-response optimiser can construct refined prompts and responses adhering to predefined constraints and specifications. These constraints and specifications outline the desired content and format for the inputs and outputs, ensuring alignment with the ultimate goal. A prompt or response template is often used in the prompt-response optimiser as a factory for creating specific instances of prompts or responses (Zhao et al., 2023a; Schumann et al., 2023). This template offers a structured approach to standardise the queries and responses, improving the accuracy of the responses and facilitate their interoperations with external tools or agents. For instance, a prompt template can contain the instructions to an agent, some examples for few-shot learning, and the question/goal for the agent to work.",
+    "Result": {
+      "Benefits": [
+        "Standardisation: Prompt-response optimiser can create standardised prompts and responses regarding the requirements specified in the template.",
+        "Goal alignment: The optimised prompts and responses adhere to user-defined conditions, hence they can achieve higher accuracy and relevance to the goals.",
+        "Interoperability: Interoperability between agent and external tools is facilitated by prompt-response optimiser which can provide consistent and well-defined prompts and responses for task execution.",
+        "Adaptability: Prompt-response optimiser can accommodate different constraints, specifications, or domain-specific requirements by refining the template with a knowledge base."
+      ],
+      "Drawbacks": [
+        "Underspecification: In certain cases, it may be difficult for prompt-response optimiser to capture and incorporate all relevant contextual information effectively, especially considering the ambiguity of users input and dependency on context engineering. Consequently, the optimiser may struggle to generate appropriate prompts or responses.",
+        "Maintenance overhead: Updating and maintaining prompt or response templates may cause significant overhead. Changes in requirements may necessitate modifying multiple templates which is time-consuming and error-prone."
+      ]
+    },
+    "Related Patterns": [
+      "Passive Goal Creator",
+      "Proactive Goal Creator",
+      "Self-Reflection",
+      "Cross-Reflection",
+      "Human Reflection",
+      "Agent Adapter"
+    ],
+    "Uses": [
+      "LangChain provides prompt templates for practitioners to develop custom foundation model-based agents.",
+      "Amazon Bedrock allows users to configure prompt templates, defining how the agent should evaluate and use the prompts.",
+      "Dialogflow allows users to create generators to specify agent behaviours and responses at runtime."
+    ],
+    "Thinking": "Identified from section 4.3. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Retrieval Augmented Generation (RAG)",
+    "Problem": "Given a task, how can agents conduct reasoning with data/knowledge that are not learned by the foundation models through model training?",
+    "Context": "Large foundational model-based agents are not equipped with knowledge related to explicitly specific domains, especially on highly confidential and privacy-sensitive local data, unless they are fine-tuned for pre-trained using domain data.",
+    "Solution": "RAG is a technique for enhancing the accuracy and reliability of agents with facts retrieved from other sources (internal or online data). The knowledge gaps where the agents are lacking in memory are filled using the parameterised knowledge generated in vector databases. For instance, after plan generation, specific tasks may require information that is not within the original agent memory. The agent can hence retrieve information from the parameterised knowledge and use for task completion, while the augmented responses will be returned back to the user after optimisation. In particular, the implementation of RAG consists of the following steps: i) Determine the data sources; ii) Define the data structure for indexing raw data (i.e., text, image, video, and audio) into embeddings or knowledge graphs; iii) Given a certain query, task executor encodes this query and searches the knowledge base (e.g., vector store) to retrieve the most relevant information; iv) Task executor processes the obtained data through re-ranking and filtering to produce a more informed and accurate response. The retrieval process requires zero pre-training or fine-tuning of the model served by the agent, which preserves the data privacy of local data, reduces training and computation costs, and also provides up-to-date and more precise information required. The retrieved local data can be sent back to the agent via prompts (need to consider the context window size), whereas the agent is able to process the information and generate plans via in-context learning. Currently, there is a cluster of RAG techniques focusing on various enhancement aspects, data sources, and applications (Hu and Lu, 2024), for instance, federated RAG (Wang et al., 2024a), graph RAG (Larson and Truitt, 2024), etc. Further, Retrieval Interleaved Generation can be considered a related technique of RAG where the agent can dynamically access external knowledge throughout the response generation phase.",
+    "Result": {
+      "Benefits": [
+        "Knowledge retrieval: Agents can search and retrieve knowledge related to the given tasks, which ensures the reliability of reasoning steps.",
+        "Updatability: The prompts/responses generated using RAG by the agent on internal or online data are updatable by the complimentary parameterised knowledge.",
+        "Data privacy: The agent can retrieve additional knowledge from local data stores, which ensures data privacy and security.",
+        "Cost-efficiency: Under the data privacy constraint, RAG can provide essential knowledge to the agent without training a new foundation model entirely. This reduced the training costs."
+      ],
+      "Drawbacks": [
+        "Maintenance overhead: Maintenance and update of the parameterised knowledge in the vector store requires additional computation and storage costs.",
+        "Data limitation: The agents still mainly rely on the data it has been trained on to generate prompts. This can impact the quality and accuracy of the generated content in those specific domains."
+      ]
+    },
+    "Related Patterns": [
+      "Retrieval augmented generation can complement all other patterns by providing extra context information from the local datastore."
+    ],
+    "Uses": [
+      "LinkedIn applies RAG to construct the pipeline of foundation model-based agents which can search appropriate case studies to respond users.",
+      "Yan et al. (2024b) devise a retrieval evaluator which can output a confidence degree after assessing the quality of retrieved data. The solution can improve the robustness and overall performance of RAG for agents.",
+      "Levonian et al. (2023) apply RAG with GPT-3.5, developing an agent that can retrieve the contents of a high-quality open-source math textbook to generate responses to students."
+    ],
+    "Thinking": "Identified from section 4.4. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "One-shot Model Querying",
+    "Problem": "How can the agent generate the steps for a plan efficiently?",
+    "Context": "When users interact with the agent for specific goals, the included foundation model is queried for plan generation.",
+    "Solution": "In this scenario, the agent queries the incorporated foundation model to generate a corresponding plan based on user-specified goals and constraints. The foundation model is only queried for once in regard to the users requirements (e.g., limited budget) to comprehend the provided inputs. In this manner, the agent can devise a multi-step plan to achieve a broad goal and provide a holistic explanation for this plan without delving into detailed reasoning steps. Please note that this pattern is applicable when other components query the integrated foundation model.",
+    "Result": {
+      "Benefits": [
+        "Efficiency: The agent can generate a plan to achieve users goals by querying the underlying foundation model only once, which saves consumed time.",
+        "Cost-efficiency: Users expenses can be reduced since the foundation model is queried for one time.",
+        "Simplicity: One-shot model querying can satisfy the tasks that do not require complex action plans."
+      ],
+      "Drawbacks": [
+        "Oversimplification: For complex tasks, one-shot model querying may not be able to fully capture all requirements at one time, hence oversimplifying the tasks and cannot return a correct response.",
+        "Lack of explainability: One-shot model querying may suffer the lack of explainability as the incorporated foundation model is queried only once, which may not provide detailed reasoning steps for plan generation.",
+        "Size of the context window: The response quality may be constrained considering the foundation models current capability of handling long conversational contexts and the token limits."
+      ]
+    },
+    "Related Patterns": [
+      "Incremental Model Querying",
+      "Single-path Plan Generator",
+      "Multimodal Guardrails"
+    ],
+    "Uses": [
+      "One-shot model querying can be considered configuration or use by default when a user is leveraging a foundation model, while CoT and Zero-shot-CoT both exemplify this pattern (Wang et al., 2024b, 2023d)."
+    ],
+    "Thinking": "Identified from section 4.5. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Incremental Model Querying",
+    "Problem": "The foundation model may struggle to generate the correct response at the first attempt. How can the agent conduct an accurate reasoning process?",
+    "Context": "When users interact with the agent for specific goals, the included foundation model is queried for plan generation.",
+    "Solution": "The agent could engage in a step-by-step reasoning process to develop the plan for goal achievement with multiple queries to the foundation model. Meanwhile, human feedback can be provided at any time to both the reasoning process and generated plan, and adjustments can be made accordingly during model querying. The number of queries can be predefined in agent configuration or determined in user prompts. Please note that incremental model querying can rely on a reusable template which guides the process through context injection or an explicit workflow/plan repository and management system. This pattern is applicable when other components query the integrated foundation model.",
+    "Result": {
+      "Benefits": [
+        "Supplementary context: Incremental model querying allows users to split the context in multiple prompts to address the issue of limited context window.",
+        "Reasoning certainty: Foundation models will iteratively refine the reasoning steps by self-checking or feedback from users.",
+        "Explainability: Users can query the foundation model to provide detailed reasoning steps through incremental model querying."
+      ],
+      "Drawbacks": [
+        "Overhead: i) Incremental model querying requires multiple interactions with the foundation model, which may increase the time consumption for planning determination. ii) The high volume of user queries may be cost-intensive when utilising commercial foundation models."
+      ]
+    },
+    "Related Patterns": [
+      "One-shot Model Querying",
+      "Multi-path Plan Generator",
+      "Self-Reflection",
+      "Human Reflection",
+      "Multimodal Guardrails"
+    ],
+    "Uses": [
+      "HuggingGPT: The underlying foundation model of HuggingGPT is queried multiple times to decompose users requests into fine-grained tasks and then determine the dependencies and execution orders of tasks (Shen et al., 2023).",
+      "EcoAssistant (Zhang et al., 2023a) applies a code executor interacting with the foundation model to iteratively refine code.",
+      "ReWOO (Xu et al., 2023) queries the foundation model to i) generate a list of interdependent plans and ii) combine the observation evidence fetched from tools with the corresponding task."
+    ],
+    "Thinking": "Identified from section 4.6. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Single-path Plan Generator",
+    "Problem": "How can an agent efficiently formulate the strategies to achieve users goals?",
+    "Context": "An agent is considered black box to users while users may care about the process of how an agent achieve users goals.",
+    "Solution": "After receiving and comprehending users goals, the single-path plan generator can coordinate the creation of a plan for other agents or tools and prioritise the tasks to progressively lead towards goal accomplishment. Specifically, the plan generation process requires inference and reasoning that whether intermediate steps are actionable and optimal. Each step in this process is designed to have only a single subsequent step, forming a linear and direct plan, such as Chain-of-Thought (CoT) (Wei et al., 2022). Self-consistency is employed to confirm with the foundation model several times and select the most consistent answer as the final decision (Wang et al., 2023b). Please note that the generated plan may have different granularity based on the given goal that complex plans may incorporate multiple workflows, processes, tasks, and fine-grained steps.",
+    "Result": {
+      "Benefits": [
+        "Reasoning certainty: Single-path plan generator generates a multi-step plan which can reflect the reasoning process and mitigate the uncertainty or ambiguity for achieving users goals.",
+        "Coherence: The interacting users, agents, and tools are provided a clear and coherent path towards the ultimate goals.",
+        "Efficiency: Single-path plan generator can increase efficiency in agents via pruning unnecessary steps or distractions."
+      ],
+      "Drawbacks": [
+        "Flexibility: A single-path plan may result in limited flexibility to accommodate diverse user preferences or application scenarios, hence users cannot customise their solutions.",
+        "Oversimplification: The agent may oversimplify the generated plan which requires multifaceted approaches."
+      ]
+    },
+    "Related Patterns": [
+      "One-shot Model Querying",
+      "Multi-path Plan Generator",
+      "Self-Reflection"
+    ],
+    "Uses": [
+      "LlamaIndex fine-tunes a ReAct Agent to achieve better performance with single-path plan generator via CoT.",
+      "ThinkGPT provides a toolkit to facilitate the implementation of single-path plan generator pattern.",
+      "Zhang et al. (2023c) promote the implementation by elucidating the basic mechanisms and paradigm shift of CoT."
+    ],
+    "Thinking": "Identified from section 4.7. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Multi-path Plan Generator",
+    "Problem": "How can an agent generate a high-quality, coherent, and efficient solution considering inclusiveness and diversity when presented with a complex task or problem?",
+    "Context": "An agent is considered black box to users while users may care about the process of how an agent achieve users goals.",
+    "Solution": "Based on single-path plan generator, multi-path plan generator can create multiple choices at each step towards the achievement of goals, which requires the underlying foundation model to tease out the eligible and actionable activities for each choice in the previous step. Specifically, users preferences may influence the subsequent intermediate steps, leading to different eventual plans. The employment of involved agents and tools will be adjusted accordingly. Tree-of-Thoughts (Yao et al., 2024) exemplifies this design pattern.",
+    "Result": {
+      "Benefits": [
+        "Reasoning certainty: Multi-path plan generator can generate a plan with multiple choices of intermediate steps to resolve the uncertainty or ambiguity within reasoning process.",
+        "Coherence: The interacting users, agents, and tools are provided a clear and coherent path towards the ultimate goals.",
+        "Alignment to human preference: Users can confirm each intermediate step to finalise the planning, hence human preferences are absorbed in the generated customised strategy.",
+        "Inclusiveness: The agent can specify multiple directions in the reasoning process for complex tasks."
+      ],
+      "Drawbacks": [
+        "Overhead: Task decomposition and multi-plan generation may increase the communication overhead between the user and agent."
+      ]
+    },
+    "Related Patterns": [
+      "Incremental Model Querying",
+      "Single-path Plan Generator",
+      "Human Reflection"
+    ],
+    "Uses": [
+      "AutoGPT can make informed decisions by incorporating Tree-of-Thoughts as the multi-path plan generator.",
+      "Gemini: For a task, Gemini can generate multiple choices for users to decide. Upon receiving users responses, Gemini will provide multiple choices for the next step.",
+      "OpenAI: GPT-4 was leveraged to implement a multi-path plan generator based on Tree-of-Thoughts."
+    ],
+    "Thinking": "Identified from section 4.8. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Self-Reflection",
+    "Problem": "A generated plan may be affected by hallucinations of the foundation model, how to review the plan and reasoning steps and incorporate feedback efficiently?",
+    "Context": "Given users goals and requirements, the agent will generate a plan to decompose the goals into a set of tasks for achieving the goals.",
+    "Solution": "Reflection is an optimisation process formalised to iteratively review and refine the reasoning process and generated contents of the agent. The user prompts specific goals to the agent, which then generates a plan to accomplish users requirements. Subsequently, the user can instruct the agent to reflect on the plan and the corresponding reasoning process. The agent will backtrack the inference process to verify whether certain intermediate results are incorrect and hence misleading all subsequent steps, then adjust and align its reasoning process to create a refined plan accordingly. Such reflection processes and results can be saved in the agents memory for continuous learning. The finalised plan will be carried out step by step. Self-consistency (Huang et al., 2022a) exemplifies this pattern.",
+    "Result": {
+      "Benefits": [
+        "Reasoning certainty: Agents can evaluate their own responses and reasoning procedure to check whether there are any errors or inappropriate outputs and make refinement accordingly.",
+        "Explainability: Self-reflection allows the agent to review and explain its reasoning process to users, facilitating better comprehension of the agents decision-making process.",
+        "Continuous improvement: The agent can continuously update the memory or knowledge base and the manner of formalising the prompts and knowledge to provide more reliable and coherent output to users without or with fewer reflection steps.",
+        "Efficiency: On one hand, it is time-saving for the agent to self-evaluate its response as no additional communication overhead is cost compared to other reflection patterns. On the other hand, the agent can provide more accurate responses in the future to reduce the overall reasoning time consumption considering the continuous improvement."
+      ],
+      "Drawbacks": [
+        "Reasoning uncertainty: The evaluation result is dependent on the complexity of self-reflection and the agents competence in assessing its generated responses.",
+        "Overhead: i) Self-reflection can increase the complexity of an agent, which may affect the overall performance. ii) Refining and maintaining agents with self-reflection capabilities requires specialised expertise and development process."
+      ]
+    },
+    "Related Patterns": [
+      "Prompt-Response Optimiser",
+      "Incremental Model Querying",
+      "Single-path Plan Generator"
+    ],
+    "Uses": [
+      "Reflexion (Shinn et al., 2023) employs a self-reflection model which can generate nuanced and concrete feedback based on the success status, current trajectory, and persistent memory.",
+      "Bidder agent (Chen et al., 2023b): A replanning module in this agent utilises self-reflection to create new textual plans based on the auctions status and new context information.",
+      "Generative agents (Park et al., 2023): Agents perform reflection two or three times a day by first determining the objective of reflection according to the recent activities, then generating a reflection which will be stored in the memory stream."
+    ],
+    "Thinking": "Identified from section 4.9. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Cross-Reflection",
+    "Problem": "When an agent has limited capability and cannot conduct reflection with satisfying performance, how to evaluate the output and reasoning steps of this agent?",
+    "Context": "The agent generates a plan to achieve users goals while the quality of this devised plan should be assessed.",
+    "Solution": "If an agent cannot generate accurate results or precise planning steps via reflecting its outputs, users can prompt the agent to query another agent which is specialised in reflection. The latter agent can review and evaluate the logged outputs and relevant reasoning steps of the original agent and provide refinement suggestions. This process can be iterative until the reflective agent confirms the plan. In addition, multiple agents can be queried for reflection to generate comprehensive responses.",
+    "Result": {
+      "Benefits": [
+        "Reasoning certainty: The agents outputs and respective methodology are assessed and refined by other agents to ensure the reasoning certainty and response accuracy.",
+        "Explainability: Multiple agents can be employed to review the reasoning process of the original agent, providing thorough explanations to the user.",
+        "Inclusiveness: The reflective feedback includes different reasoning outputs when multiple agents are queried, which can help formalise a comprehensive refinement suggestion.",
+        "Scalability: Cross-reflection supports scalable agent-based systems as the reflective agents can be flexibly updated without disrupting the system operation."
+      ],
+      "Drawbacks": [
+        "Reasoning uncertainty: The overall response quality and reliability are dependent on the performance of other reflective agents.",
+        "Fairness preservation: When various agents participate in the reflection process, a critical issue would be how to preserve fairness among all the provided feedback.",
+        "Complex accountability: If the cross-reflection feedback causes serious or harmful results, the accountability process may be complex when multiple agents are employed.",
+        "Overhead: i) There will be communication overhead for the interactions between agents. ii) Users may need to pay for utilising the reflective agents."
+      ]
+    },
+    "Related Patterns": [
+      "Prompt-Response Optimiser",
+      "Voting-based Cooperation",
+      "Role-based Cooperation",
+      "Debate-based Cooperation",
+      "Tool-Agent Registry"
+    ],
+    "Uses": [
+      "XAgent: In XAgent, the tool agent can send feedback and reflection to the plan agent to indicate whether a task is completed or pinpoint the refinements.",
+      "Yao et al. (2023) explore agents capability of learning through communicating with each other. A thinker agent can provide suggestions to an actor agent who is responsible for decision-making.",
+      "Qian et al. (2023) develop a virtual software development company based on agents where the tester agents can detect bugs and report to programmer agents.",
+      "Talebirad and Nadiri (2023) analyse the inter-agent feedback which involves criticism of each other, which can help agents adapt their strategies."
+    ],
+    "Thinking": "Identified from section 4.10. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Human Reflection",
+    "Problem": "How to ensure human preference is fully and correctly captured and integrated into the reasoning process and generated plans?",
+    "Context": "Agents create plans and strategies that decompose users goals and requirements into a pool of tasks. The tasks will be completed by other tools and agents.",
+    "Solution": "When a user prompts his/her goals and specified constraints, the agent first creates a plan consisting of a series of intermediate steps. The constructed plan and its reasoning process logs can be presented to the user for review or sent to other human experts to validate the feasibility and usefulness. The user or expert can provide comments or suggestions to indicate which steps can be updated or replaced. The plan will be iteratively assessed and improved until it is approved by the user/expert.",
+    "Result": {
+      "Benefits": [
+        "Alignment to human preference: The agent can directly receive feedback from users or additional human experts to understand human preferences and improve the outcomes or procedural fairness, diversity in the results, etc.",
+        "Contestability: Users or human experts can challenge the agents outcomes immediately if abnormal behaviours or responses are found.",
+        "Effectiveness: Human-reflection allows agents to include users perspectives for plan refinement, which can help formalise responses tailored to users specific needs and level of understanding. This can ensure the usability of strategies and improve the effectiveness for achieving users goals."
+      ],
+      "Drawbacks": [
+        "Fairness preservation: The agent may be affected by users who provide skewed information about the real world.",
+        "Limited capability: Agents may still have limited capability to understand human emotions and experiences.",
+        "Underspecification: Users may provide limited or ambiguous reflective feedback to agents.",
+        "Overhead: Users may need to pay for the multiple rounds of communication with the agent."
+      ]
+    },
+    "Related Patterns": [
+      "Prompt-Response Optimiser",
+      "Multi-path Plan Generator",
+      "Incremental Model Querying"
+    ],
+    "Uses": [
+      "Inner Monologue (Huang et al., 2022b) is implemented in a robotic system which can decompose users instructions into actionable steps and leverage human feedback for object recognition.",
+      "Ma et al. (2024) explore the deliberation between users and agents for decision-making. Users and agents both need to provide related evidence and arguments for their conflicting opinions.",
+      "Wang et al. (2023a) incorporate human feedback for agents to capture the dynamic evolution of user interests and consequently provide more accurate recommendations."
+    ],
+    "Thinking": "Identified from section 4.11. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Voting-based Cooperation",
+    "Problem": "How to finalise the agents decisions properly to ensure fairness among different agents?",
+    "Context": "Multiple agents can be leveraged within a compound AI system. Agents need to collaborate on the same task while having their own perspectives.",
+    "Solution": "An agent can first generate a candidate response to the users prompts, then it holds a vote in which different reflective suggestions are presented as choices. Additional agents are requested to submit their votes to select the most appropriate feedback according to their capabilities and experiences. In this circumstance, agents communicate in a centralised manner that the original agent will act as a coordinator. The voting result will be formalised and sent back to the original agent who can refine the response accordingly before answering the user. Please note that the voting process can be implemented through various methods (e.g., direct communications between the agent-as-a-coordinator and other agents, blockchain-based smart contracts, etc.). Moreover, the identity management of all participating agents is significant to ensure the traceability and verifiability of votes.",
+    "Result": {
+      "Benefits": [
+        "Fairness: Votes can be held in multiple ways to preserve fairness. For instance, counting heads to ensure agents rights are equal or weights can be distributed considering the roles of agents, etc.",
+        "Accountability: The overall procedure and final results are recorded in the respective voting system. Stakeholders can trace back to identify the accountable agents selecting certain options.",
+        "Collective intelligence: The finalised decisions after votes can leverage the strengths of multiple agents (e.g., comprehensive knowledge base), hence they are regarded as more accurate and reliable than the ones generated by a single agent."
+      ],
+      "Drawbacks": [
+        "Centralisation: Specific agents may gain the majority of decision rights and hence have the ability to compromise the voting process.",
+        "Overhead: Hosting a vote may increase the communication overhead for agents to examine and vote for the choices."
+      ]
+    },
+    "Related Patterns": [
+      "Cross-Reflection",
+      "Role-based Cooperation",
+      "Debate-based Cooperation",
+      "Tool-Agent Registry"
+    ],
+    "Uses": [
+      "Hamilton (2023) utilises nine agents to simulate court where the agents need to vote for the received cases. Each case is determined by the dominant voting result.",
+      "ChatEval (Chan et al., 2024): Agents can reach consensus on users prompts via voting, while the voting results can be totalled by calculating either the majority vote or the average score.",
+      "Yang et al. (2024b) explore the alignment of agent voters based on GPT-4 and LLaMA-2 and human voters on 24 urban projects. The results indicate that agent voters tend to have uniform choices while human voters have diverse preferences.",
+      "Li et al. (2024) incrementally query a foundation model to generate N samples and leverage multiple agents to select a finale response via majority voting."
+    ],
+    "Thinking": "Identified from section 4.12. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Role-based Cooperation",
+    "Problem": "How can agents cooperate on certain tasks considering their specialties?",
+    "Context": "Multiple agents can be leveraged within a compound AI system. Agents need to collaborate on the same task while having their own perspectives.",
+    "Solution": "Agents can be assigned certain roles and hence establishing a workflow via persona specification, task definition, tool employment, and process orchestration. For example, an agent-as-a-planner can generate a multi-step plan by decomposing users goal into a chain of tasks. Subsequently, the agent-as-an-assigner can orchestrate task assignment (i.e., some tasks can be completed by the assigner itself while other tasks can be delegated to certain agent-as-a-worker based on their domain-specific capabilities and expertise). In addition, if there is no available agent, agent-as-a-creator can be invoked to create a new agent with a specific role by providing necessary resources, clear objectives, and initial guidance to ensure a seamless transition of tasks and responsibilities. Please note that more elaborate roles can be defined and assigned to the agents.",
+    "Result": {
+      "Benefits": [
+        "Division of labour: Agents can simulate the division of labour in the real world according to their roles, which enables the observation of social phenomena.",
+        "Fault tolerance: Since multiple agents are leveraged, the system can continue operation by replacing inactive agents with other agents of the same role.",
+        "Scalability: Agents of new roles can be employed or created any time to refine the task workflow and extend the capability of the whole system.",
+        "Accountability: Accountability is facilitated as the responsibilities of agents are attributed clearly regarding their expected roles."
+      ],
+      "Drawbacks": [
+        "Overhead: Cooperation between agents will increase communication overhead while agent services with different roles may have different prices."
+      ]
+    },
+    "Related Patterns": [
+      "Cross-Reflection",
+      "Voting-based Cooperation",
+      "Debate-based Cooperation",
+      "Tool-Agent Registry"
+    ],
+    "Uses": [
+      "XAgent consists of three main parts: planner agent for task generation, dispatcher agent for task assignment, and tool agent for task completion.",
+      "MetaGPT (Hong et al., 2023) utilises various agents acting as different roles (e.g., architect, project manager, engineer) in standardised operating procedures.",
+      "MedAgents (Tang et al., 2023): Agents are assigned roles as various domain experts (e.g., cardiology, surgery, gastroenterology) to provide specialised analysis and collaboratively work on health care issues.",
+      "Wang et al. (2024c) propose Mixture-of-Agents where proposer agents provide useful reference responses to aggregator agents, and the aggregator agents are composed in layers to synthesise and refine the responses."
+    ],
+    "Thinking": "Identified from section 4.13. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Debate-based Cooperation",
+    "Problem": "How to leverage multiple agents to create refined responses while facilitating the evolution of agents?",
+    "Context": "A compound AI system can integrate multiple agents to provide more comprehensive services. The included agents need to collaborate on the same task while having their own perspectives.",
+    "Solution": "A user can send queries to an agent which will then share the questions with other agents. Given the shared question, each agent generates its own initial responses, and subsequently a round of debate will start between the agents. Agents will propagate their initial response in a decentralised manner to each other for verification, while also providing instructions and potential directions to construct a more comprehensive response based on inclusive and collective outcomes. In addition, agents may utilise a shared memory in certain circumstances or allow each other to access the respective memory for facilitating the debate. This debate process can be iterative to enhance the performance of all participating agents. Debate-based cooperation can end according to a predefined number of debate rounds or the agents will continue the procedure until a consensus answer is obtained.",
+    "Result": {
+      "Benefits": [
+        "Adaptability: Agents can adapt to other agents during the debate procedure, achieving continuous learning and evolution.",
+        "Explainability: Debate-based cooperation is structured with agents arguments and presented evidence, preserving transparency and explainability of the whole procedure.",
+        "Critical thinking: Arguing with other agents can help an agent develop the ability of critical thinking for future reasoning process."
+      ],
+      "Drawbacks": [
+        "Limited capability: The effectiveness of debate-based cooperation relies on agents capabilities of reasoning, argument, and evaluation of other agents statement.",
+        "Data privacy: Agents may need to withhold certain sensitive information, which can affect the debate process.",
+        "Overhead: The complexity of debate may increase the communication and computation overhead.",
+        "Scalability preservation: The system scalability may be affected as the number of participating agents increases. The coordination of agents and processing of their arguments may become complex."
+      ]
+    },
+    "Related Patterns": [
+      "Cross-Reflection",
+      "Voting-based Cooperation",
+      "Role-based Cooperation",
+      "Tool-Agent Registry"
+    ],
+    "Uses": [
+      "crewAI provides a multi-agent orchestration framework where multiple agents can be grouped for discussion on a given topic.",
+      "Liang et al. (2023) leverage multi-agent debate to address the issue of Degeneration-of-Thought. Within the debate, an agent needs to persuade another and correct the mistakes.",
+      "Du et al. (2023) employ multiple agents to discuss the given user input, and the experiment results indicate that the agents can converge on a consensus answer after multiple rounds.",
+      "Chen et al. (2023a) explore the negotiation process in a multi-agent system where each agent can perceive the outcomes of other agents and adjust its own strategies.",
+      "Li et al. (2023) propose a framework including peer rank and discussion between agents to mitigate the biases in automated evaluation process."
+    ],
+    "Thinking": "Identified from section 4.14. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Multimodal Guardrails",
+    "Problem": "How to prevent the foundation model from being influenced by adversarial inputs or generate harmful or undesirable outputs to users and other components?",
+    "Context": "An agent consists of foundation model and other components. When users prompt specific goals to the agent, the underlying foundation model is queried for goal achievement.",
+    "Solution": "Guardrails can be applied as an intermediate layer between the foundation model and all other components in a compound AI system. When users input prompts or other components (e.g., memory) send any message to the foundation model, guardrails can first verify whether the information meets specific predefined requirements. Only valid information are delivered to the foundation model, while risky or sensitive data will be processed before being transferred. For instance, personally identifiable information should be treated with care or removed to protect privacy. Guardrails can evaluate the contents either relying on predefined examples or in a reference-free manner. Equivalently, when the foundation model creates results, guardrails need to ensure that the responses do not include biased or irrespective information to users or fulfil the particular requirements of other system components. Please note that a set of guardrails can be implemented where each of them is responsible for specialised interactions (e.g., information retrieval from datastore, validation of users input, external API invocation, etc.). Meanwhile, guardrails are capable of processing multimodal data such as text, audio, video to provide comprehensive monitoring and control.",
+    "Result": {
+      "Benefits": [
+        "Robustness: Guardrails preserve the robustness of foundation models by filtering the inappropriate context information.",
+        "Safety: Guardrails serve as validators of foundation model outcomes, ensuring the generated responses do not harm agent users.",
+        "Standard alignment: Guardrails can be configured referring to organisational policies and strategies, ethical standards, and legal requirements to regulate the behaviours of foundation models.",
+        "Adaptability: Guardrails can be implemented across various foundation models and agents and deployed with customised requirements."
+      ],
+      "Drawbacks": [
+        "Overhead: i) Collecting diverse and high-quality corpus to develop multimodal guardrails may be resource-intensive. ii) Real-time processing multimodal data can increase the computational requirements and costs.",
+        "Lack of explainability: The complexity of multimodal guardrails makes it difficult to explain the finalised outputs."
+      ]
+    },
+    "Related Patterns": [
+      "Proactive Goal Creator",
+      "One-shot Model Querying",
+      "Incremental Model Querying"
+    ],
+    "Uses": [
+      "NeMo guardrails (Rebedea et al., 2023): NVIDIA released NeMo guardrails which are specifically designed to ensure the coherency of dialogue between users and AI systems and prevent negative impact of misinformation and sensitive topics.",
+      "Llama guard (Inan et al., 2023): Meta published Llama guard, a foundation model-based safeguard model fine-tuned via a safety risk taxonomy. Llama guard can identify the potentially risky or violating content in users prompts and model outputs.",
+      "Guardrails AI provides a hub listing various validators for handling different risks in the inputs and outputs of foundation models."
+    ],
+    "Thinking": "Identified from section 4.15. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Tool-Agent Registry",
+    "Problem": "There are diverse agents and tools, how can the agent efficiently select the appropriate external agents and tools?",
+    "Context": "Within an agent, the task executor may cooperate with other agents or leverage external tools for expanded capabilities.",
+    "Solution": "A user prompts goals to an agent which then decomposes the goals into fine-grained tasks. The agent can query the tool-agent registry which is the main entry point for collecting and categorising various tools and agents regarding a series of metrics (e.g., domain-specific capability, price, context window). Based on the returned information, the agent can employ and assign the tasks to respective tools and agents. Please note that a registry can be implemented in different manners (for instance, a coordinator agent with specific knowledge base, blockchain-based smart contract, etc.) and a registry can be extended into a marketplace for tool-agent service trading.",
+    "Result": {
+      "Benefits": [
+        "Discoverability: The registry provides a catalogue for users and agents to discover tools and agents with different capabilities.",
+        "Efficiency: The registry offers an intuitive inventory listing the attributes (e.g., performance, price) of tools and agents, which saves time for comparison.",
+        "Tool appropriateness: Given the task requirements and conditions, users and agents can select the most appropriate tools/agents according to the provided attributes.",
+        "Scalability: The registry only stores certain metadata about tools and agents, hence the data structure is simple and lightweight, which ensures the scalability of the registry."
+      ],
+      "Drawbacks": [
+        "Centralisation: The registry may become a vendor lock-in solution and cause single point of failure. It may be manipulated and compromised if it is maintained by external entities.",
+        "Overhead: Implementing and maintaining a tool-agent registry can introduce additional complexity and overhead."
+      ]
+    },
+    "Related Patterns": [
+      "Cross-Reflection",
+      "Voting-based Cooperation",
+      "Role-based Cooperation",
+      "Debate-based Cooperation",
+      "Agent Adapter"
+    ],
+    "Uses": [
+      "GPTStore provides a catalogue for searching ChatGPT-based agents.",
+      "TPTU (Ruan et al., 2023) incorporates a toolset to broaden the capabilities of AI Agents.",
+      "VOYAGER (Wang et al., 2023c) can store action programs and hence incrementally establish a skill library for reusability.",
+      "OpenAgents (Xie et al., 2023): An agent is specifically developed to manage the API invocation of plugins."
+    ],
+    "Thinking": "Identified from section 4.16. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Agent Adapter",
+    "Problem": "The agent needs to deal with different interfaces of diverse tools while certain interfaces might be incompatible or inefficient to interact for the agent. How can the agent assign tasks to external tools and process the results?",
+    "Context": "An agent may leverage external tools to complete certain tasks for expanded capabilities.",
+    "Solution": "Given users instructions, the agent generates a plan consisting of a set of tasks to achieve the users goals. In particular, the agent may employ diverse external tools to complete different tasks. However, tools have respective interfaces which can be of different abstraction levels for the agent to deal with or have specific format requirements, etc. Agent adapter can help invoke and manage these interfaces by converting the agent messages into required format or content and vice versa. In particular, the adapter can retrieve tool manual or tutorial from datastore to acquire available interfaces and learn the usage. It then transforms the agent outputs based on the interface requirements and invokes the service (Qu et al., 2024). Please note that fine-grained interface description can enhance agent understanding and hence improve the performance. The adapter also receives execution results from tools which will be sent to the underlying foundation model for further analysis (e.g., task assignment to other tools, self-reflection for tool employment). For instance, the adapter can translate tasks into system messages when interacting with local file system or capture and operate graphical user interface when playing a video game.",
+    "Result": {
+      "Benefits": [
+        "Interoperability: Agent adapter facilitates the interoperation between an agent and external tools.",
+        "Adaptability: Agents can employ new tools via agent adapter which can acquire and convert the tool API via corresponding manual or tutorial.",
+        "Reduced development cost: Agent adapter enables autonomous conversion of interfaces, there is no need to develop compatible interfaces for different tools, hence the development cost is reduced."
+      ],
+      "Drawbacks": [
+        "Maintenance overhead: i) Agent adapter itself requires proper maintenance and evaluation to ensure the correctness of outputs. ii) Agent adapter may need additional memory or external data store to record the historical tool interfaces."
+      ]
+    },
+    "Related Patterns": [
+      "Prompt-Response Optimiser",
+      "Tool-Agent Registry"
+    ],
+    "Uses": [
+      "AutoGen: Users can register different tools in the agent, specifying the usage description. Registered tools will be leveraged by the agent during a conversation with user.",
+      "Apple Intelligence can support writing, image generation, schedule management across different products and applications. For instance, it can capture the entities in users photo library and create emoji.",
+      "Semantic Kernel can orchestrate agents and plugins to extend agents skills. Plugins need to provide semantic description (e.g., input, output, side effects) for agents to understand.",
+      "Yang et al. (2024a) devise SWEagent that can provide agent-computer interfaces, enabling foundation model-based agents to process code commands and resolve software engineering tasks."
+    ],
+    "Thinking": "Identified from section 4.17. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  },
+  {
+    "Pattern Name": "Agent Evaluator",
+    "Problem": "How to assess the performance of agents to ensure they behave as intended?",
+    "Context": "Within an agent, the underlying foundation model and a series of components coordinate to conduct reasoning and generate the responses given users prompts.",
+    "Solution": "Developers can deploy evaluator to assess the agent regarding responses and reasoning process at both design-time and run-time. Specifically, developers need to build up the evaluation pipeline, for instance, by defining specific scenario-based requirements, metrics, and expected outputs from agents. Given particular context, the agent evaluator prepares context-specific test cases (either searching from external resources or generating by itself) and performs evaluation on the agent components respectively. The evaluation results provide valuable feedback (such as boundary cases, near-misses, etc.) while developers can further fine-tune the agent or employ corresponding risk mitigation solutions and also upgrade the evaluator based on the results.",
+    "Result": {
+      "Benefits": [
+        "Functional suitability: Agent developers can learn the agents behaviour and compare the actual responses with expected ones through the evaluation results.",
+        "Adaptability: Agent developers can analyse the evaluation results regarding scenario-based requirements and decide whether the agent should adapt to new requirements or test cases.",
+        "Flexibility: Agent developers can define customised metrics and the expected outputs to test a specific aspect of the agent."
+      ],
+      "Drawbacks": [
+        "Metric quantification: It is difficult to design quantified rubrics for the assessment of software quality attributes.",
+        "Quality of evaluation: The evaluation quality is dependent on the prepared test cases."
+      ]
+    },
+    "Related Patterns": [
+      "Agent evaluator can be configured and deployed to assess the performance of other pattern-oriented agent components during both design-time and run-time."
+    ],
+    "Uses": [
+      "Inspect: UK AI Safety Institute devised an evaluation framework for large language models that offers a series of built-in components including prompt engineering, tool usage, etc.",
+      "DeepEval incorporates 14 evaluation metrics and supports agent development frameworks such as LlamaIndex, Hugging Face, etc.",
+      "Promptfoo can provide efficient evaluation services with caching, concurrency, and live reloading and also enable automate scoring based on user-defined metrics.",
+      "Ragas facilitates evaluation on the RAG pipelines via test dataset generation and leveraging LLM-assisted evaluation metrics."
+    ],
+    "Thinking": "Identified from section 4.18. The pattern name, problem, context, solution, benefits, drawbacks, related patterns, and known uses were directly extracted from the corresponding subheadings in the text, which follows a standard pattern template."
+  }
+]

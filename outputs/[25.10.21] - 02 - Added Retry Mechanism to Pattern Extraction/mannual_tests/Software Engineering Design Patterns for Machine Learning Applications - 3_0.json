@@ -1,0 +1,154 @@
+[
+  {
+    "Pattern Name": "Different Workloads in Different Computing Environments",
+    "Problem": "Difficulty in separating and quickly changing ML data and training workloads to maximize efficiency.",
+    "Context": "In an ML application system dealing with varying data and training workloads, where efficiency is critical.",
+    "Solution": "Physically isolate workloads to separate machines, then optimize configurations and network usage.",
+    "Result": "Maximizes efficiency and facilitates easier separation and change of ML data and training workloads.",
+    "Related Patterns": [],
+    "Uses": "Systems requiring high efficiency and flexible management of ML data and training workloads.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from the 'Pattern Name', 'Problem (Excerpt)', and 'Solution (Excerpt)' columns in Table 1 on Page 3. Context was inferred from the problem statement, which highlights the need for efficiency and the dynamic nature of workloads. The Result was derived from how the solution directly addresses the stated problem and its goal of maximizing efficiency. Uses were inferred from the problem and solution's objectives. No explicit related patterns were found in the provided text for this pattern."
+  },
+  {
+    "Pattern Name": "Distinguish Business Logic from ML Models",
+    "Problem": "Business logic is tightly coupled with ML models, making changes difficult without broader impact. ML application systems are complex due to regular retraining, intrinsic nondeterministic behavior of ML components, and evolving business requirements and ML algorithms.",
+    "Context": "ML application systems where business logic and ML models are intertwined, leading to complexity and difficulty in maintenance or evolution. Systems requiring isolation of failures and easier debugging.",
+    "Solution": "Separate business logic and inference engine, loosely coupling them with ML-specific dataflows. Define clear APIs between traditional and ML components, placing them into three distinct layers and dividing data flows into three types.",
+    "Result": "Decoupling business and ML components, allowing for better monitoring and adjustment of ML components to meet user requirements and adapt to changing inputs. Facilitates easier debugging and isolation of failures.",
+    "Related Patterns": [
+      "Data Lake for ML (P7)"
+    ],
+    "Uses": "Any ML application system where outputs depend on ML techniques. Specifically mentioned for a Slack-based Chatbot system (Figure 5 on Page 7).",
+    "Thinking": "Pattern Name, initial Problem, and initial Solution were extracted from Table 1 on Page 3. Extended Problem, Solution details, Context, Result (Consequences), and Uses (Applicability and Usage example) were found in the detailed description of P2 on Page 6. The relationship to 'Data Lake for ML (P7)' was explicitly stated on Page 6: 'P2... serves as a basis for other patterns (e.g., P7 'Data Lake for ML').'"
+  },
+  {
+    "Pattern Name": "ML Gateway Routing Architecture",
+    "Problem": "Managing individual endpoints for multiple services when a client is involved.",
+    "Context": "ML application systems with multiple services and clients, requiring efficient and centralized request management.",
+    "Solution": "Install a gateway for routing requests to appropriate instances.",
+    "Result": "Centralized management of requests, simplified client interaction with multiple services, and efficient routing.",
+    "Related Patterns": [],
+    "Uses": "Systems with distributed ML services that need a single point of entry for clients.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which describes the challenge of managing multiple endpoints. The Result was derived from the solution's purpose of routing and simplifying management. Uses were inferred from the problem and solution's scope. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Microservice Architecture for ML",
+    "Problem": "ML applications are confined to specific frameworks, limiting options.",
+    "Context": "ML application systems that are tied to specific frameworks, hindering flexibility and choice in development and deployment.",
+    "Solution": "Define consistent input/output data and well-defined services for ML frameworks.",
+    "Result": "Increased flexibility and options for ML frameworks, improved modularity through well-defined services, and enhanced maintainability.",
+    "Related Patterns": [],
+    "Uses": "ML applications needing to integrate various ML frameworks or requiring high modularity. Frequently used to improve maintainability (Page 5).",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which highlights limitations due to framework confinement. The Result was derived from the solution addressing these limitations and the mention on Page 5 that P4 commonly addresses maintainability. Uses were inferred from the problem and the explicit mention of maintainability on Page 5. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Lambda Architecture for ML",
+    "Problem": "Real-time data processing requires scalability, fault tolerance, predictability, and extensibility.",
+    "Context": "ML application systems dealing with large volumes of data that require both real-time and historical processing capabilities, with high demands for scalability, fault tolerance, predictability, and extensibility.",
+    "Solution": "Use a batch layer for historical views and a speed layer for real-time views, with a serving layer merging queries from both.",
+    "Result": "Achieves scalability, fault tolerance, predictability, and extensibility for real-time data processing by separating batch and speed layers.",
+    "Related Patterns": [],
+    "Uses": "Systems requiring robust real-time and historical data processing for ML applications.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which lists specific requirements for real-time data processing. The Result directly addresses the requirements listed in the problem. Uses were inferred from the problem and solution's capabilities. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Kappa Architecture for ML",
+    "Problem": "Dealing with large amounts of data with limited code resources.",
+    "Context": "ML application systems processing large datasets, especially when code resources are constrained, and requiring both real-time and reprocessing capabilities.",
+    "Solution": "Support real-time processing and continuous reprocessing with a single stream processing engine.",
+    "Result": "Efficient handling of large data volumes with limited code, enabling real-time and continuous reprocessing through a unified stream processing engine.",
+    "Related Patterns": [],
+    "Uses": "Systems needing to process large data streams efficiently with minimal code and requiring continuous reprocessing.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which mentions large data and limited code resources. The Result was derived from the solution addressing the problem and providing specific capabilities. Uses were inferred from the problem and solution's capabilities. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Data Lake for ML",
+    "Problem": "Inability to foresee future analyses or frameworks for data.",
+    "Context": "ML application systems where future data usage, analytical methods, or ML frameworks are uncertain.",
+    "Solution": "Store data, from structured to unstructured, as 'raw' as possible.",
+    "Result": "Provides flexibility for future analyses and framework adoption by preserving data in its rawest form.",
+    "Related Patterns": [],
+    "Uses": "Systems needing long-term data storage with unknown future requirements for analysis or ML frameworks.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which highlights uncertainty about future data usage. The Result was derived from the solution's benefit of raw data storage. Uses were inferred from the problem and solution's purpose. While P2 is mentioned as a basis for P7, P7 itself doesn't explicitly relate to other patterns, so 'Related Patterns' remains empty for P7."
+  },
+  {
+    "Pattern Name": "Separation of Concerns and Modularization of ML Components",
+    "Problem": "ML applications need to accommodate frequent changes to components.",
+    "Context": "ML application systems undergoing frequent changes to their components, requiring high adaptability and maintainability.",
+    "Solution": "Decouple components at various levels of complexity.",
+    "Result": "Improved adaptability and maintainability by allowing independent changes to decoupled components.",
+    "Related Patterns": [],
+    "Uses": "Systems with evolving ML components that require high flexibility and ease of modification.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which emphasizes the need to accommodate frequent changes. The Result was derived from the solution addressing the need for change accommodation. Uses were inferred from the problem and solution's benefits. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Encapsulate ML Models within Rule-base Safeguards",
+    "Problem": "ML models are unstable, vulnerable to attacks, noise, and data drift.",
+    "Context": "ML application systems where model stability, security, and robustness against noise, attacks, or data drift are critical concerns.",
+    "Solution": "Encapsulate ML model functionality and use deterministic, verifiable rules to handle inherent uncertainty.",
+    "Result": "Enhanced stability, security, and robustness of ML models by mitigating inherent uncertainties with verifiable rules.",
+    "Related Patterns": [],
+    "Uses": "Critical ML systems where model reliability, safety, and resilience against external factors are paramount.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which lists vulnerabilities of ML models. The Result was derived from the solution addressing these vulnerabilities and uncertainties. Uses were inferred from the problem and solution's objectives. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Discard PoC Code",
+    "Problem": "Proof of Concept (PoC) code often sacrifices maintainability for quick implementation and is no longer needed after findings.",
+    "Context": "ML development workflows where PoC phases are used for rapid experimentation, but the resulting code is not production-ready and lacks maintainability.",
+    "Solution": "Discard PoC code and rebuild maintainable code based on PoC findings.",
+    "Result": "Improved maintainability of production code by preventing the accumulation of unmaintainable PoC artifacts.",
+    "Related Patterns": [],
+    "Uses": "ML projects transitioning from experimentation (PoC) to production, aiming for high code quality and maintainability. Frequently used to improve maintainability (Page 5).",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem description of PoC code characteristics. The Result was derived from the solution's goal of rebuilding maintainable code and the mention on Page 5 that P10 commonly addresses maintainability. Uses were inferred from the problem and the explicit mention of maintainability on Page 5. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Parameter-Server Abstraction",
+    "Problem": "Lack of widely accepted abstractions for distributed learning.",
+    "Context": "Distributed ML learning environments lacking standardized abstractions for managing parameters across multiple nodes.",
+    "Solution": "Distribute data and workloads over worker nodes, with server nodes maintaining globally shared parameters (vectors and matrices).",
+    "Result": "Provides a widely accepted abstraction for distributed learning, enabling efficient management of shared parameters across worker and server nodes.",
+    "Related Patterns": [],
+    "Uses": "Distributed ML training systems that require efficient and standardized parameter management.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which highlights the lack of abstractions for distributed learning. The Result was derived from the solution providing the abstraction and its mechanism. Uses were inferred from the problem and solution's purpose. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Data Flows Up, Model Flows Down",
+    "Problem": "Standard ML approaches centralize training data.",
+    "Context": "ML systems where training data is sensitive or distributed across many edge devices, and centralized training is undesirable or impractical.",
+    "Solution": "Enable mobile devices to collaboratively learn a shared prediction model in the cloud, keeping training data on the device (federated learning).",
+    "Result": "Enables collaborative learning while preserving data privacy and reducing data transfer by keeping training data on devices.",
+    "Related Patterns": [],
+    "Uses": "Federated learning scenarios, especially with mobile devices and sensitive data, where data privacy and distributed training are key requirements.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem of centralized data and the solution's approach (federated learning, mobile devices). The Result was derived from the benefits of federated learning (data privacy, distributed training). Uses were inferred from the problem and solution's application. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "Secure Aggregation",
+    "Problem": "System needs to communicate and aggregate model updates securely, efficiently, scalably, and fault-tolerantly.",
+    "Context": "Collaborative ML learning environments (like federated learning) where model updates from individual devices need to be aggregated securely, efficiently, scalably, and fault-tolerantly.",
+    "Solution": "Encrypt data from mobile devices in collaborative learning and calculate totals/averages without individual examination.",
+    "Result": "Secure, efficient, scalable, and fault-tolerant aggregation of model updates, preserving privacy by encrypting individual contributions.",
+    "Related Patterns": [],
+    "Uses": "Collaborative learning systems, especially federated learning, requiring secure and private aggregation of model updates from distributed devices.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem's requirements and the solution's mechanism (encryption, collaborative learning). The Result directly addresses the requirements listed in the problem. Uses were inferred from the problem and solution's application. No explicit related patterns were found, although it is conceptually related to federated learning (P12)."
+  },
+  {
+    "Pattern Name": "Deployable Canary Model",
+    "Problem": "Need for a surrogate ML model to approximate the best model's behavior for explainability.",
+    "Context": "ML systems requiring explainability for their predictions, especially when the primary model is complex and not inherently explainable.",
+    "Solution": "Run an explainable inference pipeline in parallel with the primary pipeline to monitor prediction differences.",
+    "Result": "Provides explainability for complex ML models by monitoring differences with a simpler, explainable surrogate model.",
+    "Related Patterns": [],
+    "Uses": "ML systems where model explainability is a critical requirement, particularly for black-box models.",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which highlights the need for explainability. The Result directly addresses the need for explainability. Uses were inferred from the problem and solution's purpose. No explicit related patterns were found."
+  },
+  {
+    "Pattern Name": "ML Versioning",
+    "Problem": "Different versions of ML models can change overall application behavior.",
+    "Context": "ML application systems where reproducibility, traceability, and managing changes in model behavior across versions are crucial.",
+    "Solution": "Record ML model structure, training data, training system, and analytical code for reproducible training and inference.",
+    "Result": "Ensures reproducible training and inference, enabling traceability and understanding of changes in application behavior due to model versions, and improves maintainability.",
+    "Related Patterns": [],
+    "Uses": "ML projects requiring strong version control and reproducibility for models and their associated artifacts. Frequently used to improve maintainability (Page 5).",
+    "Thinking": "Pattern Name, Problem, and Solution were directly extracted from Table 1 on Page 3. Context was inferred from the problem statement, which mentions changes in application behavior due to model versions. The Result was derived from the solution's goal of reproducible training and inference and the mention on Page 5 that P15 commonly addresses maintainability. Uses were inferred from the problem and the explicit mention of maintainability on Page 5. No explicit related patterns were found."
+  }
+]

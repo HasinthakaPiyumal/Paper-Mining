@@ -1,0 +1,195 @@
+[
+  {
+    "Pattern Name": "InContext Retrieval-Augmented Language Model (InContext RALM)",
+    "Problem": "Mainstream Language Models (LMs) have inherent limitations in accessing external knowledge, leading to factual inaccuracies and a lack of source attribution. Existing Retrieval-Augmented Language Modeling (RALM) approaches require modifying the LM architecture, which complicates deployment and hinders wide adoption, especially for pre-trained LMs or those accessible only via API.",
+    "Context": "A pre-trained Language Model (LM) is available, but its architecture cannot be modified or it is only accessible via an API. There is a need to ground the LM's generation with relevant, up-to-date external knowledge to improve factual accuracy, provide source attribution, and enhance overall language modeling performance.",
+    "Solution": "Instead of altering the LM architecture, relevant grounding documents retrieved from an external knowledge source are simply prepended to the LM's input text. This 'zero-effort document reading mechanism' allows the LM to process the concatenated input (retrieved documents + original prefix) without any architectural changes or further training of the LM itself.",
+    "Result": "Achieves surprisingly large LM performance gains (e.g., perplexity improvements equivalent to increasing LM parameters by 2-3x). Effectively mitigates factual inaccuracies in generated text and provides a natural mechanism for source attribution. Significantly increases the prevalence and applicability of LM grounding, particularly in settings where LMs are frozen or accessed via API.",
+    "Related Patterns": [
+      "Retrieval-Augmented Language Modeling (RALM)",
+      "kNN-LM (Nearest Neighbor Language Models)",
+      "Retrieve and Read Models (e.g., RETRO)",
+      "In-Context Learning"
+    ],
+    "Uses": [
+      "Improving language modeling performance (e.g., perplexity reduction).",
+      "Mitigating factual inaccuracies and hallucinations in generated text.",
+      "Providing source attribution for machine-generated text.",
+      "Enabling knowledge grounding for LMs that cannot be modified or retrained (e.g., via API access).",
+      "Enhancing performance in downstream tasks like Open-Domain Question Answering (ODQA)."
+    ],
+    "Thinking": "This is the core pattern described in the paper, focusing on augmenting LMs by prepending retrieved documents without modifying the LM architecture, which is a distinct AI system design choice."
+  },
+  {
+    "Pattern Name": "Retrieval Stride Optimization",
+    "Problem": "Performing document retrieval at every generation step (i.e., for every token) in a Retrieval-Augmented Language Model (RALM) system incurs significant runtime costs due to frequent retriever calls and recomputing prefix embeddings, making the system inefficient.",
+    "Context": "An InContext RALM system is being implemented where grounding documents are retrieved and prepended to the LM's input. A balance is needed between the computational cost of retrieval operations and the desired performance gains from frequently updated contextual information.",
+    "Solution": "Introduce a 'retrieval stride' (s), which defines the number of tokens between consecutive retrieval operations. Instead of retrieving for every token, retrieval is performed only once every 's' tokens. This reduces the frequency of retriever calls and the associated computational overhead.",
+    "Result": "Enables a configurable trade-off between runtime efficiency and LM performance. Smaller strides (more frequent retrieval) generally lead to better LM performance due to more up-to-date context but incur higher costs. Larger strides reduce cost with some performance degradation. An optimal stride (e.g., s=4) can be found to balance these factors.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model (InContext RALM)",
+      "Adaptive Retrieval Strategy (Conditional Retrieval)"
+    ],
+    "Uses": [
+      "Optimizing the computational efficiency of RALM systems.",
+      "Balancing the performance-cost trade-off in real-time or high-throughput RALM deployments."
+    ],
+    "Thinking": "This pattern describes an AI-specific optimization for managing the computational cost and freshness of context in retrieval-augmented systems, directly impacting AI model inference."
+  },
+  {
+    "Pattern Name": "Retrieval Query Length Tuning",
+    "Problem": "The length of the input prefix used as a query for document retrieval significantly impacts the relevance of the retrieved documents. A query that is too short may lack sufficient context, while an excessively long query can dilute the most relevant information for the immediate generation task by overemphasizing older context.",
+    "Context": "An InContext RALM system uses a segment of the LM's input prefix to query an external knowledge source for relevant grounding documents. The goal is to maximize the relevance of the retrieved documents to improve LM performance.",
+    "Solution": "Restrict the retrieval query to the last 'l' tokens of the current prefix, where 'l' is the 'retrieval query length'. This hyperparameter is tuned to identify a 'sweet spot' that provides enough recent context without introducing irrelevant older information or diluting the query's focus.",
+    "Result": "Improves the relevance and quality of retrieved documents, leading to enhanced LM performance. Tuning this parameter allows for a better balance between contextualization (sufficient information) and recency (focus on the most relevant part of the prefix). For BM25, a query length of 32 tokens was found to be optimal.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model (InContext RALM)"
+    ],
+    "Uses": [
+      "Optimizing the effectiveness of document retrieval in RALM systems.",
+      "Improving the quality of contextual grounding for language models."
+    ],
+    "Thinking": "This pattern addresses an AI-specific problem of query formulation for retrieval in an LM context, balancing information density and recency for optimal AI performance."
+  },
+  {
+    "Pattern Name": "Zero-Shot LM Reranking",
+    "Problem": "Initial document retrievers (especially lexical ones like BM25) may not always select the most semantically relevant document from a set of candidates for the specific language modeling task. This limits the potential performance gains from retrieval, and fine-tuning the LM for reranking is often not feasible (e.g., frozen LMs, API access).",
+    "Context": "An InContext RALM system has used an initial retriever to fetch a set of top-k candidate documents. The objective is to select the single most relevant document from this set to prepend to the LM's input, leveraging semantic understanding without requiring further training of the LM or direct access to its internal states.",
+    "Solution": "Utilize an existing (potentially smaller or different) Language Model to perform 'zero-shot reranking'. For each candidate document 'di' and a specific segment of the prefix 'y'' (e.g., the tokens immediately preceding the generation target), calculate the LM's probability of 'y'' given 'di' and the preceding prefix. The document that maximizes this probability is chosen as the most relevant.",
+    "Result": "Consistently achieves better LM performance compared to simply taking the top-1 document from the initial retriever. Enables the incorporation of semantic understanding into document selection even when the primary LM is frozen or only accessible via API. A smaller LM can effectively rerank documents for larger LMs, offering efficiency benefits.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model (InContext RALM)",
+      "Predictive Reranking"
+    ],
+    "Uses": [
+      "Improving the semantic relevance of selected documents for RALM systems without additional training.",
+      "Enabling advanced document selection for LMs accessed through APIs or those that cannot be fine-tuned.",
+      "Leveraging the inherent language understanding capabilities of LMs for contextual relevance scoring."
+    ],
+    "Thinking": "This pattern describes an AI-specific technique for improving document selection by using an LM's inherent scoring capabilities in a zero-shot manner, which is a common challenge in AI systems."
+  },
+  {
+    "Pattern Name": "Predictive Reranking",
+    "Problem": "While zero-shot reranking improves document selection, there is still untapped potential to further specialize the document selection mechanism for the language modeling task, especially when domain-specific training data is available, to achieve even greater performance gains.",
+    "Context": "An InContext RALM system employs an initial retriever to provide a set of top-k candidate documents. Domain-specific training data is available, and the goal is to train a dedicated reranker to select the most effective document for predicting the upcoming text, thereby maximizing LM performance.",
+    "Solution": "Train a specialized reranker (e.g., a fine-tuned bidirectional model like RoBERTa-base) as a classifier. This reranker takes a prefix and a candidate document as input and produces a scalar score representing the document's relevance for the continuation of the prefix. The training process is self-supervised, using a loss function that optimizes the reranker to choose documents that maximize the LM's probability of generating the actual upcoming text.",
+    "Result": "Provides significant additional gains in LM performance compared to both using only the initial retriever and zero-shot reranking. Achieves a highly specialized and effective document selection mechanism tailored to the specific language modeling task and domain. This approach leverages available training data to learn optimal document relevance for prediction.",
+    "Related Patterns": [
+      "InContext Retrieval-Augmented Language Model (InContext RALM)",
+      "Zero-Shot LM Reranking"
+    ],
+    "Uses": [
+      "Maximizing the effectiveness of document selection in RALM systems when domain-specific training data is available.",
+      "Achieving superior language modeling performance by deeply specializing the retrieval component.",
+      "Developing highly accurate contextual grounding for LMs in specific domains."
+    ],
+    "Thinking": "This pattern details an AI-specific training approach for a reranker, leveraging LM signals in a self-supervised manner to optimize document selection for a predictive AI task."
+  },
+  {
+    "Pattern Name": "kNN-LM (Nearest Neighbor Language Models)",
+    "Problem": "Standard Language Models (LMs) lack access to external, up-to-date knowledge and struggle with factual inaccuracies, especially at inference time, without costly retraining or architectural modifications.",
+    "Context": "An existing Language Model is used for next-token prediction. There is a large external retrieval corpus available. The goal is to augment the LM's predictions with information from this corpus at inference time without modifying the LM's core architecture or requiring extensive retraining.",
+    "Solution": "At inference time, for each query token, retrieve 'k' nearest neighbors from the external corpus based on their embeddings in the LM embedding space. Interpolate between two next-token distributions: one generated by the LM itself, and another induced by these 'k' nearest neighbors. This combines the LM's generative capabilities with external knowledge.",
+    "Result": "Achieves significant gains in language modeling performance. However, it requires storing representations for each token in the corpus, which can be an expensive requirement and challenging to scale to very large corpora.",
+    "Related Patterns": [
+      "Retrieval-Augmented Language Modeling (RALM)",
+      "InContext Retrieval-Augmented Language Model (InContext RALM)"
+    ],
+    "Uses": [
+      "Enhancing language model performance at inference time.",
+      "Incorporating external knowledge without LM retraining.",
+      "Improving factual consistency in generated text."
+    ],
+    "Thinking": "This pattern is explicitly described in Section 2 as a distinct family of RALM approaches. It presents a specific AI mechanism for augmenting LMs by interpolating next-token distributions based on nearest neighbors in embedding space, which is different from prepending documents."
+  },
+  {
+    "Pattern Name": "RETRO (Retrieval-Enhanced Transformer)",
+    "Problem": "Standard autoregressive Language Models (LMs) lack direct access to external knowledge during generation, leading to factual inaccuracies and limited knowledge scope. Existing retrieval-augmented methods often rely on simple input concatenation, which might not fully integrate the retrieved information into the LM's internal attention mechanisms.",
+    "Context": "An autoregressive Language Model is used for text generation. There is a need to deeply integrate external knowledge from a retrieval corpus into the LM's generation process to improve performance and factual grounding, even if it requires architectural modifications.",
+    "Solution": "Modify the autoregressive LM architecture to attend to relevant documents via 'chunked cross-attention'. This involves introducing new parameters to the model specifically designed to process and incorporate information from retrieved documents. The document selection might use an off-the-shelf retriever (e.g., frozen BERT retriever). This modification requires further training of the LM.",
+    "Result": "Shows impressive performance gains in language modeling. However, the need for architectural changes and dedicated retraining hinders wide adoption and makes it incompatible with frozen LMs or API-only access.",
+    "Related Patterns": [
+      "Retrieval-Augmented Language Modeling (RALM)",
+      "Retrieve and Read Models",
+      "InContext Retrieval-Augmented Language Model (InContext RALM)"
+    ],
+    "Uses": [
+      "Deeply integrating external knowledge into autoregressive LMs.",
+      "Improving language modeling performance through architectural modifications.",
+      "Enhancing factual consistency by allowing the LM to attend to retrieved documents."
+    ],
+    "Thinking": "This pattern is clearly identified in Sections 1 and 2 as a leading RALM system that specifically 'modifies an autoregressive LM to attend to relevant documents via chunked cross-attention thus introducing new parameters'. This represents a distinct AI architectural pattern for retrieval augmentation, contrasting with InContext RALM's no-modification approach."
+  },
+  {
+    "Pattern Name": "Fine-tuned Encoder-Decoder for Knowledge-Intensive Tasks",
+    "Problem": "Generative models (especially sequence-to-sequence architectures) struggle with knowledge-intensive NLP tasks due to limited internal knowledge and difficulty in incorporating external, up-to-date information during generation.",
+    "Context": "A generative model based on an encoder-decoder architecture is used for tasks requiring external knowledge (e.g., open-domain question answering, fact-checked summarization). A knowledge source (e.g., a corpus of documents) is available, and the model needs to leverage this information to produce accurate and informed outputs.",
+    "Solution": "Fine-tune an encoder-decoder architecture (e.g., T5, BART) on task-specific data. During this fine-tuning, the model is trained to process both the input query (e.g., a question) and one or more retrieved documents. The encoder integrates information from both the query and the documents, and the decoder generates the output (e.g., an answer) conditioned on this integrated representation. This typically involves training the entire model, including its attention mechanisms, to effectively utilize the retrieved context.",
+    "Result": "Significantly improved performance on knowledge-intensive NLP tasks by enabling the generative model to directly incorporate and reason over external knowledge. However, this approach requires substantial fine-tuning and may not be applicable to frozen models or those accessed via API.",
+    "Related Patterns": [
+      "Retrieve and Read Models",
+      "REALM (Retrieval-Augmented Masked Language Model) Pretraining",
+      "RETRO (Retrieval-Enhanced Transformer)",
+      "Retrieval-Augmented Generation"
+    ],
+    "Uses": [
+      "Open-domain question answering",
+      "Knowledge-intensive summarization",
+      "Fact verification",
+      "Information extraction from documents"
+    ],
+    "Thinking": "This is described in Section 2 ('Retrieve and Read Models') as a common approach by Lewis et al. 2020 and Izacard and Grave 2021. It's a distinct AI architectural pattern for integrating retrieval into generative models through fine-tuning, contrasting with InContext RALM's no-modification approach."
+  },
+  {
+    "Pattern Name": "Prompt-Tuning a Frozen LM Reader",
+    "Problem": "Large Language Models (LMs) are powerful knowledge sources but are often frozen (cannot be fine-tuned) or only accessible via API. Adapting them to specific downstream tasks, especially knowledge-intensive ones like Open-Domain Question Answering (ODQA) where they need to act as a 'reader' of retrieved documents, is challenging without modifying their weights.",
+    "Context": "A large, pre-trained, and frozen Language Model is available. The goal is to adapt this LM to act as a 'reader' in a retrieval-augmented system for tasks like ODQA, where it needs to process a question and retrieved documents to generate an answer, without altering the LM's internal parameters.",
+    "Solution": "Instead of fine-tuning the LM's weights, use 'prompt-tuning' to guide the frozen LM. This involves carefully designing specific input prompts that structure the question and retrieved documents in a way that elicits the desired answer from the LM. The prompt acts as a soft instruction or context that leverages the LM's pre-trained knowledge and reasoning capabilities to interpret the retrieved information and formulate an answer.",
+    "Result": "Achieves competitive performance on downstream tasks like ODQA using frozen LMs. This approach avoids the computational cost and complexity of fine-tuning large models and is applicable when LMs are accessed through APIs.",
+    "Related Patterns": [
+      "InContext Learning",
+      "InContext Retrieval-Augmented Language Model (InContext RALM)",
+      "Retrieval-Augmented Generation"
+    ],
+    "Uses": [
+      "Adapting frozen LMs for specific tasks, especially as readers in retrieval-augmented systems, when full fine-tuning is not possible or desirable.",
+      "Open-domain question answering with API-accessed LMs."
+    ],
+    "Thinking": "This is explicitly mentioned in Section 2 ('Retrieve and Read Models') by Levine et al. 2022a: 'showed competitive open domain question-answering performance by prompt-tuning a frozen LM as a reader'. It's a specific AI technique for adapting LMs without weight changes, distinct from InContext RALM's prepending mechanism, but sharing the 'frozen LM' constraint."
+  },
+  {
+    "Pattern Name": "REALM (Retrieval-Augmented Masked Language Model) Pretraining",
+    "Problem": "Standard masked language models (e.g., BERT) are limited by the knowledge encoded during their initial pretraining phase and cannot easily access or incorporate external, up-to-date knowledge during inference or fine-tuning for knowledge-intensive tasks. This leads to factual limitations.",
+    "Context": "Developing a language model that is inherently capable of leveraging external knowledge for tasks like open-domain question answering. A large text corpus for masked language modeling and a separate, external retrieval corpus are available.",
+    "Solution": "Pretrain a Retrieval-Augmented Masked Language Model (REALM). During pretraining, the model learns to retrieve relevant documents from an external knowledge source and use them to inform its masked token prediction task. This involves jointly training a dense retriever and a masked language model. The retriever identifies relevant passages, and the masked LM uses these passages to better predict masked tokens, effectively integrating retrieval directly into the pretraining objective.",
+    "Result": "Produces a language model highly effective for knowledge-intensive tasks, particularly open-domain question answering, after further fine-tuning. Integrates retrieval directly into the pretraining objective, making the model inherently knowledge-aware.",
+    "Related Patterns": [
+      "Retrieve and Read Models",
+      "Retrieval-Augmented Generation",
+      "Fine-tuned Encoder-Decoder for Knowledge-Intensive Tasks"
+    ],
+    "Uses": [
+      "Pretraining foundation models for knowledge-intensive NLP",
+      "Open-domain question answering",
+      "Building knowledge-aware language models"
+    ],
+    "Thinking": "This is explicitly mentioned in Section 2 ('Retrieve and Read Models') by Guu et al. 2020: 'pretrained REALM a retrieval-augmented bidirectional masked-LM later finetuned for open-domain question answering'. It's a specific AI pretraining architecture and strategy for a retrieval-augmented LM, making it a distinct AI pattern."
+  },
+  {
+    "Pattern Name": "Adaptive Retrieval Strategy (Conditional Retrieval)",
+    "Problem": "Fixed retrieval intervals (e.g., every 's' tokens) in Retrieval-Augmented Language Model (RALM) systems can be inefficient. Retrieval operations are costly, and external knowledge might not be equally relevant or necessary at every generation step. This leads to unnecessary computational overhead or missed opportunities for grounding.",
+    "Context": "An InContext RALM system is generating text, and retrieval operations incur significant latency and cost. The need for external knowledge varies dynamically throughout the text generation process.",
+    "Solution": "Instead of a fixed retrieval stride, employ a specialized, lightweight model (e.g., a classifier or a smaller LM) to dynamically predict *when* retrieval is needed. This 'retrieval predictor' analyzes the current context and decides whether to trigger a retrieval operation. Retrieval is performed only when the specialized model predicts that new external knowledge would significantly benefit the ongoing generation, or when the current context is deemed insufficient.",
+    "Result": "Potential for significant latency and cost gains by performing retrieval more sparsely and only when necessary. Optimizes resource usage by making retrieval conditional on the predicted need, leading to a more efficient and potentially more effective grounding process.",
+    "Related Patterns": [
+      "Retrieval Stride Optimization",
+      "InContext Retrieval-Augmented Language Model (InContext RALM)"
+    ],
+    "Uses": [
+      "Optimizing the efficiency and effectiveness of retrieval in dynamic generation scenarios",
+      "Reducing computational overhead in RALM systems",
+      "Improving real-time performance"
+    ],
+    "Thinking": "This is mentioned in the 'Discussion' section as a future direction: 'retrieving more sparsely, such as only when a specialized model predicts that retrieval is needed'. This describes a clear AI problem (inefficient fixed-interval retrieval) and a conceptual AI solution (a specialized model for dynamic, conditional retrieval). It's a pattern for *how* retrieval is managed in an AI system, involving an AI decision-making component."
+  }
+]

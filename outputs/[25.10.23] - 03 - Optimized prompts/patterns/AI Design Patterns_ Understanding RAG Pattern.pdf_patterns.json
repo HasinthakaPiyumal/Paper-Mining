@@ -1,0 +1,364 @@
+[
+  {
+    "Pattern Name": "LACE (Local Agnostic attribute Contribution Explanation)",
+    "Problem": "High-performing machine learning models (black-boxes) lack interpretability, making it difficult to understand the reasons behind individual instance predictions, especially in critical areas. Existing methods often provide only qualitative or quantitative explanations, or struggle with exponential complexity when considering feature interactions.",
+    "Context": "Applicable to any black-box classification model for structured data, where understanding individual predictions is crucial for trust, debugging, and compliance (e.g., GDPR's \"right to explanation\").",
+    "Solution": "1. **Locality Capture**: Identify the K nearest neighbors of the instance to be explained from the training set. These neighbors are labeled by the black-box model.\n2. **Local Rule-Based Model**: Train an associative classifier (e.g., L3) on the K labeled neighbors to learn local rules. These rules represent relevant patterns (conjunctions of attribute-value pairs) that determine the prediction in that locality.\n3. **Prediction Difference Estimation**: For each individual attribute value and for each relevant pattern extracted from the local rules, quantify its influence on the prediction. This is done using a removal-based technique (marginalization) to compute the \"prediction difference\" (how the prediction probability changes when the attribute/pattern is omitted). This avoids exponential complexity by focusing only on relevant patterns.\n4. **Automatic Locality Definition**: A heuristic instance-based algorithm automatically tunes the parameter K (number of neighbors) by evaluating the \"locality approximation\" (deviation between removing all attribute values and removing only the union of relevant patterns) until a good approximation is reached.\n5. **Visualization**: Present the prediction differences via a bar plot, showing both individual attribute contributions and joint pattern contributions.",
+    "Result": "Provides both a qualitative (local rules/patterns) and quantitative (prediction difference) understanding of the reasons behind individual black-box model predictions. Accurately identifies relevant feature values and their interactions, improving trust and enabling debugging.",
+    "Related Patterns": [
+      "LIME (Local Interpretable Model-agnostic Explanations)",
+      "SHAP (SHapley Additive exPlanations)",
+      "Anchor",
+      "Removal-based explanations"
+    ],
+    "Uses": [
+      "Explaining individual predictions",
+      "Model debugging",
+      "Trust assessment",
+      "Compliance with 'right to explanation' regulations (e.g., GDPR)",
+      "Comparing local behavior of different classifiers"
+    ],
+    "Thinking": "LACE is explicitly introduced in the Summary and detailed in Chapter 4. The text clearly defines its problem (lack of interpretability for individual predictions in black-box models), context (model-agnostic, structured data), solution steps (locality, local rules, prediction difference, automatic K tuning, visualization), and results (qualitative and quantitative understanding). Related patterns like LIME, SHAP, and Anchor are mentioned in comparison."
+  },
+  {
+    "Pattern Name": "XPLAIN (Interactive Framework to Inspect Model Behavior)",
+    "Problem": "Understanding black-box model behavior is crucial for human experts, but the lack of interactive tools hinders active investigation, hypothesis testing, and debugging of predictions, especially in critical decision-making tasks.",
+    "Context": "Users (data analysts, domain experts) need to interactively explore and understand individual predictions of any black-box classifier for structured (tabular) data.",
+    "Solution": "1. **Leverage LACE**: Integrates LACE as the underlying explanation method to generate class-dependent, model-agnostic explanations for individual instances.\n2. **Interactive UI**: Provides a web-based user interface for selecting datasets, specifying classifiers, and initiating analyses.\n3. **Multi-Class/Multi-Classifier Comparison**: Allows users to compare explanations for the same instance across different target classes (e.g., predicted vs. true class for misclassifications) and across different black-box classifiers.\n4. **Human-in-the-Loop Analysis**: Users can define custom rules based on domain knowledge, and XPLAIN quantifies their prediction difference. Users can also perform 'what-if' analysis by tweaking attribute values of an instance and observing changes.\n5. **Explanation Metadata Analysis**: Aggregates multiple local explanations to provide global insights into model behavior at different granularities (attribute view, item view, local rule view), revealing overall discriminating factors for each class.",
+    "Result": "Enables human-in-the-loop inspection of individual predictions, fostering trust, facilitating model debugging, and supporting validation. Provides actionable insights by allowing users to test assumptions and compare model behaviors.",
+    "Related Patterns": [
+      "LACE (as its core explanation engine)",
+      "Interactive visualization tools for XAI (e.g., MLCube, FairVIS)"
+    ],
+    "Uses": [
+      "Model validation",
+      "Debugging",
+      "Trust assessment",
+      "Understanding misclassifications",
+      "Comparing different classifiers' local behaviors",
+      "Knowledge discovery",
+      "Supporting GDPR compliance"
+    ],
+    "Thinking": "XPLAIN is introduced in the Summary and detailed in Chapter 5. It's presented as an interactive tool that *leverages* LACE. Its problem focuses on the *lack of interactive exploration*, and its solution involves specific UI functionalities like what-if analysis and metadata aggregation, which are distinct from LACE's algorithmic explanation generation. It's a clear application pattern."
+  },
+  {
+    "Pattern Name": "DivExplorer (Algorithm for Subgroup Divergence Analysis)",
+    "Problem": "Understanding how a machine learning model behaves across different data subgroups is crucial for validation, fairness assessment, and debugging, but existing methods often require manual subgroup specification or lack exhaustive exploration, potentially missing critical or unexpected behaviors. Performance metrics are often non-monotonic, making heuristic pruning problematic.",
+    "Context": "Analyzing the behavior of any black-box classification model on structured data, especially in high-stakes applications where fairness and bias detection are paramount. The goal is to automatically identify and characterize subgroups where the model's performance (e.g., False Positive Rate, False Negative Rate) deviates significantly from the overall dataset.",
+    "Solution": "1. **Divergence Notion**: Introduces \"h-divergence\" to quantify the difference in a chosen statistic 'h' (e.g., false positive rate, false negative rate) between a data subgroup (defined by a pattern) and the entire dataset.\n2. **Outcome Function**: Defines an \"outcome function\" o(x) (e.g., indicating if an instance is a false positive) to allow efficient computation of 'h' for Boolean outcomes.\n3. **Frequent Pattern Mining (FPM)**: Leverages efficient FPM algorithms (e.g., FP-growth, Apriori) to exhaustively extract *all* frequent itemsets (patterns) whose support (frequency) in the dataset is above a specified threshold 's'. This ensures adequate representation and avoids statistical fluctuations.\n4. **Augmented FPM**: Integrates the computation of outcome function statistics directly into the FPM process, allowing efficient, simultaneous calculation of divergence for all frequent itemsets.\n5. **Statistical Significance**: Employs Bayesian statistics (Beta distribution, Welch's t-test) to assess the statistical significance of the observed divergence.\n6. **Item Contribution (Local Shapley Value)**: Applies the Shapley value concept to attribute the divergence of an itemset to its constituent items, quantifying each item's contribution within that specific subgroup.\n7. **Global Item Divergence (Generalized Shapley Value)**: Introduces a generalization of the Shapley value to estimate the overall impact of an item on divergence across *all* itemsets it can be part of, revealing items that cause divergence through association.\n8. **Corrective Items Identification**: Identifies \"corrective items\" – items that, when added to a pattern, reduce its divergence.\n9. **Redundancy Pruning**: Offers a post-exploration pruning approach to summarize divergent itemsets by removing those not significantly more divergent than their subsets.",
+    "Result": "Provides a comprehensive and exhaustive exploration of divergent subgroups, revealing unexpected behaviors, quantifying item contributions (local and global), and identifying corrective factors. Enables robust model validation, bias detection, and debugging at the subgroup level.",
+    "Related Patterns": [
+      "Slice Finder",
+      "FairVIS",
+      "Frequent Pattern Mining",
+      "Shapley Value"
+    ],
+    "Uses": [
+      "Model validation",
+      "Testing",
+      "Error analysis",
+      "Evaluation of model fairness",
+      "Identification of bias",
+      "Understanding heterogeneous model behavior",
+      "Exploring underrepresented groups",
+      "Generalization to scoring and ranking systems"
+    ],
+    "Thinking": "DivExplorer is introduced in the Summary and extensively detailed in Chapter 6 as a novel *approach* or *algorithm*. Its problem is about understanding subgroup behavior, and its solution involves specific algorithmic steps like divergence definition, FPM integration, and Shapley value application/generalization. It's distinct from the interactive system that uses it."
+  },
+  {
+    "Pattern Name": "DivExplorer Interactive System",
+    "Problem": "While the DivExplorer algorithm identifies divergent subgroups, users need an intuitive and interactive way to explore these findings, drill down into specific patterns, understand item contributions, and perform ad-hoc searches to fully leverage the insights for debugging and fairness assessment.",
+    "Context": "Users (data analysts, domain experts) need to interactively explore the output of the DivExplorer algorithm, especially when dealing with potentially large numbers of divergent patterns.",
+    "Solution": "1. **Web-based UI**: Provides a web application for uploading datasets, specifying classifier predictions, and configuring the support threshold.\n2. **Divergent Itemset Table**: Displays a sortable table of all identified divergent itemsets, allowing users to rank by divergence, statistical significance, or support.\n3. **Redundancy Pruning Integration**: Allows users to apply a redundancy pruning threshold to summarize the list of divergent itemsets, making the output more manageable and insightful.\n4. **Local Contribution Visualization**: For a selected itemset, displays a bar graph showing the Shapley value-based contributions of individual items to that itemset's divergence.\n5. **Lattice Exploration**: Visualizes the itemset lattice around a selected divergent pattern, showing its subsets, their divergences, and highlighting corrective phenomena. This allows users to understand how divergence evolves with item additions.\n6. **Global Item Influence Visualization**: Presents visualizations (e.g., bar plots) of both individual item divergence and global item divergence (generalized Shapley value) across the entire dataset.\n7. **Drilldown and Interactive Search**: Enables users to select an itemset and view its supersets, or search for itemsets containing specific items or patterns.",
+    "Result": "Provides an intuitive and interactive platform for exploring, analyzing, and understanding the complex behaviors of classifiers in data subgroups. Facilitates human-in-the-loop debugging, bias identification, and model improvement by making the DivExplorer algorithm's output accessible and explorable.",
+    "Related Patterns": [
+      "DivExplorer (Algorithm, as its underlying engine)",
+      "XPLAIN (as another interactive XAI tool, but with a different focus)",
+      "OLAP tools (e.g., Smart Drilldown)"
+    ],
+    "Uses": [
+      "Debugging classifiers",
+      "Identifying bias in classifiers",
+      "Model validation",
+      "Interactive exploration of subgroup behavior",
+      "Fairness auditing"
+    ],
+    "Thinking": "Chapter 7 is dedicated to the 'DivExplorer interactive system' or 'web app'. This is clearly an application pattern built on the DivExplorer algorithm. Its problem is about *exploring* the findings, and its solution focuses on UI elements and interactive features like tables, graphs, lattice views, and search functionalities. It's distinct from the algorithm itself."
+  },
+  {
+    "Pattern Name": "Targeting Interpretability by Design",
+    "Problem": "The common trade-off between high predictive accuracy and model interpretability, leading to the adoption of complex, opaque models in critical applications where understanding is essential.",
+    "Context": "Developing new machine learning models for high-stakes applications (e.g., healthcare, finance) where both high performance and inherent transparency are non-negotiable requirements.",
+    "Solution": "Formulate the model learning as an optimization problem that directly includes interpretability criteria (e.g., number of nodes in a decision tree, number of rules in a rule list, number of non-zero coefficients in a linear model) as a penalty term or constraint, alongside the traditional loss function.",
+    "Result": "Creation of inherently interpretable models that achieve high accuracy while ensuring their comprehensibility by design, often by leveraging and optimizing existing transparent model classes (e.g., decision trees, rule lists, linear models).",
+    "Related Patterns": [
+      "Decision Trees",
+      "Classification Rules",
+      "Logistic Regression",
+      "Generalized Additive Models (GAMs)",
+      "CORELS",
+      "Interpretable Decision Sets",
+      "LIBRE",
+      "Explainable Boosting Machine (EBM)"
+    ],
+    "Uses": [
+      "Building transparent AI systems",
+      "Ensuring regulatory compliance",
+      "Fostering trust",
+      "Enabling knowledge discovery",
+      "Facilitating debugging"
+    ],
+    "Thinking": "This pattern describes a fundamental paradigm shift in AI model development, moving from post-hoc explanation to building interpretability directly into the model's core design and optimization process. It's a meta-pattern for creating interpretable AI models, explicitly discussed in Section 2.1.1 under 'Targeting interpretability by design'."
+  },
+  {
+    "Pattern Name": "Rule Extraction (from Black-box Models)",
+    "Problem": "Complex black-box models (e.g., Artificial Neural Networks, Random Forests, Support Vector Machines) achieve high performance but lack transparency, making their decision-making process opaque to humans.",
+    "Context": "When a human-understandable, symbolic representation of a complex model's learned logic is required, either for global understanding or to compare with domain expertise, after the model has been trained.",
+    "Solution": "Develop algorithms to analyze the trained black-box model and derive a set of explicit, propositional \"if-then\" rules that approximate its decision boundaries or internal logic. These rules can be global or local.",
+    "Result": "A more comprehensible, rule-based explanation of the black-box model's behavior, which can be inspected, validated, and potentially used for knowledge discovery or debugging.",
+    "Related Patterns": [
+      "Associative Classifiers",
+      "LACE (uses rule-based local models)",
+      "Anchor",
+      "LORE"
+    ],
+    "Uses": [
+      "Explaining complex model behavior",
+      "Knowledge discovery",
+      "Model comparison",
+      "Debugging",
+      "Compliance"
+    ],
+    "Thinking": "The text explicitly mentions 'many techniques have been proposed for extracting explicit rules from ANN' (Section 2.1.2), 'Several approaches extract rules from trained random forest models' (Section 2.1.2), and 'Rule extraction techniques have also been developed for the interpretation of SVMs' (Section 2.1.2). This is a recurring solution for a common problem in XAI."
+  },
+  {
+    "Pattern Name": "Saliency Maps (for Image/Pixel Importance)",
+    "Problem": "Understanding which specific parts of an input image (e.g., individual pixels or regions) are most influential or relevant for a deep learning model's prediction, especially in image recognition tasks.",
+    "Context": "Explaining predictions of deep learning models (e.g., Convolutional Neural Networks) on unstructured data like images, where visual explanations are intuitive for human users.",
+    "Solution": "Generate a visual map (saliency map) that highlights the pixels or regions in the input image that contribute most significantly to the model's output. This can be achieved through gradient-based methods, perturbation-based methods (e.g., removing parts of the image), or other attribution techniques.",
+    "Result": "An intuitive visual explanation that shows the \"focus\" of the model, helping users understand *why* an image was classified in a certain way and building trust in the model's visual reasoning.",
+    "Related Patterns": [
+      "Removal-based explanations",
+      "Visualization-based explanations"
+    ],
+    "Uses": [
+      "Explaining image classification",
+      "Debugging visual models",
+      "Understanding model attention",
+      "Building trust in computer vision systems"
+    ],
+    "Thinking": "The text states: 'For image recognition many techniques provide explanations in form of saliency maps showing how each pixel of a particular image is important for class prediction' (Section 2.1.2). This is a well-established and distinct AI design pattern in XAI for visual data."
+  },
+  {
+    "Pattern Name": "Interpretable Global Surrogate Models",
+    "Problem": "Understanding the overall, global behavior of a complex, opaque black-box model, which is too intricate to be directly inspected.",
+    "Context": "When a comprehensive, high-level understanding of the entire black-box model's logic is required, rather than just individual predictions, and a simpler, transparent model can approximate this behavior.",
+    "Solution": "Train a simpler, intrinsically interpretable model (e.g., a decision tree like TREPAN, or a rule-based model) on the predictions generated by the original black-box model across the entire dataset. This surrogate model then serves as an interpretable approximation of the black-box's global logic.",
+    "Result": "A transparent model that mimics the global behavior of the black-box, offering insights into its overall decision-making process, albeit with potential trade-offs in faithfulness to the original model's complexity.",
+    "Related Patterns": [
+      "Targeting Interpretability by Design",
+      "Rule Extraction (from Black-box Models)"
+    ],
+    "Uses": [
+      "Global model understanding",
+      "Model comparison",
+      "High-level debugging",
+      "Knowledge discovery"
+    ],
+    "Thinking": "The text explicitly describes this: 'Some solutions try to explain the original model globally by deriving a transparent model that mimics its behavior. The algorithm TREPAN approximates a generic model f by learning a classification tree DT on the predictions of f' (Section 2.1.2). This is a clear AI design pattern for global XAI."
+  },
+  {
+    "Pattern Name": "Partial Dependence Plots (PDPs)",
+    "Problem": "Understanding the average marginal effect of one or two input features on the prediction outcome of a black-box model across the entire dataset.",
+    "Context": "When a global, average-level insight into how individual features (or pairs of features) influence the model's predictions is desired, without considering complex interactions with all other features.",
+    "Solution": "Compute the partial dependence function, which shows the average prediction probability (or outcome) as a function of the values of a specific feature subset, by averaging out the effects of all other features across the dataset. Visualize this function, typically as 2D or 3D plots.",
+    "Result": "Intuitive visualizations that reveal the global average relationship between selected features and the model's predictions, helping to understand overall trends.",
+    "Related Patterns": [
+      "Individual Conditional Expectation (ICE) plots (local counterpart)"
+    ],
+    "Uses": [
+      "Global model understanding",
+      "Identifying general feature effects",
+      "Model comparison"
+    ],
+    "Thinking": "The text states: 'Partial dependence plots PDPs provide the global average prediction behavior of a variable or a small set of variables by visualizing their marginal effect on the class probability' (Section 2.1.2). This is a distinct and widely recognized AI design pattern in XAI."
+  },
+  {
+    "Pattern Name": "Permutation Feature Importance",
+    "Problem": "Quantifying the global relevance or importance of individual features for a black-box model's overall predictive performance.",
+    "Context": "When a simple, global ranking of how much each feature contributes to the model's accuracy or other performance metrics is needed, without detailing specific decision logic.",
+    "Solution": "Measure the decrease in a model's performance score (e.g., accuracy, F1-score, R-squared) when the values of a single feature are randomly shuffled or permuted in the validation dataset. A large drop indicates high importance.",
+    "Result": "A global, model-agnostic measure of feature importance that is intuitive and easy to interpret, indicating which features are most critical for the model's predictive power.",
+    "Related Patterns": [
+      "Removal-based explanations"
+    ],
+    "Uses": [
+      "Global model understanding",
+      "Feature selection",
+      "Model debugging",
+      "Identifying critical input variables"
+    ],
+    "Thinking": "The text describes this: 'Permutation feature importance is a generalization of the feature importance firstly proposed by Breiman for Random Forest classifiers... The approach measures the change in scores... when features are permuted' (Section 2.1.2). This is a clear AI design pattern for global XAI."
+  },
+  {
+    "Pattern Name": "Visualization-based Explanations (Individual Conditional Expectation Plots)",
+    "Problem": "Understanding how a black-box model's prediction for a *single instance* changes as the value of a *single feature* varies, revealing individual-level dependencies.",
+    "Context": "When a local, instance-specific understanding of how a particular feature influences a prediction is desired, especially to identify heterogeneous relationships that might be obscured by global average plots.",
+    "Solution": "For each individual instance, plot the model's prediction as a function of one feature's value, while keeping all other features of that specific instance fixed. This generates multiple lines (one per instance) on a single plot.",
+    "Result": "Visualizations (e.g., ICE plots) that depict individual conditional dependencies, allowing users to see how predictions change for specific instances, and potentially identify subgroups with different behaviors.",
+    "Related Patterns": [
+      "Partial Dependence Plots (PDPs, global counterpart)"
+    ],
+    "Uses": [
+      "Local model understanding",
+      "Identifying heterogeneous feature effects",
+      "Debugging individual predictions"
+    ],
+    "Thinking": "The text states: 'Individual Conditional Expectation ICE plots are a novel adaptation of partial dependence plots PDPs for the local inspection of the model inner working... ICE depicts how the model behaves for a single observation' (Section 2.1.2). This is a distinct AI design pattern for local XAI."
+  },
+  {
+    "Pattern Name": "Counterfactual Explanations",
+    "Problem": "Providing intuitive and actionable explanations for individual black-box model predictions by showing the minimal changes to an instance's features that would alter its prediction to a desired (often opposite) outcome.",
+    "Context": "When users need to understand *why* a specific decision was made by knowing *what would have to be different* to achieve a different result, particularly in high-stakes scenarios where users want to influence the outcome.",
+    "Solution": "Generate a \"counterfactual instance\" by finding the smallest perturbation (e.g., in terms of distance or number of feature changes) to the original instance's feature values such that the black-box model predicts a different, specified class or outcome.",
+    "Result": "Actionable explanations that highlight the critical features and their thresholds for changing a prediction, enabling users to understand decision boundaries and potentially achieve desired outcomes.",
+    "Related Patterns": [
+      "Example-based explanations",
+      "Adversarial Examples"
+    ],
+    "Uses": [
+      "Local model understanding",
+      "Influencing model outcomes",
+      "Debugging",
+      "Fairness analysis",
+      "Compliance"
+    ],
+    "Thinking": "The text explicitly mentions: 'Several approaches derive counterfactuals to provide insight into the model behavior... Counterfactual explanations of an individual prediction describe the slightest change to the feature values of the instance that changes the prediction outcome' (Section 2.1.2). This is a well-recognized AI design pattern."
+  },
+  {
+    "Pattern Name": "SliceLine",
+    "Problem": "Efficiently identifying the top-k data slices (subgroups) where a black-box model performs significantly worse than the overall dataset, especially for large datasets and when scalability is a concern.",
+    "Context": "Model debugging and validation, where identifying problematic subgroups is critical, and the search space of possible slices is vast. It aims to overcome limitations of non-monotonic performance metrics.",
+    "Solution": "Leverages monotonicity properties of error metrics and a linear-algebra-based enumeration algorithm. It incorporates effective pruning strategies and is optimized for parallelization to scale to large datasets.",
+    "Result": "Efficient and scalable identification of the top-k most problematic data slices with adequate representation, aiding in model debugging and performance improvement.",
+    "Related Patterns": [
+      "DivExplorer",
+      "Slice Finder"
+    ],
+    "Uses": [
+      "Model debugging",
+      "Performance analysis",
+      "Identifying problematic subgroups",
+      "Scalability in subgroup analysis"
+    ],
+    "Thinking": "The text describes SliceLine as an unsupervised technique for subgroup analysis (Section 2.2.2), explicitly stating its problem (identifying top-k slices with worse performance) and solution (monotonicity, linear algebra, pruning, parallelization). This is a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "FairVIS",
+    "Problem": "Discovering and visualizing intersectional bias in black-box machine learning models across data subgroups, especially when sensitive attributes or their combinations are not predefined.",
+    "Context": "Auditing the fairness of ML models in high-stakes applications where bias can lead to discriminatory outcomes, and a visual, interactive approach is desired for human experts.",
+    "Solution": "A visual analytics system that automatically generates data subgroups using clustering techniques. It then applies feature entropy to derive interpretable representations (dominant features) for these identified clusters. Performance metrics are evaluated on the clusters, and interactive drilldown operations are supported.",
+    "Result": "A visual analytics system that automatically discovers and helps interpret intersectional bias in classifiers, providing an interactive platform for fairness auditing and understanding disparate impact.",
+    "Related Patterns": [
+      "DivExplorer",
+      "Clustering analysis"
+    ],
+    "Uses": [
+      "Fairness auditing",
+      "Bias detection",
+      "Understanding disparate impact",
+      "Visual analytics for XAI"
+    ],
+    "Thinking": "The text describes FairVIS as an unsupervised technique for subgroup analysis (Section 2.2.2), explicitly detailing its problem (discovering intersectional bias) and solution (clustering, feature entropy, visual analytics). This is a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Errudite",
+    "Problem": "Systematically analyzing errors and understanding *why* Natural Language Processing (NLP) models fail for certain data subgroups, which is challenging due to the complexity of textual data.",
+    "Context": "Debugging and improving NLP models, where traditional error analysis might be insufficient, and a systematic approach to grouping instances and performing counterfactual analysis is needed.",
+    "Solution": "Proposes a domain-specific language to systematically group instances of textual data. It enables systematic counterfactual analysis to understand the root causes of model failures within these identified subgroups.",
+    "Result": "A system for scalable, reproducible, and testable error analysis specifically tailored for NLP models, facilitating targeted model improvement and debugging.",
+    "Related Patterns": [
+      "Counterfactual Explanations",
+      "Subgroup analysis"
+    ],
+    "Uses": [
+      "NLP model debugging",
+      "Error analysis in text data",
+      "Understanding model failures",
+      "Systematic counterfactual analysis"
+    ],
+    "Thinking": "The text describes Errudite as an unsupervised technique for subgroup analysis (Section 2.2.2), specifically for NLP error analysis, detailing its problem (improving NLP models via error analysis) and solution (domain-specific language, systematic counterfactual analysis). This is a distinct AI design pattern."
+  },
+  {
+    "Pattern Name": "Data Coverage Analysis (Uncovered Patterns)",
+    "Problem": "Identifying regions in the attribute space where the dataset has inadequate representation or coverage, which can lead to prediction errors, poor generalization, and undesirable outcomes like algorithmic racism.",
+    "Context": "Ensuring the robustness, fairness, and reliability of machine learning models, especially when data collection might be incomplete or biased, or when models are deployed in new environments.",
+    "Solution": "Introduce the concept of \"uncovered patterns\" to systematically identify attribute-value combinations (regions in the attribute space) that are not adequately represented by instances in the training data.",
+    "Result": "Highlights data sparsity and underrepresentation issues, informing data augmentation strategies, identifying potential sources of bias, and improving model robustness and fairness.",
+    "Related Patterns": [
+      "Subgroup analysis",
+      "Fairness analysis"
+    ],
+    "Uses": [
+      "Data quality assessment",
+      "Bias detection",
+      "Improving model robustness",
+      "Guiding data collection",
+      "Fairness in AI"
+    ],
+    "Thinking": "The text mentions: 'The work of Asudeh et al studies the lack of adequate coverage in a dataset. Inadequate representation may cause errors in predictions and undesirable outcomes such as algorithmic racism. Uncovered patterns are introduced to identify attribute space regions not adequately covered by the data' (Section 2.2.2). This describes a problem and a solution (uncovered patterns) in the context of AI system reliability and fairness, making it an AI design pattern."
+  },
+  {
+    "Pattern Name": "Explanation by Example",
+    "Problem": "Providing an intuitive, human-like justification for a model's prediction or behavior, especially when the internal logic is complex or non-symbolic.",
+    "Context": "When a model's decision can be best understood by showing similar past cases or representative instances, rather than abstract rules or feature importances. Applicable to instance-based models (k-NN) or models that identify critical instances (SVM support vectors, prototypes).",
+    "Solution": "Identify and present a small set of data instances (e.g., k-nearest neighbors, support vectors, prototypes) that are most similar to the instance being explained, or are highly representative of a class or decision boundary. The explanation is then derived by analogy to these examples.",
+    "Result": "An intuitive and relatable explanation that leverages human cognitive processes of analogy, helping users understand the model's reasoning without delving into complex internal mechanisms.",
+    "Related Patterns": [
+      "Counterfactual Explanations",
+      "Visualization-based Explanations"
+    ],
+    "Uses": [
+      "Justifying individual predictions",
+      "Understanding model behavior",
+      "Building trust",
+      "Identifying representative cases"
+    ],
+    "Thinking": "The text explicitly mentions 'K closed instances represent an explanation by example of the reasons behind the prediction' for k-NN (Section 2.1.1) and 'One possible way to interpret model is through its support vectors... Hence support vectors provide an explanation by example' for SVMs (Section 2.1.2). It also generally defines 'Example-based explanations consists in providing a data instance or a set of data instances to explain the model behavior' (Section 2.1.2). This is a recurring, distinct AI explanation pattern."
+  },
+  {
+    "Pattern Name": "Nomogram Visualization",
+    "Problem": "Visually representing the contribution of individual feature values to a model's prediction, especially for linear or generalized linear models, in a compact and comparable format.",
+    "Context": "Explaining individual decisions of models like SVMs with linear kernels, Naive Bayes, or Logistic Regression, where a clear visual breakdown of feature contributions is beneficial.",
+    "Solution": "Generate a nomogram, which is a graphical representation that allows users to visually sum up the contributions of different feature values to arrive at a final prediction score or probability.",
+    "Result": "A compact and intuitive visual explanation that enables users to quickly understand the relative influence of different feature values on a prediction and compare the behavior of different classifiers using the same visualization format.",
+    "Related Patterns": [
+      "Visualization-based Explanations",
+      "Feature Importance Explanations"
+    ],
+    "Uses": [
+      "Explaining individual predictions",
+      "Comparing model behaviors",
+      "Understanding feature contributions",
+      "Medical and social science applications"
+    ],
+    "Thinking": "The text states: 'Nomograms have been applied to explain the individual decisions of Support Vector Machines SVM with linear kernels... Nomograms are a visualization technique that enables visualizing the contribution of feature values' (Section 2.1.2). It also mentions their application for Naive Bayes and Logistic Regression, highlighting their comparability. This is a specific, recurring AI explanation pattern."
+  },
+  {
+    "Pattern Name": "Neural Network Graph Visualization",
+    "Problem": "Understanding the complex, multi-layered internal structure and connections of Artificial Neural Networks (ANNs) to gain insight into their decision-making process.",
+    "Context": "When trying to \"open the black box\" of an ANN to reveal the relationships between inputs, hidden layers, and outputs, especially for simpler ANNs where a direct visual representation is feasible.",
+    "Solution": "Create a graphical representation of the neural network's architecture, showing neurons, layers, and weighted connections. This visualization aims to make the flow of information and the transformation of inputs to outputs more transparent.",
+    "Result": "A visual aid that helps users conceptualize the internal workings of an ANN, potentially revealing learned features or decision pathways, though its utility diminishes with increasing network complexity.",
+    "Related Patterns": [
+      "Visualization-based Explanations",
+      "Rule Extraction (from Black-box Models, as an alternative for ANNs)"
+    ],
+    "Uses": [
+      "Understanding ANN architecture",
+      "Gaining insights into learned representations",
+      "Debugging simpler ANNs"
+    ],
+    "Thinking": "The text mentions: 'Other solutions propose visualizing the neural network graph. As an example Tzeng and Ma propose to open the black box to reveal the relations between the inputs and the outputs of an ANN' (Section 2.1.2). This is a specific visualization pattern for a specific AI model type."
+  }
+]

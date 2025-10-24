@@ -1,0 +1,292 @@
+[
+  {
+    "Pattern Name": "Logits Masking",
+    "Problem": "Need to ensure generated text conforms to specific style rules for brand, accuracy, or compliance reasons.",
+    "Context": "When generating text with LLMs, there's a need for strict adherence to predefined stylistic, factual, or compliance guidelines.",
+    "Solution": "Intercept the generation at the sampling stage to zero out probabilities of continuations that don't meet the rules.",
+    "Result": "Generated text strictly adheres to specified style rules, brand guidelines, factual constraints, or compliance requirements, preventing undesirable outputs.",
+    "Related Patterns": "",
+    "Uses": "Use words associated with specific brand; avoid repeating factual information; make content compliant with style book",
+    "Thinking": "This pattern directly manipulates the internal generation probabilities (logits) of an LLM to enforce specific output constraints, making it inherently AI-specific."
+  },
+  {
+    "Pattern Name": "Grammar",
+    "Problem": "Need text to conform to a specific format or data schema for downstream processing.",
+    "Context": "LLM-generated text needs to be consumed by automated systems or databases that require structured, predictable input.",
+    "Solution": "Specify rules as a formal grammar (e.g., BNF) or schema that the model framework applies to constrain token generation.",
+    "Result": "LLM output is guaranteed to be in a valid, structured format (e.g., JSON, SQL), enabling seamless downstream processing.",
+    "Related Patterns": "",
+    "Uses": "Generating valid SQL timestamps; extracting structured data in a specific format; ensuring output conforms to JSON schema.",
+    "Thinking": "This pattern constrains the token generation process of an LLM to adhere to a formal grammar or schema, ensuring structured AI output for integration."
+  },
+  {
+    "Pattern Name": "Style Transfer",
+    "Problem": "Need to convert content into a form that mimics specific tone and style that is difficult to express through rules, but can be shown through example conversions.",
+    "Context": "Transforming content's tone and style to match a target, where the desired style is nuanced and best demonstrated through examples rather than explicit rules.",
+    "Solution": "Use few-shot learning or model fine-tuning to teach the model how to convert content to the desired style.",
+    "Result": "Content is effectively converted to a desired, example-driven tone and style, suitable for different audiences or platforms.",
+    "Related Patterns": "",
+    "Uses": "Rewriting generic content to match brand guidelines; converting academic papers to blog posts; transforming image and text content for different social media platforms or audiences.",
+    "Thinking": "This pattern leverages core AI techniques like few-shot learning and model fine-tuning to achieve stylistic transformations, which are specific to LLM capabilities."
+  },
+  {
+    "Pattern Name": "Reverse Neutralization",
+    "Problem": "Need to generate content in a specific style that can be shown through example content.",
+    "Context": "Generating content directly in a highly specific, example-driven style is challenging for a single LLM, especially when the style is complex or niche.",
+    "Solution": "Use an LLM to generate content in an intermediate neutral form, and a fine-tuned LLM to convert that neutral form into the desired style.",
+    "Result": "Enables the generation of content in highly specific, example-driven styles by decoupling content generation from style application, improving consistency and quality.",
+    "Related Patterns": "",
+    "Uses": "Generating letters in region-specific legalese; generating emails in personal style.",
+    "Thinking": "This pattern describes a multi-stage process involving two LLMs (one for neutral generation, one for style transfer via fine-tuning), making it an AI-specific architectural pattern."
+  },
+  {
+    "Pattern Name": "Content Optimization",
+    "Problem": "Need to determine optimal style for content without knowing which factors matter.",
+    "Context": "When the most effective content style for a specific goal (e.g., engagement, conversion) is unknown and cannot be easily defined by rules.",
+    "Solution": "Generate pairs of content, compare them using an evaluator, create a preference dataset, and perform preference tuning.",
+    "Result": "Identifies and applies the optimal content style for a given objective by leveraging iterative evaluation and preference learning, even when explicit style factors are unknown.",
+    "Related Patterns": "",
+    "Uses": "Optimizing ad copy, marketing content, or educational materials where effective style factors are unknown.",
+    "Thinking": "This pattern involves AI-driven evaluation (using an evaluator) and preference tuning (similar to RLHF), which are advanced AI techniques for optimizing generative outputs."
+  },
+  {
+    "Pattern Name": "Basic RAG",
+    "Problem": "Knowledge cutoff, confidential data, and hallucinations pose problems for zero-shot generation by LLMs.",
+    "Context": "LLMs lack up-to-date, proprietary, or domain-specific knowledge and can generate factually incorrect information.",
+    "Solution": "Ground the response generated by the LLM by adding relevant information from a knowledge base into the prompt context.",
+    "Result": "LLM responses are grounded in factual, current, and specific information from a knowledge base, reducing hallucinations and incorporating proprietary data.",
+    "Related Patterns": "",
+    "Uses": "The applications of RAG are constantly expanding as the technology evolves.",
+    "Thinking": "Retrieval Augmented Generation (RAG) is a foundational AI pattern for enhancing LLMs by integrating external knowledge, directly addressing LLM limitations."
+  },
+  {
+    "Pattern Name": "Semantic Indexing",
+    "Problem": "Traditional keyword indexing/lookup approaches fail when documents get more complex, contain different media types like images or tables, or bridge multiple domains.",
+    "Context": "Retrieving relevant information from diverse and complex knowledge bases where simple keyword matching is insufficient to capture meaning.",
+    "Solution": "Use embeddings to capture the meaning of texts, images, and other media types. Find relevant chunks by comparing the embedding of the chunk to that of the query.",
+    "Result": "Enables more accurate and contextually relevant information retrieval across various media types and domains by understanding the semantic meaning of content.",
+    "Related Patterns": "",
+    "Uses": "",
+    "Thinking": "This pattern relies on AI-generated embeddings to represent the semantic meaning of data, which is a core AI technique for information retrieval."
+  },
+  {
+    "Pattern Name": "Indexing at Scale",
+    "Problem": "Dealing with outdated or contradictory information in your knowledge base.",
+    "Context": "Managing large, dynamic knowledge bases where information can become stale, inconsistent, or conflicting.",
+    "Solution": "Using metadata, query filtering, and result reranking.",
+    "Result": "Improves the quality and relevance of retrieved information by effectively managing and filtering large-scale knowledge bases, ensuring up-to-date and consistent results.",
+    "Related Patterns": "",
+    "Uses": "",
+    "Thinking": "While metadata and filtering are general, 'result reranking' often involves AI models to re-order search results based on relevance, making it AI-specific in this context of RAG."
+  },
+  {
+    "Pattern Name": "Index-aware Retrieval",
+    "Problem": "Comparing questions to chunks is problematic because the question itself will not appear in the knowledge base, may use synonyms or jargon, or may require holistic interpretation.",
+    "Context": "Standard retrieval methods struggle when user queries differ significantly in phrasing or require deeper understanding than direct keyword matching.",
+    "Solution": "Hypothetical answers, query expansion, hybrid search, GraphRAG",
+    "Result": "Enhances retrieval accuracy by intelligently transforming or enriching queries to better match relevant information in the knowledge base, even with complex or nuanced questions.",
+    "Related Patterns": "",
+    "Uses": "",
+    "Thinking": "Techniques like generating 'hypothetical answers' (HyDE) or 'query expansion' (often LLM-driven) and 'GraphRAG' are advanced AI methods for improving retrieval for LLMs."
+  },
+  {
+    "Pattern Name": "Node Postprocessing",
+    "Problem": "Irrelevant content, ambiguous entities, generic answers.",
+    "Context": "Initial retrieval steps may yield a broad set of results that contain noise, lack specificity, or are not optimally ordered for the user's query.",
+    "Solution": "Reranking offer the ability to bring in a lot of other neat ideas: hybrid search, query expansion, filtering, contextual compression, disambiguation, personalization",
+    "Result": "Refines retrieved content to be more relevant, specific, and personalized by applying various post-retrieval processing techniques.",
+    "Related Patterns": "",
+    "Uses": "",
+    "Thinking": "This pattern involves AI-driven techniques like reranking, contextual compression, and disambiguation applied to retrieved content to optimize it for LLM consumption."
+  },
+  {
+    "Pattern Name": "Trustworthy Generation",
+    "Problem": "How to retain users’ trust given that there is no way to completely avoid errors.",
+    "Context": "Building user confidence in LLM applications despite the inherent possibility of errors, hallucinations, or out-of-domain responses.",
+    "Solution": "Out-of-domain detection, citations, guardrails, human feedback, corrective RAG, UX design can all help.",
+    "Result": "Increases user trust and satisfaction by implementing mechanisms to detect and mitigate errors, provide transparency, and allow for human intervention.",
+    "Related Patterns": "",
+    "Uses": "",
+    "Thinking": "Many components of the solution (out-of-domain detection, corrective RAG, guardrails) are AI-specific or AI-driven strategies to improve the reliability of generative AI."
+  },
+  {
+    "Pattern Name": "Deep Search",
+    "Problem": "RAG systems are less effective for complex information retrieval tasks because of context window constraints, query ambiguity, information verification, shallow reasoning, and multi-hop query challenges.",
+    "Context": "Addressing limitations of standard RAG for queries requiring extensive information synthesis, multi-step reasoning, or verification across multiple sources.",
+    "Solution": "Iterative process of searching, reading, and reasoning to provide comprehensive answers to complex queries.",
+    "Result": "Enables LLMs to provide comprehensive and accurate answers to complex, multi-faceted queries by simulating a human-like iterative research and reasoning process.",
+    "Related Patterns": "",
+    "Uses": "",
+    "Thinking": "This pattern describes an iterative, AI-driven process of searching, reading, and reasoning, which is an advanced application of LLMs for complex information retrieval."
+  },
+  {
+    "Pattern Name": "Chain of Thought (CoT)",
+    "Problem": "Foundational models often struggle with multi-step reasoning tasks, leading to incorrect or fabricated answers.",
+    "Context": "LLMs need to solve complex problems that require breaking down into logical, sequential steps.",
+    "Solution": "CoT prompts the model to break down complex problems into intermediate reasoning steps before providing the final answer.",
+    "Result": "Improves the accuracy and transparency of LLM responses for complex reasoning tasks by guiding the model through explicit intermediate steps.",
+    "Related Patterns": "",
+    "Uses": "Complex mathematical problems, logical deductions, and sequential reasoning tasks where step-by-step thinking is required.",
+    "Thinking": "Chain of Thought is a fundamental prompting technique specifically designed to enhance the reasoning capabilities of LLMs, making it a core AI design pattern."
+  },
+  {
+    "Pattern Name": "Tree of Thoughts (ToT)",
+    "Problem": "Many strategic or logical tasks cannot be solved by a single linear reasoning path, requiring exploration of multiple alternatives.",
+    "Context": "Solving problems that involve strategic planning, creative generation, or decision-making where multiple potential paths need to be explored and evaluated.",
+    "Solution": "ToT treats problem-solving as a tree search, generating multiple reasoning paths, evaluating them, and backtracking as needed",
+    "Result": "Enhances LLM's ability to solve complex strategic and logical tasks by systematically exploring and evaluating multiple reasoning paths, leading to more robust solutions.",
+    "Related Patterns": "",
+    "Uses": "Complex tasks involving strategic thinking, planning, or creative writing that require exploring multiple solution paths.",
+    "Thinking": "Tree of Thoughts is an advanced AI reasoning technique that extends CoT by exploring multiple reasoning paths in a tree structure, specific to LLM problem-solving."
+  },
+  {
+    "Pattern Name": "Adapter Tuning",
+    "Problem": "Fully fine-tuning large foundational models for specialized tasks is computationally expensive and requires significant data.",
+    "Context": "Adapting large pre-trained LLMs to new, specific tasks or domains efficiently, with limited computational resources and data.",
+    "Solution": "Adapter Tuning trains small add-on neural network layers, leaving the original model weights frozen, making it efficient for specialized adaptation.",
+    "Result": "Enables cost-effective and data-efficient adaptation of large foundational models to specialized tasks, reducing computational overhead and data requirements.",
+    "Related Patterns": "",
+    "Uses": "Adapting models for specific tasks like classification, summarization, or specialized chatbots with a small (100-10k) dataset of examples.",
+    "Thinking": "Adapter Tuning is a specific machine learning technique for efficiently adapting neural networks (LLMs) without full fine-tuning, making it AI-specific."
+  },
+  {
+    "Pattern Name": "Evol-Instruct",
+    "Problem": "Creating high-quality datasets for instruction tuning models on new and complex enterprise tasks is difficult and time-consuming.",
+    "Context": "The need for high-quality, domain-specific instruction-tuning datasets to teach LLMs new enterprise tasks, where manual dataset creation is impractical.",
+    "Solution": "Evol-Instruct efficiently generates instruction-tuning datasets by evolving instructions through multiple iterations of LLM-generated tasks and answers.",
+    "Result": "Accelerates and automates the creation of high-quality, domain-specific instruction-tuning datasets, enabling LLMs to learn new and complex enterprise tasks more effectively.",
+    "Related Patterns": "",
+    "Uses": "Teaching models new, domain-specific tasks that are not covered by their pre-training data, particularly in enterprise settings.",
+    "Thinking": "This pattern uses LLMs themselves to generate and evolve training data for other LLMs, which is a meta-AI technique for dataset creation."
+  },
+  {
+    "Pattern Name": "LLM-as-Judge",
+    "Problem": "Evaluation of GenAI capabilities is hard because the tasks that GenAI performs are open-ended.",
+    "Context": "Objectively and comprehensively evaluating the quality and performance of open-ended Generative AI outputs, which traditional metrics struggle with.",
+    "Solution": "Provide detailed, multi-dimensional feedback that can be used to compare models, track improvements, and guide further development.",
+    "Result": "Provides a scalable and nuanced method for evaluating Generative AI outputs, offering detailed feedback for model comparison, improvement tracking, and development guidance.",
+    "Related Patterns": "",
+    "Uses": "Evaluation is core to many of the other patterns and to building AI applications effectively.",
+    "Thinking": "This pattern uses an LLM itself to evaluate the outputs of other generative AI models, which is a specific AI application for evaluation."
+  },
+  {
+    "Pattern Name": "Reflection",
+    "Problem": "How to get the LLM to correct an earlier response in response to feedback or criticism.",
+    "Context": "Improving the reliability and accuracy of LLM outputs by enabling the model to self-correct based on external feedback or internal criticism.",
+    "Solution": "The feedback is used to modify the prompt that is sent to the LLM a second time.",
+    "Result": "Enhances the reliability and correctness of LLM responses by allowing the model to iteratively refine its output based on feedback, leading to improved performance in complex tasks.",
+    "Related Patterns": "",
+    "Uses": "Reliable performance in most complex tasks where the approach can not be predetermined.",
+    "Thinking": "This pattern describes an iterative feedback loop where an LLM processes its own output or external feedback to refine its response, a self-correction mechanism specific to AI."
+  },
+  {
+    "Pattern Name": "Prompt Optimization",
+    "Problem": "Need to easily update prompts when dependencies change to maintain level of performance",
+    "Context": "Maintaining consistent performance of GenAI pipelines when underlying LLM versions or other dependencies evolve, requiring prompt adjustments.",
+    "Solution": "Systematically set the prompts used in a GenAI pipeline by optimizing them on a dataset of examples",
+    "Result": "Reduces maintenance overhead and ensures consistent performance of GenAI applications by systematically optimizing prompts against a dataset, adapting to changes in underlying models.",
+    "Related Patterns": "",
+    "Uses": "In any situation where you have to reduce the maintenance overhead associated with LLM version changes (and other dependencies).",
+    "Thinking": "This pattern focuses on the systematic optimization of prompts, which are the primary interface for controlling LLMs, making it specific to AI application development."
+  },
+  {
+    "Pattern Name": "Tool Calling",
+    "Problem": "How can you bridge the LLM and a software API so that the LLM is able to invoke the API and get the job done?",
+    "Context": "Enabling LLMs to perform actions in the real world, access real-time information, or interact with external systems beyond text generation.",
+    "Solution": "The LLM emits special tokens when it determines that a function needs to be called and also emits the parameters to pass to that function. A client-side postprocessor invokes the function with those parameters, and sends the results back to the LLM. The LLM incorporates the function results in its response.",
+    "Result": "Extends LLM capabilities to execute real-world actions, access dynamic data, and interact with transactional systems, transforming LLMs into active agents.",
+    "Related Patterns": "",
+    "Uses": "Whenever you want the LLM to not just state the steps needed, but to execute those steps. Also allows you to incorporate up-to-date knowledge from real-time sources, connect to transactional enterprise systems, perform calculations, and use optimization solvers.",
+    "Thinking": "This pattern describes how LLMs can interact with and invoke external software APIs, transforming them into agents capable of taking action, which is a core AI capability."
+  },
+  {
+    "Pattern Name": "Code Execution",
+    "Problem": "You have a software system that can do the task, but invoking it involves a DSL.",
+    "Context": "Leveraging existing software systems or domain-specific languages (DSLs) through an LLM, where direct API calls might be too complex or unavailable.",
+    "Solution": "LLMs generate code that is then executed by an external system.",
+    "Result": "Allows LLMs to interact with and control external software systems by generating executable code, enabling complex tasks like data manipulation or visualization.",
+    "Related Patterns": "",
+    "Uses": "Creating graphs, annotating images, updating databases.",
+    "Thinking": "This pattern involves LLMs generating executable code (e.g., Python, SQL) that is then run by an external interpreter, directly leveraging the generative capabilities of AI for automation."
+  },
+  {
+    "Pattern Name": "Multi-agent Collaboration",
+    "Problem": "Handle multi-step tasks that require different tools, maintain content over extended interactions, evaluate situations and take appropriate actions without human intervention, and adapt to user preferences.",
+    "Context": "Solving complex, multi-faceted problems that exceed the capabilities of a single LLM or require diverse specialized skills and persistent interaction.",
+    "Solution": "Multi-agent architectures allow you to solve real-world problems using specialized single-purpose agents and organizing them in ways that mimic human organizational structures.",
+    "Result": "Enables the solution of highly complex, multi-step problems by orchestrating specialized AI agents, leading to more robust, adaptive, and autonomous systems.",
+    "Related Patterns": "",
+    "Uses": "Complex reasoning, multi-step problem solving, collaborative content creation, adversarial verification, specialized domain integration, self-improving systems",
+    "Thinking": "This pattern describes an architectural approach for organizing multiple AI agents to collaboratively solve complex problems, which is specific to AI system design."
+  },
+  {
+    "Pattern Name": "Small Language Model (SLM)",
+    "Problem": "The foundational model you are using is introducing too much latency or cost.",
+    "Context": "Deploying LLM capabilities under strict constraints of cost, latency, or hardware resources (e.g., edge devices, limited GPUs).",
+    "Solution": "Use a small foundational model to fit within cost and latency constraints without compromising unduly on quality by employing quantization (reduce precision of model parameters), distillation (narrow knowledge scope), or speculative coding (backstop with larger model)",
+    "Result": "Achieves efficient and cost-effective LLM deployment by using smaller models and optimization techniques, meeting latency and resource constraints while maintaining acceptable quality.",
+    "Related Patterns": "",
+    "Uses": "Narrow-scoped knowledge applications, cost reduction, edge device deployment, faster inference requirements, GPU-constrained environments",
+    "Thinking": "This pattern focuses on optimizing AI model deployment using AI-specific techniques like quantization, distillation, and speculative decoding, which are unique to machine learning models."
+  },
+  {
+    "Pattern Name": "Prompt Caching",
+    "Problem": "User requests follow patterns with repeated queries. Recomputing the same responses wastes resources and increases costs.",
+    "Context": "Optimizing resource usage and reducing latency in LLM applications where similar or identical prompts are frequently submitted.",
+    "Solution": "Reuse previously generated responses (in the case of client-side caching) and/or model internal states (in the case of server-side caching) for the same or similar prompts. The similarity can be based on prompt meaning (semantic cache) or overlap (prefix caching).",
+    "Result": "Reduces computational cost and improves response times by reusing prior LLM outputs or internal states for repeated or semantically similar queries.",
+    "Related Patterns": "",
+    "Uses": "Applications with repeated queries, cost optimization, interactive applications requiring fast responses, multi-tenant systems",
+    "Thinking": "While caching is a general concept, 'semantic cache' (based on prompt meaning) and caching 'model internal states' are specific AI applications of caching to optimize LLM inference."
+  },
+  {
+    "Pattern Name": "Inference Optimization",
+    "Problem": "Self-hosting LLMs brings with it GPU constraints and hardware utilization challenges. Real-time applications need faster response times.",
+    "Context": "Maximizing the efficiency and throughput of LLM inference, especially in self-hosted environments with limited GPU resources or for real-time applications.",
+    "Solution": "Improves the efficiency of model inference by employing continuous batching (requests are pulled from a queue and slotted into GPU cores as soon as they become available), speculative decoding (efficiently compute the next set of tokens whenever the smaller model is able to do so, backstopping this with a large model), and/or prompt compression (preprocess prompts to make them shorter).",
+    "Result": "Significantly improves the speed and efficiency of LLM inference, enabling faster response times and better hardware utilization for self-hosted or real-time applications.",
+    "Related Patterns": "",
+    "Uses": "Self-hosted LLM deployments, real-time applications, GPU memory-constrained environments, high-throughput serving scenarios",
+    "Thinking": "This pattern describes techniques like continuous batching, speculative decoding, and prompt compression, which are specific methods for optimizing the inference performance of AI models, particularly LLMs."
+  },
+  {
+    "Pattern Name": "Degradation Testing",
+    "Problem": "Need metrics to help identify when service quality degrades and the constraint under which the application is bounded.",
+    "Context": "Ensuring the sustained performance and reliability of LLM applications by proactively identifying and addressing service quality degradation under various operational constraints.",
+    "Solution": "A set of core metrics — Time-to-First-Token (TTFT), End-to-End Request Latency (EERL), Tokens per Second (TPS) — and a variety of scalability and resilience metrics can help identify degradation of service quality; targeted interventions can help improve specific metrics.",
+    "Result": "Provides clear visibility into the performance and quality of LLM services, enabling early detection of degradation and informed interventions to maintain service levels.",
+    "Related Patterns": "",
+    "Uses": "Pre-production testing, performance validation, bottleneck identification, capacity planning, ongoing monitoring and optimization.",
+    "Thinking": "While testing is general, the specific metrics (TTFT, TPS) and the context of evaluating LLM service quality make this pattern tailored to AI systems, focusing on their unique performance characteristics."
+  },
+  {
+    "Pattern Name": "Long-Term Memory",
+    "Problem": "LLM applications need to simulate memory of past interactions by prepending relevant history to each prompt, but this approach can become costly and inefficient with long conversations due to context window limitations.",
+    "Context": "Maintaining conversational context and personalization over extended interactions in LLM applications, overcoming the inherent context window limitations of models.",
+    "Solution": "LLM applications use various types of memory – working, episodic, procedural, and semantic – to maintain context, recall past interactions, personalize responses, and retain key facts, respectively.",
+    "Result": "Enables LLM applications to maintain coherent, personalized, and context-aware interactions over long durations by intelligently managing and retrieving past information.",
+    "Related Patterns": "",
+    "Uses": "Chatbots, multi-step workflows, personalization, processing large documents",
+    "Thinking": "This pattern addresses a core challenge in LLM interaction (context window limitations) by proposing AI-specific memory management strategies (working, episodic, procedural, semantic memory)."
+  },
+  {
+    "Pattern Name": "Self-Check",
+    "Problem": "Identify potential hallucinations cost-effectively",
+    "Context": "Ensuring the factual accuracy of LLM responses, particularly in applications where creative freedom is not desired and hallucinations are detrimental.",
+    "Solution": "Use token probabilities to detect hallucination in LLM responses",
+    "Result": "Cost-effectively identifies and flags potential hallucinations in LLM outputs, improving the factual reliability of generated content.",
+    "Related Patterns": "",
+    "Uses": "In any situation where factual (as opposed to creative) responses are needed.",
+    "Thinking": "This pattern leverages internal LLM mechanisms (token probabilities) to detect and mitigate hallucinations, which is a self-correction technique specific to AI models."
+  },
+  {
+    "Pattern Name": "Guardrails",
+    "Problem": "Require safeguards for security, data privacy, content moderation, hallucination, and alignment to ensure that AI applications operate within ethical, legal, and functional parameters.",
+    "Context": "Deploying LLM applications safely and responsibly, preventing undesirable outputs, misuse, or violations of ethical and legal guidelines.",
+    "Solution": "Wrap the LLM calls with a layer of code that preprocesses the information going into the model and/or post-processes the output of the model. Knowledge retrieval and tool use will also need to be protected.",
+    "Result": "Ensures that LLM applications operate within defined safety, ethical, and functional boundaries by filtering inputs and outputs, mitigating risks like hallucination, privacy breaches, or harmful content.",
+    "Related Patterns": "",
+    "Uses": "Anytime your application could be subject to attacks by malicious adversaries.",
+    "Thinking": "While 'wrapping with code' is general, the purpose of 'guardrails' (content moderation, hallucination, alignment) and their application specifically to LLM inputs/outputs make this an AI-specific pattern for safety and control."
+  }
+]
